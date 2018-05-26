@@ -292,6 +292,7 @@ class FlowBuilder implements Serializable {
         if (isUi(releaseInfo.getServiceName())) {
             return new UiAutoTestsService()
         } else {
+            if (backEndAutoTestsServiceBuilder == null) return null
             if (suit == PipelineStagesSuit.LIBRARY) {
                 return backEndAutoTestsServiceBuilder.buildLibrary(sonarQubeService)
             }
