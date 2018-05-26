@@ -105,9 +105,7 @@ class FlowBuilder implements Serializable {
         dsl.echo "population complete"
         dockerService = dockerBuilder.build()
         dsl.echo "docker service preparation complete"
-        dsl.echo "sonarQubeBuilder start build: ${sonarQubeBuilder.toString()}"
-        sonarQubeService = sonarQubeBuilder.build()
-        dsl.echo "sonarQubeBuilder finish build"
+        prepareSonarQube()
         dsl.echo "DockerMavenBuildService debug"
         dsl.echo "new DockerMavenBuildService(${maven.toString()})"
         dsl.echo "new DockerMavenBuildService(${dockerService.toString()})"
@@ -124,6 +122,16 @@ class FlowBuilder implements Serializable {
         releaseService = getReleaseService()
         dsl.echo "created buildService: ${buildService.toString()}"
         dsl.echo "createServices finished"
+    }
+
+    def prepareSonarQube() {
+        if (sonarQubeBuilder != null) {
+            dsl.echo "sonarQubeBuilder start build: ${sonarQubeBuilder.toString()}"
+            sonarQubeService = sonarQubeBuilder.build()
+            dsl.echo "sonarQubeBuilder finish build"
+        } else {
+            dsl.echo "sonarQubeBuilder is not provided"
+        }
     }
 
     DeploymentService getAppropriateDeploymentService(BuildServiceType buildServiceType) {
