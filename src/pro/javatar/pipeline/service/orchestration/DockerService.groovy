@@ -18,6 +18,7 @@ package pro.javatar.pipeline.service.orchestration
 import pro.javatar.pipeline.model.Env
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
+import static pro.javatar.pipeline.util.Utils.isBlank
 import static pro.javatar.pipeline.util.Utils.isNotBlank
 
 /**
@@ -91,7 +92,10 @@ class DockerService implements Serializable {
     }
 
     def dockerLogin(String dockerRepositoryUrl) {
-        // String domain = dockerRepositoryUrl.split("/")[0]
+        if (isBlank(dockerCredentialsId)) {
+            dsl.echo "WARN: dockerCredentialsId is blank (${dockerCredentialsId}), skip login"
+            return
+        }
         dsl.withCredentials([[$class: 'UsernamePasswordMultiBinding',
                               credentialsId: dockerCredentialsId,
                               usernameVariable: 'DOCKER_REGISTRY_USERNAME',
