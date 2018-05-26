@@ -55,7 +55,7 @@ class VcsRepositoryUrlResolver {
         }
         if (vcsRepositoryType == VcsRepositoryType.BITBUCKET) {
             if (useSsh) {
-                return "ssh://git@${domain}:${repoOwner}/${repoName}.git"
+                return "git@${domain}:${repoOwner}/${repoName}.git"
             }
             return "https://${userName}@bitbucket.org/${repoOwner}/${repoName}.git/"
         }
