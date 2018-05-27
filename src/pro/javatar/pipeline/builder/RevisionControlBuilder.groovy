@@ -16,6 +16,7 @@
 package pro.javatar.pipeline.builder
 
 import pro.javatar.pipeline.exception.UnrecognizedRevisionControlTypeException
+import pro.javatar.pipeline.model.RevisionControlType
 import pro.javatar.pipeline.model.VcsRepositoryType
 import pro.javatar.pipeline.service.vcs.HgService
 import pro.javatar.pipeline.service.vcs.GitService
@@ -100,22 +101,4 @@ class RevisionControlBuilder implements Serializable {
         return branch
     }
 
-    enum RevisionControlType {
-
-        GIT,
-        MERCURIAL
-
-        static RevisionControlType fromString(String type) {
-            if (type == null) {
-                throw new UnrecognizedRevisionControlTypeException("type is null")
-            }
-            if("mercurial".equalsIgnoreCase(type) || "hg".equalsIgnoreCase(type)) {
-                return MERCURIAL
-            }
-            if ("git".equalsIgnoreCase(type)) {
-                return GIT
-            }
-            throw new UnrecognizedRevisionControlTypeException("type ${type} is not recognized")
-        }
-    }
 }

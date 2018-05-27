@@ -68,20 +68,24 @@ class HgService extends RevisionControlService {
         dsl.echo "mercurial finish checkout branch: ${branch}"
     }
 
-    def static checkoutRepo(String repo, String branch, String folder, def disableChangeLog=false,
-                            String repoOwner="javatar") {
+    @Override
+    def checkoutRepo(String repoOwner, String repo, String branch) {
+        String repoUrl = urlResolver.getRepoUrl(repoOwner, repo)
+        return checkoutRepo(repoUrl, branch)
+    }
+
+    @Override
+    def checkoutRepo(String repoUrl, String branch) {
         dsl.timeout(time: 5, unit: 'MINUTES') {
-            dsl.dir(folder) {
-                dsl.checkout([$class: 'MercurialSCM',
+            dsl.checkout([$class: 'MercurialSCM',
                           credentialsId: credentialsId,
                           installation: 'mercurial',
                           revision: "${branch}",
-                          source: "ssh://hg@bitbucket.org/${repoOwner}/${repo}",
-                          disableChangeLog: disableChangeLog,
-                ])
-            }
-            dsl.sh "hg pull --rebase -R ${folder}/"
-            dsl.sh "hg update --clean -R ${folder}/"
+                          source: repoUrl,
+                          disableChangeLog: false,
+            ])
+            dsl.sh "hg pull --rebase"
+            dsl.sh "hg update --clean"
         }
     }
 

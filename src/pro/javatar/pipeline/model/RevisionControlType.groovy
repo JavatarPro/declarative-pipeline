@@ -12,23 +12,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package pro.javatar.pipeline.model
 
-package pro.javatar.pipeline.service.orchestration
+import pro.javatar.pipeline.exception.UnrecognizedRevisionControlTypeException
 
 /**
  * Author : Borys Zora
- * Date Created: 3/22/18 22:27
+ * Date Created: 5/27/18 23:05
  */
-class KubernetesService implements DockerOrchestrationService {
+enum RevisionControlType {
 
-    @Override
-    def setup() {
-        throw new UnsupportedOperationException("KubernetesService does not supported yet")
-    }
+    GIT,
+    MERCURIAL
 
-    @Override
-    def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment) {
-        throw new UnsupportedOperationException("KubernetesService does not supported yet")
+    static RevisionControlType fromString(String type) {
+        if (type == null) {
+            throw new UnrecognizedRevisionControlTypeException("type is null")
+        }
+        if("mercurial".equalsIgnoreCase(type) || "hg".equalsIgnoreCase(type)) {
+            return MERCURIAL
+        }
+        if ("git".equalsIgnoreCase(type)) {
+            return GIT
+        }
+        throw new UnrecognizedRevisionControlTypeException("type ${type} is not recognized")
     }
 
 }

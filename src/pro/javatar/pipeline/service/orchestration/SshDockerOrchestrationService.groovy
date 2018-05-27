@@ -24,12 +24,18 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 class SshDockerOrchestrationService implements DockerOrchestrationService {
 
     @Override
+    def setup() {
+        throw new UnsupportedOperationException("SshDockerOrchestrationService does not supported yet")
+    }
+
+    @Override
     def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment) {
         dsl.echo "SshDockerOrchestrationService started dockerDeployContainer(imageName: ${imageName}, " +
                 "imageVersion: ${imageVersion}, dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})"
 
         dsl.echo "SshDockerOrchestrationService finished dockerDeployContainer(imageName: ${imageName}, " +
                 "imageVersion: ${imageVersion}, dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})"
+        throw new UnsupportedOperationException("SshDockerOrchestrationService does not supported yet")
     }
 
 }

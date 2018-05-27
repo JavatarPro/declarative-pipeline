@@ -107,6 +107,7 @@ class DockerService implements Serializable {
     def dockerDeployContainer(String imageName, String imageVersion, Env env) {
         dsl.echo "dockerDeployContainer(${imageName}, ${imageVersion}, ${env.getValue()})"
         if (env == Env.DEV) {
+            orchestrationService.setup()
             orchestrationService.dockerDeployContainer(imageName, imageVersion, devRepo, env.getValue())
         } else {
             orchestrationService.dockerDeployContainer(imageName, imageVersion, prodRepo, env.getValue())

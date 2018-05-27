@@ -48,6 +48,7 @@ class FlowBuilder implements Serializable {
     SwaggerBuilder swaggerBuilder // TODO
     BackEndAutoTestsServiceBuilder backEndAutoTestsServiceBuilder
 
+    // services
     Maven maven
     MavenBuildService mavenBuildService
     DockerMavenBuildService dockerMavenBuildService
@@ -121,6 +122,7 @@ class FlowBuilder implements Serializable {
         autoTestsService = getAutoTestsService()
         releaseService = getReleaseService()
         dsl.echo "created buildService: ${buildService.toString()}"
+        populateServiceContextHolder()
         dsl.echo "createServices finished"
     }
 
@@ -382,6 +384,23 @@ class FlowBuilder implements Serializable {
         mavenBuildService.setLayout(maven.getLayout())
         mavenBuildService.setRepoUrl(maven.getRepoUrl())
         return mavenBuildService
+    }
+
+    void populateServiceContextHolder() {
+        ServiceContextHolder.addService(mavenBuildService)
+        ServiceContextHolder.addService(dockerMavenBuildService)
+        ServiceContextHolder.addService(npmBuildService)
+        ServiceContextHolder.addService(senchaService)
+        ServiceContextHolder.addService(buildService)
+        ServiceContextHolder.addService(deploymentService)
+        ServiceContextHolder.addService(autoTestsService)
+        ServiceContextHolder.addService(revisionControlService)
+        ServiceContextHolder.addService(RevisionControlService.class, revisionControlService)
+        ServiceContextHolder.addService(releaseService)
+        ServiceContextHolder.addService(dockerService)
+        ServiceContextHolder.addService(slackService)
+        ServiceContextHolder.addService(sonarQubeService)
+        ServiceContextHolder.addService(swaggerService)
     }
 
     @Override

@@ -15,9 +15,9 @@
 
 package pro.javatar.pipeline.service.orchestration
 
-import pro.javatar.pipeline.service.vcs.HgService
-
+import pro.javatar.pipeline.service.vcs.VcsHelper
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
+import static pro.javatar.pipeline.util.Utils.isNotBlank
 
 /**
  * Author : Borys Zora
@@ -25,9 +25,31 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class MesosService implements DockerOrchestrationService {
 
+    String repoOwner
+    String repo = "mesos-services-configuration"
+    String branch = "master"
+    String folder = "mesos-services-configuration"
+
+    MesosService(){}
+
+    MesosService(String repoOwner) {
+        this.repoOwner = repoOwner
+    }
+
+    MesosService(String repoOwner, String repo, String branch) {
+        this.repoOwner = repoOwner
+        this.repo = repo
+        this.branch = branch
+    }
+
     def setup() {
-        HgService.checkoutRepo("mesos-services-configuration", "default",
-                "mesos-services-configuration", true)
+        if (isNotBlank(repoOwner)) {
+            dsl.echo "MesosService: repoOwner: ${repoOwner}"
+            VcsHelper.checkoutRepo(repoOwner, repo, branch, folder)
+        } else {
+            dsl.echo "MesosService: same repoOwner as for service repo will be used"
+            VcsHelper.checkoutRepo(repo, branch, branch, folder)
+        }
     }
 
     @Override
@@ -40,8 +62,18 @@ class MesosService implements DockerOrchestrationService {
         dsl.withEnv(["SERVICE=${imageName}", "DOCKER_REPOSITORY=${dockerRepositoryUrl}",
                      "RELEASE_VERSION=${imageVersion}", "LABEL_ENVIRONMENT=${environment}"]) {
 
-            dsl.sh "../mesos-services-configuration/bin/mm-deploy -e ${environment} ${imageName} || " +
+            dsl.sh "../${folder}/bin/mm-deploy -e ${environment} ${imageName} || " +
                     " (depcon -e ${environment} app rollback /${imageName} --wait; echo 'Deploy failed!'; exit 2)"
         }
+    }
+
+    @Override
+    public String toString() {
+        return "MesosService{" +
+                "repoOwner='" + repoOwner + '\'' +
+                ", repo='" + repo + '\'' +
+                ", branch='" + branch + '\'' +
+                ", folder='" + folder + '\'' +
+                '}';
     }
 }

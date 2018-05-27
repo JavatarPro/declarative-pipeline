@@ -63,6 +63,20 @@ class GitService extends RevisionControlService {
     }
 
     @Override
+    def checkoutRepo(String repoOwner, String repo, String branch) {
+        dsl.echo "GitService checkoutRepo: ${repo}, branch: ${branch}, folder: ${folder}, repoOwner: ${repoOwner}"
+        String repoUrl = urlResolver.getRepoUrl(repoOwner, repo)
+        return checkoutRepo(repoUrl, branch)
+    }
+
+    @Override
+    def checkoutRepo(String repoUrl, String branch) {
+        dsl.timeout(time: 5, unit: 'MINUTES') {
+            dsl.git branch: branch, credentialsId: credentialsId, url: repoUrl
+        }
+    }
+
+    @Override
     def createReleaseBranchLocally(String releaseVersion) {
         dsl.echo "createReleaseBranchLocally releaseVersion - ${releaseVersion}"
         dsl.sh "git status"

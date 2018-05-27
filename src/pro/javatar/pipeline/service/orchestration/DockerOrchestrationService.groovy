@@ -21,6 +21,8 @@ package pro.javatar.pipeline.service.orchestration
  */
 interface DockerOrchestrationService {
 
+    def setup()
+
     def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment)
 
 }

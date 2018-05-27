@@ -42,9 +42,14 @@ class VcsRepositoryUrlResolver {
     }
 
     String getRepoUrl() {
-        String userName = revisionControlService.getUserName()
         String repoName = revisionControlService.getRepoName()
         String repoOwner = revisionControlService.getRepoOwner()
+
+        return getRepoUrl(repoOwner, repoName)
+    }
+
+    String getRepoUrl(String repoOwner, String repoName) {
+        String userName = revisionControlService.getUserName()
         String domain = revisionControlService.getDomain()
 
         if (vcsRepositoryType == VcsRepositoryType.GITLAB) {
