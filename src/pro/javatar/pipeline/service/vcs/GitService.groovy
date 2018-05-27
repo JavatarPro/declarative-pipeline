@@ -72,7 +72,10 @@ class GitService extends RevisionControlService {
     @Override
     def checkoutRepo(String repoUrl, String branch) {
         dsl.timeout(time: 5, unit: 'MINUTES') {
-            dsl.git branch: branch, credentialsId: credentialsId, url: repoUrl
+            dsl.git credentialsId: credentialsId, url: repoUrl
+            dsl.sh "pwd; ls -la"
+            dsl.sh "git checkout ${branch}"
+            dsl.echo "GitService#checkoutRepo successfully finished for repoUrl: ${repoUrl}, branch: ${branch}"
         }
     }
 
