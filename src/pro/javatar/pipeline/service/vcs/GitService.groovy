@@ -64,7 +64,7 @@ class GitService extends RevisionControlService {
 
     @Override
     def checkoutRepo(String repoOwner, String repo, String branch) {
-        dsl.echo "GitService checkoutRepo: ${repo}, branch: ${branch}, folder: ${folder}, repoOwner: ${repoOwner}"
+        dsl.echo "GitService checkoutRepo: repoOwner: ${repoOwner}, repo: ${repo}, branch: ${branch}"
         String repoUrl = urlResolver.getRepoUrl(repoOwner, repo)
         return checkoutRepo(repoUrl, branch)
     }
