@@ -28,7 +28,7 @@ class MesosService implements DockerOrchestrationService {
     String repoOwner
     String repo = "mesos-services-configuration"
     String branch = "master"
-    String folder = "mesos-services-configuration"
+    String folder = "../mesos-services-configuration"
 
     MesosService(){}
 
@@ -62,7 +62,7 @@ class MesosService implements DockerOrchestrationService {
         dsl.withEnv(["SERVICE=${imageName}", "DOCKER_REPOSITORY=${dockerRepositoryUrl}",
                      "RELEASE_VERSION=${imageVersion}", "LABEL_ENVIRONMENT=${environment}"]) {
 
-            dsl.sh "../${folder}/bin/mm-deploy -e ${environment} ${imageName} || " +
+            dsl.sh "${folder}/bin/mm-deploy -e ${environment} ${imageName} || " +
                     " (depcon -e ${environment} app rollback /${imageName} --wait; echo 'Deploy failed!'; exit 2)"
         }
     }
