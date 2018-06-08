@@ -63,7 +63,7 @@ class MesosService implements DockerOrchestrationService {
                      "RELEASE_VERSION=${imageVersion}", "LABEL_ENVIRONMENT=${environment}"]) {
 
             dsl.sh "${folder}/bin/mm-deploy -e ${environment} ${imageName} || " +
-                    " (depcon -e ${environment} app rollback /${imageName} --wait; echo 'Deploy failed!'; exit 2)"
+                    " (depcon -e ${environment} mar app rollback /${imageName} --wait; echo 'Deploy failed!'; exit 2)"
         }
     }
 
