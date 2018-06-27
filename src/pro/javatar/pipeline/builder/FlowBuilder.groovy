@@ -302,6 +302,9 @@ class FlowBuilder implements Serializable {
                 }
                 return backEndAutoTestsServiceBuilder.buildLibrary(sonarQubeService)
             }
+            if (sonarQubeService == null) {
+                return backEndAutoTestsServiceBuilder.buildLibrary();
+            }
             return backEndAutoTestsServiceBuilder.build(sonarQubeService)
         }
     }
