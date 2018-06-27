@@ -175,6 +175,7 @@ class GitService extends RevisionControlService {
     def pushRelease() {
         dsl.sshagent([credentialsId]) {
             dsl.sh "git push"
+            dsl.sh "git push --all"
             dsl.sh "git push origin --tags"
         }
         //
