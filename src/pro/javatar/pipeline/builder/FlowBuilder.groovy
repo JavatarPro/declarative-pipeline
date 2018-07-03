@@ -137,7 +137,9 @@ class FlowBuilder implements Serializable {
     }
 
     DeploymentService getAppropriateDeploymentService(BuildServiceType buildServiceType) {
-        if (buildType == BuildServiceType.MAVEN) {
+        if (buildType == BuildServiceType.MAVEN
+                || buildType == BuildServiceType.PHP
+                || buildType == BuildServiceType.PYTHON) {
             return new DockerDeploymentService(releaseInfo, dockerService)
         }
         if (buildType == BuildServiceType.NPM || buildType == BuildServiceType.SENCHA) {
@@ -241,9 +243,14 @@ class FlowBuilder implements Serializable {
             dsl.echo "after build npm"
             buildService = npmBuildService
         } else if (buildType == BuildServiceType.SENCHA) {
-            senchaService = new SenchaService(revisionControlService)
+            senchaService = new SenchaService()
             buildService = senchaService
+        } else if (buildType == BuildServiceType.PHP) {
+            buildService = new PhpBuildService()
+        } else if (buildType == BuildServiceType.PYTHON) {
+            buildService = new PythonBuildService()
         }
+
         buildService.useBuildNumberForVersion = useBuildNumberForVersion
         dsl.echo "buildService: ${buildService.toString()}"
         dsl.echo "setupBuildService finished"

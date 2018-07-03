@@ -17,7 +17,6 @@ package pro.javatar.pipeline.service.impl
 
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
-import pro.javatar.pipeline.service.vcs.RevisionControlService
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -27,12 +26,9 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class SenchaService extends BuildService {
 
-    RevisionControlService revisionControlService
     String applicationFile = "app.json"
 
-    SenchaService(RevisionControlService revisionControlService) {
-        this.revisionControlService = revisionControlService
-    }
+    SenchaService() {}
 
     @Override
     void setUp() {

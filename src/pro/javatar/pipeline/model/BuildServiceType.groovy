@@ -26,7 +26,9 @@ enum BuildServiceType implements Serializable {
 
     MAVEN,
     NPM,
-    SENCHA
+    SENCHA,
+    PHP,
+    PYTHON
 
     static BuildServiceType fromString(String type) {
         if (type == null) {
@@ -40,6 +42,12 @@ enum BuildServiceType implements Serializable {
         }
         if ("sencha".equalsIgnoreCase(type) || "extjs".equalsIgnoreCase(type) || "ext".equalsIgnoreCase(type)) {
             return SENCHA
+        }
+        if ("php".equalsIgnoreCase(type)) {
+            return PHP
+        }
+        if ("python".equalsIgnoreCase(type)) {
+            return PYTHON
         }
         throw new UnrecognizedBuildServiceTypeException("type ${type} is not recognized")
     }

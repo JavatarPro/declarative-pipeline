@@ -64,7 +64,7 @@ abstract class BuildService implements Serializable {
 
     abstract def setupReleaseVersion(String releaseVersion)
 
-    abstract def setupVersion(String developVersion)
+    abstract def setupVersion(String version)
 
     // helper methods
 
