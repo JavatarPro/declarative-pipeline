@@ -246,9 +246,9 @@ class FlowBuilder implements Serializable {
             senchaService = new SenchaService()
             buildService = senchaService
         } else if (buildType == BuildServiceType.PHP) {
-            buildService = new PhpBuildService()
+            buildService = new PhpBuildService(dockerService)
         } else if (buildType == BuildServiceType.PYTHON) {
-            buildService = new PythonBuildService()
+            buildService = new PythonBuildService(dockerService)
         }
 
         buildService.useBuildNumberForVersion = useBuildNumberForVersion

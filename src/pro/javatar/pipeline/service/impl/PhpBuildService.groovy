@@ -2,17 +2,23 @@ package pro.javatar.pipeline.service.impl
 
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
+import pro.javatar.pipeline.service.orchestration.DockerService
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 class PhpBuildService extends BuildService {
 
+    DockerService dockerService;
+
     String applicationFile = "composer.json"
 
-    PhpBuildService() {
+    PhpBuildService(DockerService dockerService) {
+        this.dockerService = dockerService
         dsl.echo "PhpBuildService constructor"
     }
 
-    PhpBuildService(String applicationFile) {
+    PhpBuildService(DockerService dockerService, String applicationFile) {
+        this.dockerService = dockerService
         this.applicationFile = applicationFile
     }
 
@@ -25,6 +31,7 @@ class PhpBuildService extends BuildService {
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
         dsl.echo 'PhpBuildService buildAndUnitTests start'
         dsl.sh "pwd; ls -la; ls -la *"
+        dockerService.dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
         dsl.echo 'PhpBuildService buildAndUnitTests end'
     }
 

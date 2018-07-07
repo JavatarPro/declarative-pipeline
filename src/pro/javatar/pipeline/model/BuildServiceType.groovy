@@ -28,6 +28,7 @@ enum BuildServiceType implements Serializable {
     NPM,
     SENCHA,
     PHP,
+    PHP_PYTHON,
     PYTHON
 
     static BuildServiceType fromString(String type) {
@@ -45,6 +46,10 @@ enum BuildServiceType implements Serializable {
         }
         if ("php".equalsIgnoreCase(type)) {
             return PHP
+        }
+        if ("php_python".equalsIgnoreCase(type) || "php-python".equalsIgnoreCase(type)
+                || "python-php".equalsIgnoreCase(type) || "python_php".equalsIgnoreCase(type)) {
+            return PHP_PYTHON
         }
         if ("python".equalsIgnoreCase(type)) {
             return PYTHON
