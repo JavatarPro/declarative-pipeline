@@ -18,8 +18,7 @@ class PhpBuildService extends BuildService {
 
     @Override
     void setUp() {
-        dsl.sh "env | grep -i php"
-        dsl.sh "env | grep -i symfony"
+        dsl.sh "env"
     }
 
     @Override
