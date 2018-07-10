@@ -55,6 +55,7 @@ class FlowBuilder implements Serializable {
     Npm npm = new Npm()
     String moduleRepository = ""
     NpmBuildService npmBuildService
+    DockerNpmBuildService dockerNpmBuildService
     SenchaService senchaService
     BuildService buildService
     CdnDeploymentService cdnDeploymentService
@@ -242,6 +243,9 @@ class FlowBuilder implements Serializable {
             npmBuildService = npm.build()
             dsl.echo "after build npm"
             buildService = npmBuildService
+        } else if (buildType == BuildServiceType.NPM_DOCKER) {
+            dockerNpmBuildService = new DockerNpmBuildService(dockerService)
+            buildService = npmBuildService
         } else if (buildType == BuildServiceType.SENCHA) {
             senchaService = new SenchaService()
             buildService = senchaService
@@ -320,7 +324,8 @@ class FlowBuilder implements Serializable {
         if (suit == PipelineStagesSuit.LIBRARY && buildType == BuildServiceType.MAVEN) {
             return new BackEndLibraryReleaseService(mavenBuildService, revisionControlService)
         }
-        if (buildType == BuildServiceType.NPM || buildType == BuildServiceType.SENCHA) {
+        if (buildType == BuildServiceType.NPM || buildType == BuildServiceType.NPM_DOCKER
+                || buildType == BuildServiceType.SENCHA) {
             return new UiReleaseService(buildService, revisionControlService)
         }
         return new BackEndReleaseService(mavenBuildService, revisionControlService, dockerService)
@@ -415,6 +420,7 @@ class FlowBuilder implements Serializable {
         ServiceContextHolder.addService(slackService)
         ServiceContextHolder.addService(sonarQubeService)
         ServiceContextHolder.addService(swaggerService)
+        ServiceContextHolder.addService(dockerNpmBuildService)
     }
 
     @Override

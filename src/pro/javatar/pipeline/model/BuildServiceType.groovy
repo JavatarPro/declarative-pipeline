@@ -25,10 +25,11 @@ import pro.javatar.pipeline.exception.UnrecognizedRevisionControlTypeException
 enum BuildServiceType implements Serializable {
 
     MAVEN,
-    NPM,
+    NPM, // e.g. angular + AWS S3
+    NPM_DOCKER, // e.g. react + docker
     SENCHA,
     PHP,
-    PHP_PYTHON,
+    PHP_PYTHON, // python code with composer.json for versioning from php
     PYTHON
 
     static BuildServiceType fromString(String type) {
@@ -38,8 +39,15 @@ enum BuildServiceType implements Serializable {
         if("maven".equalsIgnoreCase(type) || "mvn".equalsIgnoreCase(type)) {
             return MAVEN
         }
-        if ("npm".equalsIgnoreCase(type) || "node".equalsIgnoreCase(type) || "nodejs".equalsIgnoreCase(type)) {
+        if ("npm".equalsIgnoreCase(type) || "node".equalsIgnoreCase(type)
+                || "nodejs".equalsIgnoreCase(type) || "npm_cdn".equalsIgnoreCase(type)) {
             return NPM
+        }
+        if ("npm_docker".equalsIgnoreCase(type) || "docker_nodejs".equalsIgnoreCase(type)
+                || "nodejs_docker".equalsIgnoreCase(type) || "node_docker".equalsIgnoreCase(type)
+                || "docker_npm".equalsIgnoreCase(type) || "react_docker".equalsIgnoreCase(type)
+                || "angular_docker".equalsIgnoreCase(type)) {
+            return NPM_DOCKER
         }
         if ("sencha".equalsIgnoreCase(type) || "extjs".equalsIgnoreCase(type) || "ext".equalsIgnoreCase(type)) {
             return SENCHA
