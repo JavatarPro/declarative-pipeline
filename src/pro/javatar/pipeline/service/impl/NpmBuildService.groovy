@@ -25,8 +25,8 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class NpmBuildService extends BuildService {
     String moduleRepository
-    String npmVersion
-    String type
+    protected String npmVersion
+    protected String type
     String libraryFolder
 
     @Override

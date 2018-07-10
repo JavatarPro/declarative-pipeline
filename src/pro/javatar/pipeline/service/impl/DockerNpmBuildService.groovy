@@ -20,8 +20,8 @@ class DockerNpmBuildService extends NpmBuildService {
 
     DockerNpmBuildService(DockerService dockerService, Npm npm) {
         this.dockerService = dockerService
-        super.type = npm.getNpmType()
-        super.npmVersion = npm.getNpmVersion()
+        type = npm.getNpmType()
+        npmVersion = npm.getNpmVersion()
     }
 
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
