@@ -116,7 +116,7 @@ class DockerService implements Serializable {
     }
 
     String getCustomDockerFileInstruction() {
-        isBlank(customDockerFileName) {
+        if (isBlank(customDockerFileName)) {
             return ""
         }
         return "-f ${customDockerFileName}"
