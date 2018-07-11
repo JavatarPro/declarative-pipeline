@@ -10,7 +10,7 @@ class PhpBuildService extends BuildService {
 
     DockerService dockerService;
 
-    String applicationFile = "composer.json"
+    String applicationFile = "package.json"
 
     PhpBuildService(DockerService dockerService) {
         this.dockerService = dockerService
