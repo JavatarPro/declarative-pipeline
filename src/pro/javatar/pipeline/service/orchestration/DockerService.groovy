@@ -33,6 +33,7 @@ class DockerService implements Serializable {
     String prodRepo
     String dockerCredentialsId
     DockerOrchestrationService orchestrationService
+    String customDockerFileName
 
     DockerService(String devRepo, String prodRepo, DockerOrchestrationService orchestrationService) {
         this.devRepo = devRepo
@@ -43,7 +44,7 @@ class DockerService implements Serializable {
     def dockerBuildImage(String imageName, String imageVersion) {
         dsl.echo "dockerBuildImage for imageName: ${imageName} with imageVersion: ${imageVersion} started"
         dsl.sh 'docker -v'
-        dsl.sh "docker build -t ${imageName}:${imageVersion} ."
+        dsl.sh "docker build -t ${imageName}:${imageVersion} ${getCustomDockerFileInstruction()} ."
         dsl.echo "dockerBuildImage for service: ${imageName} with releaseVersion: ${imageVersion} finished"
     }
 
@@ -114,8 +115,19 @@ class DockerService implements Serializable {
         }
     }
 
+    String getCustomDockerFileInstruction() {
+        isBlank(customDockerFileName) {
+            return ""
+        }
+        return "-f ${customDockerFileName}"
+    }
+
     void setDockerCredentialsId(String dockerCredentialsId) {
         this.dockerCredentialsId = dockerCredentialsId
+    }
+
+    void setCustomDockerFileName(String customDockerFileName) {
+        this.customDockerFileName = customDockerFileName
     }
 
     @Override
