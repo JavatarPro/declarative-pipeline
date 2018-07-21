@@ -35,13 +35,15 @@ class DockerBuilder implements Serializable {
 
     private String dockerRepo
     private String dockerDevRepo
-    private String dockerCredentialsId
+    private String dockerDevCredentialsId
+    private String dockerProdCredentialsId
     private String customDockerFileName = ""
     private DockerOrchestrationService orchestrationService
 
     DockerService build() {
         DockerService dockerService = new DockerService(dockerDevRepo, dockerRepo, orchestrationService)
-        dockerService.setDockerCredentialsId(dockerCredentialsId)
+        dockerService.setDockerDevCredentialsId(dockerDevCredentialsId)
+        dockerService.setDockerProdCredentialsId(dockerProdCredentialsId)
         dockerService.setCustomDockerFileName(customDockerFileName)
         return dockerService
     }
@@ -74,7 +76,17 @@ class DockerBuilder implements Serializable {
     }
 
     DockerBuilder withDockerCredentialsId(String dockerCredentialsId) {
-        this.dockerCredentialsId = dockerCredentialsId
+        this.dockerDevCredentialsId = dockerCredentialsId
+        return this
+    }
+
+    DockerBuilder withDockerDevCredentialsId(String dockerCredentialsId) {
+        this.dockerDevCredentialsId = dockerCredentialsId
+        return this
+    }
+
+    DockerBuilder withDockerProdCredentialsId(String dockerProdCredentialsId) {
+        this.dockerProdCredentialsId = dockerProdCredentialsId
         return this
     }
 

@@ -19,7 +19,6 @@ import pro.javatar.pipeline.model.Env
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 import static pro.javatar.pipeline.util.Utils.isBlank
-import static pro.javatar.pipeline.util.Utils.isNotBlank
 
 /**
  * @author Borys Zora
@@ -31,7 +30,8 @@ class DockerService implements Serializable {
 
     String devRepo
     String prodRepo
-    String dockerCredentialsId
+    String dockerDevCredentialsId
+    String dockerProdCredentialsId
     DockerOrchestrationService orchestrationService
     String customDockerFileName
 
@@ -50,14 +50,14 @@ class DockerService implements Serializable {
 
     def dockerPublish(String imageName, String imageVersion, Env env) {
         if (env == Env.DEV) {
-            dockerPushImageToRegistry(imageName, imageVersion, devRepo)
+            dockerPushImageToRegistry(imageName, imageVersion, devRepo, dockerDevCredentialsId)
         }
         if (env == Env.QA) {
             if (devRepo.equalsIgnoreCase(prodRepo)) {
                 dsl.echo "prodRepo: ${prodRepo} same as ${devRepo}, dockerPushImageToRegistry will be skipped"
                 return
             }
-            dockerPushImageToRegistry(imageName, imageVersion, prodRepo)
+            dockerPushImageToRegistry(imageName, imageVersion, prodRepo, dockerProdCredentialsId)
         }
     }
 
@@ -65,9 +65,10 @@ class DockerService implements Serializable {
         dockerPushImageToRegistry(imageName, imageVersion, prodRepo)
     }
 
-    def dockerLoginAndPushImageToRegistry(String imageName, String imageVersion, String dockerRepositoryUrl) {
-        dsl.echo "withDockerRegistry([credentialsId: ${dockerCredentialsId}, url: 'http://${dockerRepositoryUrl}'])"
-        dsl.withDockerRegistry([credentialsId: dockerCredentialsId, url: 'http://${dockerRepositoryUrl}']) {
+    def dockerLoginAndPushImageToRegistry(String imageName, String imageVersion,
+                                          String dockerRepositoryUrl, String credentialsId) {
+        dsl.echo "withDockerRegistry([credentialsId: ${credentialsId}, url: 'http://${dockerRepositoryUrl}'])"
+        dsl.withDockerRegistry([credentialsId: credentialsId, url: 'http://${dockerRepositoryUrl}']) {
             dsl.sh "docker images"
             dsl.docker.image("${dockerRepositoryUrl}/${imageName}:${imageVersion}").push()
             dsl.docker.image("${dockerRepositoryUrl}/${imageName}:${LATEST_LABEL}").push()
@@ -82,19 +83,20 @@ class DockerService implements Serializable {
         dsl.sh "docker push ${dockerRepositoryUrl}/${imageName}:${LATEST_LABEL}"
     }
 
-    def dockerPushImageToRegistry(String imageName, String imageVersion, String dockerRepositoryUrl) {
-        dockerLogin(dockerRepositoryUrl)
+    def dockerPushImageToRegistry(String imageName, String imageVersion,
+                                  String dockerRepositoryUrl, String credentialsId) {
+        dockerLogin(dockerRepositoryUrl, credentialsId)
         dockerPushImageToRegistryWithoutLogin(imageName, imageVersion, dockerRepositoryUrl)
-//        if (isNotBlank(dockerCredentialsId)) {
+//        if (isNotBlank(dockerDevCredentialsId)) {
 //            dockerLoginAndPushImageToRegistry(imageName, imageVersion, dockerRepositoryUrl)
 //        } else {
 //            dockerPushImageToRegistryWithoutLogin(imageName, imageVersion, dockerRepositoryUrl)
 //        }
     }
 
-    def dockerLogin(String dockerRepositoryUrl) {
-        if (isBlank(dockerCredentialsId)) {
-            dsl.echo "WARN: dockerCredentialsId is blank (${dockerCredentialsId}), skip login"
+    def dockerLogin(String dockerRepositoryUrl, String credentialsId) {
+        if (isBlank(credentialsId)) {
+            dsl.echo "WARN: credentialsId is blank (${credentialsId}), skip login"
             return
         }
         dsl.withCredentials([[$class: 'UsernamePasswordMultiBinding',
@@ -113,6 +115,14 @@ class DockerService implements Serializable {
         } else {
             orchestrationService.dockerDeployContainer(imageName, imageVersion, prodRepo, env.getValue())
         }
+    }
+
+    void setDockerDevCredentialsId(String dockerCredentialsId) {
+        this.dockerDevCredentialsId = dockerCredentialsId
+    }
+
+    void setDockerProdCredentialsId(String dockerProdCredentialsId) {
+        this.dockerProdCredentialsId = dockerProdCredentialsId
     }
 
     String getCustomDockerFileInstruction() {
