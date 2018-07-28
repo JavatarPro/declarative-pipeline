@@ -32,6 +32,9 @@ This is shared library for jenkins CD declarative pipeline created by [Javatar L
 
 ### RELEASE NOTES ###
 
+* 1.1
+    - added python support
+    - added github support
 * 1.0
     - tools supported: gitlab, docker, mesos
     - build tools: maven, npm
