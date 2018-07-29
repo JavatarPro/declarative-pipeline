@@ -26,7 +26,7 @@ enum Env implements Serializable {
     DEV("dev"),
     QA("qa"),
     STAGING("uat"),
-    PROD("prod")
+    PROD("prd")
 
     private final String value
 
@@ -51,7 +51,7 @@ enum Env implements Serializable {
         if ("staging".equalsIgnoreCase(env) || "uat".equalsIgnoreCase(env)) {
             return STAGING
         }
-        if ("prod".equalsIgnoreCase(env) || "production".equalsIgnoreCase(env)) {
+        if ("prod".equalsIgnoreCase(env) || "prd".equalsIgnoreCase(env) || "production".equalsIgnoreCase(env)) {
             return PROD
         }
         throw new UnrecognizedEnvException("env ${env} is not recognized")

@@ -15,6 +15,7 @@
 
 package pro.javatar.pipeline.service.orchestration
 
+import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.vcs.VcsHelper
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 import static pro.javatar.pipeline.util.Utils.isNotBlank
@@ -27,8 +28,8 @@ class MesosService implements DockerOrchestrationService {
 
     String repoOwner
     String repo = "mesos-services-configuration"
+    String prodRepo = "mesos-services-configuration-prd"
     String branch = "master"
-    String folder = "../mesos-services-configuration"
 
     MesosService(){}
 
@@ -45,10 +46,11 @@ class MesosService implements DockerOrchestrationService {
     def setup() {
         if (isNotBlank(repoOwner)) {
             dsl.echo "MesosService: repoOwner: ${repoOwner}"
-            VcsHelper.checkoutRepo(repoOwner, repo, branch, folder)
+            VcsHelper.checkoutRepo(repoOwner, repo, branch, getFolder(Env.DEV.value))
+            VcsHelper.checkoutRepo(repoOwner, prodRepo, branch, getFolder(Env.PROD.value))
         } else {
             dsl.echo "MesosService: same repoOwner as for service repo will be used"
-            VcsHelper.checkoutRepo(repo, branch, folder)
+            VcsHelper.checkoutRepo(repo, branch, getFolder(Env.DEV))
         }
     }
 
@@ -62,9 +64,16 @@ class MesosService implements DockerOrchestrationService {
         dsl.withEnv(["SERVICE=${imageName}", "DOCKER_REPOSITORY=${dockerRepositoryUrl}",
                      "RELEASE_VERSION=${imageVersion}", "LABEL_ENVIRONMENT=${environment}"]) {
 
-            dsl.sh "${folder}/bin/mm-deploy -e ${environment} ${imageName} || " +
+            dsl.sh "${getFolder(environment)}/bin/mm-deploy -e ${environment} ${imageName} || " +
                     " (depcon -e ${environment} mar app rollback /${imageName}-${environment} --wait; echo 'Deploy failed!'; exit 2)"
         }
+    }
+
+    String getFolder(String env) {
+        if (Env.fromString(env) == Env.PROD) {
+            return "../${repo}"
+        }
+        return "../${prodRepo}"
     }
 
     @Override
@@ -73,7 +82,6 @@ class MesosService implements DockerOrchestrationService {
                 "repoOwner='" + repoOwner + '\'' +
                 ", repo='" + repo + '\'' +
                 ", branch='" + branch + '\'' +
-                ", folder='" + folder + '\'' +
                 '}';
     }
 }
