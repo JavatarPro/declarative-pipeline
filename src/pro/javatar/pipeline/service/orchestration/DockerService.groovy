@@ -62,7 +62,7 @@ class DockerService implements Serializable {
     }
 
     def dockerPushImageToProdRegistry(String imageName, String imageVersion) {
-        dockerPushImageToRegistry(imageName, imageVersion, prodRepo)
+        dockerPushImageToRegistry(imageName, imageVersion, prodRepo, dockerProdCredentialsId)
     }
 
     def dockerLoginAndPushImageToRegistry(String imageName, String imageVersion,
