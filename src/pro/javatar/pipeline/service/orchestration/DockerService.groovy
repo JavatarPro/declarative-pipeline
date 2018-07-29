@@ -100,7 +100,7 @@ class DockerService implements Serializable {
             return
         }
         dsl.withCredentials([[$class: 'UsernamePasswordMultiBinding',
-                              credentialsId: dockerCredentialsId,
+                              credentialsId: credentialsId,
                               usernameVariable: 'DOCKER_REGISTRY_USERNAME',
                               passwordVariable: 'DOCKER_REGISTRY_PASSWORD']]) {
             dsl.sh("echo ${dsl.env.DOCKER_REGISTRY_PASSWORD} | docker login ${dockerRepositoryUrl} -u ${dsl.env.DOCKER_REGISTRY_USERNAME} --password-stdin")
