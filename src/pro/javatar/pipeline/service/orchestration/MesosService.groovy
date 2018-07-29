@@ -50,7 +50,8 @@ class MesosService implements DockerOrchestrationService {
             VcsHelper.checkoutRepo(repoOwner, prodRepo, branch, getFolder(Env.PROD.value))
         } else {
             dsl.echo "MesosService: same repoOwner as for service repo will be used"
-            VcsHelper.checkoutRepo(repo, branch, getFolder(Env.DEV))
+            VcsHelper.checkoutRepo(repo, branch, getFolder(Env.DEV.value))
+            VcsHelper.checkoutRepo(repo, branch, getFolder(Env.PROD.value))
         }
     }
 
