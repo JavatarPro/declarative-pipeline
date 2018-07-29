@@ -72,9 +72,9 @@ class MesosService implements DockerOrchestrationService {
 
     String getFolder(String env) {
         if (Env.fromString(env) == Env.PROD) {
-            return "../${repo}"
+            return "../${prodRepo}"
         }
-        return "../${prodRepo}"
+        return "../${repo}"
     }
 
     @Override
