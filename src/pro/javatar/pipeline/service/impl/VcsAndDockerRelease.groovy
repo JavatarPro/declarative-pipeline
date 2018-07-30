@@ -23,7 +23,20 @@ class VcsAndDockerRelease implements ReleaseService {
 
     @Override
     def release(ReleaseInfo releaseInfo) {
+        dsl.echo "VcsAndDockerRelease start release: ${releaseInfo.toString()}"
         validateReleaseVersion(releaseInfo.releaseVersion)
+        dsl.parallel 'release revision control': {
+            dsl.echo "VcsAndDockerRelease releaseRevisionControl() started"
+            revisionControlService.release(releaseInfo.releaseVersion)
+            revisionControlService.switchToDevelopBranch()
+            buildService.setupVersion(releaseInfo.developVersion)
+            revisionControlService.commitChanges("Update version to ${releaseInfo.developVersion}")
+            revisionControlService.pushRelease()
+            dsl.echo "VcsAndDockerRelease releaseRevisionControl() finished"
+        }, 'release docker artifacts': {
+            dockerService.dockerPushImageToProdRegistry(releaseInfo.serviceName, releaseInfo.releaseVersion)
+        }
+        dsl.echo "VcsAndDockerRelease end release"
     }
 
     def validateReleaseVersion(String releaseVersion) {

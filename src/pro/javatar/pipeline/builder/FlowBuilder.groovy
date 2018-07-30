@@ -332,7 +332,7 @@ class FlowBuilder implements Serializable {
         }
         if (buildType == BuildServiceType.PYTHON || buildType == BuildServiceType.PHP
                 || buildType == BuildServiceType.PHP_PYTHON) {
-            return new BackEndReleaseService(buildService, revisionControlService, dockerService)
+            return new VcsAndDockerRelease(buildService, revisionControlService, dockerService)
         }
         return new BackEndReleaseService(mavenBuildService, revisionControlService, dockerService)
     }
