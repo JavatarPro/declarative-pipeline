@@ -19,6 +19,7 @@ class VcsAndDockerRelease implements ReleaseService {
                         DockerService dockerService) {
         this.buildService = buildService
         this.revisionControlService = revisionControlService
+        this.dockerService = dockerService
     }
 
     @Override
