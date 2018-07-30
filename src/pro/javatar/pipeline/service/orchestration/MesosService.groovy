@@ -28,7 +28,7 @@ class MesosService implements DockerOrchestrationService {
 
     String repoOwner
     String repo = "mesos-services-configuration"
-    String prodRepo = "mesos-services-configuration-prd"
+    String prodRepo = "mesos-services-configuration"
     String branch = "master"
 
     MesosService(){}
