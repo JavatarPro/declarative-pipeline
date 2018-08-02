@@ -51,9 +51,6 @@ class DockerService implements Serializable {
     def dockerPublish(String imageName, String imageVersion, Env env) {
         if (env == Env.DEV) {
             dockerPushImageToRegistry(imageName, imageVersion, devRepo, dockerDevCredentialsId)
-            String versionWithBuildNumber = getImageVersionWithBuildNumber(imageVersion)
-            dockerPushImageToRegistry(imageName, versionWithBuildNumber, devRepo, dockerDevCredentialsId)
-            // dockerPushLatestImageToRegistryWithoutLogin(imageName, imageVersion, devRepo, dockerDevCredentialsId)
         }
         if (env == Env.QA) {
             if (devRepo.equalsIgnoreCase(prodRepo)) {
@@ -81,12 +78,8 @@ class DockerService implements Serializable {
     def dockerPushImageToRegistryWithoutLogin(String imageName, String imageVersion, String dockerRepositoryUrl) {
         dsl.sh "docker images"
         dsl.sh "docker tag ${imageName}:${imageVersion} ${dockerRepositoryUrl}/${imageName}:${imageVersion}"
-        dsl.sh "docker push ${dockerRepositoryUrl}/${imageName}:${imageVersion}"
-    }
-
-    def dockerPushLatestImageToRegistryWithoutLogin(String imageName, String imageVersion, String dockerRepositoryUrl) {
-        dsl.sh "docker images"
         dsl.sh "docker tag ${imageName}:${imageVersion} ${dockerRepositoryUrl}/${imageName}:${LATEST_LABEL}"
+        dsl.sh "docker push ${dockerRepositoryUrl}/${imageName}:${imageVersion}"
         dsl.sh "docker push ${dockerRepositoryUrl}/${imageName}:${LATEST_LABEL}"
     }
 
@@ -118,8 +111,7 @@ class DockerService implements Serializable {
         dsl.echo "dockerDeployContainer(${imageName}, ${imageVersion}, ${env.getValue()})"
         if (env == Env.DEV) {
             orchestrationService.setup()
-            String versionWithBuildNumber = getImageVersionWithBuildNumber(imageVersion)
-            orchestrationService.dockerDeployContainer(imageName, versionWithBuildNumber, devRepo, env.getValue())
+            orchestrationService.dockerDeployContainer(imageName, imageVersion, devRepo, env.getValue())
         } else {
             orchestrationService.dockerDeployContainer(imageName, imageVersion, prodRepo, env.getValue())
         }
@@ -146,10 +138,6 @@ class DockerService implements Serializable {
 
     void setCustomDockerFileName(String customDockerFileName) {
         this.customDockerFileName = customDockerFileName
-    }
-
-    String getImageVersionWithBuildNumber(String imageVersion) {
-        return "${imageVersion}.${dsl.currentBuild.number}"
     }
 
     @Override
