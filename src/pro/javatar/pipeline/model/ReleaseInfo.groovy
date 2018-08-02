@@ -40,6 +40,8 @@ class ReleaseInfo implements Serializable {
 
     String buildReleaseVersion
 
+    String uiDistributionFolder = "dist"
+
     String getReleaseVersion() {
         return releaseVersion
     }
@@ -121,6 +123,14 @@ class ReleaseInfo implements Serializable {
         this.buildReleaseVersion = buildReleaseVersion
     }
 
+    String getUiDistributionFolder() {
+        return uiDistributionFolder
+    }
+
+    void setUiDistributionFolder(String uiDistributionFolder) {
+        this.uiDistributionFolder = uiDistributionFolder
+    }
+
     @Override
     public String toString() {
         return "ReleaseInfo{" +
@@ -129,6 +139,7 @@ class ReleaseInfo implements Serializable {
                 ", repoFolder='" + repoFolder + '\'' +
                 ", serviceName='" + serviceName + '\'' +
                 ", flowPrefix='" + flowPrefix + '\'' +
+                ", uiDistributionFolder='" + uiDistributionFolder + '\'' +
                 ", dockerImageName='" + getDockerImageName() + '\'' +
                 ", dockerImageVersion='" + getDockerImageVersion() + '\'' +
                 ", buildReleaseVersion='" + getBuildReleaseVersion() + '\'' +
