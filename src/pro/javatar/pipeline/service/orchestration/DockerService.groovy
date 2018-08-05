@@ -51,9 +51,8 @@ class DockerService implements Serializable {
     def dockerPublish(String imageName, String imageVersion, Env env) {
         if (env == Env.DEV) {
             dockerPushImageToRegistry(imageName, imageVersion, devRepo, dockerDevCredentialsId)
-            String versionWithBuildNumber = getImageVersionWithBuildNumber(imageVersion)
-            dockerPushImageToRegistry(imageName, versionWithBuildNumber, devRepo, dockerDevCredentialsId)
-            // dockerPushLatestImageToRegistryWithoutLogin(imageName, imageVersion, devRepo, dockerDevCredentialsId)
+            dockerPushImageWithBuildNumberToRegistryWithoutLogin(imageName, imageVersion, devRepo,
+                    dockerDevCredentialsId)
         }
         if (env == Env.QA) {
             if (devRepo.equalsIgnoreCase(prodRepo)) {
@@ -74,7 +73,6 @@ class DockerService implements Serializable {
         dsl.withDockerRegistry([credentialsId: credentialsId, url: 'http://${dockerRepositoryUrl}']) {
             dsl.sh "docker images"
             dsl.docker.image("${dockerRepositoryUrl}/${imageName}:${imageVersion}").push()
-            // dsl.docker.image("${dockerRepositoryUrl}/${imageName}:${LATEST_LABEL}").push()
         }
     }
 
@@ -82,6 +80,14 @@ class DockerService implements Serializable {
         dsl.sh "docker images"
         dsl.sh "docker tag ${imageName}:${imageVersion} ${dockerRepositoryUrl}/${imageName}:${imageVersion}"
         dsl.sh "docker push ${dockerRepositoryUrl}/${imageName}:${imageVersion}"
+    }
+
+    def dockerPushImageWithBuildNumberToRegistryWithoutLogin(String imageName, String imageVersion,
+                                                             String dockerRepositoryUrl) {
+        dsl.sh "docker images"
+        String versionWithBuildNumber = getImageVersionWithBuildNumber(imageVersion)
+        dsl.sh "docker tag ${imageName}:${imageVersion} ${dockerRepositoryUrl}/${imageName}:${versionWithBuildNumber}"
+        dsl.sh "docker push ${dockerRepositoryUrl}/${imageName}:${versionWithBuildNumber}"
     }
 
     def dockerPushLatestImageToRegistryWithoutLogin(String imageName, String imageVersion, String dockerRepositoryUrl) {
@@ -94,11 +100,6 @@ class DockerService implements Serializable {
                                   String dockerRepositoryUrl, String credentialsId) {
         dockerLogin(dockerRepositoryUrl, credentialsId)
         dockerPushImageToRegistryWithoutLogin(imageName, imageVersion, dockerRepositoryUrl)
-//        if (isNotBlank(dockerDevCredentialsId)) {
-//            dockerLoginAndPushImageToRegistry(imageName, imageVersion, dockerRepositoryUrl)
-//        } else {
-//            dockerPushImageToRegistryWithoutLogin(imageName, imageVersion, dockerRepositoryUrl)
-//        }
     }
 
     def dockerLogin(String dockerRepositoryUrl, String credentialsId) {
