@@ -51,8 +51,7 @@ class DockerService implements Serializable {
     def dockerPublish(String imageName, String imageVersion, Env env) {
         if (env == Env.DEV) {
             dockerPushImageToRegistry(imageName, imageVersion, devRepo, dockerDevCredentialsId)
-            dockerPushImageWithBuildNumberToRegistryWithoutLogin(imageName, imageVersion, devRepo,
-                    dockerDevCredentialsId)
+            dockerPushImageWithBuildNumberToRegistryWithoutLogin(imageName, imageVersion, devRepo)
         }
         if (env == Env.QA) {
             if (devRepo.equalsIgnoreCase(prodRepo)) {
