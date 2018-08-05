@@ -40,7 +40,9 @@ class DockerDeploymentService implements DeploymentService {
     void deployArtifact(Env environment, String version) {
         dsl.echo "DockerDeploymentService deployArtifact to ${environment.getValue()} env and version: ${version} started"
         // TODO move & split this method to do it on build and release stage
-        dockerService.dockerPublish(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion(), environment)
+        if (environment == Env.DEV) {
+            dockerService.dockerPublish(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion(), environment)
+        }
         dockerService.dockerDeployContainer(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion(),
                 environment)
         dsl.echo "DockerDeploymentService deployArtifact to ${environment.getValue()} env and version: ${version} finished"
