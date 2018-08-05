@@ -74,7 +74,7 @@ class DockerService implements Serializable {
         dsl.withDockerRegistry([credentialsId: credentialsId, url: 'http://${dockerRepositoryUrl}']) {
             dsl.sh "docker images"
             dsl.docker.image("${dockerRepositoryUrl}/${imageName}:${imageVersion}").push()
-            dsl.docker.image("${dockerRepositoryUrl}/${imageName}:${LATEST_LABEL}").push()
+            // dsl.docker.image("${dockerRepositoryUrl}/${imageName}:${LATEST_LABEL}").push()
         }
     }
 
