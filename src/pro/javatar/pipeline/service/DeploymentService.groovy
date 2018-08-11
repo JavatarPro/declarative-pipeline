@@ -16,6 +16,7 @@
 package pro.javatar.pipeline.service
 
 import pro.javatar.pipeline.model.Env
+import pro.javatar.pipeline.model.ReleaseInfo
 
 /**
  * @author Borys Zora
@@ -23,6 +24,6 @@ import pro.javatar.pipeline.model.Env
  */
 interface DeploymentService extends Serializable {
 
-    void deployArtifact(Env environment, String version)
+    void deployArtifact(Env environment, ReleaseInfo releaseInfo)
 
 }

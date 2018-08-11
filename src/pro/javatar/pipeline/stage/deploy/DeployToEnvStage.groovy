@@ -35,7 +35,7 @@ abstract class DeployToEnvStage extends Stage {
         dsl.echo "DeployToEnvStage to ${getEnv().getValue()} execute started: ${toString()}"
         dsl.timeout(time: 10, unit: 'MINUTES') {
             dsl.dir(releaseInfo.repoFolder) {
-                deploymentService.deployArtifact(getEnv(), releaseInfo.releaseVersion)
+                deploymentService.deployArtifact(getEnv(), releaseInfo)
             }
         }
         dsl.echo "DeployToEnvStage to ${getEnv().getValue()} execute finished"

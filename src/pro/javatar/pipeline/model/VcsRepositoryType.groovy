@@ -25,6 +25,7 @@ import pro.javatar.pipeline.exception.UnrecognizedVcsRepositoryTypeException
 enum VcsRepositoryType implements Serializable {
 
     BITBUCKET,
+    GITHUB,
     GITLAB
 
     static VcsRepositoryType fromString(String type) {
@@ -36,6 +37,9 @@ enum VcsRepositoryType implements Serializable {
         }
         if ("gitlab".equalsIgnoreCase(type)) {
             return GITLAB
+        }
+        if ("github".equalsIgnoreCase(type)) {
+            return GITHUB
         }
         throw new UnrecognizedVcsRepositoryTypeException("type ${type} is not recognized")
     }

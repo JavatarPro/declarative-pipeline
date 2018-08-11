@@ -27,14 +27,21 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class UiAutoTestsService implements AutoTestsService {
 
+    String uiSystemTestsJobName
+
     @Override
     void runAutoTests(String service, Env environment) throws PipelineException {
         String env = environment.getValue()
         dsl.echo "runAutoTests with service: ${service}, env: ${env}"
-        dsl.build job: 'ui-system-tests', parameters: [
+        dsl.build job: uiSystemTestsJobName, parameters: [
                 [$class: 'StringParameterValue', name: 'service', value: service],
                 [$class: 'StringParameterValue', name: 'test_env', value: env]
         ]
+    }
+
+    UiAutoTestsService withUiSystemTestsJobName(String uiSystemTestsJobName) {
+        this.uiSystemTestsJobName = uiSystemTestsJobName
+        return this
     }
 
     @Override

@@ -59,6 +59,8 @@ class FlowBuilder implements Serializable {
     SenchaService senchaService
     BuildService buildService
     CdnDeploymentService cdnDeploymentService
+    AwsS3DeploymentService awsS3DeploymentService
+    UiDeploymentType uiDeploymentType = UiDeploymentType.NONE
     DeploymentService deploymentService
     AutoTestsService autoTestsService
     RevisionControlService revisionControlService
@@ -142,6 +144,9 @@ class FlowBuilder implements Serializable {
                 || buildType == BuildServiceType.PHP
                 || buildType == BuildServiceType.PYTHON) {
             return new DockerDeploymentService(releaseInfo, dockerService)
+        }
+        if (uiDeploymentType == UiDeploymentType.AWS_S3) {
+            return awsS3DeploymentService
         }
         if (buildType == BuildServiceType.NPM || buildType == BuildServiceType.SENCHA) {
             return cdnDeploymentService
@@ -305,7 +310,7 @@ class FlowBuilder implements Serializable {
 
     AutoTestsService getAutoTestsService() {
         if (isUi(releaseInfo.getServiceName())) {
-            return new UiAutoTestsService()
+            return new UiAutoTestsService().withUiSystemTestsJobName("common/ui-system-tests")
         } else {
             // TODO provide default, root cause of npe
             if (backEndAutoTestsServiceBuilder == null) return null
@@ -394,6 +399,16 @@ class FlowBuilder implements Serializable {
 
     FlowBuilder addModuleRepository(String repository) {
         this.moduleRepository = repository
+        return this
+    }
+
+    FlowBuilder withS3(S3Builder s3Builder) {
+        this.awsS3DeploymentService = s3Builder.build()
+        return this
+    }
+
+    FlowBuilder withUiDeploymentType(String uiDeploymentTypeRowValue) {
+        uiDeploymentType = UiDeploymentType.fromString(uiDeploymentTypeRowValue)
         return this
     }
 

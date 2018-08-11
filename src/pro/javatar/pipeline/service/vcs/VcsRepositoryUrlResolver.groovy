@@ -58,6 +58,12 @@ class VcsRepositoryUrlResolver {
             }
             throw new UnsupportedOperationException("gitlab https is not yet implemented")
         }
+        if (vcsRepositoryType == VcsRepositoryType.GITHUB) {
+            if (useSsh) {
+                return "git@${domain}:${repoOwner}/${repoName}.git"
+            }
+            throw new UnsupportedOperationException("github https is not yet implemented")
+        }
         if (vcsRepositoryType == VcsRepositoryType.BITBUCKET) {
             if (useSsh) {
                 return "ssh://git@${domain}/${repoOwner}/${repoName}.git"
