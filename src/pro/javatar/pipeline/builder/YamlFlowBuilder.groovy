@@ -18,7 +18,7 @@ class YamlFlowBuilder {
     YamlFlowBuilder(def dsl, String configFile) {
         PipelineDslHolder.dsl = dsl
         dsl.echo "YamlFlowBuilder used configFile: ${configFile}"
-        this.properties = dsl.readYaml configFile
+        this.properties = dsl.readYaml file: configFile
         dsl.echo "YamlFlowBuilder constructor finished with state: ${this.toString()}"
     }
 
