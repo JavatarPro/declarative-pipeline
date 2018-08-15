@@ -25,7 +25,8 @@ class YamlFlowBuilder {
     Flow build() {
         dsl.echo "YamlFlowBuilder used configFile: ${configFile}"
         dsl.sh "pwd; ls -la"
-        properties = dsl.readYaml file: configFile
+        def trustedText = dsl.readTrusted configFile
+        properties = dsl.readYaml text: trustedText
         //dsl.echo "${properties.docker.dev.credentialsId}"
 //        dsl.echo "YamlFlowBuilder constructor finished with state: ${this.toString()}"
         dsl.echo ""
