@@ -26,12 +26,13 @@ class YamlFlowBuilder {
         dsl.echo "YamlFlowBuilder used configFile: ${configFile}"
         dsl.sh "pwd; ls -la"
         def trustedText = dsl.readTrusted configFile
+        dsl.echo "trustedText: ${trustedText}"
         properties = dsl.readYaml text: trustedText
-        //dsl.echo "${properties.docker.dev.credentialsId}"
-//        dsl.echo "YamlFlowBuilder constructor finished with state: ${this.toString()}"
-        dsl.echo ""
+        dsl.echo "${properties.docker.dev.credentialsId}"
+        dsl.echo "YamlFlowBuilder constructor finished with state: ${this.toString()}"
         String buildType = ""
-        FlowBuilder flowBuilder = new FlowBuilder().withBuildType()
+        FlowBuilder flowBuilder = new FlowBuilder()
+        return flowBuilder.build()
     }
 
     @Override
