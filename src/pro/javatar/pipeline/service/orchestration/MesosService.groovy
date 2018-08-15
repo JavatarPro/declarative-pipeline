@@ -17,8 +17,9 @@ package pro.javatar.pipeline.service.orchestration
 
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.vcs.VcsHelper
+import pro.javatar.pipeline.service.vcs.model.VcsRepo
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-import static pro.javatar.pipeline.util.Utils.isNotBlank
 
 /**
  * Author : Borys Zora
@@ -26,33 +27,17 @@ import static pro.javatar.pipeline.util.Utils.isNotBlank
  */
 class MesosService implements DockerOrchestrationService {
 
-    String repoOwner
-    String repo = "mesos-services-configuration"
-    String prodRepo = "mesos-services-configuration"
-    String branch = "master"
+    VcsRepo dev
+    VcsRepo prod
 
     MesosService(){}
 
-    MesosService(String repoOwner) {
-        this.repoOwner = repoOwner
-    }
-
-    MesosService(String repoOwner, String repo, String branch) {
-        this.repoOwner = repoOwner
-        this.repo = repo
-        this.branch = branch
-    }
-
     def setup() {
-        if (isNotBlank(repoOwner)) {
-            dsl.echo "MesosService: repoOwner: ${repoOwner}"
-            VcsHelper.checkoutRepo(repoOwner, repo, branch, getFolder(Env.DEV.value))
-            VcsHelper.checkoutRepo(repoOwner, prodRepo, branch, getFolder(Env.PROD.value))
-        } else {
-            dsl.echo "MesosService: same repoOwner as for service repo will be used"
-            VcsHelper.checkoutRepo(repo, branch, getFolder(Env.DEV.value))
-            VcsHelper.checkoutRepo(prodRepo, branch, getFolder(Env.PROD.value))
-        }
+        // TODO prepare vcsRepos on builder stage
+        dsl.echo "MesosService: checkout configurations for dev: ${dev.toString()}, and prod: ${prod.toString()}"
+        VcsHelper.checkoutRepo(dev)
+        VcsHelper.checkoutRepo(prod)
+        dsl.echo "MesosService: configurations checkout completed"
     }
 
     @Override
@@ -72,17 +57,26 @@ class MesosService implements DockerOrchestrationService {
 
     String getFolder(String env) {
         if (Env.fromString(env) == Env.PROD) {
-            return "../${prodRepo}"
+            return "../${prod.getName()}"
         }
-        return "../${repo}"
+        return "../${dev.getName()}"
+    }
+
+    MesosService withDev(VcsRepo dev) {
+        this.dev = dev
+        return this
+    }
+
+    MesosService withProd(VcsRepo prod) {
+        this.prod = prod
+        return this
     }
 
     @Override
     public String toString() {
         return "MesosService{" +
-                "repoOwner='" + repoOwner + '\'' +
-                ", repo='" + repo + '\'' +
-                ", branch='" + branch + '\'' +
+                "dev=" + dev +
+                ", prod=" + prod +
                 '}';
     }
 }

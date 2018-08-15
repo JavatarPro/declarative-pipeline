@@ -1,6 +1,9 @@
 package pro.javatar.pipeline.service.vcs
 
 import pro.javatar.pipeline.service.ServiceContextHolder
+import pro.javatar.pipeline.service.vcs.converter.VcsConverter
+import pro.javatar.pipeline.service.vcs.model.VcsRepo
+import pro.javatar.pipeline.service.vcs.model.VscCheckoutRequest
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -22,6 +25,15 @@ class VcsHelper {
         dsl.echo "VcsHelper: revisionControlService: ${revisionControlService} will be used"
         dsl.dir(folder) {
             revisionControlService.checkoutRepo(repoOwner, repo, branch)
+        }
+    }
+
+    def static checkoutRepo(VcsRepo vcsRepo, String folder) {
+        RevisionControlService revisionControlService = ServiceContextHolder.getService(RevisionControlService.class)
+        dsl.echo "VcsHelper: revisionControlService: ${revisionControlService} will be used"
+        VscCheckoutRequest request = VcsConverter.toVscCheckoutRequest(vcsRepo)
+        dsl.dir(folder) {
+            revisionControlService.checkoutRepo(request)
         }
     }
 

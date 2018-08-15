@@ -16,6 +16,7 @@
 package pro.javatar.pipeline.service.vcs
 
 import pro.javatar.pipeline.model.VcsRepositoryType
+import pro.javatar.pipeline.service.vcs.model.VcsRepo
 
 /**
  * Author : Borys Zora
@@ -49,26 +50,36 @@ class VcsRepositoryUrlResolver {
     }
 
     String getRepoUrl(String repoOwner, String repoName) {
+        VcsRepo vcsRepo = new VcsRepo()
+                .withOwner(repoOwner)
+                .withName(repoName)
+                .withType(vcsRepositoryType)
+                .withSsh(useSsh)
+                .withDomain(revisionControlService.getDomain())
+
+        return getRepoUrl(vcsRepo)
+    }
+
+    String getRepoUrl(VcsRepo vcsRepo) {
         String userName = revisionControlService.getUserName()
-        String domain = revisionControlService.getDomain()
 
         if (vcsRepositoryType == VcsRepositoryType.GITLAB) {
             if (useSsh) {
-                return "git@${domain}:${repoOwner}/${repoName}.git"
+                return "git@${vcsRepo.getDomain()}:${vcsRepo.getOwner()}/${vcsRepo.getName()}.git"
             }
             throw new UnsupportedOperationException("gitlab https is not yet implemented")
         }
         if (vcsRepositoryType == VcsRepositoryType.GITHUB) {
             if (useSsh) {
-                return "git@${domain}:${repoOwner}/${repoName}.git"
+                return "git@${vcsRepo.getDomain()}:${vcsRepo.getOwner()}/${vcsRepo.getName()}.git"
             }
             throw new UnsupportedOperationException("github https is not yet implemented")
         }
         if (vcsRepositoryType == VcsRepositoryType.BITBUCKET) {
             if (useSsh) {
-                return "ssh://git@${domain}/${repoOwner}/${repoName}.git"
+                return "ssh://git@${vcsRepo.getDomain()}/${vcsRepo.getOwner()}/${vcsRepo.getName()}.git"
             }
-            return "https://${userName}@bitbucket.org/${repoOwner}/${repoName}.git/"
+            return "https://${userName}@bitbucket.org/${vcsRepo.getOwner()}/${vcsRepo.getName()}.git/"
         }
     }
 }
