@@ -11,19 +11,23 @@ class YamlFlowBuilder {
 
     def properties
 
+    String configFile
+
     YamlFlowBuilder(def dsl) {
         this(dsl, DEFAULT_CONFIG_FILE)
     }
 
     YamlFlowBuilder(def dsl, String configFile) {
         PipelineDslHolder.dsl = dsl
-        dsl.echo "YamlFlowBuilder used configFile: ${configFile}"
-        this.properties = dsl.readYaml file: configFile
-        dsl.echo "${properties.docker.dev.credentialsId}"
-        dsl.echo "YamlFlowBuilder constructor finished with state: ${this.toString()}"
+        this.configFile = configFile
     }
 
     Flow build() {
+        dsl.echo "YamlFlowBuilder used configFile: ${configFile}"
+        dsl.sh "pwd; ls -la"
+        properties = dsl.readYaml file: configFile
+        //dsl.echo "${properties.docker.dev.credentialsId}"
+//        dsl.echo "YamlFlowBuilder constructor finished with state: ${this.toString()}"
         dsl.echo ""
         String buildType = ""
         FlowBuilder flowBuilder = new FlowBuilder().withBuildType()
