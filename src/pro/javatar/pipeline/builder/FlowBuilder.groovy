@@ -71,6 +71,8 @@ class FlowBuilder implements Serializable {
     SwaggerService swaggerService
     PipelineStagesSuit suit
 
+    FlowBuilder() {}
+
     FlowBuilder(def dsl) {
         PipelineDslHolder.dsl = dsl
     }
