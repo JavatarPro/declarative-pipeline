@@ -19,6 +19,7 @@ class YamlFlowBuilder {
         PipelineDslHolder.dsl = dsl
         dsl.echo "YamlFlowBuilder used configFile: ${configFile}"
         this.properties = dsl.readYaml file: configFile
+        dsl.echo "${properties.docker.dev.credentialsId}"
         dsl.echo "YamlFlowBuilder constructor finished with state: ${this.toString()}"
     }
 
@@ -31,7 +32,7 @@ class YamlFlowBuilder {
     @Override
     public String toString() {
         return "YamlFlowBuilder{" +
-                "properties=" + properties +
+                "properties=" + properties.size() +
                 '}';
     }
 }
