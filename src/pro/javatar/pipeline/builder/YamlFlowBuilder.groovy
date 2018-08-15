@@ -31,7 +31,7 @@ class YamlFlowBuilder {
     @Override
     public String toString() {
         return "YamlFlowBuilder{" +
-                ", properties=" + properties +
+                "properties=" + properties +
                 '}';
     }
 }
