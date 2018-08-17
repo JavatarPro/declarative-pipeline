@@ -2,7 +2,7 @@ package pro.javatar.pipeline.builder
 
 class YamlModel {
 
-    Npm npm
+    Npm npm = new Npm()
 
     Npm getNpm() {
         return npm
