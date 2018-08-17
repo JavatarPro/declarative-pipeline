@@ -28,7 +28,7 @@ class YamlFlowBuilder {
         dsl.sh "pwd; ls -la"
         def yamlConfiguration = dsl.readTrusted configFile
         Yaml parser = new Yaml()
-        YamlModel model = parser.load(yamlConfiguration)
+        YamlModel model = parser.loadAs(yamlConfiguration, YamlModel.class)
         dsl.echo "yamlConfiguration model: ${model.getNpm().toString()}"
         dsl.echo "yamlConfiguration: ${yamlConfiguration}"
         dsl.echo "model: ${yamlConfiguration}"
