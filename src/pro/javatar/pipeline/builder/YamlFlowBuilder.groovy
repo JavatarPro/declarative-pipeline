@@ -1,9 +1,10 @@
 package pro.javatar.pipeline.builder
 
+import org.yaml.snakeyaml.Yaml
+@Grab('org.yaml:snakeyaml:1.21')
 import pro.javatar.pipeline.Flow
 import pro.javatar.pipeline.service.PipelineDslHolder
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-
 
 class YamlFlowBuilder {
 
@@ -25,9 +26,13 @@ class YamlFlowBuilder {
     Flow build() {
         dsl.echo "YamlFlowBuilder used configFile: ${configFile}"
         dsl.sh "pwd; ls -la"
-        def trustedText = dsl.readTrusted configFile
-        dsl.echo "trustedText: ${trustedText}"
-        properties = dsl.readYaml text: trustedText
+        def yamlConfiguration = dsl.readTrusted configFile
+        Yaml parser = new Yaml()
+        YamlModel model = parser.load(yamlConfiguration)
+        dsl.echo "yamlConfiguration model: ${model.getNpm().toString()}"
+        dsl.echo "yamlConfiguration: ${yamlConfiguration}"
+        dsl.echo "model: ${yamlConfiguration}"
+        properties = dsl.readYaml text: yamlConfiguration
         dsl.echo "${properties.docker.dev.credentialsId}"
         dsl.echo "YamlFlowBuilder constructor finished with state: ${this.toString()}"
         String buildType = ""
