@@ -21,6 +21,7 @@ import pro.javatar.pipeline.builder.FlowBuilder
 import pro.javatar.pipeline.builder.Maven
 import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.builder.RevisionControlBuilder
+import pro.javatar.pipeline.builder.YamlFlowBuilder
 import pro.javatar.pipeline.stage.Stage
 
 import static pro.javatar.pipeline.model.StageType.*
@@ -29,6 +30,13 @@ import static pro.javatar.pipeline.model.StageType.*
  * @author Borys Zora
  * @since 2017-10-15
  */
+@GrabConfig(systemClassLoader=true)
+@GrabResolver(name='atlassian', root='https://maven.atlassian.com/content/groups/public/')
+@Grapes([
+        @Grab('com.fasterxml.jackson.core:jackson-databind:2.9.6'),
+        @Grab('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.6'),
+        @GrabConfig( systemClassLoader=true )
+])
 class JenkinsfileExample {
 
     String repo = "test2-service"
@@ -47,8 +55,9 @@ class JenkinsfileExample {
     }
 
     static void main(String[] args) {
+        Flow flow = new YamlFlowBuilder(this).build()
 //        new JenkinsfileExample().execute("some-ui")
-        println(new JenkinsfileExample().domainUrl())
+//        println(new JenkinsfileExample().domainUrl())
 //        println(new JenkinsfileExample().containsBranch())
     }
 

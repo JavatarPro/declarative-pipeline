@@ -101,15 +101,15 @@ class Npm implements Serializable {
         this.npmType = npmType
     }
 
-    String getDistributionFolder() {
+    public String getDistributionFolder() {
         return distributionFolder
     }
 
-    void setDistributionFolder(String distributionFolder) {
+    public void setDistributionFolder(String distributionFolder) {
         this.distributionFolder = distributionFolder
     }
 
-    Npm withDistributionFolder(String distributionFolder) {
+    public Npm withDistributionFolder(String distributionFolder) {
         this.distributionFolder = distributionFolder
         return this
     }
