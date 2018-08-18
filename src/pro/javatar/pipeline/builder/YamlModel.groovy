@@ -4,6 +4,8 @@ class YamlModel {
 
     String version
 
+    Maven maven = new Maven()
+
     Npm npm = new Npm()
 
     String getVersion() {
@@ -12,6 +14,14 @@ class YamlModel {
 
     void setVersion(String version) {
         this.version = version
+    }
+
+    Maven getMaven() {
+        return maven
+    }
+
+    void setMaven(Maven maven) {
+        this.maven = maven
     }
 
     Npm getNpm() {

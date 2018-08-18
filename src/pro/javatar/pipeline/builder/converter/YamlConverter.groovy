@@ -15,11 +15,11 @@ class YamlConverter {
 
     def populateMaven(YamlModel model, def yml) {
         def maven = yml.maven
-        model.setNpm(new Maven()
+        model.setMaven(new Maven()
                 .withRepositoryId(maven.repository.id)
                 .withRepoUrl(maven.repository.url)
-//                .withMaven(maven.jenkins_tools.maven)
-//                .withJava(maven.jenkins_tools.java)
+                .withMaven(maven.jenkins_tools.maven)
+                .withJava(maven.jenkins_tools.java)
                 .withMavenParams(maven.params)
         )
     }
