@@ -1,15 +1,15 @@
 package pro.javatar.pipeline.builder.converter
 
-import pro.javatar.pipeline.builder.Docker
+import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.Maven
 import pro.javatar.pipeline.builder.Npm
-import pro.javatar.pipeline.builder.YamlModel
+import pro.javatar.pipeline.builder.model.YamlFile
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 class YamlConverter {
 
-    YamlModel toYamlModel(def yml) {
-        YamlModel model = new YamlModel()
+    YamlFile toYamlModel(def yml) {
+        YamlFile model = new YamlFile()
         dsl.echo "model: ${model.toString()}"
         populateNpm(model, yml)
         dsl.echo "model: ${model.toString()}"
@@ -20,7 +20,7 @@ class YamlConverter {
         return model
     }
 
-    def populateDocker(YamlModel model, def yml) {
+    def populateDocker(YamlFile model, def yml) {
         def docker = yml.docker
         dsl.echo "populateDocker: docker: ${docker}"
         List<Docker> dockers = new ArrayList<>()
@@ -44,7 +44,7 @@ class YamlConverter {
         return envList
     }
 
-    def populateMaven(YamlModel model, def yml) {
+    def populateMaven(YamlFile model, def yml) {
         def maven = yml.maven
         dsl.echo "populateMaven: maven: ${maven}"
         model.setMaven(new Maven()
@@ -54,7 +54,7 @@ class YamlConverter {
         )
     }
 
-    def populateNpm(YamlModel model, def yml) {
+    def populateNpm(YamlFile model, def yml) {
         def npm = yml.npm
         dsl.echo "populateNpm: npm: ${npm}"
         model.setNpm(new Npm()

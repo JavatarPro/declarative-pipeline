@@ -1,4 +1,4 @@
-package pro.javatar.pipeline.builder
+package pro.javatar.pipeline.builder.model
 
 class Docker {
 

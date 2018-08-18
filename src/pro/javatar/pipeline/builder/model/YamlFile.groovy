@@ -1,8 +1,8 @@
-package pro.javatar.pipeline.builder
+package pro.javatar.pipeline.builder.model
 
-import pro.javatar.pipeline.builder.model.Maven;
+import pro.javatar.pipeline.builder.Npm
 
-class YamlModel {
+class YamlFile {
 
     String version
 
@@ -46,7 +46,7 @@ class YamlModel {
 
     @Override
     public String toString() {
-        return "YamlModel{" +
+        return "YamlFile{" +
                 "version='" + version + '\'' +
                 ", maven=" + maven +
                 ", npm=" + npm +

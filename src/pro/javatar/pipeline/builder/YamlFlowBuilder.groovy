@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import pro.javatar.pipeline.Flow
 import pro.javatar.pipeline.builder.converter.YamlConverter
+import pro.javatar.pipeline.builder.model.YamlFile
 import pro.javatar.pipeline.service.PipelineDslHolder
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -39,34 +40,34 @@ class YamlFlowBuilder {
         dsl.sh "pwd; ls -la"
         def yamlConfiguration = dsl.readTrusted configFile
         dsl.echo "yamlConfiguration: ${yamlConfiguration}"
-        YamlModel model = null
+        YamlFile model = null
 //        model = getYamlModelUsingJackson(yamlConfiguration)
 //        model = getYamlModelUsingSnakeYaml(yamlConfiguration)
         model = getYamlModelUsingJenkinsReadYamlCommand(yamlConfiguration)
-        dsl.echo "YamlModel: ${model.toString()}"
+        dsl.echo "YamlFile: ${model.toString()}"
         FlowBuilder flowBuilder = new FlowBuilder()
 //        return flowBuilder.build()
         return new Flow(null)
     }
 
-    YamlModel getYamlModelUsingJenkinsReadYamlCommand(def yamlConfiguration) {
+    YamlFile getYamlModelUsingJenkinsReadYamlCommand(def yamlConfiguration) {
         properties = dsl.readYaml text: yamlConfiguration
         return yamlConverter.toYamlModel(properties)
     }
 
-    YamlModel getYamlModelUsingSnakeYaml(def yamlConfiguration) {
+    YamlFile getYamlModelUsingSnakeYaml(def yamlConfiguration) {
         Yaml parser = new Yaml()
-        YamlModel model = parser.loadAs(yamlConfiguration, YamlModel.class)
+        YamlFile model = parser.loadAs(yamlConfiguration, YamlFile.class)
         return model
     }
 
-    YamlModel getYamlModelUsingJackson(def yamlConfiguration) {
+    YamlFile getYamlModelUsingJackson(def yamlConfiguration) {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         mapper.disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)
         mapper.disable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE)
-        YamlModel model = mapper.readValue(yamlConfiguration, YamlModel.class)
+        YamlFile model = mapper.readValue(yamlConfiguration, YamlFile.class)
         return model
     }
 
