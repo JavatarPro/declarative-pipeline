@@ -10,13 +10,13 @@ class YamlConverter {
 
     YamlModel toYamlModel(def yml) {
         YamlModel model = new YamlModel()
-        dsl.echo "model: ${model}"
+        dsl.echo "model: ${model.toString()}"
         populateNpm(model, yml)
-        dsl.echo "model: ${model}"
+        dsl.echo "model: ${model.toString()}"
         populateMaven(model, yml)
-        dsl.echo "model: ${model}"
+        dsl.echo "model: ${model.toString()}"
         populateDocker(model, yml)
-        dsl.echo "model: ${model}"
+        dsl.echo "model: ${model.toString()}"
         return model
     }
 
