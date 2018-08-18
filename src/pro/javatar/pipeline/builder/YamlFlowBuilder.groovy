@@ -46,7 +46,7 @@ class YamlFlowBuilder {
         dsl.echo "YamlModel: ${model.toString()}"
         FlowBuilder flowBuilder = new FlowBuilder()
 //        return flowBuilder.build()
-        return null
+        return new Flow(null)
     }
 
     YamlModel getYamlModelUsingJenkinsReadYamlCommand(def yamlConfiguration) {

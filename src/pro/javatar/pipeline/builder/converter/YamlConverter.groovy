@@ -10,9 +10,13 @@ class YamlConverter {
 
     YamlModel toYamlModel(def yml) {
         YamlModel model = new YamlModel()
+        dsl.echo "model: ${model}"
         populateNpm(model, yml)
+        dsl.echo "model: ${model}"
         populateMaven(model, yml)
+        dsl.echo "model: ${model}"
         populateDocker(model, yml)
+        dsl.echo "model: ${model}"
         return model
     }
 
@@ -25,6 +29,7 @@ class YamlConverter {
     }
 
     Docker retrieveDocker(def dockerItem) {
+        dsl.echo "retrieveDocker: dockerItem: ${dockerItem}"
         Docker docker = new Docker()
                 .withCredentialsId(dockerItem.credentialsId)
                 .withRegistry(dockerItem.registry)
