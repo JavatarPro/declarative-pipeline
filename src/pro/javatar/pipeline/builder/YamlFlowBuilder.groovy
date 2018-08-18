@@ -36,9 +36,9 @@ class YamlFlowBuilder {
         dsl.sh "pwd; ls -la"
         def yamlConfiguration = dsl.readTrusted configFile
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         mapper.disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)
+        mapper.disable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE)
         YamlModel model = mapper.readValue(yamlConfiguration, YamlModel.class)
 //        Yaml parser = new Yaml()
 //        Npm npm = parser.loadAs(yamlConfiguration, Npm.class)
