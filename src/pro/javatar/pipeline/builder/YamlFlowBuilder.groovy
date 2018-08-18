@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Grab('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.6')
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import pro.javatar.pipeline.Flow
+import pro.javatar.pipeline.builder.converter.YamlConverter
 import pro.javatar.pipeline.service.PipelineDslHolder
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -21,6 +22,8 @@ class YamlFlowBuilder {
     def properties
 
     String configFile
+
+    YamlConverter yamlConverter = new YamlConverter()
 
     YamlFlowBuilder(def dsl) {
         this(dsl, DEFAULT_CONFIG_FILE)
@@ -38,8 +41,8 @@ class YamlFlowBuilder {
         dsl.echo "yamlConfiguration: ${yamlConfiguration}"
         YamlModel model = null
 //        model = getYamlModelUsingJackson(yamlConfiguration)
-        model = getYamlModelUsingSnakeYaml(yamlConfiguration)
-//        model = getYamlModelUsingJenkinsReadYamlCommand(yamlConfiguration)
+//        model = getYamlModelUsingSnakeYaml(yamlConfiguration)
+        model = getYamlModelUsingJenkinsReadYamlCommand(yamlConfiguration)
         dsl.echo "YamlModel: ${model.toString()}"
         FlowBuilder flowBuilder = new FlowBuilder()
         return flowBuilder.build()
@@ -48,6 +51,7 @@ class YamlFlowBuilder {
     YamlModel getYamlModelUsingJenkinsReadYamlCommand(def yamlConfiguration) {
         properties = dsl.readYaml text: yamlConfiguration
         dsl.echo "${properties.docker.dev.credentialsId}"
+        return yamlConverter.toYamlModel(properties)
     }
 
     YamlModel getYamlModelUsingSnakeYaml(def yamlConfiguration) {
