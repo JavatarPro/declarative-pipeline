@@ -49,7 +49,7 @@ class YamlConverter {
                 .withParams(maven.params)
     }
 
-    Npm retrieveNpm(YamlFile model, def yml) {
+    Npm retrieveNpm(def yml) {
         def npm = yml.npm
         dsl.echo "populateNpm: npm: ${npm}"
         return new Npm()
