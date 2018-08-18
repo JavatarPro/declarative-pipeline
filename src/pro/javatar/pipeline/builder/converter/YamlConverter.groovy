@@ -18,8 +18,8 @@ class YamlConverter {
         model.setNpm(new Maven()
                 .withRepositoryId(maven.repository.id)
                 .withRepoUrl(maven.repository.url)
-                .withMaven(maven.jenkins_tools.maven)
-                .withJava(maven.jenkins_tools.java)
+//                .withMaven(maven.jenkins_tools.maven)
+//                .withJava(maven.jenkins_tools.java)
                 .withMavenParams(maven.params)
         )
     }
