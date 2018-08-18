@@ -39,8 +39,8 @@ class YamlFlowBuilder {
         dsl.echo "yamlConfiguration: ${yamlConfiguration}"
         YamlModel model = null
 //        model = getYamlModelUsingJackson(yamlConfiguration)
-//        model = getYamlModelUsingSnakeYaml(yamlConfiguration)
-        model = getYamlModelUsingJenkinsReadYamlCommand(yamlConfiguration)
+        model = getYamlModelUsingSnakeYaml(yamlConfiguration)
+//        model = getYamlModelUsingJenkinsReadYamlCommand(yamlConfiguration)
         dsl.echo "YamlModel: ${model.toString()}"
         FlowBuilder flowBuilder = new FlowBuilder()
         return flowBuilder.build()
