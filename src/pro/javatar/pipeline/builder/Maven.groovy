@@ -31,6 +31,74 @@ class Maven implements Serializable {
     String layout = "default"
     String repoUrl
 
+    String getJava() {
+        return java
+    }
+
+    void setJava(String java) {
+        this.java = java
+    }
+
+    String getMaven() {
+        return maven
+    }
+
+    void setMaven(String maven) {
+        this.maven = maven
+    }
+
+    String getMavenParams() {
+        return mavenParams
+    }
+
+    void setMavenParams(String mavenParams) {
+        this.mavenParams = mavenParams
+    }
+
+    String getGroupId() {
+        return groupId
+    }
+
+    void setGroupId(String groupId) {
+        this.groupId = groupId
+    }
+
+    String getArtifactId() {
+        return artifactId
+    }
+
+    void setArtifactId(String artifactId) {
+        this.artifactId = artifactId
+    }
+
+    String getPackaging() {
+        return packaging
+    }
+
+    void setPackaging(String packaging) {
+        this.packaging = packaging
+    }
+
+    String getRepositoryId() {
+        return repositoryId
+    }
+
+    void setRepositoryId(String repositoryId) {
+        this.repositoryId = repositoryId
+    }
+
+    void setLayout(String layout) {
+        this.layout = layout
+    }
+
+    String getRepoUrl() {
+        return repoUrl
+    }
+
+    void setRepoUrl(String repoUrl) {
+        this.repoUrl = repoUrl
+    }
+
     Maven withMaven(String maven) {
         this.maven = maven
         return this
