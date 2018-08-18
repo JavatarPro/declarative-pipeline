@@ -1,7 +1,7 @@
 package pro.javatar.pipeline.builder.converter
 
 import pro.javatar.pipeline.builder.Docker
-import pro.javatar.pipeline.builder.Maven
+import pro.javatar.pipeline.builder.model.Maven
 import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.builder.YamlModel
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
@@ -49,10 +49,8 @@ class YamlConverter {
         dsl.echo "populateMaven: maven: ${maven}"
         model.setMaven(new Maven()
                 .withRepositoryId(maven.repository.id)
-                .withRepoUrl(maven.repository.url)
-                .withMaven(maven.jenkins_tool.maven)
-                .withJava(maven.jenkins_tool.java)
-                .withMavenParams(maven.params)
+                .withRepositoryUrl(maven.repository.url)
+                .withParams(maven.params)
         )
     }
 

@@ -1,5 +1,7 @@
 package pro.javatar.pipeline.builder
 
+import pro.javatar.pipeline.builder.model.Maven;
+
 class YamlModel {
 
     String version
