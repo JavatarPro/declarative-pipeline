@@ -20,12 +20,22 @@ class YamlFile {
         this.version = version
     }
 
+    YamlFile withVersion(String version) {
+        this.version = version
+        return this
+    }
+
     Maven getMaven() {
         return maven
     }
 
     void setMaven(Maven maven) {
         this.maven = maven
+    }
+
+    YamlFile withMaven(Maven maven) {
+        this.maven = maven
+        return this
     }
 
     Npm getNpm() {
@@ -36,12 +46,22 @@ class YamlFile {
         this.npm = npm
     }
 
+    YamlFile withNpm(Npm npm) {
+        this.npm = npm
+        return this
+    }
+
     List<Docker> getDocker() {
         return docker
     }
 
     void setDocker(List<Docker> docker) {
         this.docker = docker
+    }
+
+    YamlFile withDocker(List<Docker> docker) {
+        this.docker = docker
+        return this
     }
 
     @Override

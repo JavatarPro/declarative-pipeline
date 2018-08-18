@@ -9,16 +9,15 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 class YamlConverter {
 
     YamlFile toYamlModel(def yml) {
-        YamlFile model = new YamlFile()
-        model.setNpm(retrieveNpm(yml))
-        model.setMaven(retrieveMaven(yml))
-        model.setDocker(retrieveDockerList(yml))
-        return model
+        return new YamlFile()
+                .withNpm(retrieveNpm(yml))
+                .withMaven(retrieveMaven(yml))
+                .withDocker(retrieveDockerList(yml))
     }
 
     List<Docker> retrieveDockerList(def yml) {
         def docker = yml.docker
-        dsl.echo "populateDocker: docker: ${docker}"
+        dsl.echo "retrieveDockerList: docker: ${docker}"
         List<Docker> dockers = new ArrayList<>()
         docker.each{dockerItem -> dockers.add(retrieveDocker(dockerItem))}
         return dockers
@@ -42,7 +41,7 @@ class YamlConverter {
 
     Maven retrieveMaven(def yml) {
         def maven = yml.maven
-        dsl.echo "populateMaven: maven: ${maven}"
+        dsl.echo "retrieveMaven: maven: ${maven}"
         return new Maven()
                 .withRepositoryId(maven.repository.id)
                 .withRepositoryUrl(maven.repository.url)
@@ -51,7 +50,7 @@ class YamlConverter {
 
     Npm retrieveNpm(def yml) {
         def npm = yml.npm
-        dsl.echo "populateNpm: npm: ${npm}"
+        dsl.echo "retrieveNpm: npm: ${npm}"
         return new Npm()
                 .withNpmType(npm.type)
                 .withNpmVersion(npm.version)
