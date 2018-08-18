@@ -45,12 +45,12 @@ class YamlFlowBuilder {
         model = getYamlModelUsingJenkinsReadYamlCommand(yamlConfiguration)
         dsl.echo "YamlModel: ${model.toString()}"
         FlowBuilder flowBuilder = new FlowBuilder()
-        return flowBuilder.build()
+//        return flowBuilder.build()
+        return null
     }
 
     YamlModel getYamlModelUsingJenkinsReadYamlCommand(def yamlConfiguration) {
         properties = dsl.readYaml text: yamlConfiguration
-        dsl.echo "${properties.docker.dev.credentialsId}"
         return yamlConverter.toYamlModel(properties)
     }
 

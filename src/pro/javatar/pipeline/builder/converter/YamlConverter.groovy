@@ -1,5 +1,6 @@
 package pro.javatar.pipeline.builder.converter
 
+import pro.javatar.pipeline.builder.Docker
 import pro.javatar.pipeline.builder.Maven
 import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.builder.YamlModel
@@ -18,7 +19,24 @@ class YamlConverter {
     def populateDocker(YamlModel model, def yml) {
         def docker = yml.docker
         dsl.echo "populateDocker: docker: ${docker}"
-        model.setDocker()
+        List<Docker> dockers = new ArrayList<>()
+        docker.each{dockerItem -> dockers.add(retrieveDocker(dockerItem))}
+        model.setDocker(dockers)
+    }
+
+    Docker retrieveDocker(def dockerItem) {
+        Docker docker = new Docker()
+                .withCredentialsId(dockerItem.credentialsId)
+                .withRegistry(dockerItem.registry)
+                .withEnv(retrieveEnvList(dockerItem.env))
+        return docker
+    }
+
+    List<String> retrieveEnvList(def env) {
+        dsl.echo "retrieveEnvList: env: ${env}"
+        List<String> envList = new ArrayList<>()
+        env.each{envItem -> envList.add(envItem)}
+        return envList
     }
 
     def populateMaven(YamlModel model, def yml) {

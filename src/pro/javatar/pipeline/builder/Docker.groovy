@@ -8,14 +8,17 @@ class Docker {
 
     List<String> env = new ArrayList<>()
 
-    String orchestrationService
-
     String getCredentialsId() {
         return credentialsId
     }
 
     void setCredentialsId(String credentialsId) {
         this.credentialsId = credentialsId
+    }
+
+    Docker withCredentialsId(String credentialsId) {
+        this.credentialsId = credentialsId
+        return this
     }
 
     String getRegistry() {
@@ -26,19 +29,30 @@ class Docker {
         this.registry = registry
     }
 
-    String getEnv() {
+    Docker withRegistry(String registry) {
+        this.registry = registry
+        return this
+    }
+
+    List<String> getEnv() {
         return env
     }
 
-    void setEnv(String env) {
+    void setEnv(List<String> env) {
         this.env = env
     }
 
-    String getOrchestrationService() {
-        return orchestrationService
+    Docker withEnv(String env) {
+        this.env.add(env)
+        return this
     }
 
-    void setOrchestrationService(String orchestrationService) {
-        this.orchestrationService = orchestrationService
+    @Override
+    public String toString() {
+        return "Docker{" +
+                "credentialsId='" + credentialsId + '\'' +
+                ", registry='" + registry + '\'' +
+                ", env=" + env +
+                '}';
     }
 }
