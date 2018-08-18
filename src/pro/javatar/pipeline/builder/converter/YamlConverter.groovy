@@ -10,22 +10,18 @@ class YamlConverter {
 
     YamlFile toYamlModel(def yml) {
         YamlFile model = new YamlFile()
-        dsl.echo "model: ${model.toString()}"
-        populateNpm(model, yml)
-        dsl.echo "model: ${model.toString()}"
-        populateMaven(model, yml)
-        dsl.echo "model: ${model.toString()}"
-        populateDocker(model, yml)
-        dsl.echo "model: ${model.toString()}"
+        model.setNpm(retrieveNpm(yml))
+        model.setMaven(retrieveMaven(yml))
+        model.setDocker(retrieveDockerList(yml))
         return model
     }
 
-    def populateDocker(YamlFile model, def yml) {
+    List<Docker> retrieveDockerList(def yml) {
         def docker = yml.docker
         dsl.echo "populateDocker: docker: ${docker}"
         List<Docker> dockers = new ArrayList<>()
         docker.each{dockerItem -> dockers.add(retrieveDocker(dockerItem))}
-        model.setDocker(dockers)
+        return dockers
     }
 
     Docker retrieveDocker(def dockerItem) {
@@ -44,25 +40,23 @@ class YamlConverter {
         return envList
     }
 
-    def populateMaven(YamlFile model, def yml) {
+    Maven retrieveMaven(def yml) {
         def maven = yml.maven
         dsl.echo "populateMaven: maven: ${maven}"
-        model.setMaven(new Maven()
+        return new Maven()
                 .withRepositoryId(maven.repository.id)
                 .withRepositoryUrl(maven.repository.url)
                 .withParams(maven.params)
-        )
     }
 
-    def populateNpm(YamlFile model, def yml) {
+    Npm retrieveNpm(YamlFile model, def yml) {
         def npm = yml.npm
         dsl.echo "populateNpm: npm: ${npm}"
-        model.setNpm(new Npm()
+        return new Npm()
                 .withNpmType(npm.type)
                 .withNpmVersion(npm.version)
                 .withDistributionFolder(npm.distributionFolder)
                 .withModuleRepository(npm.moduleRepository)
-        )
     }
 
 }
