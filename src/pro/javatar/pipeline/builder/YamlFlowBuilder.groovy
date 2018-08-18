@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 //@Grab('org.apache.commons:commons-lang3:3.4')
 import org.yaml.snakeyaml.Yaml
 @Grab('com.fasterxml.jackson.core:jackson-databind:2.9.6')
+@Grab('com.fasterxml.jackson.core:jackson-annotations:2.9.6')
 import com.fasterxml.jackson.databind.ObjectMapper;
 @Grab('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.6')
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -36,6 +37,7 @@ class YamlFlowBuilder {
         dsl.sh "pwd; ls -la"
         def yamlConfiguration = dsl.readTrusted configFile
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         mapper.disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)
         mapper.disable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE)
