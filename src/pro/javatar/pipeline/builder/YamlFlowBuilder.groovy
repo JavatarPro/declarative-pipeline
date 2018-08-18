@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Grab('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.6')
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import pro.javatar.pipeline.Flow
+import pro.javatar.pipeline.builder.converter.FlowBuilderConverter
 import pro.javatar.pipeline.builder.converter.YamlConverter
 import pro.javatar.pipeline.builder.model.YamlFile
 import pro.javatar.pipeline.service.PipelineDslHolder
@@ -25,6 +26,8 @@ class YamlFlowBuilder {
     String configFile
 
     YamlConverter yamlConverter = new YamlConverter()
+
+    FlowBuilderConverter flowBuilderConverter = new FlowBuilderConverter()
 
     YamlFlowBuilder(def dsl) {
         this(dsl, DEFAULT_CONFIG_FILE)
@@ -45,7 +48,8 @@ class YamlFlowBuilder {
 //        model = getYamlModelUsingSnakeYaml(yamlConfiguration)
         model = getYamlModelUsingJenkinsReadYamlCommand(yamlConfiguration)
         dsl.echo "YamlFile: ${model.toString()}"
-        FlowBuilder flowBuilder = new FlowBuilder()
+        FlowBuilder flowBuilder = flowBuilderConverter.toFlowBuilder(model)
+        dsl.echo "flowBuilder: ${flowBuilder.toString()}"
 //        return flowBuilder.build()
         return new Flow(null)
     }
