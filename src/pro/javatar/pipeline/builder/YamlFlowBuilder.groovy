@@ -3,8 +3,7 @@ package pro.javatar.pipeline.builder
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
 
-//@Grab('org.yaml:snakeyaml:1.21')
-//@Grab('org.apache.commons:commons-lang3:3.4')
+@Grab('org.yaml:snakeyaml:1.21')
 import org.yaml.snakeyaml.Yaml
 @Grab('com.fasterxml.jackson.core:jackson-databind:2.9.6')
 @Grab('com.fasterxml.jackson.core:jackson-annotations:2.9.6')
