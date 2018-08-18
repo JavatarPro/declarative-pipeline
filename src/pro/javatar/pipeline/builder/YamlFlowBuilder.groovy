@@ -1,7 +1,12 @@
 package pro.javatar.pipeline.builder
 
+//@Grab('org.yaml:snakeyaml:1.21')
+//@Grab('org.apache.commons:commons-lang3:3.4')
 import org.yaml.snakeyaml.Yaml
-@Grab('org.yaml:snakeyaml:1.21')
+@Grab('com.fasterxml.jackson.core:jackson-databind:2.9.6')
+import com.fasterxml.jackson.databind.ObjectMapper;
+@Grab('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.6')
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import pro.javatar.pipeline.Flow
 import pro.javatar.pipeline.service.PipelineDslHolder
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
@@ -27,18 +32,20 @@ class YamlFlowBuilder {
         dsl.echo "YamlFlowBuilder used configFile: ${configFile}"
         dsl.sh "pwd; ls -la"
         def yamlConfiguration = dsl.readTrusted configFile
-        Yaml parser = new Yaml()
-        Npm npm = parser.loadAs(yamlConfiguration, Npm.class)
-        dsl.echo "yamlConfiguration model: ${npm.toString()}"
-
-        YamlModel model = parser.loadAs(yamlConfiguration, YamlModel.class)
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
+        YamlModel model = mapper.readValue(yamlConfiguration, YamlModel.class);
+//        Yaml parser = new Yaml()
+//        Npm npm = parser.loadAs(yamlConfiguration, Npm.class)
+//        dsl.echo "yamlConfiguration model: ${npm.toString()}"
+//
+//        YamlModel model = parser.loadAs(yamlConfiguration, YamlModel.class)
         dsl.echo "yamlConfiguration model: ${model.getNpm().toString()}"
-        dsl.echo "yamlConfiguration: ${yamlConfiguration}"
-        dsl.echo "model: ${yamlConfiguration}"
-        properties = dsl.readYaml text: yamlConfiguration
-        dsl.echo "${properties.docker.dev.credentialsId}"
-        dsl.echo "YamlFlowBuilder constructor finished with state: ${this.toString()}"
-        String buildType = ""
+//        dsl.echo "yamlConfiguration: ${yamlConfiguration}"
+//        dsl.echo "model: ${yamlConfiguration}"
+//        properties = dsl.readYaml text: yamlConfiguration
+//        dsl.echo "${properties.docker.dev.credentialsId}"
+//        dsl.echo "YamlFlowBuilder constructor finished with state: ${this.toString()}"
+//        String buildType = ""
         FlowBuilder flowBuilder = new FlowBuilder()
         return flowBuilder.build()
     }
