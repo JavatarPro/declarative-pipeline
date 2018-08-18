@@ -36,26 +36,35 @@ class YamlFlowBuilder {
         dsl.echo "YamlFlowBuilder used configFile: ${configFile}"
         dsl.sh "pwd; ls -la"
         def yamlConfiguration = dsl.readTrusted configFile
+        dsl.echo "yamlConfiguration: ${yamlConfiguration}"
+        YamlModel model = null
+//        model = getYamlModelUsingJackson(yamlConfiguration)
+//        model = getYamlModelUsingSnakeYaml(yamlConfiguration)
+        model = getYamlModelUsingJenkinsReadYamlCommand(yamlConfiguration)
+        dsl.echo "YamlModel: ${model.toString()}"
+        FlowBuilder flowBuilder = new FlowBuilder()
+        return flowBuilder.build()
+    }
+
+    YamlModel getYamlModelUsingJenkinsReadYamlCommand(def yamlConfiguration) {
+        properties = dsl.readYaml text: yamlConfiguration
+        dsl.echo "${properties.docker.dev.credentialsId}"
+    }
+
+    YamlModel getYamlModelUsingSnakeYaml(def yamlConfiguration) {
+        Yaml parser = new Yaml()
+        YamlModel model = parser.loadAs(yamlConfiguration, YamlModel.class)
+        return model
+    }
+
+    YamlModel getYamlModelUsingJackson(def yamlConfiguration) {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         mapper.disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)
         mapper.disable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE)
         YamlModel model = mapper.readValue(yamlConfiguration, YamlModel.class)
-//        Yaml parser = new Yaml()
-//        Npm npm = parser.loadAs(yamlConfiguration, Npm.class)
-//        dsl.echo "yamlConfiguration model: ${npm.toString()}"
-//
-//        YamlModel model = parser.loadAs(yamlConfiguration, YamlModel.class)
-        dsl.echo "yamlConfiguration model: ${model.getNpm().toString()}"
-//        dsl.echo "yamlConfiguration: ${yamlConfiguration}"
-//        dsl.echo "model: ${yamlConfiguration}"
-//        properties = dsl.readYaml text: yamlConfiguration
-//        dsl.echo "${properties.docker.dev.credentialsId}"
-//        dsl.echo "YamlFlowBuilder constructor finished with state: ${this.toString()}"
-//        String buildType = ""
-        FlowBuilder flowBuilder = new FlowBuilder()
-        return flowBuilder.build()
+        return model
     }
 
     @Override
