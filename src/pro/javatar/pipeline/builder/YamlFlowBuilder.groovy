@@ -1,6 +1,7 @@
 package pro.javatar.pipeline.builder
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.DeserializationFeature
 
 //@Grab('org.yaml:snakeyaml:1.21')
 //@Grab('org.apache.commons:commons-lang3:3.4')
@@ -35,8 +36,9 @@ class YamlFlowBuilder {
         dsl.sh "pwd; ls -la"
         def yamlConfiguration = dsl.readTrusted configFile
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        YamlModel model = mapper.readValue(yamlConfiguration, YamlModel.class);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        YamlModel model = mapper.readValue(yamlConfiguration, YamlModel.class)
 //        Yaml parser = new Yaml()
 //        Npm npm = parser.loadAs(yamlConfiguration, Npm.class)
 //        dsl.echo "yamlConfiguration model: ${npm.toString()}"
