@@ -42,7 +42,12 @@ class Docker {
         this.env = env
     }
 
-    Docker withEnv(String env) {
+    Docker withEnv(List<String> env) {
+        this.env = env
+        return this
+    }
+
+    Docker addEnv(String env) {
         this.env.add(env)
         return this
     }
