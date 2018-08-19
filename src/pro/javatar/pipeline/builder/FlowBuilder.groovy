@@ -243,6 +243,8 @@ class FlowBuilder implements Serializable {
             buildService = dockerMavenBuildService
         } else if (buildType == BuildServiceType.MAVEN && suit == PipelineStagesSuit.LIBRARY) {
             buildService = mavenBuildService
+        } else if (buildType == BuildServiceType.MAVEN) {
+            buildService = dockerMavenBuildService
         } else if (buildType == BuildServiceType.NPM) {
             dsl.echo "before build npm"
             npmBuildService = npm.build()
