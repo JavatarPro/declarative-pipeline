@@ -65,6 +65,7 @@ class YamlFlowBuilder {
 
     void replaceVariablesOrSetProperty(def param, def properties) {
         dsl.echo "param: ${param}"
+        dsl.echo "param: ${param.key}:${param.value}"
     }
 
     YamlConfig getYamlModelUsingSnakeYaml(def yamlConfiguration) {
