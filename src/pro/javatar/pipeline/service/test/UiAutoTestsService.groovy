@@ -13,11 +13,10 @@
  * limitations under the License.
  */
 
-package pro.javatar.pipeline.service.impl
+package pro.javatar.pipeline.service.test
 
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.Env
-import pro.javatar.pipeline.service.test.AutoTestsService
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
