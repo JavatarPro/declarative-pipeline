@@ -18,12 +18,22 @@ class Service {
         this.name = name
     }
 
+    Service withName(String name) {
+        this.name = name
+        return this
+    }
+
     String getBuildType() {
         return buildType
     }
 
     void setBuildType(String buildType) {
         this.buildType = buildType
+    }
+
+    Service withBuildType(String buildType) {
+        this.buildType = buildType
+        return this
     }
 
     boolean getUseBuildNumberForVersion() {
@@ -34,12 +44,22 @@ class Service {
         this.useBuildNumberForVersion = useBuildNumberForVersion
     }
 
+    Service withUseBuildNumberForVersion(boolean useBuildNumberForVersion) {
+        this.useBuildNumberForVersion = useBuildNumberForVersion
+        return this
+    }
+
     VcsRepo getRepo() {
         return repo
     }
 
     void setRepo(VcsRepo repo) {
         this.repo = repo
+    }
+
+    Service withRepo(VcsRepo repo) {
+        this.repo = repo
+        return this
     }
 
     @Override

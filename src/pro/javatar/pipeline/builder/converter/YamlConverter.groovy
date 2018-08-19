@@ -3,16 +3,41 @@ package pro.javatar.pipeline.builder.converter
 import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.Maven
 import pro.javatar.pipeline.builder.Npm
-import pro.javatar.pipeline.builder.model.YamlFile
+import pro.javatar.pipeline.builder.model.Pipeline
+import pro.javatar.pipeline.builder.model.Service
+import pro.javatar.pipeline.builder.model.YamlConfig
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 class YamlConverter {
 
-    YamlFile toYamlModel(def yml) {
-        return new YamlFile()
+    YamlConfig toYamlModel(def yml) {
+        return new YamlConfig()
+                .withService(retrieveService(yml))
+                .withPipeline(retrievePipeline(yml))
                 .withNpm(retrieveNpm(yml))
                 .withMaven(retrieveMaven(yml))
                 .withDocker(retrieveDockerList(yml))
+    }
+
+    Service retrieveService(def yml) {
+        def service = yml.service
+        dsl.echo "retrieveService: service: ${service}"
+        return new Service()
+                .withName(service.name)
+                .withBuildType(service.buildType)
+                .withUseBuildNumberForVersion(service.useBuildNumberForVersion)
+                // TODO getVcsRepoByName
+                .withRepo(service.vcs.repo)
+    }
+
+    Pipeline retrievePipeline(def yml) {
+        def pipeline = yml.pipeline
+        dsl.echo "retrievePipeline: pipeline: ${pipeline}"
+        List<String> stages = new ArrayList<>()
+        pipeline.stages.each{stage -> stages.add(stage)}
+        return new Pipeline()
+                .withPipelineSuit(pipeline.pipelineSuit)
+                .withStages(stages)
     }
 
     List<Docker> retrieveDockerList(def yml) {

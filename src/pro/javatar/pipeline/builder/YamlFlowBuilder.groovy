@@ -1,5 +1,6 @@
 package pro.javatar.pipeline.builder
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
 
 @Grab('org.yaml:snakeyaml:1.21')
@@ -12,7 +13,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import pro.javatar.pipeline.Flow
 import pro.javatar.pipeline.builder.converter.FlowBuilderConverter
 import pro.javatar.pipeline.builder.converter.YamlConverter
-import pro.javatar.pipeline.builder.model.YamlFile
+import pro.javatar.pipeline.builder.model.YamlConfig
 import pro.javatar.pipeline.service.PipelineDslHolder
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -40,35 +41,39 @@ class YamlFlowBuilder {
         dsl.sh "pwd; ls -la"
         def yamlConfiguration = dsl.readTrusted configFile
         dsl.echo "yamlConfiguration: ${yamlConfiguration}"
-        YamlFile model = null
+        YamlConfig model = null
 //        model = getYamlModelUsingJackson(yamlConfiguration)
 //        model = getYamlModelUsingSnakeYaml(yamlConfiguration)
         model = getYamlModelUsingJenkinsReadYamlCommand(yamlConfiguration)
-        dsl.echo "YamlFile: ${model.toString()}"
+        dsl.echo "YamlConfig: ${model.toString()}"
         FlowBuilder flowBuilder = flowBuilderConverter.toFlowBuilder(model)
         dsl.echo "flowBuilder: ${flowBuilder.toString()}"
 //        return flowBuilder.build()
         return new Flow(null)
     }
 
-    YamlFile getYamlModelUsingJenkinsReadYamlCommand(def yamlConfiguration) {
+    YamlConfig getYamlModelUsingJenkinsReadYamlCommand(def yamlConfiguration) {
         def properties = dsl.readYaml text: yamlConfiguration
         return yamlConverter.toYamlModel(properties)
     }
 
-    YamlFile getYamlModelUsingSnakeYaml(def yamlConfiguration) {
+    void populateWithJenkinsBuildParams(YamlConfig model) {
+        // TODO
+    }
+
+    YamlConfig getYamlModelUsingSnakeYaml(def yamlConfiguration) {
         Yaml parser = new Yaml()
-        YamlFile model = parser.loadAs(yamlConfiguration, YamlFile.class)
+        YamlConfig model = parser.loadAs(yamlConfiguration, YamlConfig.class)
         return model
     }
 
-    YamlFile getYamlModelUsingJackson(def yamlConfiguration) {
+    YamlConfig getYamlModelUsingJackson(def yamlConfiguration) {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         mapper.disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)
         mapper.disable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE)
-        YamlFile model = mapper.readValue(yamlConfiguration, YamlFile.class)
+        YamlConfig model = mapper.readValue(yamlConfiguration, YamlConfig.class)
         return model
     }
 

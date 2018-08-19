@@ -14,6 +14,8 @@ class VcsRepo {
 
     String revisionControl
 
+    String branch
+
     String getName() {
         return name
     }
@@ -92,6 +94,19 @@ class VcsRepo {
         return this
     }
 
+    String getBranch() {
+        return branch
+    }
+
+    void setBranch(String branch) {
+        this.branch = branch
+    }
+
+    VcsRepo withBranch(String branch) {
+        this.branch = branch
+        return this
+    }
+
     @Override
     public String toString() {
         return "VcsRepo{" +
@@ -100,6 +115,8 @@ class VcsRepo {
                 ", credentialsId='" + credentialsId + '\'' +
                 ", domain='" + domain + '\'' +
                 ", type='" + type + '\'' +
+                ", revisionControl='" + revisionControl + '\'' +
+                ", branch='" + branch + '\'' +
                 '}';
     }
 }
