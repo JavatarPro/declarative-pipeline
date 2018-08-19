@@ -54,11 +54,17 @@ class YamlFlowBuilder {
 
     YamlConfig getYamlModelUsingJenkinsReadYamlCommand(def yamlConfiguration) {
         def properties = dsl.readYaml text: yamlConfiguration
+        populateWithJenkinsBuildParams(properties)
         return yamlConverter.toYamlModel(properties)
     }
 
-    void populateWithJenkinsBuildParams(YamlConfig model) {
-        // TODO
+    void populateWithJenkinsBuildParams(def properties) {
+        def params = dsl.params
+        params.each { param -> replaceVariablesOrSetProperty(param, properties)}
+    }
+
+    void replaceVariablesOrSetProperty(def param, def properties) {
+        dsl.echo "param: ${param}"
     }
 
     YamlConfig getYamlModelUsingSnakeYaml(def yamlConfiguration) {
