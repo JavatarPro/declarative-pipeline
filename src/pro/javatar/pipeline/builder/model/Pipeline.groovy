@@ -6,7 +6,9 @@ class Pipeline {
     String pipelineSuit = "service"
 
     // TODO validate all String exists in enum if suit custom
-    List<String> stages = new ArrayList<>()String getPipelineSuit() {
+    List<String> stages = new ArrayList<>()
+
+    String getPipelineSuit() {
         return pipelineSuit
     }
 
