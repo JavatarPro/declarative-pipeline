@@ -1,6 +1,5 @@
 package pro.javatar.pipeline.builder
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
 
 @Grab('org.yaml:snakeyaml:1.21')
@@ -20,8 +19,6 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 class YamlFlowBuilder {
 
     static final DEFAULT_CONFIG_FILE = "javatar-declarative-pipeline.yml"
-
-    def properties
 
     String configFile
 
@@ -55,7 +52,7 @@ class YamlFlowBuilder {
     }
 
     YamlFile getYamlModelUsingJenkinsReadYamlCommand(def yamlConfiguration) {
-        properties = dsl.readYaml text: yamlConfiguration
+        def properties = dsl.readYaml text: yamlConfiguration
         return yamlConverter.toYamlModel(properties)
     }
 
@@ -78,7 +75,7 @@ class YamlFlowBuilder {
     @Override
     public String toString() {
         return "YamlFlowBuilder{" +
-                "properties=" + properties.size() +
+                "configFile='" + configFile + '\'' +
                 '}';
     }
 }

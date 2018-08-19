@@ -4,7 +4,7 @@ class Vcs {
 
     String revisionControl
 
-    Map<String, Repo> repo
+    Map<String, VcsRepo> repo
 
     String getRevisionControl() {
         return revisionControl
@@ -19,15 +19,15 @@ class Vcs {
         return this
     }
 
-    Map<String, Repo> getRepo() {
+    Map<String, VcsRepo> getRepo() {
         return repo
     }
 
-    void setRepo(Map<String, Repo> repo) {
+    void setRepo(Map<String, VcsRepo> repo) {
         this.repo = repo
     }
 
-    Vcs withRepo(Map<String, Repo> repo) {
+    Vcs withRepo(Map<String, VcsRepo> repo) {
         this.repo = repo
         return this
     }
