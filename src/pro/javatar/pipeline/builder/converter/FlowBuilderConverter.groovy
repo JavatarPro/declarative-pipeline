@@ -5,8 +5,6 @@ import pro.javatar.pipeline.builder.FlowBuilder
 import pro.javatar.pipeline.builder.Maven
 import pro.javatar.pipeline.builder.RevisionControlBuilder
 import pro.javatar.pipeline.builder.model.YamlConfig
-import pro.javatar.pipeline.model.RevisionControlType
-import pro.javatar.pipeline.model.VcsRepositoryType
 
 class FlowBuilderConverter {
 
@@ -47,8 +45,8 @@ class FlowBuilderConverter {
         return new RevisionControlBuilder()
                 .withRepo(repo.getName())
                 .withRepoOwner(repo.getOwner())
-                .withRevisionControlType(RevisionControlType.fromString(repo.getRevisionControl()))
-                .withVcsRepositoryType(VcsRepositoryType.fromString(repo.getType()))
+                .withRevisionControlType(repo.getRevisionControl())
+                .withVcsRepositoryType(repo.getType())
                 .withFlowPrefix(null)
                 .withCredentialsId(repo.getCredentialsId())
                 .withDomain(repo.getDomain())
