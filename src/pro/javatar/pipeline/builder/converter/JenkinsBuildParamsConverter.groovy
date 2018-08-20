@@ -21,7 +21,6 @@ class JenkinsBuildParamsConverter {
 
     void replaceVariable(def param, def properties) {
         String toBeReplaced = "\${${param.key}}"
-        toBeReplaced.replace()
         properties.each { prop ->
             if(prop.value.trim.equalsIgnoreCase(toBeReplaced)) {
                 dsl.echo "${prop.key} will be replaced with ${prop.key}"
