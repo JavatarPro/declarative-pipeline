@@ -16,7 +16,7 @@
 package pro.javatar.pipeline.builder
 
 import pro.javatar.pipeline.model.DockerOrchestrationServiceType
-import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService;
+import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
 import pro.javatar.pipeline.service.orchestration.DockerService
 import pro.javatar.pipeline.service.orchestration.KubernetesService
 import pro.javatar.pipeline.service.orchestration.MesosService
@@ -25,7 +25,7 @@ import pro.javatar.pipeline.service.orchestration.SshDockerOrchestrationService
 import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.KUBERNETES
 import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.MESOS
 import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.SSH
-import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.fromString;
+import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.fromString
 
 /**
  * @author Borys Zora

@@ -4,15 +4,14 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 class JenkinsBuildParamsConverter {
 
-
-    def getProperty(String propertyName, def defaultValue) {
-        dsl.echo "DEBUG: getProperty for propertyName: ${propertyName} with default: ${defaultValue}"
-        try {
-            return dsl.getProperty(propertyName)
-        } catch (MissingPropertyException e) {
-            dsl.echo "DEBUG: getProperty for propertyName: ${propertyName} not found, " +
-                    "default: ${defaultValue} will be appied"
-            return defaultValue
-        }
+    void populateWithJenkinsBuildParams(def properties) {
+        def params = dsl.params
+        params.each{param -> replaceVariablesOrSetProperty(param, properties)}
     }
+
+    void replaceVariablesOrSetProperty(def param, def properties) {
+        dsl.echo "param.key: ${param.key}, param.value: ${param.value}"
+
+    }
+
 }
