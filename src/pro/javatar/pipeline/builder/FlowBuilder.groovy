@@ -193,8 +193,8 @@ class FlowBuilder implements Serializable {
         return this
     }
 
-    FlowBuilder addPipelineStages(List<String> stageTypes) {
-        stageTypes.each {stageType -> stageTypes.add(StageType.valueOf(stageType))}
+    FlowBuilder addPipelineStages(List<String> stageTypeList) {
+        stageTypeList.each {stageType -> stageTypes.add(StageType.valueOf(stageType))}
         return this
     }
 
