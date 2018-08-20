@@ -43,10 +43,24 @@ enum JenkinsBuildParams {
     JenkinsBuildParams(String key, def defaultValue){
         this.key = key
         this.defaultValue = defaultValue
-        keys.add(key)
+        // keys.add(key)
+    }
+
+    def getDefaultValue() {
+        return defaultValue
+    }
+
+    String getKey() {
+        return key
     }
 
     static boolean hasKey(String key) {
-        return keys.contains(key)
+        // return keys.contains(key)
+        JenkinsBuildParams.values().each {param ->
+            if (param.getKey().equalsIgnoreCase(key)) {
+                return true
+            }
+        }
+        return false
     }
 }
