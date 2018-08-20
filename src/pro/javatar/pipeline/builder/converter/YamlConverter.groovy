@@ -5,6 +5,8 @@ import pro.javatar.pipeline.builder.model.Maven
 import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.builder.model.Pipeline
 import pro.javatar.pipeline.builder.model.Service
+import pro.javatar.pipeline.builder.model.Vcs
+import pro.javatar.pipeline.builder.model.VcsRepo
 import pro.javatar.pipeline.builder.model.YamlConfig
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -12,11 +14,13 @@ class YamlConverter {
 
     YamlConfig toYamlModel(def yml) {
         return new YamlConfig()
+                .withVcs(retrieveVcs(yml))
                 .withService(retrieveService(yml))
                 .withPipeline(retrievePipeline(yml))
                 .withNpm(retrieveNpm(yml))
                 .withMaven(retrieveMaven(yml))
                 .withDocker(retrieveDockerList(yml))
+                .populateServiceRepo()
     }
 
     Service retrieveService(def yml) {
@@ -26,8 +30,32 @@ class YamlConverter {
                 .withName(service.name)
                 .withBuildType(service.buildType)
                 .withUseBuildNumberForVersion(service.useBuildNumberForVersion)
-                // TODO getVcsRepoByName
-                .withRepo(service.vcs.repo)
+                .withVcsRepoId(service.vcs.repo)
+    }
+
+    VcsRepo retrieveVcs(def yml) {
+        def vcs = yml.vcs
+        dsl.echo "retrieveVcsRepo: vcs: ${vcs}"
+        return new Vcs()
+                .withRevisionControl(yml.revisionControl)
+                .withRepo(retrieveVcsRepos(vcs))
+    }
+
+    Map<String, VcsRepo> retrieveVcsRepos(def vcs) {
+        Map<String, VcsRepo> vcsRepos = new HashMap<>()
+        def repos = vcs.repo
+        repos.each { key, value -> vcsRepos.put(key, retrieveVcsRepo(value)) }
+        return vcsRepos
+    }
+
+    VcsRepo retrieveVcsRepo(def vcsRepo) {
+        return new VcsRepo()
+                .withName(vcsRepo.name)
+                .withOwner(vcsRepo.owner)
+                .withCredentialsId(vcsRepo.credentialsId)
+                .withDomain(vcsRepo.domain)
+                .withType(vcsRepo.type)
+                .withRevisionControl(vcsRepo.revisionControl)
     }
 
     Pipeline retrievePipeline(def yml) {

@@ -16,7 +16,25 @@ class YamlConfig {
 
     List<Docker> docker = new ArrayList<>()
 
-    JenkinsTool jenkinsTool = new JenkinsTool()
+    Vcs vcs = new Vcs()
+
+    YamlConfig populateServiceRepo() {
+        service.setRepo(vcs.getRepo().get(service.getVcsRepoId()))
+        return this
+    }
+
+    JenkinsTool jenkinsTool = new JenkinsTool()Vcs getVcs() {
+        return vcs
+    }
+
+    void setVcs(Vcs vcs) {
+        this.vcs = vcs
+    }
+
+    YamlConfig withVcs(Vcs vcs) {
+        this.vcs = vcs
+        return this
+    }
 
     String getVersion() {
         return version
@@ -118,6 +136,7 @@ class YamlConfig {
                 ", maven=" + maven +
                 ", npm=" + npm +
                 ", docker=" + docker +
+                ", vcs=" + vcs +
                 ", jenkinsTool=" + jenkinsTool +
                 '}';
     }

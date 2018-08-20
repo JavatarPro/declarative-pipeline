@@ -10,6 +10,8 @@ class Service {
 
     VcsRepo repo
 
+    String vcsRepoId
+
     String getName() {
         return name
     }
@@ -62,6 +64,19 @@ class Service {
         return this
     }
 
+    String getVcsRepoId() {
+        return vcsRepoId
+    }
+
+    void setVcsRepoId(String vcsRepoId) {
+        this.vcsRepoId = vcsRepoId
+    }
+
+    Service withVcsRepoId(String vcsRepoId) {
+        this.vcsRepoId = vcsRepoId
+        return this
+    }
+
     @Override
     public String toString() {
         return "Service{" +
@@ -69,6 +84,7 @@ class Service {
                 ", buildType='" + buildType + '\'' +
                 ", useBuildNumberForVersion=" + useBuildNumberForVersion +
                 ", repo=" + repo +
+                ", vcsRepoId='" + vcsRepoId + '\'' +
                 '}';
     }
 }

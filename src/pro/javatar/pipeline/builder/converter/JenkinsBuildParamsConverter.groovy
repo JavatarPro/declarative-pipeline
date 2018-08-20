@@ -13,10 +13,19 @@ class JenkinsBuildParamsConverter {
     void replaceVariablesOrSetProperty(def param, def properties) {
         dsl.echo "param.key: ${param.key}, param.value: ${param.value}"
         if (JenkinsBuildParams.hasKey(param.key)){
-            properties.put(param.value, param.value)
+            if (JenkinsBuildParams.PROFILES.getKey().equalsIgnoreCase(param.key)) {
+                amendAccordingToProfile(param.value, properties)
+            } else {
+                properties.put(param.key, param.value)
+            }
         } else {
             replaceVariable(param, properties)
         }
+    }
+
+    void amendAccordingToProfile(String profileName, def properties) {
+        def profile = properties.profile[profileName]
+        profile.each {key, value -> properties.put(key, value)}
     }
 
     void replaceVariable(def param, def properties) {
@@ -26,13 +35,6 @@ class JenkinsBuildParamsConverter {
                 properties.put(key, param.value)
             }
         }
-//        properties.each { prop ->
-//            if(prop.value.trim().equalsIgnoreCase(toBeReplaced)) {
-//                dsl.echo "${prop.key} will be replaced with ${prop.key}"
-//                prop.value.replace(toBeReplaced, param.value)
-//                dsl.echo "prop: ${prop}"
-//            }
-//        }
     }
 
 }
