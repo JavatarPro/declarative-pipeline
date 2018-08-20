@@ -32,13 +32,13 @@ enum JenkinsBuildParams {
 
     PROFILES("profile", "")
 
-    static final Set<String> keys = new HashSet<>()
+    static Set<String> keys = new HashSet<>()
 
     // instance variables
 
-    private final def defaultValue
+    private def defaultValue
 
-    private final String key
+    private String key
 
     JenkinsBuildParams(String key, def defaultValue){
         this.key = key
