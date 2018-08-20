@@ -23,7 +23,9 @@ class YamlConfig {
         return this
     }
 
-    JenkinsTool jenkinsTool = new JenkinsTool()Vcs getVcs() {
+    JenkinsTool jenkinsTool = new JenkinsTool()
+
+    Vcs getVcs() {
         return vcs
     }
 
