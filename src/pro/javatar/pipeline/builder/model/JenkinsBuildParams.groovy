@@ -32,8 +32,6 @@ enum JenkinsBuildParams {
 
     PROFILES("profile", "")
 
-    static Set<String> keys = new HashSet<>()
-
     // instance variables
 
     private def defaultValue
@@ -43,7 +41,6 @@ enum JenkinsBuildParams {
     JenkinsBuildParams(String key, def defaultValue){
         this.key = key
         this.defaultValue = defaultValue
-        // keys.add(key)
     }
 
     def getDefaultValue() {
@@ -55,7 +52,6 @@ enum JenkinsBuildParams {
     }
 
     static boolean hasKey(String key) {
-        // return keys.contains(key)
         JenkinsBuildParams.values().each {param ->
             if (param.getKey().equalsIgnoreCase(key)) {
                 return true
