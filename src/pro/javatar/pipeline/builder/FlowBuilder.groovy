@@ -168,19 +168,24 @@ class FlowBuilder implements Serializable {
     }
 
     void createDeployStages() {
+        dsl.echo "createDeployStages started"
         availableStages.put(StageType.DEPLOY_ON_DEV_ENV, new DeployToDevEnvStage(deploymentService))
         availableStages.put(StageType.DEPLOY_ON_QA_ENV, new DeployToQAEnvStage(deploymentService))
         availableStages.put(StageType.DEPLOY_ON_STAGING_ENV, new DeployToStagingEnvStage(deploymentService))
         availableStages.put(StageType.DEPLOY_ON_PROD_ENV, new DeployToProdEnvStage(deploymentService))
+        dsl.echo "createDeployStages finished"
     }
 
     void createSignOffStages() {
+        dsl.echo "createSignOffStages started"
         availableStages.put(StageType.DEV_SIGN_OFF, new DeveloperSignOffStage())
         availableStages.put(StageType.QA_SIGN_OFF, new QaSignOffStage())
         availableStages.put(StageType.DEVOPS_SIGN_OFF, new DevOpsSignOffStage())
+        dsl.echo "createSignOffStages finished"
     }
 
     FlowBuilder skipStage(StageType stageType) {
+        dsl.echo "skipStage stageType: ${stageType.name()}"
         stageTypesToBeSkipped.add(stageType)
         return this
     }
