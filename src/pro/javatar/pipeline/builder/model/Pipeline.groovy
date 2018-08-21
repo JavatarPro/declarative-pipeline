@@ -22,7 +22,10 @@ class Pipeline {
     }
 
     List<String> getStages() {
-        return stages
+        if ("custom".equalsIgnoreCase(pipelineSuit)) {
+            return stages
+        }
+        return new ArrayList<>()
     }
 
     void setStages(List<String> stages) {
