@@ -14,7 +14,7 @@ class Ui {
 
     Ui withDeploymentType(String deploymentType) {
         this.deploymentType = deploymentType
-        return
+        return this
     }
 
     @Override
