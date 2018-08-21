@@ -17,6 +17,7 @@ class FlowBuilderConverter {
                 .addPipelineStages(yamlFile.getPipeline().getStages())
                 .addMaven(toMaven(yamlFile))
                 .addNpm(yamlFile.getNpm())
+                .withUiDeploymentType(yamlFile.getUi().getDeploymentType())
                 .withRevisionControl(toRevisionControlBuilder(yamlFile))
                 .withDocker(toDockerBuilder(yamlFile))
     }

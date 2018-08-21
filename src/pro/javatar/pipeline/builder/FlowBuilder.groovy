@@ -60,7 +60,7 @@ class FlowBuilder implements Serializable {
     BuildService buildService
     CdnDeploymentService cdnDeploymentService
     AwsS3DeploymentService awsS3DeploymentService
-    UiDeploymentType uiDeploymentType = UiDeploymentType.NONE
+    UiDeploymentType uiDeploymentType = UiDeploymentType.AWS_S3
     DeploymentService deploymentService
     AutoTestsService autoTestsService
     RevisionControlService revisionControlService

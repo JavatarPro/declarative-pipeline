@@ -14,6 +14,8 @@ class YamlConfig {
 
     Npm npm = new Npm()
 
+    Ui ui = new Ui()
+
     List<Docker> docker = new ArrayList<>()
 
     Vcs vcs = new Vcs()
@@ -77,6 +79,19 @@ class YamlConfig {
         return this
     }
 
+    Ui getUi() {
+        return ui
+    }
+
+    void setUi(Ui ui) {
+        this.ui = ui
+    }
+
+    YamlConfig withUi(Ui ui) {
+        this.ui = ui
+        return this
+    }
+    
     List<Docker> getDocker() {
         return docker
     }

@@ -6,6 +6,7 @@ import pro.javatar.pipeline.builder.model.Maven
 import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.builder.model.Pipeline
 import pro.javatar.pipeline.builder.model.Service
+import pro.javatar.pipeline.builder.model.Ui
 import pro.javatar.pipeline.builder.model.Vcs
 import pro.javatar.pipeline.builder.model.VcsRepo
 import pro.javatar.pipeline.builder.model.YamlConfig
@@ -20,6 +21,7 @@ class YamlConverter {
                 .withService(retrieveService(yml))
                 .withPipeline(retrievePipeline(yml))
                 .withNpm(retrieveNpm(yml))
+                .withUi(retrieveUi(yml))
                 .withMaven(retrieveMaven(yml))
                 .withDocker(retrieveDockerList(yml))
                 .populateServiceRepo()
@@ -122,6 +124,12 @@ class YamlConverter {
                 .withNpmVersion(npm.version)
                 .withDistributionFolder(npm.distributionFolder)
                 .withModuleRepository(npm.moduleRepository)
+    }
+
+    Ui retrieveUi(def yml) {
+        def ui = yml.ui
+        dsl.echo "retrieveUi: ui: ${ui}"
+        return new Ui().withDeploymentType(ui.deploymentType)
     }
 
 }
