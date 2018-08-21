@@ -6,25 +6,21 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 class JenkinsBuildParamsConverter {
 
     void populateWithJenkinsBuildParams(def properties) {
-        def params = dsl.params
-        params.each{param -> replaceVariablesOrSetProperty(param, properties)}
+        dsl.params.each{param -> setProperty(param, properties)}
     }
 
-    void replaceVariablesOrSetProperty(def param, def properties) {
+    void setProperty(def param, def properties) {
         dsl.echo "param.key: ${param.key}, param.value: ${param.value}"
-        if (JenkinsBuildParams.hasKey(param.key)) {
-            dsl.echo "param.key: ${param.key} is valid properity"
-            if (JenkinsBuildParams.PROFILES.getKey().equalsIgnoreCase(param.key)) {
-                amendAccordingToProfile(param.value, properties)
-            } else {
-                dsl.echo "properties.put(param.key: ${param.key}, param.value: ${param.value}"
-                properties.put(param.key, param.value)
-            }
+        if (!JenkinsBuildParams.hasKey(param.key)) {
+            dsl.echo "param.key: ${param.key} IS NOT a valid properity"
+            return
+        }
+        dsl.echo "param.key: ${param.key} is valid properity"
+        if (JenkinsBuildParams.PROFILES.getKey().equalsIgnoreCase(param.key)) {
+            amendAccordingToProfile(param.value, properties)
         } else {
-            // TODO remove, does not need
-            dsl.echo "properties before replaceVariable(${param}: ${properties})"
-            replaceVariable(param, properties)
-            dsl.echo "properties after replaceVariable(${param}: ${properties})"
+            dsl.echo "properties.put(param.key: ${param.key}, param.value: ${param.value}"
+            properties.put(param.key, param.value)
         }
     }
 
@@ -42,16 +38,6 @@ class JenkinsBuildParamsConverter {
             target.put(keys[keys.length - 1], value)
         }
         dsl.echo "properties after apply: ${properties}"
-    }
-
-    void replaceVariable(def param, def properties) {
-        dsl.echo "replaceVariable param: ${param}"
-        String toBeReplaced = "\${${param.key}}"
-        properties.each{ key, value ->
-            if(value.toString().trim().equalsIgnoreCase(toBeReplaced)) {
-                properties.put(key, param.value)
-            }
-        }
     }
 
 }

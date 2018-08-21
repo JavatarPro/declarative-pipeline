@@ -73,6 +73,16 @@ class JenkinsfileExample {
 //        println(new JenkinsfileExample().containsBranch())
     }
 
+    void replaceVariable1(def param, def properties) {
+        dsl.echo "replaceVariable param: ${param}"
+        String toBeReplaced = "\${${param.key}}"
+        properties.each{ key, value ->
+            if(value.toString().trim().equalsIgnoreCase(toBeReplaced)) {
+                properties.put(key, param.value)
+            }
+        }
+    }
+
     def yml() {
 //        println(JenkinsBuildParams.hasKey("profile"))
         def properties = ["service": ["buildType":"maven", "useBuildNumberForVersion":false],
