@@ -77,7 +77,6 @@ class JenkinsfileExample {
 //        println(JenkinsBuildParams.hasKey("profile"))
         def properties = ["service": ["buildType":"maven", "useBuildNumberForVersion":false],
                           "profile":["ui":["service.buildType":"npm"]]]
-        //def param = ["service.buildType":"npm"]
         println(properties)
         new JenkinsBuildParamsConverter().amendAccordingToProfile("ui", properties)
         println(properties)
@@ -89,8 +88,6 @@ class JenkinsfileExample {
         properties.put("service.buildType", "maven")
         properties.put("service.useBuildNumberForVersion", true)
         def param = ["repo":"configuration-service"]
-        // JenkinsBuildParamsConverter converter = new JenkinsBuildParamsConverter()
-//        converter.replaceVariable(param, properties)
         replaceVariable(param, properties)
         println(properties)
     }
@@ -102,13 +99,6 @@ class JenkinsfileExample {
                 properties.put(key, "configuration-service")
             }
         }
-//        properties.each { prop ->
-//            if(prop.value.toString().trim().equalsIgnoreCase(toBeReplaced)) {
-//                dsl.echo "${prop.key} will be replaced with ${prop.key}"
-//                prop.value.replace(toBeReplaced, param.value)
-//                dsl.echo "prop: ${prop}"
-//            }
-//        }
     }
 
     def domainUrl() {

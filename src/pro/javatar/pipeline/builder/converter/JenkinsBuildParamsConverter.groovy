@@ -21,6 +21,7 @@ class JenkinsBuildParamsConverter {
                 properties.put(param.key, param.value)
             }
         } else {
+            // TODO remove, does not need
             dsl.echo "properties before replaceVariable(${param}: ${properties})"
             replaceVariable(param, properties)
             dsl.echo "properties after replaceVariable(${param}: ${properties})"
