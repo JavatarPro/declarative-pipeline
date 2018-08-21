@@ -5,6 +5,8 @@ import pro.javatar.pipeline.model.UiDeploymentType
 
 enum JenkinsBuildParams {
 
+    PROFILES("profile", ""),
+
     VERSION("version", "1.0"),
 
     SERVICE_NAME("service.name", ""),
@@ -28,9 +30,7 @@ enum JenkinsBuildParams {
     JENKINS_TOOL_MAVEN("jenkins_tool.maven", "maven"),
     JENKINS_TOOL_JAVA("jenkins_tool.java", "jdk"),
     JENKINS_TOOL_NPM_VERSION("jenkins_tool.npm.version", "nodejs"),
-    JENKINS_TOOL_NPM_TYPE("jenkins_tool.npm.type", "nodejs"),
-
-    PROFILES("profile", "")
+    JENKINS_TOOL_NPM_TYPE("jenkins_tool.npm.type", "nodejs")
 
     // instance variables
 
@@ -52,7 +52,7 @@ enum JenkinsBuildParams {
     }
 
     static boolean hasKey(String key) {
-        JenkinsBuildParams.values().each {param ->
+        for (JenkinsBuildParams param: JenkinsBuildParams.values()) {
             if (param.getKey().equalsIgnoreCase(key)) {
                 return true
             }

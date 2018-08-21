@@ -23,6 +23,7 @@ import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.builder.RevisionControlBuilder
 import pro.javatar.pipeline.builder.YamlFlowBuilder
 import pro.javatar.pipeline.builder.converter.JenkinsBuildParamsConverter
+import pro.javatar.pipeline.builder.model.JenkinsBuildParams
 import pro.javatar.pipeline.stage.Stage
 
 import static pro.javatar.pipeline.model.StageType.*
@@ -59,11 +60,16 @@ class JenkinsfileExample {
 
     static void main(String[] args) {
 //        Flow flow = new YamlFlowBuilder(this).build()
+        hasKey()
         //new JenkinsfileExample().jenkinsBuildParamsConverterTest()
-        jenkinsBuildParamsConverterTest()
+//        jenkinsBuildParamsConverterTest()
 //        new JenkinsfileExample().execute("some-ui")
 //        println(new JenkinsfileExample().domainUrl())
 //        println(new JenkinsfileExample().containsBranch())
+    }
+
+    static def hasKey() {
+        println(JenkinsBuildParams.hasKey("profile"))
     }
 
     static def jenkinsBuildParamsConverterTest() {
