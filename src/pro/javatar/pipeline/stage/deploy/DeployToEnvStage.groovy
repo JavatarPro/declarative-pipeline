@@ -29,7 +29,7 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 abstract class DeployToEnvStage extends Stage {
 
-    protected DeploymentService deploymentService = ServiceContextHolder.getService(DeploymentService.class)
+    protected DeploymentService deploymentService // = ServiceContextHolder.getService(DeploymentService.class)
 
     @Override
     void execute() throws PipelineException {
