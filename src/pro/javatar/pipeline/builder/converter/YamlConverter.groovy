@@ -1,6 +1,7 @@
 package pro.javatar.pipeline.builder.converter
 
 import pro.javatar.pipeline.builder.model.Docker
+import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.builder.model.Maven
 import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.builder.model.Pipeline
@@ -14,6 +15,7 @@ class YamlConverter {
 
     YamlConfig toYamlModel(def yml) {
         return new YamlConfig()
+                .withJenkinsTool(retrieveJenkinsTools(yml))
                 .withVcs(retrieveVcs(yml))
                 .withService(retrieveService(yml))
                 .withPipeline(retrievePipeline(yml))
@@ -21,6 +23,16 @@ class YamlConverter {
                 .withMaven(retrieveMaven(yml))
                 .withDocker(retrieveDockerList(yml))
                 .populateServiceRepo()
+    }
+
+    JenkinsTool retrieveJenkinsTools(yml) {
+        def tool = yml.jenkins_tool
+        dsl.echo "retrieveJenkinsTools: jenkins_tool: ${tool}"
+        return new JenkinsTool()
+                .withJava(tool.java)
+                .withMaven(tool.maven)
+                .withNpmVersion(tool["npm.version"])
+                .withNpmType(tool["npm.type"])
     }
 
     Service retrieveService(def yml) {
