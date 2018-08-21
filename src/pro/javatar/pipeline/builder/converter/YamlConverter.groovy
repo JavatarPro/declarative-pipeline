@@ -39,6 +39,7 @@ class YamlConverter {
         return new Vcs()
                 .withRevisionControl(yml.revisionControl)
                 .withRepo(retrieveVcsRepos(vcs))
+                .populateRevisionControl()
     }
 
     Map<String, VcsRepo> retrieveVcsRepos(def vcs) {

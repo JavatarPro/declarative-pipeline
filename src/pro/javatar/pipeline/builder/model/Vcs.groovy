@@ -1,10 +1,21 @@
 package pro.javatar.pipeline.builder.model
 
+import static pro.javatar.pipeline.util.Utils.isBlank
+
 class Vcs {
 
     String revisionControl
 
     Map<String, VcsRepo> repo
+
+    Vcs populateRevisionControl() {
+        repo.each {key, value ->
+            if (isBlank(value.getRevisionControl())) {
+                value.setRevisionControl(revisionControl)
+            }
+        }
+        return this
+    }
 
     String getRevisionControl() {
         return revisionControl
