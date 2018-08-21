@@ -94,4 +94,57 @@ class DockerBuilder implements Serializable {
         this.customDockerFileName = customDockerFileName
         return this
     }
+
+    String getDockerRepo() {
+        return dockerRepo
+    }
+
+    void setDockerRepo(String dockerRepo) {
+        this.dockerRepo = dockerRepo
+    }
+
+    DockerBuilder withDockerRepo(String dockerRepo) {
+        this.dockerRepo = dockerRepo
+        return this
+    }
+
+    String getDockerDevRepo() {
+        return dockerDevRepo
+    }
+
+    void setDockerDevRepo(String dockerDevRepo) {
+        this.dockerDevRepo = dockerDevRepo
+    }
+
+    String getDockerDevCredentialsId() {
+        return dockerDevCredentialsId
+    }
+
+    void setDockerDevCredentialsId(String dockerDevCredentialsId) {
+        this.dockerDevCredentialsId = dockerDevCredentialsId
+    }
+
+    String getDockerProdCredentialsId() {
+        return dockerProdCredentialsId
+    }
+
+    void setDockerProdCredentialsId(String dockerProdCredentialsId) {
+        this.dockerProdCredentialsId = dockerProdCredentialsId
+    }
+
+    String getCustomDockerFileName() {
+        return customDockerFileName
+    }
+
+    void setCustomDockerFileName(String customDockerFileName) {
+        this.customDockerFileName = customDockerFileName
+    }
+
+    DockerOrchestrationService getOrchestrationService() {
+        return orchestrationService
+    }
+
+    void setOrchestrationService(DockerOrchestrationService orchestrationService) {
+        this.orchestrationService = orchestrationService
+    }
 }

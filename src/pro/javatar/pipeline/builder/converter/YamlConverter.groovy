@@ -5,6 +5,7 @@ import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.builder.model.Maven
 import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.builder.model.Pipeline
+import pro.javatar.pipeline.builder.model.S3
 import pro.javatar.pipeline.builder.model.Service
 import pro.javatar.pipeline.builder.model.Ui
 import pro.javatar.pipeline.builder.model.Vcs
@@ -22,8 +23,10 @@ class YamlConverter {
                 .withPipeline(retrievePipeline(yml))
                 .withNpm(retrieveNpm(yml))
                 .withUi(retrieveUi(yml))
+                .withS3(retrieveS3(yml))
                 .withMaven(retrieveMaven(yml))
                 .withDocker(retrieveDockerList(yml))
+                .withOrchestrationService(yml.orchestrationService)
                 .populateServiceRepo()
     }
 
@@ -130,6 +133,20 @@ class YamlConverter {
         def ui = yml.ui
         dsl.echo "retrieveUi: ui: ${ui}"
         return new Ui().withDeploymentType(ui.deploymentType)
+    }
+
+    S3 retrieveS3(def yml) {
+        def s3 = yml.s3
+        dsl.echo "retrieveS3: s3: ${s3}"
+        List<S3> result = new ArrayList<>()
+        s3.each { it ->
+            result.add(new S3()
+                    .withCredentialsId(it.credentialsId)
+                    .withBucket(it.bucket)
+                    .withRegion(it.region)
+                    .withEnv(retrieveEnvList(it.env)))
+        }
+        return result
     }
 
 }

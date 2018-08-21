@@ -18,14 +18,18 @@ class YamlConfig {
 
     List<Docker> docker = new ArrayList<>()
 
+    List<S3> s3 = new ArrayList<>()
+
     Vcs vcs = new Vcs()
+
+    JenkinsTool jenkinsTool = new JenkinsTool()
+
+    String orchestrationService
 
     YamlConfig populateServiceRepo() {
         service.setRepo(vcs.getRepo().get(service.getVcsRepoId()))
         return this
     }
-
-    JenkinsTool jenkinsTool = new JenkinsTool()
 
     Vcs getVcs() {
         return vcs
@@ -91,7 +95,7 @@ class YamlConfig {
         this.ui = ui
         return this
     }
-    
+
     List<Docker> getDocker() {
         return docker
     }
@@ -144,6 +148,37 @@ class YamlConfig {
         return this
     }
 
+    List<S3> getS3() {
+        return s3
+    }
+
+    void setS3(List<S3> s3) {
+        this.s3 = s3
+    }
+
+    YamlConfig withS3(List<S3> s3) {
+        this.s3 = s3
+        return this
+    }
+
+    YamlConfig addS3(S3 s3) {
+        this.s3.add(s3)
+        return this
+    }
+
+    String getOrchestrationService() {
+        return orchestrationService
+    }
+
+    void setOrchestrationService(String orchestrationService) {
+        this.orchestrationService = orchestrationService
+    }
+
+    YamlConfig withOrchestrationService(String orchestrationService) {
+        this.orchestrationService = orchestrationService
+        return this
+    }
+
     @Override
     public String toString() {
         return "YamlConfig{" +
@@ -152,7 +187,9 @@ class YamlConfig {
                 ", pipeline=" + pipeline +
                 ", maven=" + maven +
                 ", npm=" + npm +
+                ", ui=" + ui +
                 ", docker=" + docker +
+                ", s3=" + s3 +
                 ", vcs=" + vcs +
                 ", jenkinsTool=" + jenkinsTool +
                 '}';
