@@ -9,9 +9,9 @@ class Vcs {
     Map<String, VcsRepo> repo
 
     Vcs populateRevisionControl() {
-        repo.values().each { value ->
-            if (isBlank(value.getRevisionControl())) {
-                value.setRevisionControl(this.revisionControl)
+        for (VcsRepo vcsRepo: repo.values()) {
+            if (isBlank(vcsRepo.getRevisionControl())) {
+                vcsRepo.setRevisionControl(revisionControl)
             }
         }
         return this
