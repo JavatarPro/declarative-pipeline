@@ -24,6 +24,8 @@ import pro.javatar.pipeline.builder.RevisionControlBuilder
 import pro.javatar.pipeline.builder.YamlFlowBuilder
 import pro.javatar.pipeline.builder.converter.JenkinsBuildParamsConverter
 import pro.javatar.pipeline.builder.model.JenkinsBuildParams
+import pro.javatar.pipeline.builder.model.Service
+import pro.javatar.pipeline.service.PipelineDslHolder
 import pro.javatar.pipeline.stage.Stage
 
 import static pro.javatar.pipeline.model.StageType.*
@@ -60,7 +62,10 @@ class JenkinsfileExample {
 
     static void main(String[] args) {
 //        Flow flow = new YamlFlowBuilder(this).build()
-        hasKey()
+//        hasKey()
+//        yml()
+        PipelineDslHolder.dsl = this
+        new JenkinsfileExample().yml()
         //new JenkinsfileExample().jenkinsBuildParamsConverterTest()
 //        jenkinsBuildParamsConverterTest()
 //        new JenkinsfileExample().execute("some-ui")
@@ -68,8 +73,14 @@ class JenkinsfileExample {
 //        println(new JenkinsfileExample().containsBranch())
     }
 
-    static def hasKey() {
-        println(JenkinsBuildParams.hasKey("profile"))
+    def yml() {
+//        println(JenkinsBuildParams.hasKey("profile"))
+        def properties = ["service": ["buildType":"maven", "useBuildNumberForVersion":false],
+                          "profile":["ui":["service.buildType":"npm"]]]
+        //def param = ["service.buildType":"npm"]
+        println(properties)
+        new JenkinsBuildParamsConverter().amendAccordingToProfile("ui", properties)
+        println(properties)
     }
 
     static def jenkinsBuildParamsConverterTest() {

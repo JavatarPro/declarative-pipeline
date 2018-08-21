@@ -12,7 +12,7 @@ enum JenkinsBuildParams {
     SERVICE_NAME("service.name", ""),
     SERVICE_BUILD_TYPE("service.buildType", BuildServiceType.MAVEN),
     SERVICE_BUILD_NUMBER_FOR_VERSION("service.useBuildNumberForVersion", false),
-    SERVICE_REPO("service.vcs.repo", false),
+    SERVICE_REPO("service.vcs_repo", false),
 
     UI_DEPLOYMENT_TYPE("ui.deploymentType", UiDeploymentType.AWS_S3),
 

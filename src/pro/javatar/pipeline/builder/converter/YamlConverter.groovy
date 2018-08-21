@@ -42,7 +42,7 @@ class YamlConverter {
                 .withName(service.name)
                 .withBuildType(service.buildType)
                 .withUseBuildNumberForVersion(service.useBuildNumberForVersion)
-                .withVcsRepoId(service["vcs.repo"])
+                .withVcsRepoId(service["vcs_repo"])
     }
 
     VcsRepo retrieveVcs(def yml) {
