@@ -42,10 +42,10 @@ class YamlConverter {
                 .withName(service.name)
                 .withBuildType(service.buildType)
                 .withUseBuildNumberForVersion(service.useBuildNumberForVersion)
-                .withVcsRepoId(service["vcs_repo"])
+                .withVcsRepoId(service.vcs_repo)
     }
 
-    VcsRepo retrieveVcs(def yml) {
+    Vcs retrieveVcs(def yml) {
         def vcs = yml.vcs
         dsl.echo "retrieveVcsRepo: vcs: ${vcs}"
         return new Vcs()
