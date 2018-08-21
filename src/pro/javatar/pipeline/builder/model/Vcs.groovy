@@ -9,7 +9,7 @@ class Vcs {
     Map<String, VcsRepo> repo
 
     Vcs populateRevisionControl() {
-        repo.each {key, value ->
+        repo.values().each { value ->
             if (isBlank(value.getRevisionControl())) {
                 value.setRevisionControl(revisionControl)
             }
