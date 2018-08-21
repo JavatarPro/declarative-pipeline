@@ -24,8 +24,12 @@ class JenkinsBuildParamsConverter {
     }
 
     void amendAccordingToProfile(String profileName, def properties) {
+        dsl.echo "detected profile change: ${profileName} will be applied"
         def profile = properties.profile[profileName]
+        dsl.echo "profile variables: ${profile}"
+        dsl.echo "properties before apply: ${properties}"
         profile.each {key, value -> properties.put(key, value)}
+        dsl.echo "properties after apply: ${properties}"
     }
 
     void replaceVariable(def param, def properties) {
