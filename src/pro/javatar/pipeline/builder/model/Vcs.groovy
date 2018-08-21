@@ -11,7 +11,7 @@ class Vcs {
     Vcs populateRevisionControl() {
         repo.values().each { value ->
             if (isBlank(value.getRevisionControl())) {
-                value.setRevisionControl(revisionControl)
+                value.setRevisionControl(this.revisionControl)
             }
         }
         return this
