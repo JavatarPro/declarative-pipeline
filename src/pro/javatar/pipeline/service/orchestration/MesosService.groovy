@@ -35,8 +35,9 @@ class MesosService implements DockerOrchestrationService {
 
     def setup() {
         // TODO prepare vcsRepos on builder stage
-        dsl.echo "MesosService: checkout configurations for dev: ${dev.toString()}, and prod: ${prod.toString()}"
-        VcsHelper.checkoutRepo(vcsRepoMap.get(Env.DEV.getValue()))
+        dsl.echo "MesosService: checkout configurations for vcsRepoMap: ${vcsRepoMap}"
+        VcsRepo vcsRepo = vcsRepoMap.get(Env.DEV.getValue())
+        VcsHelper.checkoutRepo(vcsRepo, getFolder(vcsRepo))
         // TODO checkout prod repo securely on different agent (e.g. pipeline-prod)
 //        VcsHelper.checkoutRepo(vcsRepoMap.get(Env.PROD.getValue()))
         dsl.echo "MesosService: configurations checkout completed"
@@ -60,6 +61,10 @@ class MesosService implements DockerOrchestrationService {
 
     String getFolder(String env) {
         VcsRepo vcsRepo = vcsRepoMap.get(env)
+        return "../${vcsRepo.getName()}"
+    }
+
+    String getFolder(VcsRepo vcsRepo) {
         return "../${vcsRepo.getName()}"
     }
 
