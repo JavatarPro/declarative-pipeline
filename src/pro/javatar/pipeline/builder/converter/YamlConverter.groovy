@@ -128,7 +128,7 @@ class YamlConverter {
         dsl.echo "retrieveMesos: vcsConfigRepos: ${vcsConfigRepos}"
         Mesos result = new Mesos()
         Map<String, VcsRepoTO> vcsRepos = new HashMap<>()
-        Map<String, VcsRepoTO> vcsRepoMap = retrieveVcsRepos(yml)
+        Map<String, VcsRepoTO> vcsRepoMap = retrieveVcs(yml).getRepo()
         dsl.echo "retrieveMesos: vcsRepoMap: ${vcsRepoMap}"
         vcsConfigRepos.each { key, value -> vcsRepos.put(key, vcsRepoMap.get(value)) }
         result.setVcsConfigRepos(vcsRepos)
