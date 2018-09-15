@@ -1,6 +1,6 @@
 package pro.javatar.pipeline.builder.model
 
-class VcsRepo {
+class VcsRepoTO {
 
     String name
 
@@ -24,7 +24,7 @@ class VcsRepo {
         this.name = name
     }
 
-    VcsRepo withName(String name) {
+    VcsRepoTO withName(String name) {
         this.name = name
         return this
     }
@@ -37,7 +37,7 @@ class VcsRepo {
         this.owner = owner
     }
 
-    VcsRepo withOwner(String owner) {
+    VcsRepoTO withOwner(String owner) {
         this.owner = owner
         return this
     }
@@ -50,7 +50,7 @@ class VcsRepo {
         this.credentialsId = credentialsId
     }
 
-    VcsRepo withCredentialsId(String credentialsId) {
+    VcsRepoTO withCredentialsId(String credentialsId) {
         this.credentialsId = credentialsId
         return this
     }
@@ -63,7 +63,7 @@ class VcsRepo {
         this.domain = domain
     }
 
-    VcsRepo withDomain(String domain) {
+    VcsRepoTO withDomain(String domain) {
         this.domain = domain
         return this
     }
@@ -76,7 +76,7 @@ class VcsRepo {
         this.type = type
     }
 
-    VcsRepo withType(String type) {
+    VcsRepoTO withType(String type) {
         this.type = type
         return this
     }
@@ -89,7 +89,7 @@ class VcsRepo {
         this.revisionControl = revisionControl
     }
 
-    VcsRepo withRevisionControl(String revisionControl) {
+    VcsRepoTO withRevisionControl(String revisionControl) {
         this.revisionControl = revisionControl
         return this
     }
@@ -102,14 +102,14 @@ class VcsRepo {
         this.branch = branch
     }
 
-    VcsRepo withBranch(String branch) {
+    VcsRepoTO withBranch(String branch) {
         this.branch = branch
         return this
     }
 
     @Override
     public String toString() {
-        return "VcsRepo{" +
+        return "VcsRepoTO{" +
                 "name='" + name + '\'' +
                 ", owner='" + owner + '\'' +
                 ", credentialsId='" + credentialsId + '\'' +

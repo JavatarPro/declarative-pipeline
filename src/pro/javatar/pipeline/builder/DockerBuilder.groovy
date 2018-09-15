@@ -58,7 +58,7 @@ class DockerBuilder implements Serializable {
         return this
     }
 
-    DockerBuilder withDockerOrchestrationService(String dockerOrchestrationServiceType) {
+    DockerBuilder withDockerOrchestrationServiceType(String dockerOrchestrationServiceType) {
         DockerOrchestrationServiceType type = fromString(dockerOrchestrationServiceType)
         if (type == KUBERNETES) {
             this.orchestrationService = new KubernetesService()

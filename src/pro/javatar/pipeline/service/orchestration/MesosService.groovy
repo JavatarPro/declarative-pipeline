@@ -29,14 +29,16 @@ class MesosService implements DockerOrchestrationService {
 
     VcsRepo dev
     VcsRepo prod
+    Map<String, VcsRepo> vcsRepoMap
 
     MesosService(){}
 
     def setup() {
         // TODO prepare vcsRepos on builder stage
         dsl.echo "MesosService: checkout configurations for dev: ${dev.toString()}, and prod: ${prod.toString()}"
-        VcsHelper.checkoutRepo(dev)
-        VcsHelper.checkoutRepo(prod)
+        VcsHelper.checkoutRepo(vcsRepoMap.get(Env.DEV.getValue()))
+        // TODO checkout prod repo securely on different agent (e.g. pipeline-prod)
+//        VcsHelper.checkoutRepo(vcsRepoMap.get(Env.PROD.getValue()))
         dsl.echo "MesosService: configurations checkout completed"
     }
 
@@ -51,32 +53,42 @@ class MesosService implements DockerOrchestrationService {
                      "RELEASE_VERSION=${imageVersion}", "LABEL_ENVIRONMENT=${environment}"]) {
 
             dsl.sh "${getFolder(environment)}/bin/mm-deploy -e ${environment} ${imageName} || " +
-                    " (depcon -e ${environment} app rollback /${imageName}-${environment} --wait; echo 'Deploy failed!'; exit 2)"
+                    " (depcon -e ${environment} app rollback /${imageName}-${environment} " +
+                    "--wait; echo 'Deploy failed!'; exit 2)"
         }
     }
 
     String getFolder(String env) {
-        if (Env.fromString(env) == Env.PROD) {
-            return "../${prod.getName()}"
-        }
-        return "../${dev.getName()}"
+        VcsRepo vcsRepo = vcsRepoMap.get(env)
+        return "../${vcsRepo.getName()}"
     }
 
     MesosService withDev(VcsRepo dev) {
+        this.vcsRepoMap.put(Env.DEV.getValue(), dev)
         this.dev = dev
         return this
     }
 
-    MesosService withProd(VcsRepo prod) {
+    MesosService withProd(VcsRepo prod) {prod
+        this.vcsRepoMap.put(Env.PROD.getValue(), dev)
         this.prod = prod
+        return this
+    }
+
+    MesosService withVcsRepoMap(Map<String, VcsRepo> vcsRepoMap) {
+        this.vcsRepoMap = vcsRepoMap
+        return this
+    }
+
+    MesosService withRepo(String repoEnv, VcsRepo vcsRepo) {
+        this.vcsRepoMap.put(repoEnv, vcsRepo)
         return this
     }
 
     @Override
     public String toString() {
         return "MesosService{" +
-                "dev=" + dev +
-                ", prod=" + prod +
+                "vcsRepoMap=" + vcsRepoMap +
                 '}';
     }
 }

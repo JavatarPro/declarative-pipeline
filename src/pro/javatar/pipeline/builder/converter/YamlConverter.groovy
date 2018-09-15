@@ -4,12 +4,13 @@ import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.builder.model.Maven
 import pro.javatar.pipeline.builder.Npm
+import pro.javatar.pipeline.builder.model.Mesos
 import pro.javatar.pipeline.builder.model.Pipeline
 import pro.javatar.pipeline.builder.model.S3
 import pro.javatar.pipeline.builder.model.Service
 import pro.javatar.pipeline.builder.model.Ui
 import pro.javatar.pipeline.builder.model.Vcs
-import pro.javatar.pipeline.builder.model.VcsRepo
+import pro.javatar.pipeline.builder.model.VcsRepoTO
 import pro.javatar.pipeline.builder.model.YamlConfig
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -27,6 +28,7 @@ class YamlConverter {
                 .withMaven(retrieveMaven(yml))
                 .withDocker(retrieveDockerList(yml))
                 .withOrchestrationService(yml.orchestrationService)
+                .withMesos(retrieveMesos(yml))
                 .populateServiceRepo()
     }
 
@@ -59,15 +61,15 @@ class YamlConverter {
                 .populateRevisionControl()
     }
 
-    Map<String, VcsRepo> retrieveVcsRepos(def vcs) {
-        Map<String, VcsRepo> vcsRepos = new HashMap<>()
+    Map<String, VcsRepoTO> retrieveVcsRepos(def vcs) {
+        Map<String, VcsRepoTO> vcsRepos = new HashMap<>()
         def repos = vcs.repo
         repos.each { key, value -> vcsRepos.put(key, retrieveVcsRepo(value)) }
         return vcsRepos
     }
 
-    VcsRepo retrieveVcsRepo(def vcsRepo) {
-        return new VcsRepo()
+    VcsRepoTO retrieveVcsRepo(def vcsRepo) {
+        return new VcsRepoTO()
                 .withName(vcsRepo.name)
                 .withOwner(vcsRepo.owner)
                 .withCredentialsId(vcsRepo.credentialsId)
@@ -117,6 +119,16 @@ class YamlConverter {
                 .withRepositoryId(maven.repository.id)
                 .withRepositoryUrl(maven.repository.url)
                 .withParams(maven.params)
+    }
+
+    Mesos retrieveMesos(def yml) {
+        def mesos = yml.mesos
+        dsl.echo "retrieveMesos: mesos: ${mesos}"
+        Mesos result = new Mesos()
+        Map<String, VcsRepoTO> vcsRepos = result.getVcsConfigRepos()
+        Map<String, VcsRepoTO> vcsRepoMap = retrieveVcsRepos(yml)
+        mesos.each { key, value -> vcsRepos.put(key, vcsRepoMap.get(value)) }
+        return result
     }
 
     Npm retrieveNpm(def yml) {

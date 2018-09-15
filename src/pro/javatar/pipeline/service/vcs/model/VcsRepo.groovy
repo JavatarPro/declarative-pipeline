@@ -1,5 +1,6 @@
 package pro.javatar.pipeline.service.vcs.model
 
+import pro.javatar.pipeline.model.RevisionControlType
 import pro.javatar.pipeline.model.VcsRepositoryType
 
 class VcsRepo {
@@ -13,6 +14,8 @@ class VcsRepo {
     String domain
 
     VcsRepositoryType type
+
+    RevisionControlType revisionControlType
 
     boolean ssh
 
@@ -110,6 +113,19 @@ class VcsRepo {
 
     VcsRepo withBranch(String branch) {
         this.branch = branch
+        return this
+    }
+
+    RevisionControlType getRevisionControlType() {
+        return revisionControlType
+    }
+
+    void setRevisionControlType(RevisionControlType revisionControlType) {
+        this.revisionControlType = revisionControlType
+    }
+
+    VcsRepo withRevisionControlType(RevisionControlType revisionControlType) {
+        this.revisionControlType = revisionControlType
         return this
     }
 

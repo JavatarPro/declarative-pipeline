@@ -11,7 +11,7 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 class YamlFlowBuilder {
 
-    static final DEFAULT_CONFIG_FILE = "javatar-declarative-pipeline.yml"
+    static final DEFAULT_CONFIG_FILE = "declarative-pipeline.yml"
 
     String configFile
 
@@ -57,11 +57,11 @@ class YamlFlowBuilder {
         return template.toString()
     }
 
-
     @Override
     public String toString() {
         return "YamlFlowBuilder{" +
                 "configFile='" + configFile + '\'' +
                 '}';
     }
+
 }

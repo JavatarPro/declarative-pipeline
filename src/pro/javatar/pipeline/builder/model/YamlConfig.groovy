@@ -26,6 +26,8 @@ class YamlConfig {
 
     String orchestrationService
 
+    Mesos mesos = new Mesos()
+
     YamlConfig populateServiceRepo() {
         service.setRepo(vcs.getRepo().get(service.getVcsRepoId()))
         return this
@@ -176,6 +178,19 @@ class YamlConfig {
 
     YamlConfig withOrchestrationService(String orchestrationService) {
         this.orchestrationService = orchestrationService
+        return this
+    }
+
+    Mesos getMesos() {
+        return mesos
+    }
+
+    void setMesos(Mesos mesos) {
+        this.mesos = mesos
+    }
+
+    YamlConfig withMesos(Mesos mesos) {
+        this.mesos = mesos
         return this
     }
 

@@ -8,7 +8,7 @@ class Service {
 
     boolean useBuildNumberForVersion
 
-    VcsRepo repo
+    VcsRepoTO repo
 
     String vcsRepoId
 
@@ -51,15 +51,15 @@ class Service {
         return this
     }
 
-    VcsRepo getRepo() {
+    VcsRepoTO getRepo() {
         return repo
     }
 
-    void setRepo(VcsRepo repo) {
+    void setRepo(VcsRepoTO repo) {
         this.repo = repo
     }
 
-    Service withRepo(VcsRepo repo) {
+    Service withRepo(VcsRepoTO repo) {
         this.repo = repo
         return this
     }

@@ -6,10 +6,10 @@ class Vcs {
 
     String revisionControl
 
-    Map<String, VcsRepo> repo
+    Map<String, VcsRepoTO> repo
 
     Vcs populateRevisionControl() {
-        for (VcsRepo vcsRepo: repo.values()) {
+        for (VcsRepoTO vcsRepo: repo.values()) {
             if (isBlank(vcsRepo.getRevisionControl())) {
                 vcsRepo.setRevisionControl(revisionControl)
             }
@@ -30,15 +30,15 @@ class Vcs {
         return this
     }
 
-    Map<String, VcsRepo> getRepo() {
+    Map<String, VcsRepoTO> getRepo() {
         return repo
     }
 
-    void setRepo(Map<String, VcsRepo> repo) {
+    void setRepo(Map<String, VcsRepoTO> repo) {
         this.repo = repo
     }
 
-    Vcs withRepo(Map<String, VcsRepo> repo) {
+    Vcs withRepo(Map<String, VcsRepoTO> repo) {
         this.repo = repo
         return this
     }

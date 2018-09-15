@@ -6,8 +6,19 @@ import pro.javatar.pipeline.builder.Maven
 import pro.javatar.pipeline.builder.RevisionControlBuilder
 import pro.javatar.pipeline.builder.S3Builder
 import pro.javatar.pipeline.builder.model.Docker
+import pro.javatar.pipeline.builder.model.Mesos
 import pro.javatar.pipeline.builder.model.S3
+import pro.javatar.pipeline.builder.model.VcsRepoTO
 import pro.javatar.pipeline.builder.model.YamlConfig
+import pro.javatar.pipeline.model.DockerOrchestrationServiceType
+import pro.javatar.pipeline.model.RevisionControlType
+import pro.javatar.pipeline.model.VcsRepositoryType
+import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
+import pro.javatar.pipeline.service.orchestration.MesosService
+import pro.javatar.pipeline.service.vcs.model.VcsRepo
+
+import static pro.javatar.pipeline.util.Utils.isEmpty
+import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 class FlowBuilderConverter {
 
@@ -51,7 +62,46 @@ class FlowBuilderConverter {
                 .withDockerRepo(prod.getRegistry())
                 .withDockerDevCredentialsId(dev.getCredentialsId())
                 .withDockerProdCredentialsId(prod.getCredentialsId())
-                .withDockerOrchestrationService(yamlFile.getOrchestrationService())
+                .withDockerOrchestrationService(toDockerOrchestrationService(yamlFile))
+    }
+
+    DockerOrchestrationService toDockerOrchestrationService(YamlConfig yamlFile) {
+        String type = yamlFile.getOrchestrationService()
+        if (isEmpty(type)) {
+            return null
+        }
+        DockerOrchestrationServiceType orchestrationServiceType = DockerOrchestrationServiceType.fromString(type)
+        if (orchestrationServiceType == DockerOrchestrationServiceType.MESOS) {
+            return toMesosService(yamlFile)
+        }
+    }
+
+    MesosService toMesosService(YamlConfig yamlFile) {
+        MesosService mesosService = new MesosService()
+        Mesos mesos = yamlFile.getMesos()
+        Map<String, VcsRepo> vcsRepoMap = toVcsRepoMap(mesos.getVcsConfigRepos())
+        mesosService.setVcsRepoMap(vcsRepoMap)
+        yamlFile.getMesos()
+        return mesosService
+    }
+
+    Map<String, VcsRepo> toVcsRepoMap(Map<String, VcsRepoTO> vcsRepoToMap) {
+        dsl.echo "toVcsRepoMap vcsRepoToMap: ${vcsRepoToMap}"
+        Map<String, VcsRepo> result = new HashMap<>()
+        vcsRepoToMap.each { key, value -> result.put(key, toVcsRepo((value))) }
+        return result
+    }
+
+    VcsRepo toVcsRepo(VcsRepoTO vcsRepoTO) {
+        dsl.echo "toVcsRepo vcsRepoTO: ${vcsRepoTO.toString()}"
+        return new VcsRepo()
+                .withCredentialsId(vcsRepoTO.getCredentialsId())
+                .withType(VcsRepositoryType.fromString(vcsRepoTO.getType()))
+                .withRevisionControlType(RevisionControlType.fromString(vcsRepoTO.getRevisionControl()))
+                .withDomain(vcsRepoTO.getDomain())
+                .withName(vcsRepoTO.getName())
+                .withOwner(vcsRepoTO.getOwner())
+                .withBranch(vcsRepoTO.getBranch())
     }
 
     RevisionControlBuilder toRevisionControlBuilder(YamlConfig yamlFile) {
