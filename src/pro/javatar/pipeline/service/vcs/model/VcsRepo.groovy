@@ -17,7 +17,7 @@ class VcsRepo {
 
     RevisionControlType revisionControlType
 
-    boolean ssh
+    boolean ssh = true
 
     String branch
 
