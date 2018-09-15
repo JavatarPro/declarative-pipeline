@@ -35,6 +35,7 @@ class VcsHelper {
         dsl.echo "VcsHelper: revisionControlService: ${revisionControlService} will be used"
         VscCheckoutRequest request = VcsConverter.toVscCheckoutRequest(vcsRepo)
         dsl.dir(folder) {
+            dsl.echo "before call revisionControlService.checkoutRepo(request: ${request})"
             revisionControlService.checkoutRepo(request)
         }
     }

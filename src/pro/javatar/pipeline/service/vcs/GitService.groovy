@@ -72,6 +72,7 @@ class GitService extends RevisionControlService {
 
     @Override
     def checkoutRepo(String repoUrl, String branch) {
+        dsl.echo "checkoutRepo with repoUrl: ${repoUrl}, branch: ${branch}"
         VscCheckoutRequest vscCheckoutRequest = new VscCheckoutRequest().withBranch(branch).withRepoUrl(repoUrl)
                                                         .withCredentialsId(credentialsId)
         checkoutRepo(vscCheckoutRequest)
