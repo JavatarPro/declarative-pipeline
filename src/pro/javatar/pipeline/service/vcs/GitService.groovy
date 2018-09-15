@@ -80,7 +80,7 @@ class GitService extends RevisionControlService {
 
     @Override
     def checkoutRepo(VscCheckoutRequest request) {
-        dsl.echo "try to checkoutRepo with request: ${request.toString()}"
+        dsl.echo "try to checkoutRepo with request: ${request}"
         // TODO remove hardcode, make configurable
         dsl.timeout(time: 5, unit: 'MINUTES') {
             dsl.git credentialsId: request.getCredentialsId(), url: request.getRepoUrl()
