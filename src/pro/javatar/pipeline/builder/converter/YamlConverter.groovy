@@ -128,6 +128,9 @@ class YamlConverter {
         Map<String, VcsRepoTO> vcsRepos = result.getVcsConfigRepos()
         Map<String, VcsRepoTO> vcsRepoMap = retrieveVcsRepos(yml)
         mesos.vcsConfigRepos.each { key, value -> vcsRepos.put(key, vcsRepoMap.get(value)) }
+        dsl.echo "retrieveMesos: result: ${result}"
+        result.setVcsConfigRepos(vcsRepos)
+        dsl.echo "retrieveMesos: result 2: ${result}"
         return result
     }
 
