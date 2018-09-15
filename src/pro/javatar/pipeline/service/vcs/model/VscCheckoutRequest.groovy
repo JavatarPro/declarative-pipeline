@@ -12,31 +12,31 @@ class VscCheckoutRequest implements Serializable {
 
     private RevisionControlType revisionControlType = RevisionControlType.GIT
 
-    String getRepoOwner() {
-        return repoOwner
-    }
-
-    void setRepoOwner(String repoOwner) {
-        this.repoOwner = repoOwner
-    }
-
-    VscCheckoutRequest withRepoOwner(String repoOwner) {
-        this.repoOwner = repoOwner
-        return this
-    }
-
-    String getRepo() {
-        return repo
-    }
-
-    void setRepo(String repo) {
-        this.repo = repo
-    }
-
-    VscCheckoutRequest withRepo(String repo) {
-        this.repo = repo
-        return this
-    }
+//    String getRepoOwner() {
+//        return repoOwner
+//    }
+//
+//    void setRepoOwner(String repoOwner) {
+//        this.repoOwner = repoOwner
+//    }
+//
+//    VscCheckoutRequest withRepoOwner(String repoOwner) {
+//        this.repoOwner = repoOwner
+//        return this
+//    }
+//
+//    String getRepo() {
+//        return repo
+//    }
+//
+//    void setRepo(String repo) {
+//        this.repo = repo
+//    }
+//
+//    VscCheckoutRequest withRepo(String repo) {
+//        this.repo = repo
+//        return this
+//    }
 
     String getRepoUrl() {
         return repoUrl
@@ -64,22 +64,22 @@ class VscCheckoutRequest implements Serializable {
         return this
     }
 
-    boolean getSsh() {
-        return ssh
-    }
-
-    boolean isSsh() {
-        return ssh
-    }
-
-    void setSsh(boolean ssh) {
-        this.ssh = ssh
-    }
-
-    VscCheckoutRequest withSsh(boolean ssh) {
-        this.ssh = ssh
-        return this
-    }
+//    boolean getSsh() {
+//        return ssh
+//    }
+//
+//    boolean isSsh() {
+//        return ssh
+//    }
+//
+//    void setSsh(boolean ssh) {
+//        this.ssh = ssh
+//    }
+//
+//    VscCheckoutRequest withSsh(boolean ssh) {
+//        this.ssh = ssh
+//        return this
+//    }
 
     String getBranch() {
         return branch
@@ -111,10 +111,10 @@ class VscCheckoutRequest implements Serializable {
     public String toString() {
         return "VscCheckoutRequest{" +
                 "repoUrl='" + repoUrl + '\'' +
-                ", repoOwner='" + repoOwner + '\'' +
-                ", repo='" + repo + '\'' +
+//                ", repoOwner='" + repoOwner + '\'' +
+//                ", repo='" + repo + '\'' +
                 ", credentialsId='" + credentialsId + '\'' +
-                ", ssh=" + ssh +
+//                ", ssh=" + ssh +
                 ", branch='" + branch + '\'' +
                 ", revisionControlType=" + revisionControlType +
                 '}';
