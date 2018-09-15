@@ -45,7 +45,9 @@ class ServiceContextHolder {
         if (service == null) {
             return
         }
-        return serviceHolder.get(service)
+        def result = serviceHolder.get(service)
+        dsl.echo "ServiceContextHolder: getService: result: ${result}"
+        return result
     }
 
     static def removeService(Class service) {
