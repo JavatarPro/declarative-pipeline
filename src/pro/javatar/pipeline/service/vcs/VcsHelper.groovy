@@ -29,6 +29,8 @@ class VcsHelper {
     }
 
     def static checkoutRepo(VcsRepo vcsRepo, String folder) {
+        dsl.echo "VcsHelper: checkoutRepo: vcsRepo: ${vcsRepo}, folder: ${folder}"
+        // TODO vcsRepo.revisionControlType ignored, used only common RevisionControlService
         RevisionControlService revisionControlService = ServiceContextHolder.getService(RevisionControlService.class)
         dsl.echo "VcsHelper: revisionControlService: ${revisionControlService} will be used"
         VscCheckoutRequest request = VcsConverter.toVscCheckoutRequest(vcsRepo)

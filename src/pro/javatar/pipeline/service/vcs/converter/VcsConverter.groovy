@@ -11,7 +11,7 @@ class VcsConverter {
 
     static VscCheckoutRequest toVscCheckoutRequest(VcsRepo vcsRepo) {
         String repoUrl = urlResolver.getRepoUrl(vcsRepo)
-        VscCheckoutRequest request = new VscCheckoutRequest()
+        return new VscCheckoutRequest()
                 .withCredentialsId(vcsRepo.getCredentialsId())
                 .withRepoUrl(repoUrl)
                 .withBranch(vcsRepo.getBranch())
