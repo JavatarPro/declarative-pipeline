@@ -46,9 +46,6 @@ class SenchaService extends BuildService {
         dsl.sh 'sencha app install --framework=/opt/ext-6.2.0/'
         dsl.sh 'sencha app build production'
         dsl.sh "pwd; ls -la"
-        // String buildFolder = dsl.env.WORKSPACE
-        // build/production/CorporateProgram/**/*
-        // dsl.sh "ln -s ${buildFolder}/repo/build/production/${getApplicationName()} ${distributionFolder}"
         dsl.sh "ln -s build/production/${getApplicationName()} ${distributionFolder}"
         dsl.sh "zip -r ${getArtifact()} ${distributionFolder}"
         dsl.sh "pwd; ls -la; ls -la *"
