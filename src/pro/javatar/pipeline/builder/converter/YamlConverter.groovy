@@ -124,13 +124,15 @@ class YamlConverter {
     Mesos retrieveMesos(def yml) {
         def mesos = yml.mesos
         dsl.echo "retrieveMesos: mesos: ${mesos}"
+        def vcsConfigRepos = mesos.vcsConfigRepos
+        dsl.echo "retrieveMesos: vcsConfigRepos: ${vcsConfigRepos}"
         Mesos result = new Mesos()
-        Map<String, VcsRepoTO> vcsRepos = result.getVcsConfigRepos()
+        Map<String, VcsRepoTO> vcsRepos = new HashMap<>()
         Map<String, VcsRepoTO> vcsRepoMap = retrieveVcsRepos(yml)
-        mesos.vcsConfigRepos.each { key, value -> vcsRepos.put(key, vcsRepoMap.get(value)) }
-        dsl.echo "retrieveMesos: result: ${result}"
+        dsl.echo "retrieveMesos: vcsRepoMap: ${vcsRepoMap}"
+        vcsConfigRepos.each { key, value -> vcsRepos.put(key, vcsRepoMap.get(value)) }
         result.setVcsConfigRepos(vcsRepos)
-        dsl.echo "retrieveMesos: result 2: ${result}"
+        dsl.echo "retrieveMesos: result: ${result}"
         return result
     }
 
