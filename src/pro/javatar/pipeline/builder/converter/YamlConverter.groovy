@@ -127,7 +127,7 @@ class YamlConverter {
         Mesos result = new Mesos()
         Map<String, VcsRepoTO> vcsRepos = result.getVcsConfigRepos()
         Map<String, VcsRepoTO> vcsRepoMap = retrieveVcsRepos(yml)
-        mesos.each { key, value -> vcsRepos.put(key, vcsRepoMap.get(value)) }
+        mesos.retrieveMesos.each { key, value -> vcsRepos.put(key, vcsRepoMap.get(value)) }
         return result
     }
 
