@@ -75,6 +75,7 @@ class YamlConverter {
                 .withCredentialsId(vcsRepo.credentialsId)
                 .withDomain(vcsRepo.domain)
                 .withType(vcsRepo.type)
+                .withBranch(vcsRepo.branch)
                 .withRevisionControl(vcsRepo.revisionControl)
     }
 
