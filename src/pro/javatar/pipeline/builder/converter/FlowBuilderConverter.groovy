@@ -1,5 +1,6 @@
 package pro.javatar.pipeline.builder.converter
 
+import pro.javatar.pipeline.builder.BackEndAutoTestsServiceBuilder
 import pro.javatar.pipeline.builder.DockerBuilder
 import pro.javatar.pipeline.builder.FlowBuilder
 import pro.javatar.pipeline.builder.Maven
@@ -35,6 +36,16 @@ class FlowBuilderConverter {
                 .withS3(toS3Builder(yamlFile))
                 .withRevisionControl(toRevisionControlBuilder(yamlFile))
                 .withDocker(toDockerBuilder(yamlFile))
+                .withBackEndAutoTestsServiceBuilder(toBackEndAutoTestsServiceBuilder(yamlFile))
+    }
+
+    BackEndAutoTestsServiceBuilder toBackEndAutoTestsServiceBuilder(YamlConfig yamlConfig) {
+        def autoTests = yamlConfig["auto-test"]
+        return new BackEndAutoTestsServiceBuilder()
+                .withJobName(autoTests.jobName)
+                .withSkipCodeQualityVerification(autoTests.skipCodeQualityVerification)
+                .withSkipSystemTests(autoTests.skipSystemTests)
+                .withSleepInSeconds(autoTests.sleepInSeconds)
     }
 
     Maven toMaven(YamlConfig yamlFile) {
