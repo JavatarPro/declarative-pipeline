@@ -99,6 +99,11 @@ class BackEndAutoTestsServiceBuilder {
         return skipCodeQualityVerification
     }
 
+    BackEndAutoTestsServiceBuilder withSkipCodeQualityVerification(boolean skipCodeQualityVerification) {
+        this.skipCodeQualityVerification = skipCodeQualityVerification
+        return this
+    }
+
     BackEndAutoTestsServiceBuilder withSkipCodeQualityVerification(String skipCodeQualityVerification) {
         this.skipCodeQualityVerification = Boolean.valueOf(skipCodeQualityVerification)
         return this
