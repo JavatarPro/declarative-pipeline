@@ -28,6 +28,8 @@ class YamlConfig {
 
     Mesos mesos = new Mesos()
 
+    AutoTest autoTest = new AutoTest()
+
     YamlConfig populateServiceRepo() {
         service.setRepo(vcs.getRepo().get(service.getVcsRepoId()))
         return this
@@ -194,6 +196,19 @@ class YamlConfig {
         return this
     }
 
+    AutoTest getAutoTest() {
+        return autoTest
+    }
+
+    void setAutoTest(AutoTest autoTest) {
+        this.autoTest = autoTest
+    }
+
+    AutoTest withAutoTest(AutoTest autoTest) {
+        this.autoTest = autoTest
+        return this
+    }
+
     @Override
     public String toString() {
         return "YamlConfig{" +
@@ -207,6 +222,9 @@ class YamlConfig {
                 ", s3=" + s3 +
                 ", vcs=" + vcs +
                 ", jenkinsTool=" + jenkinsTool +
+                ", orchestrationService='" + orchestrationService + '\'' +
+                ", mesos=" + mesos +
+                ", autoTest=" + autoTest +
                 '}';
     }
 }

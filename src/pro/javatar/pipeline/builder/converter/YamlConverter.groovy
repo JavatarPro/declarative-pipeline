@@ -1,5 +1,6 @@
 package pro.javatar.pipeline.builder.converter
 
+import pro.javatar.pipeline.builder.model.AutoTest
 import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.builder.model.Maven
@@ -29,6 +30,7 @@ class YamlConverter {
                 .withDocker(retrieveDockerList(yml))
                 .withOrchestrationService(yml.orchestrationService)
                 .withMesos(retrieveMesos(yml))
+                .withAutoTest(retrieveAutoTest(yml))
                 .populateServiceRepo()
     }
 
@@ -50,6 +52,16 @@ class YamlConverter {
                 .withBuildType(service.buildType)
                 .withUseBuildNumberForVersion(service.useBuildNumberForVersion)
                 .withVcsRepoId(service.vcs_repo)
+    }
+
+    AutoTest retrieveAutoTest(def yml) {
+        def autoTest = yml["auto-test"]
+        dsl.echo "retrieveAutoTest: autoTest: ${autoTest}"
+        return new AutoTest()
+                .withJobName(autoTest.jobName)
+                .withSkipCodeQualityVerification(autoTest.skipCodeQualityVerification)
+                .withSkipSystemTests(autoTest.skipSystemTests)
+                .withSleepInSeconds(autoTest.skipCodeQualityVerification)
     }
 
     Vcs retrieveVcs(def yml) {

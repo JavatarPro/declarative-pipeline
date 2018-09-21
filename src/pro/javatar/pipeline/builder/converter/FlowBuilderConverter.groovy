@@ -40,7 +40,7 @@ class FlowBuilderConverter {
     }
 
     BackEndAutoTestsServiceBuilder toBackEndAutoTestsServiceBuilder(YamlConfig yamlConfig) {
-        def autoTests = yamlConfig["auto-test"]
+        def autoTests = yamlConfig.getAutoTest()
         return new BackEndAutoTestsServiceBuilder()
                 .withJobName(autoTests.jobName)
                 .withSkipCodeQualityVerification(autoTests.skipCodeQualityVerification)
