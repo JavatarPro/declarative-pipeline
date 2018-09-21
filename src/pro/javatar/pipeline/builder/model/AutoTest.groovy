@@ -36,6 +36,11 @@ class AutoTest {
         return this
     }
 
+    AutoTest withSkipSystemTests(String skipSystemTests) {
+        this.skipSystemTests = Boolean.valueOf(skipSystemTests)
+        return this
+    }
+
     boolean getSkipCodeQualityVerification() {
         return skipCodeQualityVerification
     }
@@ -46,6 +51,11 @@ class AutoTest {
 
     AutoTest withSkipCodeQualityVerification(boolean skipCodeQualityVerification) {
         this.skipCodeQualityVerification = skipCodeQualityVerification
+        return this
+    }
+
+    AutoTest withSkipCodeQualityVerification(String skipCodeQualityVerification) {
+        this.skipCodeQualityVerification = Boolean.valueOf(skipCodeQualityVerification)
         return this
     }
 
