@@ -118,6 +118,11 @@ class BackEndAutoTestsServiceBuilder {
         return sleepInSeconds
     }
 
+    BackEndAutoTestsServiceBuilder withSleepInSeconds(int sleepInSeconds) {
+        this.sleepInSeconds = sleepInSeconds
+        return this
+    }
+
     BackEndAutoTestsServiceBuilder withSleepInSeconds(String sleepInSeconds) {
         if (isBlank(sleepInSeconds)) return this
         this.sleepInSeconds = Integer.parseInt(sleepInSeconds)
