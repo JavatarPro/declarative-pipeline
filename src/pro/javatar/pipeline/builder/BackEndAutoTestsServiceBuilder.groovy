@@ -90,6 +90,11 @@ class BackEndAutoTestsServiceBuilder {
         return skipSystemTests
     }
 
+    BackEndAutoTestsServiceBuilder withSkipSystemTests(boolean skipSystemTests) {
+        this.skipSystemTests = skipSystemTests
+        return this
+    }
+
     BackEndAutoTestsServiceBuilder withSkipSystemTests(String skipSystemTests) {
         this.skipSystemTests = Boolean.valueOf(skipSystemTests)
         return this
