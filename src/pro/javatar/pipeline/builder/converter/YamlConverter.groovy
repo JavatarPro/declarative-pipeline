@@ -61,7 +61,7 @@ class YamlConverter {
                 .withJobName(autoTest.jobName)
                 .withSkipCodeQualityVerification(autoTest.skipCodeQualityVerification)
                 .withSkipSystemTests(autoTest.skipSystemTests)
-                .withSleepInSeconds(autoTest.skipCodeQualityVerification)
+                .withSleepInSeconds(autoTest.sleepInSeconds)
     }
 
     Vcs retrieveVcs(def yml) {
