@@ -29,14 +29,15 @@ class DockerMavenBuildService extends MavenBuildService {
 
     DockerService dockerService
 
-    DockerMavenBuildService(Maven maven, DockerService dockerService) {
+    DockerMavenBuildService(Maven mvn, DockerService dockerService) {
         dsl.echo "DockerMavenBuildService constructor with maven & dockerService"
+        setMavenParams(mvn.getMavenParams())
         // does not work
         // dsl.echo "DockerMavenBuildService dockerService: ${dockerService.toString()}"
         // dsl.echo "DockerMavenBuildService dockerService: ${maven.toString()}"
         // dsl.echo "DockerMavenBuildService: maven: ${maven.toString()}, dockerService: ${dockerService.toString()}"
         this.dockerService = dockerService
-        populateMaven(maven)
+        // populateMaven(maven)
     }
 
     @Override

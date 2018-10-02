@@ -149,7 +149,7 @@ class MavenBuildService extends BuildService {
         this.maven = maven
     }
 
-    void setMavenParams(String mavenParams) {
+    protected void setMavenParams(String mavenParams) {
         if(isBlank(mavenParams)) {
             return
         }
