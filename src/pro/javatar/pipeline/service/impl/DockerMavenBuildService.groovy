@@ -36,16 +36,16 @@ class DockerMavenBuildService extends MavenBuildService {
         // dsl.echo "DockerMavenBuildService dockerService: ${maven.toString()}"
         // dsl.echo "DockerMavenBuildService: maven: ${maven.toString()}, dockerService: ${dockerService.toString()}"
         this.dockerService = dockerService
-        //populateMaven(maven)
+        populateMaven(maven)
     }
 
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
-        // buildAndUnitTests(releaseInfo)
-        dsl.echo "buildAndUnitTests started"
-        dsl.sh "mvn clean package"
+        dsl.echo "DockerMavenBuildService buildAndUnitTests started"
+        super.buildAndUnitTests(releaseInfo)
+//        dsl.sh "mvn clean package"
         dockerService.dockerBuildImage(releaseInfo)
-        dsl.echo "buildAndUnitTests finished"
+        dsl.echo "DockerMavenBuildService buildAndUnitTests finished"
     }
 
     void populateMaven(Maven maven) {
