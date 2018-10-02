@@ -25,7 +25,7 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 abstract class BuildService implements Serializable {
 
-    protected int unitTestsTimeout = 5
+    protected int unitTestsTimeout = 15
     boolean useBuildNumberForVersion = true
     boolean skipUnitTests = true
     protected String distributionFolder = "dist"
