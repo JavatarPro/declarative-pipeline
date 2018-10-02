@@ -16,6 +16,7 @@
 package pro.javatar.pipeline.service.impl
 
 import pro.javatar.pipeline.model.ReleaseInfo
+import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.orchestration.DockerService
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
@@ -24,7 +25,7 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  * @author Borys Zora
  * @since 2018-03-09
  */
-class DockerMavenBuildService extends MavenBuildService {
+class DockerMavenBuildService extends BuildService {
 
     MavenBuildService mavenBuildService
     DockerService dockerService
@@ -50,4 +51,23 @@ class DockerMavenBuildService extends MavenBuildService {
         dockerService.populateReleaseInfo(releaseInfo)
     }
 
+    @Override
+    void setUp() {
+        mavenBuildService.setUp()
+    }
+
+    @Override
+    String getCurrentVersion() {
+        return mavenBuildService.getCurrentVersion()
+    }
+
+    @Override
+    def setupReleaseVersion(String releaseVersion) {
+        return mavenBuildService.setupReleaseVersion(releaseVersion)
+    }
+
+    @Override
+    def setupVersion(String version) {
+        return mavenBuildService.setupVersion(version)
+    }
 }
