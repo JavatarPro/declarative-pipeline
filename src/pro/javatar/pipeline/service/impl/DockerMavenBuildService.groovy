@@ -31,7 +31,8 @@ class DockerMavenBuildService extends MavenBuildService {
 
     DockerMavenBuildService(Maven mvn, DockerService dockerService) {
         dsl.echo "DockerMavenBuildService constructor with maven & dockerService"
-        setMavenParams(mvn.getMavenParams())
+        // setMavenParams(mvn.getMavenParams())
+        mavenParams = mvn.getMavenParams()
         // does not work
         // dsl.echo "DockerMavenBuildService dockerService: ${dockerService.toString()}"
         // dsl.echo "DockerMavenBuildService dockerService: ${maven.toString()}"
@@ -43,7 +44,7 @@ class DockerMavenBuildService extends MavenBuildService {
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
         dsl.echo "DockerMavenBuildService buildAndUnitTests started"
-        super.buildAndUnitTests(releaseInfo)
+        buildAndUnitTestsWithParams(mavenParams)
 //        dsl.sh "mvn clean package"
         dockerService.dockerBuildImage(releaseInfo)
         dsl.echo "DockerMavenBuildService buildAndUnitTests finished"
