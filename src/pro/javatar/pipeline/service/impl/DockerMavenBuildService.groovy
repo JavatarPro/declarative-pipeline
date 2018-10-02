@@ -15,7 +15,6 @@
 
 package pro.javatar.pipeline.service.impl
 
-import pro.javatar.pipeline.builder.Maven
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.orchestration.DockerService
 
@@ -27,46 +26,27 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class DockerMavenBuildService extends MavenBuildService {
 
+    MavenBuildService mavenBuildService
     DockerService dockerService
 
-    DockerMavenBuildService(Maven mvn, DockerService dockerService) {
-        dsl.echo "DockerMavenBuildService constructor with maven & dockerService"
-        // setMavenParams(mvn.getMavenParams())
-        mavenParams = mvn.getMavenParams()
-        // does not work
-        // dsl.echo "DockerMavenBuildService dockerService: ${dockerService.toString()}"
-        // dsl.echo "DockerMavenBuildService dockerService: ${maven.toString()}"
-        // dsl.echo "DockerMavenBuildService: maven: ${maven.toString()}, dockerService: ${dockerService.toString()}"
+    DockerMavenBuildService(MavenBuildService mavenBuildService, DockerService dockerService) {
+        dsl.echo "DockerMavenBuildService constructor with mavenBuildService & dockerService started"
         this.dockerService = dockerService
-        // populateMaven(maven)
+        this.mavenBuildService = mavenBuildService
+        dsl.echo "DockerMavenBuildService constructor with mavenBuildService & dockerService finished"
     }
 
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
         dsl.echo "DockerMavenBuildService buildAndUnitTests started"
-        buildAndUnitTestsWithParams(mavenParams)
-//        dsl.sh "mvn clean package"
+        mavenBuildService.buildAndUnitTests(releaseInfo)
         dockerService.dockerBuildImage(releaseInfo)
         dsl.echo "DockerMavenBuildService buildAndUnitTests finished"
     }
 
-    void populateMaven(Maven maven) {
-        dsl.echo "setJava(maven.getJava())"
-//        dsl.echo "populateMaven: ${maven.toString()}"
-        setJava(maven.getJava())
-        dsl.echo "maven = maven.getMaven()"
-        setMaven(maven.getMaven())
-        setMavenParams(maven.getMavenParams())
-        setGroupId(maven.getGroupId())
-        setArtifactId(maven.getArtifactId())
-        setPackaging(maven.getPackaging())
-        setRepositoryId(maven.getRepositoryId())
-        setRepoUrl(maven.getRepoUrl())
-        setLayout(maven.getLayout())
-    }
-
     @Override
     def populateReleaseInfo(ReleaseInfo releaseInfo) {
+        mavenBuildService.populateReleaseInfo(releaseInfo)
         dockerService.populateReleaseInfo(releaseInfo)
     }
 

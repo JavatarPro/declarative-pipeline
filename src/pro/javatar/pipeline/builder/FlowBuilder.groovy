@@ -112,15 +112,12 @@ class FlowBuilder implements Serializable {
         dockerService = dockerBuilder.build()
         dsl.echo "docker service preparation complete"
         prepareSonarQube()
-        dsl.echo "DockerMavenBuildService debug"
-        dsl.echo "new DockerMavenBuildService(${maven.toString()})"
-        dsl.echo "new DockerMavenBuildService(${dockerService.toString()})"
-        dockerMavenBuildService = new DockerMavenBuildService(maven, dockerService)
-        dsl.echo "dockerMavenBuildService.populateMaven(maven)"
-        dockerMavenBuildService.populateMaven(maven)
+        // dsl.echo "dockerMavenBuildService.populateMaven(maven)"
+        // dockerMavenBuildService.populateMaven(maven)
         dsl.echo "before maven build"
         mavenBuildService = buildMavenBuildService(maven)
         mavenBuildService.setUp()
+        dockerMavenBuildService = new DockerMavenBuildService(mavenBuildService, dockerService)
         setupBuildService()
         cdnDeploymentService = new CdnDeploymentService(releaseInfo.getServiceName(), mavenBuildService, buildService)
         deploymentService = getAppropriateDeploymentService(buildType)
