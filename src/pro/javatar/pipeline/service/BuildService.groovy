@@ -66,6 +66,10 @@ abstract class BuildService implements Serializable {
 
     abstract def setupVersion(String version)
 
+    def populateReleaseInfo(ReleaseInfo releaseInfo) {
+        dsl.echo "default populateReleaseInfo, nothing to change"
+    }
+
     // helper methods
 
     String getReleaseNumber(String currentVersion) {

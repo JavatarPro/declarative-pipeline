@@ -44,7 +44,7 @@ class DockerMavenBuildService extends MavenBuildService {
         // buildAndUnitTests(releaseInfo)
         dsl.echo "buildAndUnitTests started"
         dsl.sh "mvn clean package"
-        dockerService.dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
+        dockerService.dockerBuildImage(releaseInfo)
         dsl.echo "buildAndUnitTests finished"
     }
 
@@ -63,5 +63,9 @@ class DockerMavenBuildService extends MavenBuildService {
         setLayout(maven.getLayout())
     }
 
+    @Override
+    def populateReleaseInfo(ReleaseInfo releaseInfo) {
+        dockerService.populateReleaseInfo(releaseInfo)
+    }
 
 }

@@ -16,6 +16,7 @@
 package pro.javatar.pipeline.service.orchestration
 
 import pro.javatar.pipeline.model.Env
+import pro.javatar.pipeline.model.ReleaseInfo
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 import static pro.javatar.pipeline.util.Utils.isBlank
@@ -26,7 +27,8 @@ import static pro.javatar.pipeline.util.Utils.isBlank
  */
 class DockerService implements Serializable {
 
-    static final LATEST_LABEL = "latest"
+    static final String LATEST_LABEL = "latest"
+    static final String DEFAULT_DOCKER_FILE = "Dockerfile"
 
     String devRepo
     String prodRepo
@@ -39,6 +41,23 @@ class DockerService implements Serializable {
         this.devRepo = devRepo
         this.prodRepo = prodRepo
         this.orchestrationService = orchestrationService
+    }
+
+    def dockerBuildImage(ReleaseInfo releaseInfo) {
+        if (releaseInfo.isMultiDockerBuild()) {
+            releaseInfo.dockerImageNames.each {
+                String image -> dockerBuildImage(image, releaseInfo.getDockerImageVersion(), releaseInfo.get)
+            }
+            return
+        }
+        dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
+    }
+
+    def dockerBuildImage(String imageName, String imageVersion, String customDockerFileName) {
+        dsl.echo "dockerBuildImage for imageName: ${imageName} with imageVersion: ${imageVersion} started"
+        dsl.sh 'docker -v'
+        dsl.sh "docker build -t ${imageName}:${imageVersion} -f ${customDockerFileName}"
+        dsl.echo "dockerBuildImage for service: ${imageName} with releaseVersion: ${imageVersion} finished"
     }
 
     def dockerBuildImage(String imageName, String imageVersion) {
@@ -150,6 +169,46 @@ class DockerService implements Serializable {
 
     String getImageVersionWithBuildNumber(String imageVersion) {
         return "${imageVersion}.${dsl.currentBuild.number}"
+    }
+
+    // TODO simplify
+    def populateReleaseInfo(ReleaseInfo releaseInfo) {
+        String output = dsl.sh returnStdout: true, script: 'ls -d */*'
+        List<String> dockerFiles = output.split().findAll {it -> it.contains(DEFAULT_DOCKER_FILE)}
+        if (dockerFiles == null) {
+            dsl.echo "WARN: no Dockerfile has been found"
+            return
+        }
+        String theDockerFile = null
+        List<String> multipleDockerFiles = new ArrayList<>()
+        for(String dockerfile: dockerFiles) {
+            if (DEFAULT_DOCKER_FILE.equals(dockerfile)) {
+                theDockerFile = dockerfile
+            } else if (dockerfile != null || dockerfile.contains("/" + DEFAULT_DOCKER_FILE)) {
+                multipleDockerFiles.add(dockerfile.trim())
+            }
+        }
+        if (theDockerFile != null) {
+            dsl.echo "INFO: main docker file exists no need populate release info"
+            if (!multipleDockerFiles.isEmpty()) {
+                dsl.echo "WARN: will be ignored next docker files: ${multipleDockerFiles}"
+            }
+            return
+        }
+        if (multipleDockerFiles.isEmpty()) {
+            dsl.echo "ERROR: no docker file provided"
+            return
+        }
+        for (String dockerfile: multipleDockerFiles) {
+            String[] array = dockerfile.split("/")
+            if (array.size() == 2) {
+                String dockerImageName = array[0]
+                releaseInfo.addDockerImageName(dockerImageName)
+                releaseInfo.addCustomDockerFileName(dockerImageName, dockerfile)
+            } else {
+                dsl.echo "WARN: dockerfile: ${dockerfile} will be ignored"
+            }
+        }
     }
 
     @Override
