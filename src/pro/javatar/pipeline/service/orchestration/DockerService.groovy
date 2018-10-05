@@ -57,7 +57,7 @@ class DockerService implements Serializable {
     def dockerBuildImage(String imageName, String imageVersion, String customDockerFileName) {
         dsl.echo "dockerBuildImage for imageName: ${imageName} with imageVersion: ${imageVersion} started"
         dsl.sh 'docker -v'
-        dsl.sh "docker build -t ${imageName}:${imageVersion} -f ${customDockerFileName}"
+        dsl.sh "docker build -t ${imageName}:${imageVersion} -f ${customDockerFileName} ."
         dsl.echo "dockerBuildImage for service: ${imageName} with releaseVersion: ${imageVersion} finished"
     }
 
