@@ -38,11 +38,13 @@ class DockerDeploymentService implements DeploymentService {
 
     @Override
     void deployArtifact(Env environment, ReleaseInfo releaseInfo) {
+        dsl.echo "DockerDeploymentService deployArtifact started"
         if (releaseInfo.isMultiDockerBuild()) {
             deployMultipleArtifacts(environment, releaseInfo)
         } else {
             deploySingleArtifact(environment, releaseInfo)
         }
+        dsl.echo "DockerDeploymentService deployArtifact finished"
     }
 
     void deploySingleArtifact(Env environment, ReleaseInfo releaseInfo) {
