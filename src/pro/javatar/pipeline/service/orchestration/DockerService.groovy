@@ -45,10 +45,14 @@ class DockerService implements Serializable {
 
     def dockerBuildImage(ReleaseInfo releaseInfo) {
         if (releaseInfo.isMultiDockerBuild()) {
+            def stepsForParallel = [:]
             releaseInfo.dockerImageNames.each {
-                String image -> dockerBuildImage(image, releaseInfo.getDockerImageVersion(),
-                        releaseInfo.getCustomDockerFileName(image))
+                String image -> stepsForParallel["Docker build: ${image}"] = {
+                    dockerBuildImage(image, releaseInfo.getDockerImageVersion(),
+                            releaseInfo.getCustomDockerFileName(image))
+                }
             }
+            dsl.parallel stepsForParallel
             return
         }
         dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
