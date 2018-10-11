@@ -75,7 +75,7 @@ class YamlConverter {
             folders.each{folder -> folderList.add(folder)}
             cacheMap.put(service, folderList)
         }
-        return new CacheRequest().setCaches(cacheMap)
+        return new CacheRequest().withCaches(cacheMap)
     }
 
     Vcs retrieveVcs(def yml) {
