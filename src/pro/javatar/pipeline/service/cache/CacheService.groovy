@@ -25,7 +25,7 @@ class CacheService {
     }
 
     void createFolderSymbolicLink(String cacheFolder, String targetFolder) {
-        dsl.echo "CacheService: createFolderSymbolicLink with cacheFolder: ${targetFolder} " +
+        dsl.echo "CacheService: createFolderSymbolicLink with cacheFolder: ${cacheFolder} " +
                 "& targetFolder ${targetFolder} started"
         if (! dsl.fileExists(cacheFolder)) {
             dsl.sh "mkdir -p ${cacheFolder}"
