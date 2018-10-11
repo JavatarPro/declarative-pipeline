@@ -123,4 +123,8 @@ abstract class BuildService implements Serializable {
         return this
     }
 
+    protected String getServiceName() {
+        return "buildService"
+    }
+
 }

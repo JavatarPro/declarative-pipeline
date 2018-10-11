@@ -1,6 +1,7 @@
 package pro.javatar.pipeline.builder.converter
 
 import pro.javatar.pipeline.builder.model.AutoTest
+import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.builder.model.Maven
@@ -31,6 +32,7 @@ class YamlConverter {
                 .withOrchestrationService(yml.orchestrationService)
                 .withMesos(retrieveMesos(yml))
                 .withAutoTest(retrieveAutoTest(yml))
+                .withCacheRequest(retrieveCacheRequest(yml))
                 .populateServiceRepo()
     }
 
@@ -62,6 +64,18 @@ class YamlConverter {
                 .withSkipCodeQualityVerification(autoTest.skipCodeQualityVerification)
                 .withSkipSystemTests(autoTest.skipSystemTests)
                 .withSleepInSeconds(autoTest.sleepInSeconds)
+    }
+
+    CacheRequest retrieveCacheRequest(def yml) {
+        def cache = yml.cache
+        dsl.echo "retrieveCacheRequest: cache: ${cache}"
+        Map<String, List<String>> cacheMap = new HashMap<>()
+        cache.each {String service, List<String> folders ->
+            List<String> folderList = new ArrayList<>()
+            folders.each{folder -> folderList.add(folder)}
+            cacheMap.put(service, folderList)
+        }
+        return new CacheRequest().setCaches(cacheMap)
     }
 
     Vcs retrieveVcs(def yml) {

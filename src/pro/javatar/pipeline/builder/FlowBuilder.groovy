@@ -16,9 +16,11 @@
 package pro.javatar.pipeline.builder
 
 import pro.javatar.pipeline.Flow
+import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.exception.*
 import pro.javatar.pipeline.model.*
 import pro.javatar.pipeline.service.*
+import pro.javatar.pipeline.service.cache.CacheRequestHolder
 import pro.javatar.pipeline.service.test.*
 import pro.javatar.pipeline.service.orchestration.*
 import pro.javatar.pipeline.service.impl.*
@@ -379,6 +381,11 @@ class FlowBuilder implements Serializable {
 
     FlowBuilder withDocker(DockerBuilder dockerBuilder) {
         this.dockerBuilder = dockerBuilder
+        return this
+    }
+
+    FlowBuilder withCacheRequest(CacheRequest cacheRequest) {
+        CacheRequestHolder.setCaches(cacheRequest.getCaches())
         return this
     }
 

@@ -17,6 +17,7 @@ package pro.javatar.pipeline.service.impl
 
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
+import pro.javatar.pipeline.service.cache.CacheService
 import pro.javatar.pipeline.service.orchestration.DockerService
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
@@ -29,6 +30,7 @@ class DockerMavenBuildService extends BuildService {
 
     MavenBuildService mavenBuildService
     DockerService dockerService
+    CacheService cacheService = new CacheService()
 
     DockerMavenBuildService(MavenBuildService mavenBuildService, DockerService dockerService) {
         dsl.echo "DockerMavenBuildService constructor with mavenBuildService & dockerService started"
@@ -54,6 +56,7 @@ class DockerMavenBuildService extends BuildService {
     @Override
     void setUp() {
         mavenBuildService.setUp()
+        cacheService.setup(getServiceName())
     }
 
     @Override

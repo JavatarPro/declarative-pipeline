@@ -30,6 +30,8 @@ class YamlConfig {
 
     AutoTest autoTest = new AutoTest()
 
+    CacheRequest cacheRequest = new CacheRequest()
+
     YamlConfig populateServiceRepo() {
         service.setRepo(vcs.getRepo().get(service.getVcsRepoId()))
         return this
@@ -204,9 +206,21 @@ class YamlConfig {
         this.autoTest = autoTest
     }
 
-    AutoTest withAutoTest(AutoTest autoTest) {
+    YamlConfig withAutoTest(AutoTest autoTest) {
         this.autoTest = autoTest
         return this
+    }
+
+    CacheRequest getCacheRequest() {
+        return cacheRequest
+    }
+
+    void setCacheRequest(CacheRequest cacheRequest) {
+        this.cacheRequest = cacheRequest
+    }
+
+    YamlConfig withCacheRequest(CacheRequest cacheRequest) {
+        this.cacheRequest = cacheRequest
     }
 
     @Override
@@ -225,6 +239,7 @@ class YamlConfig {
                 ", orchestrationService='" + orchestrationService + '\'' +
                 ", mesos=" + mesos +
                 ", autoTest=" + autoTest +
+                ", cacheRequest=" + cacheRequest +
                 '}';
     }
 }
