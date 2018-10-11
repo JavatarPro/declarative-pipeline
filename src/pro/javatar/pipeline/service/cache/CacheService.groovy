@@ -5,7 +5,9 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 class CacheService {
 
     void setup(String service) {
+        dsl.echo "CacheService: setup service: ${service} started"
         CacheRequestHolder.getCaches(service).each {String folder -> createRepoFolderWorkspaceSymbolicLink(folder)}
+        dsl.echo "CacheService: setup service: ${service} finished"
     }
 
     void createRepoFolderWorkspaceSymbolicLink(String folderToBeCached) {

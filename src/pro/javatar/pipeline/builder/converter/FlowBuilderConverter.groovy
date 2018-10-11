@@ -36,6 +36,7 @@ class FlowBuilderConverter {
                 .withS3(toS3Builder(yamlFile))
                 .withRevisionControl(toRevisionControlBuilder(yamlFile))
                 .withDocker(toDockerBuilder(yamlFile))
+                .withCacheRequest(yamlFile.getCacheRequest())
                 .withBackEndAutoTestsServiceBuilder(toBackEndAutoTestsServiceBuilder(yamlFile))
     }
 
