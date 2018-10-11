@@ -9,8 +9,8 @@ class CacheRequestHolder {
         return caches.get(service)
     }
 
-    static void setCaches(Map<String, List<String>> caches) {
-        CacheRequestHolder.caches = caches
+    static void setCaches(Map<String, List<String>> cacheMap) {
+        caches = cacheMap
     }
 
     static CacheRequestHolder addCache(String service, String folder) {
