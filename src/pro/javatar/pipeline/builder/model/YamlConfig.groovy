@@ -221,6 +221,7 @@ class YamlConfig {
 
     YamlConfig withCacheRequest(CacheRequest cacheRequest) {
         this.cacheRequest = cacheRequest
+        return this
     }
 
     @Override
