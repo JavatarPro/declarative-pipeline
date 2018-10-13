@@ -15,6 +15,8 @@
 
 package pro.javatar.pipeline.model
 
+import pro.javatar.pipeline.service.infra.model.InfraRequest
+
 import static pro.javatar.pipeline.util.Utils.addPrefixIfNotExists
 import static pro.javatar.pipeline.util.Utils.isNotBlank
 
@@ -41,6 +43,8 @@ class ReleaseInfo implements Serializable {
     String buildReleaseVersion
 
     String uiDistributionFolder = "dist"
+
+    InfraRequest infraRequest = new InfraRequest()
 
     String getReleaseVersion() {
         return releaseVersion
@@ -129,6 +133,19 @@ class ReleaseInfo implements Serializable {
 
     void setUiDistributionFolder(String uiDistributionFolder) {
         this.uiDistributionFolder = uiDistributionFolder
+    }
+
+    InfraRequest getInfraRequest() {
+        return infraRequest
+    }
+
+    void setInfraRequest(InfraRequest infraRequest) {
+        this.infraRequest = infraRequest
+    }
+
+    ReleaseInfo withInfraRequest(InfraRequest infraRequest) {
+        this.infraRequest = infraRequest
+        return this
     }
 
     @Override

@@ -16,6 +16,7 @@
 package pro.javatar.pipeline.service.orchestration
 
 import pro.javatar.pipeline.model.Env
+import pro.javatar.pipeline.service.infra.model.Infra
 import pro.javatar.pipeline.service.vcs.VcsHelper
 import pro.javatar.pipeline.service.vcs.model.VcsRepo
 
@@ -53,10 +54,16 @@ class MesosService implements DockerOrchestrationService {
         dsl.withEnv(["SERVICE=${imageName}", "DOCKER_REPOSITORY=${dockerRepositoryUrl}",
                      "RELEASE_VERSION=${imageVersion}", "LABEL_ENVIRONMENT=${environment}"]) {
 
+            // TODO rollback does not work properly (manual involvement is needed when something goes wrong)
             dsl.sh "${getFolder(environment)}/bin/mm-deploy -e ${environment} ${imageName} || " +
                     " (depcon -e ${environment} app rollback /${imageName}-${environment} " +
                     "--wait; echo 'Deploy failed!'; exit 2)"
         }
+    }
+
+    @Override
+    def deployInfraContainer(Infra infra) {
+        return null
     }
 
     String getFolder(String env) {

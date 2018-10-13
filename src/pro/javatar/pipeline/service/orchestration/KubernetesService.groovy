@@ -15,6 +15,8 @@
 
 package pro.javatar.pipeline.service.orchestration
 
+import pro.javatar.pipeline.service.infra.model.Infra
+
 /**
  * Author : Borys Zora
  * Date Created: 3/22/18 22:27
@@ -31,4 +33,8 @@ class KubernetesService implements DockerOrchestrationService {
         throw new UnsupportedOperationException("KubernetesService does not supported yet")
     }
 
+    @Override
+    def deployInfraContainer(Infra infra) {
+        return null
+    }
 }

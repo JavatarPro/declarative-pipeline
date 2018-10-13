@@ -1,5 +1,7 @@
 package pro.javatar.pipeline.service.orchestration
 
+import pro.javatar.pipeline.service.infra.model.Infra
+
 class DockerSwarmService implements DockerOrchestrationService {
 
     @Override
@@ -12,4 +14,8 @@ class DockerSwarmService implements DockerOrchestrationService {
         return null
     }
 
+    @Override
+    def deployInfraContainer(Infra infra) {
+        return null
+    }
 }
