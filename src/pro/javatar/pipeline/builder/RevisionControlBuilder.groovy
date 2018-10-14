@@ -59,6 +59,7 @@ class RevisionControlBuilder implements Serializable {
         return this
     }
 
+    // TODO refactor if used appropriate type use its domain (e.g. github)
     RevisionControlBuilder withDomain(String domain) {
         this.domain = domain
         return this

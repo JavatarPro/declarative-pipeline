@@ -21,14 +21,28 @@ import pro.javatar.pipeline.builder.FlowBuilder
 import pro.javatar.pipeline.builder.Maven
 import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.builder.RevisionControlBuilder
+import pro.javatar.pipeline.builder.YamlFlowBuilder
+import pro.javatar.pipeline.builder.converter.JenkinsBuildParamsConverter
+import pro.javatar.pipeline.builder.model.JenkinsBuildParams
+import pro.javatar.pipeline.builder.model.Service
+import pro.javatar.pipeline.service.PipelineDslHolder
 import pro.javatar.pipeline.stage.Stage
 
 import static pro.javatar.pipeline.model.StageType.*
+import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
+import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
  * @author Borys Zora
  * @since 2017-10-15
  */
+//@GrabConfig(systemClassLoader=true)
+//@GrabResolver(name='atlassian', root='https://maven.atlassian.com/content/groups/public/')
+//@Grapes([
+//        @Grab('com.fasterxml.jackson.core:jackson-databind:2.9.6'),
+//        @Grab('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.6'),
+//        @GrabConfig( systemClassLoader=true )
+//])
 class JenkinsfileExample {
 
     String repo = "test2-service"
@@ -47,9 +61,54 @@ class JenkinsfileExample {
     }
 
     static void main(String[] args) {
+//        Flow flow = new YamlFlowBuilder(this).build()
+//        hasKey()
+//        yml()
+        PipelineDslHolder.dsl = this
+        new JenkinsfileExample().yml()
+        //new JenkinsfileExample().jenkinsBuildParamsConverterTest()
+//        jenkinsBuildParamsConverterTest()
 //        new JenkinsfileExample().execute("some-ui")
-        println(new JenkinsfileExample().domainUrl())
+//        println(new JenkinsfileExample().domainUrl())
 //        println(new JenkinsfileExample().containsBranch())
+    }
+
+    void replaceVariable1(def param, def properties) {
+        dsl.echo "replaceVariable param: ${param}"
+        String toBeReplaced = "\${${param.key}}"
+        properties.each{ key, value ->
+            if(value.toString().trim().equalsIgnoreCase(toBeReplaced)) {
+                properties.put(key, param.value)
+            }
+        }
+    }
+
+    def yml() {
+//        println(JenkinsBuildParams.hasKey("profile"))
+        def properties = ["service": ["buildType":"maven", "useBuildNumberForVersion":false],
+                          "profile":["ui":["service.buildType":"npm"]]]
+        println(properties)
+        new JenkinsBuildParamsConverter().amendAccordingToProfile("ui", properties)
+        println(properties)
+    }
+
+    static def jenkinsBuildParamsConverterTest() {
+        Map<String, Object> properties = new LinkedHashMap<>()
+        properties.put("service.name", "\${repo}")
+        properties.put("service.buildType", "maven")
+        properties.put("service.useBuildNumberForVersion", true)
+        def param = ["repo":"configuration-service"]
+        replaceVariable(param, properties)
+        println(properties)
+    }
+
+    static void replaceVariable(def param, def properties) {
+        String toBeReplaced = "\${repo}"
+        properties.each{ key, value ->
+            if(value.toString().trim().equalsIgnoreCase(toBeReplaced)) {
+                properties.put(key, "configuration-service")
+            }
+        }
     }
 
     def domainUrl() {

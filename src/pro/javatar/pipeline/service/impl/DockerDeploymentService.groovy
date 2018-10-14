@@ -38,13 +38,55 @@ class DockerDeploymentService implements DeploymentService {
 
     @Override
     void deployArtifact(Env environment, ReleaseInfo releaseInfo) {
+        dsl.echo "DockerDeploymentService deployArtifact started"
+        if (releaseInfo.isMultiDockerBuild()) {
+            deployMultipleArtifacts(environment, releaseInfo)
+        } else {
+            deploySingleArtifact(environment, releaseInfo)
+        }
+        dsl.echo "DockerDeploymentService deployArtifact finished"
+    }
+
+    void deploySingleArtifact(Env environment, ReleaseInfo releaseInfo) {
         String version = releaseInfo.getReleaseVersion()
-        dsl.echo "DockerDeploymentService deployArtifact to ${environment.getValue()} env and version: ${version} started"
+        dsl.echo "DockerDeploymentService deploySingleArtifact to ${environment.getValue()} " +
+                "env and version: ${version} started"
         // TODO move & split this method to do it on build and release stage
-        dockerService.dockerPublish(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion(), environment)
+        if (environment == Env.DEV) {
+            dockerService.dockerPublish(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion(), environment)
+        }
         dockerService.dockerDeployContainer(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion(),
                 environment)
-        dsl.echo "DockerDeploymentService deployArtifact to ${environment.getValue()} env and version: ${version} finished"
+        dsl.echo "DockerDeploymentService deploySingleArtifact to ${environment.getValue()} " +
+                "env and version: ${version} finished"
+    }
+
+    void deploySingleArtifactForMultiDocker(Env environment, String dockerImageName, ReleaseInfo releaseInfo) {
+        String version = releaseInfo.getReleaseVersion()
+        dsl.echo "DockerDeploymentService deploySingleArtifactForMultiDocker to ${environment.getValue()}, " +
+                "dockerImageName: ${dockerImageName}, env and version: ${version} started"
+        // TODO move & split this method to do it on build and release stage
+        if (environment == Env.DEV) {
+            dockerService.dockerPublish(dockerImageName, releaseInfo.getDockerImageVersion(), environment)
+        }
+        dockerService.dockerDeployContainer(dockerImageName, releaseInfo.getDockerImageVersion(), environment)
+        dsl.echo "DockerDeploymentService deploySingleArtifactForMultiDocker to ${environment.getValue()}, " +
+                "dockerImageName: ${dockerImageName}, env and version: ${version} finished"
+    }
+
+    // deployment with prefix not yet supported
+    void deployMultipleArtifacts(Env environment, ReleaseInfo releaseInfo) {
+        dsl.echo "DockerDeploymentService deployMultipleArtifacts with environment: ${environment} " +
+                "& releaseInfo: ${releaseInfo} started"
+        def stepsForParallel = [:]
+        releaseInfo.getCustomDockerFileNames().each {
+            key, value -> stepsForParallel[key] = {
+                deploySingleArtifactForMultiDocker(environment, key, releaseInfo)
+            }
+        }
+        dsl.parallel stepsForParallel
+        dsl.echo "DockerDeploymentService deployMultipleArtifacts with environment: ${environment} " +
+                "& releaseInfo: ${releaseInfo} finished"
     }
 
 }

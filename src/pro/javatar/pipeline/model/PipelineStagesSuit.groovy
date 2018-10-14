@@ -17,6 +17,8 @@ package pro.javatar.pipeline.model
 
 import pro.javatar.pipeline.exception.UnrecognizedPipelineStagesSuitException
 
+import static pro.javatar.pipeline.util.Utils.isBlank
+
 /**
  * @author Borys Zora
  * @since 2018-03-09
@@ -24,13 +26,14 @@ import pro.javatar.pipeline.exception.UnrecognizedPipelineStagesSuitException
 enum PipelineStagesSuit {
 
     SERVICE,
-    LIBRARY
+    LIBRARY,
+    CUSTOM
 
     static PipelineStagesSuit fromString(String suit) {
         if (suit == null) {
             throw new UnrecognizedPipelineStagesSuitException("suit is null")
         }
-        if("service".equalsIgnoreCase(suit) || "µservice".equalsIgnoreCase(suit)
+        if("service".equalsIgnoreCase(suit) || "µService".equalsIgnoreCase(suit)
                 || "ui".equalsIgnoreCase(suit)) {
             return SERVICE
         }
@@ -38,6 +41,9 @@ enum PipelineStagesSuit {
                 || "component".equalsIgnoreCase(suit)
                 || "ui-component".equalsIgnoreCase(suit)) {
             return LIBRARY
+        }
+        if("custom".equalsIgnoreCase(suit) || isBlank(suit)) {
+            return CUSTOM
         }
         throw new UnrecognizedPipelineStagesSuitException("suit ${suit} is not recognized")
     }

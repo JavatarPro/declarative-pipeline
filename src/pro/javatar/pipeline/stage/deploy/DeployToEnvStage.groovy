@@ -18,6 +18,7 @@ package pro.javatar.pipeline.stage.deploy
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.DeploymentService
+import pro.javatar.pipeline.service.ServiceContextHolder
 import pro.javatar.pipeline.stage.Stage
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
@@ -28,7 +29,7 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 abstract class DeployToEnvStage extends Stage {
 
-    protected DeploymentService deploymentService
+    protected DeploymentService deploymentService // = ServiceContextHolder.getService(DeploymentService.class)
 
     @Override
     void execute() throws PipelineException {
@@ -46,6 +47,11 @@ abstract class DeployToEnvStage extends Stage {
     @Override
     String getName() {
         return "${getEnv().getValue().toLowerCase()} env"
+    }
+
+    DeployToEnvStage withDeploymentService(DeploymentService deploymentService) {
+        this.deploymentService = deploymentService
+        return this
     }
 
     @Override

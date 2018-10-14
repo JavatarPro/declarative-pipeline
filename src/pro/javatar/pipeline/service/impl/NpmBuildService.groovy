@@ -49,8 +49,8 @@ class NpmBuildService extends BuildService {
         if (! dsl.fileExists(libraryCacheFolder)) {
             dsl.sh "mkdir ${libraryCacheFolder}"
         }
-//        dsl.sh "ln -s ${libraryCacheFolder} ${libraryFolder}"
-//        dsl.echo "ln -s ${libraryCacheFolder} ${libraryFolder}"
+        dsl.echo "ln -s ${libraryCacheFolder} ${libraryFolder}"
+        dsl.sh "ln -s ${libraryCacheFolder} ${libraryFolder}"
     }
 
     @Override

@@ -71,6 +71,7 @@ class BuildAndUnitTestStage extends Stage {
         releaseInfo.setReleaseVersion(releaseVersion)
         releaseInfo.setDevelopVersion(buildService.getDevelopVersion(releaseVersion))
         releaseInfo.setFlowPrefix(revisionControl.getFlowPrefix())
+        buildService.populateReleaseInfo(releaseInfo)
         dsl.echo "BuildAndUnitTestStage populateReleaseInfo finished: ${releaseInfo.toString()}"
     }
 

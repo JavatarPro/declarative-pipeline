@@ -15,9 +15,12 @@
 
 package pro.javatar.pipeline.service.orchestration
 
+import pro.javatar.pipeline.model.Env
+import pro.javatar.pipeline.service.infra.model.Infra
 import pro.javatar.pipeline.service.vcs.VcsHelper
+import pro.javatar.pipeline.service.vcs.model.VcsRepo
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-import static pro.javatar.pipeline.util.Utils.isNotBlank
 
 /**
  * Author : Borys Zora
@@ -25,31 +28,20 @@ import static pro.javatar.pipeline.util.Utils.isNotBlank
  */
 class MesosService implements DockerOrchestrationService {
 
-    String repoOwner
-    String repo = "mesos-services-configuration"
-    String branch = "master"
-    String folder = "../mesos-services-configuration"
+    VcsRepo dev
+    VcsRepo prod
+    Map<String, VcsRepo> vcsRepoMap
 
     MesosService(){}
 
-    MesosService(String repoOwner) {
-        this.repoOwner = repoOwner
-    }
-
-    MesosService(String repoOwner, String repo, String branch) {
-        this.repoOwner = repoOwner
-        this.repo = repo
-        this.branch = branch
-    }
-
     def setup() {
-        if (isNotBlank(repoOwner)) {
-            dsl.echo "MesosService: repoOwner: ${repoOwner}"
-            VcsHelper.checkoutRepo(repoOwner, repo, branch, folder)
-        } else {
-            dsl.echo "MesosService: same repoOwner as for service repo will be used"
-            VcsHelper.checkoutRepo(repo, branch, folder)
-        }
+        // TODO prepare vcsRepos on builder stage
+        dsl.echo "MesosService: checkout configurations for vcsRepoMap: ${vcsRepoMap}"
+        VcsRepo vcsRepo = vcsRepoMap.get(Env.DEV.getValue())
+        VcsHelper.checkoutRepo(vcsRepo, getFolder(vcsRepo))
+        // TODO checkout prod repo securely on different agent (e.g. pipeline-prod)
+//        VcsHelper.checkoutRepo(vcsRepoMap.get(Env.PROD.getValue()))
+        dsl.echo "MesosService: configurations checkout completed"
     }
 
     @Override
@@ -62,18 +54,53 @@ class MesosService implements DockerOrchestrationService {
         dsl.withEnv(["SERVICE=${imageName}", "DOCKER_REPOSITORY=${dockerRepositoryUrl}",
                      "RELEASE_VERSION=${imageVersion}", "LABEL_ENVIRONMENT=${environment}"]) {
 
-            dsl.sh "${folder}/bin/mm-deploy -e ${environment} ${imageName} || " +
-                    " (depcon -e ${environment} app rollback /${imageName}-${environment} --wait; echo 'Deploy failed!'; exit 2)"
+            // TODO rollback does not work properly (manual involvement is needed when something goes wrong)
+            dsl.sh "${getFolder(environment)}/bin/mm-deploy -e ${environment} ${imageName} || " +
+                    " (depcon -e ${environment} app rollback /${imageName}-${environment} " +
+                    "--wait; echo 'Deploy failed!'; exit 2)"
         }
+    }
+
+    @Override
+    def deployInfraContainer(Infra infra) {
+        return null
+    }
+
+    String getFolder(String env) {
+        VcsRepo vcsRepo = vcsRepoMap.get(env)
+        return "../${vcsRepo.getName()}"
+    }
+
+    String getFolder(VcsRepo vcsRepo) {
+        return "../${vcsRepo.getName()}"
+    }
+
+    MesosService withDev(VcsRepo dev) {
+        this.vcsRepoMap.put(Env.DEV.getValue(), dev)
+        this.dev = dev
+        return this
+    }
+
+    MesosService withProd(VcsRepo prod) {prod
+        this.vcsRepoMap.put(Env.PROD.getValue(), dev)
+        this.prod = prod
+        return this
+    }
+
+    MesosService withVcsRepoMap(Map<String, VcsRepo> vcsRepoMap) {
+        this.vcsRepoMap = vcsRepoMap
+        return this
+    }
+
+    MesosService withRepo(String repoEnv, VcsRepo vcsRepo) {
+        this.vcsRepoMap.put(repoEnv, vcsRepo)
+        return this
     }
 
     @Override
     public String toString() {
         return "MesosService{" +
-                "repoOwner='" + repoOwner + '\'' +
-                ", repo='" + repo + '\'' +
-                ", branch='" + branch + '\'' +
-                ", folder='" + folder + '\'' +
+                "vcsRepoMap=" + vcsRepoMap +
                 '}';
     }
 }

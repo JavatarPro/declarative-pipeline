@@ -19,6 +19,7 @@ import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
+import static pro.javatar.pipeline.util.Utils.isBlank
 import static pro.javatar.pipeline.util.Utils.isNotBlank
 
 /**
@@ -29,7 +30,7 @@ class MavenBuildService extends BuildService {
 
     protected String java
     protected String maven
-    protected String mavenParams
+    protected String mavenParams = ""
     protected String groupId
     protected String artifactId
     protected String packaging
@@ -54,9 +55,9 @@ class MavenBuildService extends BuildService {
 
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
-        dsl.echo "buildAndUnitTests started"
-        dsl.sh "mvn clean package"
-        dsl.echo "buildAndUnitTests finished"
+        dsl.echo "MavenBuildService buildAndUnitTests started"
+        dsl.sh "mvn clean package ${mavenParams}"
+        dsl.echo "MavenBuildService buildAndUnitTests finished"
     }
 
     @Override
@@ -148,8 +149,18 @@ class MavenBuildService extends BuildService {
         this.maven = maven
     }
 
-    void setMavenParams(String mavenParams) {
+    protected void setMavenParams(String mavenParams) {
+        if(isBlank(mavenParams)) {
+            return
+        }
         this.mavenParams = mavenParams
+    }
+
+    String getMavenParams() {
+        if (isBlank(mavenParams)) {
+            return ""
+        }
+        return mavenParams
     }
 
     void setGroupId(String groupId) {

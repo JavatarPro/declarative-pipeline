@@ -15,6 +15,8 @@
 
 package pro.javatar.pipeline.service.orchestration
 
+import pro.javatar.pipeline.service.infra.model.Infra
+
 /**
  * Author : Borys Zora
  * Date Created: 3/22/18 22:11
@@ -23,6 +25,9 @@ interface DockerOrchestrationService {
 
     def setup()
 
+    // deploy µService docker container
     def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment)
+
+    def deployInfraContainer(Infra infra)
 
 }

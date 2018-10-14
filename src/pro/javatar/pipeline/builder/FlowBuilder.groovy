@@ -16,9 +16,11 @@
 package pro.javatar.pipeline.builder
 
 import pro.javatar.pipeline.Flow
+import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.exception.*
 import pro.javatar.pipeline.model.*
 import pro.javatar.pipeline.service.*
+import pro.javatar.pipeline.service.cache.CacheRequestHolder
 import pro.javatar.pipeline.service.test.*
 import pro.javatar.pipeline.service.orchestration.*
 import pro.javatar.pipeline.service.impl.*
@@ -60,7 +62,7 @@ class FlowBuilder implements Serializable {
     BuildService buildService
     CdnDeploymentService cdnDeploymentService
     AwsS3DeploymentService awsS3DeploymentService
-    UiDeploymentType uiDeploymentType = UiDeploymentType.NONE
+    UiDeploymentType uiDeploymentType = UiDeploymentType.AWS_S3
     DeploymentService deploymentService
     AutoTestsService autoTestsService
     RevisionControlService revisionControlService
@@ -70,6 +72,8 @@ class FlowBuilder implements Serializable {
     SonarQubeService sonarQubeService
     SwaggerService swaggerService
     PipelineStagesSuit suit
+
+    FlowBuilder() {}
 
     FlowBuilder(def dsl) {
         PipelineDslHolder.dsl = dsl
@@ -110,15 +114,12 @@ class FlowBuilder implements Serializable {
         dockerService = dockerBuilder.build()
         dsl.echo "docker service preparation complete"
         prepareSonarQube()
-        dsl.echo "DockerMavenBuildService debug"
-        dsl.echo "new DockerMavenBuildService(${maven.toString()})"
-        dsl.echo "new DockerMavenBuildService(${dockerService.toString()})"
-        dockerMavenBuildService = new DockerMavenBuildService(maven, dockerService)
-        dsl.echo "dockerMavenBuildService.populateMaven(maven)"
-        dockerMavenBuildService.populateMaven(maven)
+        // dsl.echo "dockerMavenBuildService.populateMaven(maven)"
+        // dockerMavenBuildService.populateMaven(maven)
         dsl.echo "before maven build"
         mavenBuildService = buildMavenBuildService(maven)
         mavenBuildService.setUp()
+        dockerMavenBuildService = new DockerMavenBuildService(mavenBuildService, dockerService)
         setupBuildService()
         cdnDeploymentService = new CdnDeploymentService(releaseInfo.getServiceName(), mavenBuildService, buildService)
         deploymentService = getAppropriateDeploymentService(buildType)
@@ -166,19 +167,24 @@ class FlowBuilder implements Serializable {
     }
 
     void createDeployStages() {
+        dsl.echo "createDeployStages started"
         availableStages.put(StageType.DEPLOY_ON_DEV_ENV, new DeployToDevEnvStage(deploymentService))
         availableStages.put(StageType.DEPLOY_ON_QA_ENV, new DeployToQAEnvStage(deploymentService))
         availableStages.put(StageType.DEPLOY_ON_STAGING_ENV, new DeployToStagingEnvStage(deploymentService))
         availableStages.put(StageType.DEPLOY_ON_PROD_ENV, new DeployToProdEnvStage(deploymentService))
+        dsl.echo "createDeployStages finished"
     }
 
     void createSignOffStages() {
+        dsl.echo "createSignOffStages started"
         availableStages.put(StageType.DEV_SIGN_OFF, new DeveloperSignOffStage())
         availableStages.put(StageType.QA_SIGN_OFF, new QaSignOffStage())
         availableStages.put(StageType.DEVOPS_SIGN_OFF, new DevOpsSignOffStage())
+        dsl.echo "createSignOffStages finished"
     }
 
     FlowBuilder skipStage(StageType stageType) {
+        dsl.echo "skipStage stageType: ${stageType.name()}"
         stageTypesToBeSkipped.add(stageType)
         return this
     }
@@ -188,6 +194,16 @@ class FlowBuilder implements Serializable {
         for(String stageType: stageTypes) {
             stageTypesToBeSkipped.add(StageType.valueOf(stageType))
         }
+        return this
+    }
+
+    FlowBuilder addPipelineStages(List<String> stageTypeList) {
+        stageTypeList.each {stageType -> stageTypes.add(StageType.valueOf(stageType))}
+        return this
+    }
+
+    FlowBuilder addPipelineStage(String stageType) {
+        stageTypes.add(StageType.valueOf(stageType))
         return this
     }
 
@@ -312,8 +328,9 @@ class FlowBuilder implements Serializable {
         if (isUi(releaseInfo.getServiceName())) {
             return new UiAutoTestsService().withUiSystemTestsJobName("common/ui-system-tests")
         } else {
-            // TODO provide default, root cause of npe
-            if (backEndAutoTestsServiceBuilder == null) return null
+            if (backEndAutoTestsServiceBuilder == null) {
+                backEndAutoTestsServiceBuilder = new BackEndAutoTestsServiceBuilder()
+            }
             if (suit == PipelineStagesSuit.LIBRARY) {
                 if (sonarQubeService == null) {
                     return backEndAutoTestsServiceBuilder.buildLibrary();
@@ -321,7 +338,7 @@ class FlowBuilder implements Serializable {
                 return backEndAutoTestsServiceBuilder.buildLibrary(sonarQubeService)
             }
             if (sonarQubeService == null) {
-                return backEndAutoTestsServiceBuilder.buildLibrary();
+                return backEndAutoTestsServiceBuilder.build();
             }
             return backEndAutoTestsServiceBuilder.build(sonarQubeService)
         }
@@ -334,6 +351,10 @@ class FlowBuilder implements Serializable {
         if (buildType == BuildServiceType.NPM || buildType == BuildServiceType.NPM_DOCKER
                 || buildType == BuildServiceType.SENCHA) {
             return new UiReleaseService(buildService, revisionControlService)
+        }
+        if (buildType == BuildServiceType.PYTHON || buildType == BuildServiceType.PHP
+                || buildType == BuildServiceType.PHP_PYTHON) {
+            return new VcsAndDockerRelease(buildService, revisionControlService, dockerService)
         }
         return new BackEndReleaseService(mavenBuildService, revisionControlService, dockerService)
     }
@@ -360,6 +381,11 @@ class FlowBuilder implements Serializable {
 
     FlowBuilder withDocker(DockerBuilder dockerBuilder) {
         this.dockerBuilder = dockerBuilder
+        return this
+    }
+
+    FlowBuilder withCacheRequest(CacheRequest cacheRequest) {
+        CacheRequestHolder.setCaches(cacheRequest.getCaches())
         return this
     }
 

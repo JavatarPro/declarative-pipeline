@@ -19,6 +19,8 @@ import pro.javatar.pipeline.exception.InvalidBranchException
 import pro.javatar.pipeline.exception.HgFlowReleaseFinishException
 import pro.javatar.pipeline.exception.ReleaseFinishException
 import pro.javatar.pipeline.model.ReleaseInfo
+import pro.javatar.pipeline.service.vcs.model.VscCheckoutRequest
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
@@ -87,6 +89,12 @@ class HgService extends RevisionControlService {
             dsl.sh "hg pull --rebase"
             dsl.sh "hg update --clean"
         }
+    }
+
+    @Override
+    def checkoutRepo(VscCheckoutRequest request) {
+        // TODO
+        throw new UnsupportedOperationException("not yet implemented")
     }
 
     @Override

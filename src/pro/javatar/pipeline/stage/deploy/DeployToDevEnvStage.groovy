@@ -24,6 +24,8 @@ import pro.javatar.pipeline.service.DeploymentService
  */
 class DeployToDevEnvStage extends DeployToEnvStage {
 
+    DeployToDevEnvStage() {}
+
     DeployToDevEnvStage(DeploymentService deploymentService) {
         super.deploymentService = deploymentService
     }

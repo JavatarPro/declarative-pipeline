@@ -25,7 +25,7 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 abstract class BuildService implements Serializable {
 
-    protected int unitTestsTimeout = 5
+    protected int unitTestsTimeout = 25
     boolean useBuildNumberForVersion = true
     boolean skipUnitTests = true
     protected String distributionFolder = "dist"
@@ -65,6 +65,10 @@ abstract class BuildService implements Serializable {
     abstract def setupReleaseVersion(String releaseVersion)
 
     abstract def setupVersion(String version)
+
+    def populateReleaseInfo(ReleaseInfo releaseInfo) {
+        dsl.echo "default populateReleaseInfo, nothing to change"
+    }
 
     // helper methods
 
@@ -117,6 +121,10 @@ abstract class BuildService implements Serializable {
     protected BuildService withUnitTestsTimeout(int unitTestsTimeout) {
         this.unitTestsTimeout = unitTestsTimeout
         return this
+    }
+
+    protected String getServiceName() {
+        return "buildService"
     }
 
 }

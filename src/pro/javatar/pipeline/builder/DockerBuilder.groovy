@@ -16,7 +16,7 @@
 package pro.javatar.pipeline.builder
 
 import pro.javatar.pipeline.model.DockerOrchestrationServiceType
-import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService;
+import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
 import pro.javatar.pipeline.service.orchestration.DockerService
 import pro.javatar.pipeline.service.orchestration.KubernetesService
 import pro.javatar.pipeline.service.orchestration.MesosService
@@ -25,7 +25,7 @@ import pro.javatar.pipeline.service.orchestration.SshDockerOrchestrationService
 import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.KUBERNETES
 import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.MESOS
 import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.SSH
-import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.fromString;
+import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.fromString
 
 /**
  * @author Borys Zora
@@ -35,13 +35,15 @@ class DockerBuilder implements Serializable {
 
     private String dockerRepo
     private String dockerDevRepo
-    private String dockerCredentialsId
+    private String dockerDevCredentialsId
+    private String dockerProdCredentialsId
     private String customDockerFileName = ""
     private DockerOrchestrationService orchestrationService
 
     DockerService build() {
         DockerService dockerService = new DockerService(dockerDevRepo, dockerRepo, orchestrationService)
-        dockerService.setDockerCredentialsId(dockerCredentialsId)
+        dockerService.setDockerDevCredentialsId(dockerDevCredentialsId)
+        dockerService.setDockerProdCredentialsId(dockerProdCredentialsId)
         dockerService.setCustomDockerFileName(customDockerFileName)
         return dockerService
     }
@@ -56,7 +58,7 @@ class DockerBuilder implements Serializable {
         return this
     }
 
-    DockerBuilder withDockerOrchestrationService(String dockerOrchestrationServiceType) {
+    DockerBuilder withDockerOrchestrationServiceType(String dockerOrchestrationServiceType) {
         DockerOrchestrationServiceType type = fromString(dockerOrchestrationServiceType)
         if (type == KUBERNETES) {
             this.orchestrationService = new KubernetesService()
@@ -74,12 +76,75 @@ class DockerBuilder implements Serializable {
     }
 
     DockerBuilder withDockerCredentialsId(String dockerCredentialsId) {
-        this.dockerCredentialsId = dockerCredentialsId
+        this.dockerDevCredentialsId = dockerCredentialsId
+        return this
+    }
+
+    DockerBuilder withDockerDevCredentialsId(String dockerCredentialsId) {
+        this.dockerDevCredentialsId = dockerCredentialsId
+        return this
+    }
+
+    DockerBuilder withDockerProdCredentialsId(String dockerProdCredentialsId) {
+        this.dockerProdCredentialsId = dockerProdCredentialsId
         return this
     }
 
     DockerBuilder withCustomDockerFileName(String customDockerFileName) {
         this.customDockerFileName = customDockerFileName
         return this
+    }
+
+    String getDockerRepo() {
+        return dockerRepo
+    }
+
+    void setDockerRepo(String dockerRepo) {
+        this.dockerRepo = dockerRepo
+    }
+
+    DockerBuilder withDockerRepo(String dockerRepo) {
+        this.dockerRepo = dockerRepo
+        return this
+    }
+
+    String getDockerDevRepo() {
+        return dockerDevRepo
+    }
+
+    void setDockerDevRepo(String dockerDevRepo) {
+        this.dockerDevRepo = dockerDevRepo
+    }
+
+    String getDockerDevCredentialsId() {
+        return dockerDevCredentialsId
+    }
+
+    void setDockerDevCredentialsId(String dockerDevCredentialsId) {
+        this.dockerDevCredentialsId = dockerDevCredentialsId
+    }
+
+    String getDockerProdCredentialsId() {
+        return dockerProdCredentialsId
+    }
+
+    void setDockerProdCredentialsId(String dockerProdCredentialsId) {
+        this.dockerProdCredentialsId = dockerProdCredentialsId
+    }
+
+    String getCustomDockerFileName() {
+        return customDockerFileName
+    }
+
+    void setCustomDockerFileName(String customDockerFileName) {
+        this.customDockerFileName = customDockerFileName
+    }
+
+    DockerOrchestrationService getOrchestrationService() {
+        return orchestrationService
+    }
+
+    void setOrchestrationService(DockerOrchestrationService orchestrationService) {
+        this.orchestrationService = orchestrationService
     }
 }

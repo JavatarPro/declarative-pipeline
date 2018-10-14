@@ -16,6 +16,7 @@
 package pro.javatar.pipeline.service
 
 import java.util.concurrent.ConcurrentHashMap
+import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
  * Author : Borys Zora
@@ -40,10 +41,13 @@ class ServiceContextHolder {
     }
 
     static def getService(Class service) {
+        dsl.echo "ServiceContextHolder: getService: ${service}"
         if (service == null) {
             return
         }
-        return serviceHolder.get(service)
+        def result = serviceHolder.get(service)
+        dsl.echo "ServiceContextHolder: getService: result: ${result}"
+        return result
     }
 
     static def removeService(Class service) {
