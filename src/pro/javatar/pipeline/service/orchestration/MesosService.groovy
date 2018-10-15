@@ -27,7 +27,7 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class MesosService implements DockerOrchestrationService {
 
-    Map<String, VcsRepo> vcsRepoMap
+    Map<String, VcsRepo> vcsRepoMap = new HashMap<>()
 
     MesosService(){}
 
@@ -70,6 +70,14 @@ class MesosService implements DockerOrchestrationService {
 
     String getFolder(VcsRepo vcsRepo) {
         return "../${vcsRepo.getName()}"
+    }
+
+    Map<String, VcsRepo> getVcsRepoMap() {
+        return vcsRepoMap
+    }
+
+    void setVcsRepoMap(Map<String, VcsRepo> vcsRepoMap) {
+        this.vcsRepoMap = vcsRepoMap
     }
 
     MesosService withVcsRepoMap(Map<String, VcsRepo> vcsRepoMap) {

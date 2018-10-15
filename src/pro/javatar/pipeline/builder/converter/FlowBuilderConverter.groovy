@@ -85,11 +85,13 @@ class FlowBuilderConverter {
     }
 
     MesosService toMesosService(YamlConfig yamlFile) {
+        dsl.echo "INFO: FlowBuilderConverter: toMesosService: started"
         MesosService mesosService = new MesosService()
         Mesos mesos = yamlFile.getMesos()
         Map<String, VcsRepo> vcsRepoMap = toVcsRepoMap(mesos.getVcsConfigRepos())
         mesosService.setVcsRepoMap(vcsRepoMap)
         yamlFile.getMesos()
+        dsl.echo "INFO: FlowBuilderConverter: toMesosService: finished"
         return mesosService
     }
 
