@@ -70,10 +70,10 @@ class FlowBuilderConverter {
         }
         return builder.withCustomDockerFileName(yamlFile.getDocker().getCustomDockerFileName())
                 .withOrchestrationService(toOrchestrationService(yamlFile))
-                .build()
     }
 
     DockerOrchestrationService toOrchestrationService(YamlConfig yamlFile) {
+        dsl.echo "INFO: FlowBuilderConverter: toOrchestrationService: started"
         String type = yamlFile.getOrchestrationService()
         if (isEmpty(type)) {
             return null
