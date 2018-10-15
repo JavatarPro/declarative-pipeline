@@ -197,7 +197,7 @@ class YamlConverter {
         }
         Map<String, S3Repository> resultMap = new HashMap<>()
         s3.repositories.each { String key, String value ->
-            resultMap.put(key, s3Repositories.get(value))
+            resultMap.put(key, repositoryMap.get(value))
         }
         return new S3().withS3Repositories(resultMap)
     }
