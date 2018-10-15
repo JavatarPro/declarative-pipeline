@@ -187,7 +187,6 @@ class YamlConverter {
         dsl.echo "retrieveS3: s3: ${s3}"
         def s3Repositories = yml["s3-repositories"]
         dsl.echo "retrieveS3: s3Repositories: ${s3Repositories}"
-        S3 result = S3()
         Map<String, S3Repository> repositoryMap = new HashMap<>()
         s3Repositories.each { String key, def value ->
             repositoryMap.put(key, new S3Repository()
@@ -199,7 +198,7 @@ class YamlConverter {
         s3.each { String key, String value ->
             resultMap.put(key, s3Repositories.get(value))
         }
-        return result.withS3Repositories(resultMap)
+        return new S3().withS3Repositories(resultMap)
     }
 
 }
