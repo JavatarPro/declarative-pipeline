@@ -18,7 +18,7 @@ class S3Builder implements Serializable {
     }
 
     AwsS3DeploymentService build() {
-        return new AwsS3DeploymentService(S3Repo)
+        return new AwsS3DeploymentService(S3Repos)
     }
 
     S3Builder addS3Repository(String env, S3Repo s3Repo) {
