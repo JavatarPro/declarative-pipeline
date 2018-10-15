@@ -36,7 +36,7 @@ class NpmBuildService extends BuildService {
         def node = dsl.tool([name: npmVersion, type: type])
         dsl.echo "node setup successfully"
         dsl.env.PATH="${node}/bin:${dsl.env.PATH}"
-        dsl.sh "npm config set registry ${moduleRepository}"
+        // dsl.sh "npm config set registry ${moduleRepository}"
         dsl.sh 'node --version'
         dsl.sh 'npm -version'
         // cacheLibraryFolder()
