@@ -128,7 +128,7 @@ class YamlConverter {
                     .withRegistry())
         }
         Map<String, DockerRegistry> resultMap = new HashMap<>()
-        docker.regestries.each { String key, String value ->
+        docker.registries.each { String key, String value ->
             resultMap.put(key, dockerRegistryMap.get(value))
         }
         return new Docker()
