@@ -17,7 +17,7 @@ class S3 {
         return this
     }
 
-    S3 addS3Repositories(String env, S3Repository s3Repository) {
+    S3 addS3Repository(String env, S3Repository s3Repository) {
         S3Repositories.put(env, s3Repository)
         return this
     }
