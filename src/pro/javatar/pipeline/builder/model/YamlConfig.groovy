@@ -18,7 +18,7 @@ class YamlConfig {
 
     List<Docker> docker = new ArrayList<>()
 
-    List<S3> s3 = new ArrayList<>()
+    S3 s3 = new S3()
 
     Vcs vcs = new Vcs()
 
@@ -154,21 +154,16 @@ class YamlConfig {
         return this
     }
 
-    List<S3> getS3() {
+    S3 getS3() {
         return s3
     }
 
-    void setS3(List<S3> s3) {
+    void setS3(S3 s3) {
         this.s3 = s3
     }
 
-    YamlConfig withS3(List<S3> s3) {
+    YamlConfig withS3(S3 s3) {
         this.s3 = s3
-        return this
-    }
-
-    YamlConfig addS3(S3 s3) {
-        this.s3.add(s3)
         return this
     }
 

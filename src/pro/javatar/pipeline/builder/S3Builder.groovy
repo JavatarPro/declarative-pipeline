@@ -1,6 +1,7 @@
 package pro.javatar.pipeline.builder
 
-import pro.javatar.pipeline.service.impl.AwsS3DeploymentService
+import pro.javatar.pipeline.service.s3.AwsS3DeploymentService
+import pro.javatar.pipeline.service.s3.model.S3Repo
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -10,81 +11,34 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class S3Builder implements Serializable {
 
-    String region
-
-    String credentials
-
-    String bucketDev
-
-    String bucketProd
+    Map<String, S3Repo> S3Repos = new HashMap<>()
 
     S3Builder() {
         dsl.echo "S3Builder default constructor"
     }
 
     AwsS3DeploymentService build() {
-        return new AwsS3DeploymentService(region, credentials, bucketDev, bucketProd)
+        return new AwsS3DeploymentService(S3Repo)
     }
 
-    String getRegion() {
-        return region
-    }
-
-    void setRegion(String region) {
-        this.region = region
-    }
-
-    S3Builder withRegion(String region) {
-        this.region = region
+    S3Builder addS3Repository(String env, S3Repo s3Repo) {
+        S3Repos.put(env, s3Repo)
         return this
     }
 
-    String getCredentials() {
-        return credentials
-    }
-
-    void setCredentials(String credentials) {
-        this.credentials = credentials
-    }
-
-    S3Builder withCredentials(String credentials) {
-        this.credentials = credentials
-        return this
-    }
-
-    String getBucketDev() {
-        return bucketDev
-    }
-
-    void setBucketDev(String bucketDev) {
-        this.bucketDev = bucketDev
-    }
-
-    S3Builder withBucketDev(String bucketDev) {
-        this.bucketDev = bucketDev
-        return this
-    }
-
-    String getBucketProd() {
-        return bucketProd
-    }
-
-    void setBucketProd(String bucketProd) {
-        this.bucketProd = bucketProd
-    }
-
-    S3Builder withBucketProd(String bucketProd) {
-        this.bucketProd = bucketProd
+    S3Builder addS3Repository(String env, String region, String credentialsId, String bucket, boolean envFolder) {
+        S3Repos.put(env, new S3Repo()
+                .withRegion(region)
+                .withCredentialsId(credentialsId)
+                .withBucket(bucket)
+                .withEnvFolder(envFolder))
         return this
     }
 
     @Override
     public String toString() {
         return "S3Builder{" +
-                "region='" + region + '\'' +
-                ", credentials='" + credentials + '\'' +
-                ", bucketDev='" + bucketDev + '\'' +
-                ", bucketProd='" + bucketProd + '\'' +
+                "S3Repos=" + S3Repos +
                 '}';
     }
 }

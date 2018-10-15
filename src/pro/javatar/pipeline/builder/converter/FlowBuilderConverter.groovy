@@ -9,6 +9,7 @@ import pro.javatar.pipeline.builder.S3Builder
 import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.Mesos
 import pro.javatar.pipeline.builder.model.S3
+import pro.javatar.pipeline.builder.model.S3Repository
 import pro.javatar.pipeline.builder.model.VcsRepoTO
 import pro.javatar.pipeline.builder.model.YamlConfig
 import pro.javatar.pipeline.model.DockerOrchestrationServiceType
@@ -129,19 +130,15 @@ class FlowBuilderConverter {
                 .withBranch(repo.getBranch())
     }
 
-    // TODO refactor S3Builder env coupling
     S3Builder toS3Builder(YamlConfig yamlFile) {
-        def s3 = yamlFile.getS3()
-        Map<String, S3> s3Map = new HashMap<>()
+        S3 s3 = yamlFile.getS3()
+        Map<String, S3Repository> s3RepositoryMap = s3.getS3Repositories()
         S3Builder builder = new S3Builder()
-        s3.each { it ->
-            it.env.each {envItem -> s3Map.put(envItem, it)}
+        s3RepositoryMap.each { String key, S3Repository value ->
+            builder.addS3Repository(key, value.getRegion(), value.getCredentialsId(),
+                    value.getBucket(), value.getEnvFolder())
         }
-        S3 prod = s3Map.get("prod")
-        return builder.withRegion(prod.getRegion())
-                .withCredentials(prod.getCredentialsId())
-                .withBucketDev(s3Map.get("dev").getBucket())
-                .withBucketProd(prod.getBucket())
+        return builder.build()
     }
 
 }

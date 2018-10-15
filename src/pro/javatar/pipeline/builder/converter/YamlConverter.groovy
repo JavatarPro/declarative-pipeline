@@ -9,6 +9,7 @@ import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.builder.model.Mesos
 import pro.javatar.pipeline.builder.model.Pipeline
 import pro.javatar.pipeline.builder.model.S3
+import pro.javatar.pipeline.builder.model.S3Repository
 import pro.javatar.pipeline.builder.model.Service
 import pro.javatar.pipeline.builder.model.Ui
 import pro.javatar.pipeline.builder.model.Vcs
@@ -115,6 +116,7 @@ class YamlConverter {
                 .withStages(stages)
     }
 
+    // TODO fixme
     List<Docker> retrieveDockerList(def yml) {
         def docker = yml.docker
         dsl.echo "retrieveDockerList: docker: ${docker}"
@@ -123,6 +125,7 @@ class YamlConverter {
         return dockers
     }
 
+    // TODO fixme
     Docker retrieveDocker(def dockerItem) {
         dsl.echo "retrieveDocker: dockerItem: ${dockerItem}"
         Docker docker = new Docker()
@@ -182,15 +185,21 @@ class YamlConverter {
     S3 retrieveS3(def yml) {
         def s3 = yml.s3
         dsl.echo "retrieveS3: s3: ${s3}"
-        List<S3> result = new ArrayList<>()
-        s3.each { it ->
-            result.add(new S3()
-                    .withCredentialsId(it.credentialsId)
-                    .withBucket(it.bucket)
-                    .withRegion(it.region)
-                    .withEnv(retrieveEnvList(it.env)))
+        def s3Repositories = yml["s3-repositories"]
+        dsl.echo "retrieveS3: s3Repositories: ${s3Repositories}"
+        S3 result = S3()
+        Map<String, S3Repository> repositoryMap = new HashMap<>()
+        s3Repositories.each { String key, def value ->
+            repositoryMap.put(key, new S3Repository()
+                    .withCredentialsId(value.credentialsId)
+                    .withBucket(value.bucket)
+                    .withRegion(value.region))
         }
-        return result
+        Map<String, S3Repository> resultMap = new HashMap<>()
+        s3.each { String key, String value ->
+            resultMap.put(key, s3Repositories.get(value))
+        }
+        return result.withS3Repositories(resultMap)
     }
 
 }

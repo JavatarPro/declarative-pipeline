@@ -21,6 +21,7 @@ import pro.javatar.pipeline.exception.*
 import pro.javatar.pipeline.model.*
 import pro.javatar.pipeline.service.*
 import pro.javatar.pipeline.service.cache.CacheRequestHolder
+import pro.javatar.pipeline.service.s3.AwsS3DeploymentService
 import pro.javatar.pipeline.service.test.*
 import pro.javatar.pipeline.service.orchestration.*
 import pro.javatar.pipeline.service.impl.*
