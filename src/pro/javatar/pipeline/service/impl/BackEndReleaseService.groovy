@@ -46,18 +46,23 @@ class BackEndReleaseService implements ReleaseService {
         dsl.echo "BackEndReleaseService start release: ${releaseInfo.toString()}"
         validateReleaseVersion(releaseInfo.releaseVersion)
         buildService.deployMavenArtifactsToNexus()
+        // TODO comment out promotion of docker, it should be after QA sign off
         dsl.parallel 'release revision control': {
-            dsl.echo "BackEndReleaseService releaseRevisionControl() started"
-            revisionControlService.release(releaseInfo.releaseVersion)
-            revisionControlService.switchToDevelopBranch()
-            buildService.setupVersion(releaseInfo.developVersion)
-            revisionControlService.commitChanges("Update version to ${releaseInfo.developVersion}")
-            revisionControlService.pushRelease()
-            dsl.echo "BackEndReleaseService releaseRevisionControl() finished"
+            releaseRevisionControl(releaseInfo)
         }, 'release docker artifacts': {
             dockerService.dockerPushImageToProdRegistry(releaseInfo.serviceName, releaseInfo.releaseVersion)
         }
         dsl.echo "BackEndReleaseService end release"
+    }
+
+    def releaseRevisionControl(ReleaseInfo releaseInfo) {
+        dsl.echo "BackEndReleaseService: releaseRevisionControl() started"
+        revisionControlService.release(releaseInfo.releaseVersion)
+        revisionControlService.switchToDevelopBranch()
+        buildService.setupVersion(releaseInfo.developVersion)
+        revisionControlService.commitChanges("Update version to ${releaseInfo.developVersion}")
+        revisionControlService.pushRelease()
+        dsl.echo "BackEndReleaseService: releaseRevisionControl() finished"
     }
 
     def validateReleaseVersion(String releaseVersion) {

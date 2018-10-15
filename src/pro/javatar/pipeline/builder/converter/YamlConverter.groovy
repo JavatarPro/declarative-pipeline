@@ -3,6 +3,7 @@ package pro.javatar.pipeline.builder.converter
 import pro.javatar.pipeline.builder.model.AutoTest
 import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.Docker
+import pro.javatar.pipeline.builder.model.DockerRegistry
 import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.builder.model.Maven
 import pro.javatar.pipeline.builder.Npm
@@ -29,7 +30,7 @@ class YamlConverter {
                 .withUi(retrieveUi(yml))
                 .withS3(retrieveS3(yml))
                 .withMaven(retrieveMaven(yml))
-                .withDocker(retrieveDockerList(yml))
+                .withDocker(retrieveDocker(yml))
                 .withOrchestrationService(yml.orchestrationService)
                 .withMesos(retrieveMesos(yml))
                 .withAutoTest(retrieveAutoTest(yml))
@@ -116,23 +117,23 @@ class YamlConverter {
                 .withStages(stages)
     }
 
-    // TODO fixme
-    List<Docker> retrieveDockerList(def yml) {
+    Docker retrieveDocker(def yml) {
         def docker = yml.docker
-        dsl.echo "retrieveDockerList: docker: ${docker}"
-        List<Docker> dockers = new ArrayList<>()
-        docker.each{dockerItem -> dockers.add(retrieveDocker(dockerItem))}
-        return dockers
-    }
-
-    // TODO fixme
-    Docker retrieveDocker(def dockerItem) {
-        dsl.echo "retrieveDocker: dockerItem: ${dockerItem}"
-        Docker docker = new Docker()
-                .withCredentialsId(dockerItem.credentialsId)
-                .withRegistry(dockerItem.registry)
-                .withEnv(retrieveEnvList(dockerItem.env))
-        return docker
+        dsl.echo "retrieveDocker: docker: ${docker}"
+        Map<String, DockerRegistry> dockerRegistryMap = new HashMap<>()
+        def dockerRegistries = yml["docker-registries"]
+        dockerRegistries.each{ String key, def value ->
+            dockerRegistryMap.put(key, new DockerRegistry()
+                    .withCredentialsId()
+                    .withRegistry())
+        }
+        Map<String, DockerRegistry> resultMap = new HashMap<>()
+        docker.regestries.each { String key, String value ->
+            resultMap.put(key, dockerRegistryMap.get(value))
+        }
+        return new Docker()
+                .withDockerRegistries(resultMap)
+                .withCustomDockerFileName(docker.customDockerFileName)
     }
 
     List<String> retrieveEnvList(def env) {

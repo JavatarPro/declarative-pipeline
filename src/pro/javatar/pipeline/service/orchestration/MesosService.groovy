@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.service.orchestration
 
 import pro.javatar.pipeline.model.Env
@@ -28,8 +27,6 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class MesosService implements DockerOrchestrationService {
 
-    VcsRepo dev
-    VcsRepo prod
     Map<String, VcsRepo> vcsRepoMap
 
     MesosService(){}
@@ -73,18 +70,6 @@ class MesosService implements DockerOrchestrationService {
 
     String getFolder(VcsRepo vcsRepo) {
         return "../${vcsRepo.getName()}"
-    }
-
-    MesosService withDev(VcsRepo dev) {
-        this.vcsRepoMap.put(Env.DEV.getValue(), dev)
-        this.dev = dev
-        return this
-    }
-
-    MesosService withProd(VcsRepo prod) {prod
-        this.vcsRepoMap.put(Env.PROD.getValue(), dev)
-        this.prod = prod
-        return this
     }
 
     MesosService withVcsRepoMap(Map<String, VcsRepo> vcsRepoMap) {

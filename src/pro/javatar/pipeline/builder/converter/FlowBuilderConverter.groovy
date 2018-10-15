@@ -6,7 +6,7 @@ import pro.javatar.pipeline.builder.FlowBuilder
 import pro.javatar.pipeline.builder.Maven
 import pro.javatar.pipeline.builder.RevisionControlBuilder
 import pro.javatar.pipeline.builder.S3Builder
-import pro.javatar.pipeline.builder.model.Docker
+import pro.javatar.pipeline.builder.model.DockerRegistry
 import pro.javatar.pipeline.builder.model.Mesos
 import pro.javatar.pipeline.builder.model.S3
 import pro.javatar.pipeline.builder.model.S3Repository
@@ -61,24 +61,19 @@ class FlowBuilderConverter {
                 .withMaven(jenkinsTools.getMaven())
     }
 
-    // TODO refactor DockerBuilder env coupling
     DockerBuilder toDockerBuilder(YamlConfig yamlFile) {
-        def docker = yamlFile.getDocker()
-        Map<String, Docker> dockerMap = new HashMap<>()
+        Map<String, DockerRegistry> dockerRegistryMap = yamlFile.getDocker().getDockerRegistries()
         DockerBuilder builder = new DockerBuilder()
-        docker.each { it ->
-            it.env.each {envItem -> dockerMap.put(envItem, it)}
+
+        dockerRegistryMap.each { String key, DockerRegistry value ->
+            builder.withDockerRegistry(key, value.getCredentialsId(), value.getRegistry())
         }
-        Docker prod = dockerMap.get("prod")
-        Docker dev = dockerMap.get("dev")
-        return builder.withDockerDevRepo(dev.getRegistry())
-                .withDockerRepo(prod.getRegistry())
-                .withDockerDevCredentialsId(dev.getCredentialsId())
-                .withDockerProdCredentialsId(prod.getCredentialsId())
-                .withDockerOrchestrationService(toDockerOrchestrationService(yamlFile))
+        return builder.withCustomDockerFileName(yamlFile.getDocker().getCustomDockerFileName())
+                .withOrchestrationService(toOrchestrationService(yamlFile))
+                .build()
     }
 
-    DockerOrchestrationService toDockerOrchestrationService(YamlConfig yamlFile) {
+    DockerOrchestrationService toOrchestrationService(YamlConfig yamlFile) {
         String type = yamlFile.getOrchestrationService()
         if (isEmpty(type)) {
             return null

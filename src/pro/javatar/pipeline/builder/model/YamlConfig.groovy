@@ -16,7 +16,7 @@ class YamlConfig {
 
     Ui ui = new Ui()
 
-    List<Docker> docker = new ArrayList<>()
+    Docker docker = new Docker()
 
     S3 s3 = new S3()
 
@@ -102,15 +102,15 @@ class YamlConfig {
         return this
     }
 
-    List<Docker> getDocker() {
+    Docker getDocker() {
         return docker
     }
 
-    void setDocker(List<Docker> docker) {
+    void setDocker(Docker docker) {
         this.docker = docker
     }
 
-    YamlConfig withDocker(List<Docker> docker) {
+    YamlConfig withDocker(Docker docker) {
         this.docker = docker
         return this
     }

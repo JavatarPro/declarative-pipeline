@@ -2,62 +2,47 @@ package pro.javatar.pipeline.builder.model
 
 class Docker {
 
-    String credentialsId
+    Map<String, DockerRegistry> dockerRegistries = new HashMap<>()
 
-    String registry
+    String customDockerFileName = ""
 
-    List<String> env = new ArrayList<>()
-
-    String getCredentialsId() {
-        return credentialsId
+    Map<String, DockerRegistry> getDockerRegistries() {
+        return dockerRegistries
     }
 
-    void setCredentialsId(String credentialsId) {
-        this.credentialsId = credentialsId
+    void setDockerRegistries(Map<String, DockerRegistry> dockerRegistries) {
+        this.dockerRegistries = dockerRegistries
     }
 
-    Docker withCredentialsId(String credentialsId) {
-        this.credentialsId = credentialsId
+    Docker withDockerRegistries(Map<String, DockerRegistry> dockerRegistries) {
+        this.dockerRegistries = dockerRegistries
         return this
     }
 
-    String getRegistry() {
-        return registry
-    }
-
-    void setRegistry(String registry) {
-        this.registry = registry
-    }
-
-    Docker withRegistry(String registry) {
-        this.registry = registry
+    Docker addDockerRegistries(String env, DockerRegistry dockerRegistry) {
+        this.dockerRegistries.put(env, dockerRegistry)
         return this
     }
 
-    List<String> getEnv() {
-        return env
+    String getCustomDockerFileName() {
+        return customDockerFileName
     }
 
-    void setEnv(List<String> env) {
-        this.env = env
+    void setCustomDockerFileName(String customDockerFileName) {
+        this.customDockerFileName = customDockerFileName
     }
 
-    Docker withEnv(List<String> env) {
-        this.env = env
+    Docker withCustomDockerFileName(String customDockerFileName) {
+        this.customDockerFileName = customDockerFileName
         return this
     }
 
-    Docker addEnv(String env) {
-        this.env.add(env)
-        return this
-    }
 
     @Override
     public String toString() {
         return "Docker{" +
-                "credentialsId='" + credentialsId + '\'' +
-                ", registry='" + registry + '\'' +
-                ", env=" + env +
+                "dockerRegistries=" + dockerRegistries +
+                ", customDockerFileName='" + customDockerFileName + '\'' +
                 '}';
     }
 }
