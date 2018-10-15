@@ -133,7 +133,7 @@ class FlowBuilderConverter {
             builder.addS3Repository(key, value.getRegion(), value.getCredentialsId(),
                     value.getBucket(), value.getEnvFolder())
         }
-        return builder.build()
+        return builder
     }
 
 }
