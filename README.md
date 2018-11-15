@@ -5,7 +5,7 @@ This is shared library for jenkins CD declarative pipeline created by [Javatar L
 ### What is this repository for? ###
 
 * This is shared library for jenkins CD pipeline
-* Jenkinsfile example [continuous-delivery repo](https://github.com/JavatarPro/continuous-delivery)
+* Jenkinsfile example [continuous-delivery repo](https://github.com/JavatarPro/declarative-pipeline)
 
 ### How do I get set up? ###
 
