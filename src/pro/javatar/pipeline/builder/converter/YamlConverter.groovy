@@ -78,7 +78,7 @@ class YamlConverter {
                 .withServerUrl(sonar.serverUrl)
                 .withQualityGateEnabled(sonar.qualityGateEnabled)
                 .withQualityGateSleepInSeconds(sonar.qualityGateSleepInSeconds)
-                .withJenkinsSettingsName(sonarjenkinsSettingsName)
+                .withJenkinsSettingsName(sonar.jenkinsSettingsName)
                 .withParams(sonar.params)
     }
 
