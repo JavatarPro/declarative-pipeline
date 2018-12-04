@@ -9,6 +9,7 @@ import pro.javatar.pipeline.builder.model.Mesos
 import pro.javatar.pipeline.builder.model.Pipeline
 import pro.javatar.pipeline.builder.model.S3
 import pro.javatar.pipeline.builder.model.Service
+import pro.javatar.pipeline.builder.model.Sonar
 import pro.javatar.pipeline.builder.model.Ui
 import pro.javatar.pipeline.builder.model.Vcs
 import pro.javatar.pipeline.builder.model.VcsRepoTO
@@ -30,6 +31,7 @@ class YamlConverter {
                 .withDocker(retrieveDockerList(yml))
                 .withOrchestrationService(yml.orchestrationService)
                 .withMesos(retrieveMesos(yml))
+                .withSonar(retrieveSonar(yml))
                 .withAutoTest(retrieveAutoTest(yml))
                 .populateServiceRepo()
     }
@@ -62,6 +64,22 @@ class YamlConverter {
                 .withSkipCodeQualityVerification(autoTest.skipCodeQualityVerification)
                 .withSkipSystemTests(autoTest.skipSystemTests)
                 .withSleepInSeconds(autoTest.sleepInSeconds)
+    }
+
+    Sonar retrieveSonar(def yml) {
+        def sonar = yml.sonar
+        dsl.echo "retrieveSonar: sonar: ${sonar}"
+        if (sonar == null) {
+            dsl.echo "empty sonar will be returned"
+            return new Sonar()
+        }
+        return new Sonar()
+                .withEnabled(sonar.enabled)
+                .withServerUrl(sonar.serverUrl)
+                .withQualityGateEnabled(sonar.qualityGateEnabled)
+                .withQualityGateSleepInSeconds(sonar.qualityGateSleepInSeconds)
+                .withJenkinsSettingsName(sonarjenkinsSettingsName)
+                .withParams(sonar.params)
     }
 
     Vcs retrieveVcs(def yml) {

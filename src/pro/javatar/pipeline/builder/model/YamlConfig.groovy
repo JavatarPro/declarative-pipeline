@@ -30,6 +30,8 @@ class YamlConfig {
 
     AutoTest autoTest = new AutoTest()
 
+    Sonar sonar = new Sonar()
+
     YamlConfig populateServiceRepo() {
         service.setRepo(vcs.getRepo().get(service.getVcsRepoId()))
         return this
@@ -204,8 +206,21 @@ class YamlConfig {
         this.autoTest = autoTest
     }
 
-    AutoTest withAutoTest(AutoTest autoTest) {
+    YamlConfig withAutoTest(AutoTest autoTest) {
         this.autoTest = autoTest
+        return this
+    }
+
+    Sonar getSonar() {
+        return sonar
+    }
+
+    void setSonar(Sonar sonar) {
+        this.sonar = sonar
+    }
+
+    YamlConfig withSonar(Sonar sonar) {
+        this.sonar = sonar
         return this
     }
 

@@ -6,6 +6,7 @@ import pro.javatar.pipeline.builder.FlowBuilder
 import pro.javatar.pipeline.builder.Maven
 import pro.javatar.pipeline.builder.RevisionControlBuilder
 import pro.javatar.pipeline.builder.S3Builder
+import pro.javatar.pipeline.builder.SonarQubeBuilder
 import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.Mesos
 import pro.javatar.pipeline.builder.model.S3
@@ -37,6 +38,7 @@ class FlowBuilderConverter {
                 .withRevisionControl(toRevisionControlBuilder(yamlFile))
                 .withDocker(toDockerBuilder(yamlFile))
                 .withBackEndAutoTestsServiceBuilder(toBackEndAutoTestsServiceBuilder(yamlFile))
+                .withSonar(toSonar(yamlFile))
     }
 
     BackEndAutoTestsServiceBuilder toBackEndAutoTestsServiceBuilder(YamlConfig yamlConfig) {
@@ -141,6 +143,17 @@ class FlowBuilderConverter {
                 .withCredentials(prod.getCredentialsId())
                 .withBucketDev(s3Map.get("dev").getBucket())
                 .withBucketProd(prod.getBucket())
+    }
+
+    SonarQubeBuilder toSonar(YamlConfig yamlFile) {
+        def sonar = yamlFile.getSonar()
+        return new SonarQubeBuilder()
+                .withEnabled(sonar.getEnabled())
+                .withServerUrl(sonar.getServerUrl())
+                .withQualityGateEnabled(sonar.getQualityGateEnabled())
+                .withQualityGateSleepInSeconds(sonar.getQualityGateSleepInSeconds())
+                .withJenkinsSettingsName(sonar.getJenkinsSettingsName())
+                .withParams(sonar.getParams())
     }
 
 }
