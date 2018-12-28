@@ -70,7 +70,13 @@ class FlowBuilderConverter {
             it.env.each {envItem -> dockerMap.put(envItem, it)}
         }
         Docker prod = dockerMap.get("prod")
+        if (prod == null) {
+            prod = new Docker()
+        }
         Docker dev = dockerMap.get("dev")
+        if (dev == null) {
+            dev = new Docker()
+        }
         return builder.withDockerDevRepo(dev.getRegistry())
                 .withDockerRepo(prod.getRegistry())
                 .withDockerDevCredentialsId(dev.getCredentialsId())
