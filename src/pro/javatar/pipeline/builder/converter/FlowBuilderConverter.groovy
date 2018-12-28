@@ -96,8 +96,9 @@ class FlowBuilderConverter {
     }
 
     MesosService toMesosService(YamlConfig yamlFile) {
-        MesosService mesosService = new MesosService()
         Mesos mesos = yamlFile.getMesos()
+        if (mesos == null) return null
+        MesosService mesosService = new MesosService()
         Map<String, VcsRepo> vcsRepoMap = toVcsRepoMap(mesos.getVcsConfigRepos())
         mesosService.setVcsRepoMap(vcsRepoMap)
         yamlFile.getMesos()
@@ -112,6 +113,7 @@ class FlowBuilderConverter {
     }
 
     VcsRepo toVcsRepo(VcsRepoTO vcsRepoTO) {
+        if (vcsRepoTO == null) return null
         dsl.echo "toVcsRepo vcsRepoTO: ${vcsRepoTO.toString()}"
         return new VcsRepo()
                 .withCredentialsId(vcsRepoTO.getCredentialsId())

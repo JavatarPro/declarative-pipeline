@@ -161,7 +161,7 @@ class YamlConverter {
 
     Mesos retrieveMesos(def yml) {
         def mesos = yml.mesos
-        if (mesos == null) return new Mesos()
+        if (mesos == null) return null
         dsl.echo "retrieveMesos: mesos: ${mesos}"
         def vcsConfigRepos = mesos.vcsConfigRepos
         dsl.echo "retrieveMesos: vcsConfigRepos: ${vcsConfigRepos}"
