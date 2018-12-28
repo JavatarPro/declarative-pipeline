@@ -133,6 +133,7 @@ class FlowBuilderConverter {
     // TODO refactor S3Builder env coupling
     S3Builder toS3Builder(YamlConfig yamlFile) {
         def s3 = yamlFile.getS3()
+        if (s3.isEmpty()) return null
         Map<String, S3> s3Map = new HashMap<>()
         S3Builder builder = new S3Builder()
         s3.each { it ->
