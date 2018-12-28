@@ -50,7 +50,7 @@ class YamlConverter {
     Service retrieveService(def yml) {
         def service = yml.service
         dsl.echo "retrieveService: service: ${service}"
-        if (service == null) return null
+        if (service == null) return new Service()
         return new Service()
                 .withName(service.name)
                 .withBuildType(service.buildType)
@@ -87,7 +87,7 @@ class YamlConverter {
 
     Vcs retrieveVcs(def yml) {
         def vcs = yml.vcs
-        if (vcs == null) return null
+        if (vcs == null) return new Vcs()
         dsl.echo "retrieveVcsRepo: vcs: ${vcs}"
         return new Vcs()
                 .withRevisionControl(yml.revisionControl)
@@ -115,7 +115,7 @@ class YamlConverter {
 
     Pipeline retrievePipeline(def yml) {
         def pipeline = yml.pipeline
-        if (pipeline == null) return null
+        if (pipeline == null) return new Pipeline()
         dsl.echo "retrievePipeline: pipeline: ${pipeline}"
         List<String> stages = new ArrayList<>()
         pipeline.stages.each{stage -> stages.add(stage)}
@@ -161,7 +161,7 @@ class YamlConverter {
 
     Mesos retrieveMesos(def yml) {
         def mesos = yml.mesos
-        if (mesos == null) return null
+        if (mesos == null) return new Mesos()
         dsl.echo "retrieveMesos: mesos: ${mesos}"
         def vcsConfigRepos = mesos.vcsConfigRepos
         dsl.echo "retrieveMesos: vcsConfigRepos: ${vcsConfigRepos}"
@@ -177,7 +177,7 @@ class YamlConverter {
 
     Npm retrieveNpm(def yml) {
         def npm = yml.npm
-        if (npm == null) return null
+        if (npm == null) return new Npm()
         dsl.echo "retrieveNpm: npm: ${npm}"
         return new Npm()
                 .withNpmType(npm.type)
@@ -188,14 +188,14 @@ class YamlConverter {
 
     Ui retrieveUi(def yml) {
         def ui = yml.ui
-        if (ui == null) return null
+        if (ui == null) return new Ui()
         dsl.echo "retrieveUi: ui: ${ui}"
         return new Ui().withDeploymentType(ui.deploymentType)
     }
 
-    S3 retrieveS3(def yml) {
+    List<S3> retrieveS3(def yml) {
         def s3 = yml.s3
-        if (s3 == null) return null
+        if (s3 == null) return new S3()
         dsl.echo "retrieveS3: s3: ${s3}"
         List<S3> result = new ArrayList<>()
         s3.each { it ->
