@@ -195,7 +195,7 @@ class YamlConverter {
 
     List<S3> retrieveS3(def yml) {
         def s3 = yml.s3
-        if (s3 == null) return new S3()
+        if (s3 == null) return Collections.emptyList()
         dsl.echo "retrieveS3: s3: ${s3}"
         List<S3> result = new ArrayList<>()
         s3.each { it ->
