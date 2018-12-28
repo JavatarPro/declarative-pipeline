@@ -49,6 +49,7 @@ class YamlConverter {
     Service retrieveService(def yml) {
         def service = yml.service
         dsl.echo "retrieveService: service: ${service}"
+        if (service == null) return null
         return new Service()
                 .withName(service.name)
                 .withBuildType(service.buildType)
@@ -169,6 +170,7 @@ class YamlConverter {
 
     Npm retrieveNpm(def yml) {
         def npm = yml.npm
+        if (npm == null) return null
         dsl.echo "retrieveNpm: npm: ${npm}"
         return new Npm()
                 .withNpmType(npm.type)
