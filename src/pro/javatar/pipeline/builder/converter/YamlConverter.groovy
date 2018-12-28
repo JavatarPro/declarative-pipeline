@@ -38,6 +38,7 @@ class YamlConverter {
 
     JenkinsTool retrieveJenkinsTools(yml) {
         def tool = yml.jenkins_tool
+        if (tool == null) return null
         dsl.echo "retrieveJenkinsTools: jenkins_tool: ${tool}"
         return new JenkinsTool()
                 .withJava(tool.java)
@@ -59,6 +60,7 @@ class YamlConverter {
 
     AutoTest retrieveAutoTest(def yml) {
         def autoTest = yml["auto-test"]
+        if (autoTest == null) return null
         dsl.echo "retrieveAutoTest: autoTest: ${autoTest}"
         return new AutoTest()
                 .withJobName(autoTest.jobName)
@@ -85,6 +87,7 @@ class YamlConverter {
 
     Vcs retrieveVcs(def yml) {
         def vcs = yml.vcs
+        if (vcs == null) return null
         dsl.echo "retrieveVcsRepo: vcs: ${vcs}"
         return new Vcs()
                 .withRevisionControl(yml.revisionControl)
@@ -112,6 +115,7 @@ class YamlConverter {
 
     Pipeline retrievePipeline(def yml) {
         def pipeline = yml.pipeline
+        if (pipeline == null) return null
         dsl.echo "retrievePipeline: pipeline: ${pipeline}"
         List<String> stages = new ArrayList<>()
         pipeline.stages.each{stage -> stages.add(stage)}
@@ -122,6 +126,7 @@ class YamlConverter {
 
     List<Docker> retrieveDockerList(def yml) {
         def docker = yml.docker
+        if (docker == null) return Collections.emptyList()
         dsl.echo "retrieveDockerList: docker: ${docker}"
         List<Docker> dockers = new ArrayList<>()
         docker.each{dockerItem -> dockers.add(retrieveDocker(dockerItem))}
@@ -146,6 +151,7 @@ class YamlConverter {
 
     Maven retrieveMaven(def yml) {
         def maven = yml.maven
+        if (maven == null) return null
         dsl.echo "retrieveMaven: maven: ${maven}"
         return new Maven()
                 .withRepositoryId(maven.repository.id)
@@ -155,6 +161,7 @@ class YamlConverter {
 
     Mesos retrieveMesos(def yml) {
         def mesos = yml.mesos
+        if (mesos == null) return null
         dsl.echo "retrieveMesos: mesos: ${mesos}"
         def vcsConfigRepos = mesos.vcsConfigRepos
         dsl.echo "retrieveMesos: vcsConfigRepos: ${vcsConfigRepos}"
@@ -181,12 +188,14 @@ class YamlConverter {
 
     Ui retrieveUi(def yml) {
         def ui = yml.ui
+        if (ui == null) return null
         dsl.echo "retrieveUi: ui: ${ui}"
         return new Ui().withDeploymentType(ui.deploymentType)
     }
 
     S3 retrieveS3(def yml) {
         def s3 = yml.s3
+        if (s3 == null) return null
         dsl.echo "retrieveS3: s3: ${s3}"
         List<S3> result = new ArrayList<>()
         s3.each { it ->
