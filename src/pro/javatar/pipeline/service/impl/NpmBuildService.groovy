@@ -40,7 +40,7 @@ class NpmBuildService extends BuildService {
         dsl.sh 'node --version'
         dsl.sh 'npm -version'
         // cacheLibraryFolder()
-        dsl.sh "npm install"
+        dsl.sh "npm install --no-save"
     }
 
     def cacheLibraryFolder() {
