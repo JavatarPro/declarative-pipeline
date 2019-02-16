@@ -44,7 +44,7 @@ class NpmBuildService extends BuildService {
 //        dsl.sh "pwd; ls -la; ls -la .."
 //        dsl.sh "ln -s ${buildFolder}/${libraryFolder} ${libraryFolder}"
 //        dsl.sh "pwd; ls -la; ls -la .."
-        dsl.sh "npm install"
+        dsl.sh "npm install --no-save"
     }
 
     @Override
