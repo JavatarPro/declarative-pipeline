@@ -110,6 +110,7 @@ class DockerService implements Serializable {
     }
 
     def dockerPushImageToRegistryWithoutLogin(String imageName, String imageVersion, String dockerRegistryUrl) {
+        dsl.echo "INFO: dockerPushImageToRegistryWithoutLogin (${imageName}, ${imageVersion}, ${dockerRegistryUrl})"
         dsl.sh "docker images"
         dsl.sh "docker tag ${imageName}:${imageVersion} ${dockerRegistryUrl}/${imageName}:${imageVersion}"
         dsl.sh "docker push ${dockerRegistryUrl}/${imageName}:${imageVersion}"
@@ -118,6 +119,7 @@ class DockerService implements Serializable {
 
     def dockerPushImageWithBuildNumberToRegistryWithoutLogin(String imageName, String imageVersion,
                                                              String dockerRegistryUrl) {
+        dsl.echo "INFO: dockerPushImageWithBuildNumberToRegistryWithoutLogin (${imageName}, ${imageVersion}, ${dockerRegistryUrl})"
         dsl.sh "docker images"
         String versionWithBuildNumber = getImageVersionWithBuildNumber(imageVersion)
         dsl.sh "docker tag ${imageName}:${imageVersion} ${dockerRegistryUrl}/${imageName}:${versionWithBuildNumber}"
@@ -126,6 +128,7 @@ class DockerService implements Serializable {
     }
 
     def dockerPushLatestImageToRegistryWithoutLogin(String imageName, String imageVersion, String dockerRegistryUrl) {
+        dsl.echo "INFO: dockerPushLatestImageToRegistryWithoutLogin (${imageName}, ${imageVersion}, ${dockerRegistryUrl})"
         dsl.sh "docker images"
         dsl.sh "docker tag ${imageName}:${imageVersion} ${dockerRegistryUrl}/${imageName}:${LATEST_LABEL}"
         dsl.sh "docker push ${dockerRegistryUrl}/${imageName}:${LATEST_LABEL}"
