@@ -2,7 +2,7 @@ package pro.javatar.pipeline.builder.model
 
 class Docker {
 
-    Map<String, DockerRegistry> dockerRegistries = new HashMap<>()
+    Map<Environment, DockerRegistry> dockerRegistries = new HashMap<>()
 
     String customDockerFileName = ""
 

@@ -4,6 +4,7 @@ import pro.javatar.pipeline.builder.model.AutoTest
 import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.DockerRegistry
+import pro.javatar.pipeline.builder.model.Environment
 import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.builder.model.Maven
 import pro.javatar.pipeline.builder.Npm
@@ -120,14 +121,15 @@ class YamlConverter {
     Docker retrieveDocker(def yml) {
         def docker = yml.docker
         dsl.echo "retrieveDocker: docker: ${docker}"
-        Map<String, DockerRegistry> dockerRegistryMap = new HashMap<>()
+        Map<Environment, DockerRegistry> dockerRegistryMap = new HashMap<>()
         def dockerRegistries = yml["docker-registries"]
         dockerRegistries.each{ String key, def value ->
-            dockerRegistryMap.put(key, new DockerRegistry()
+            Environment env = new Environment(key);
+            dockerRegistryMap.put(env, new DockerRegistry()
                     .withCredentialsId()
                     .withRegistry())
         }
-        Map<String, DockerRegistry> resultMap = new HashMap<>()
+        Map<Environment, DockerRegistry> resultMap = new HashMap<>()
         docker.registries.each { String key, String value ->
             resultMap.put(key, dockerRegistryMap.get(value))
         }
