@@ -121,17 +121,17 @@ class YamlConverter {
     Docker retrieveDocker(def yml) {
         def docker = yml.docker
         dsl.echo "retrieveDocker: docker: ${docker}"
-        Map<Environment, DockerRegistry> dockerRegistryMap = new HashMap<>()
         def dockerRegistries = yml["docker-registries"]
+        dsl.echo "retrieve: dockerRegistries: ${dockerRegistries}"
+        Map<String, DockerRegistry> dockerRegistryMap = new HashMap<>()
         dockerRegistries.each{ String key, def value ->
-            Environment env = new Environment(key);
-            dockerRegistryMap.put(env, new DockerRegistry()
-                    .withCredentialsId()
-                    .withRegistry())
+            dockerRegistryMap.put(key, new DockerRegistry()
+                    .withCredentialsId(value.credentialsId)
+                    .withRegistry(value.registry))
         }
         Map<Environment, DockerRegistry> resultMap = new HashMap<>()
         docker.registries.each { String key, String value ->
-            resultMap.put(key, dockerRegistryMap.get(value))
+            resultMap.put(new Environment(key), dockerRegistryMap.get(value))
         }
         return new Docker()
                 .withDockerRegistries(resultMap)

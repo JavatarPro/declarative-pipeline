@@ -10,16 +10,22 @@ class Docker {
         return dockerRegistries
     }
 
-    void setDockerRegistries(Map<String, DockerRegistry> dockerRegistries) {
+    void setDockerRegistries(Map<Environment, DockerRegistry> dockerRegistries) {
         this.dockerRegistries = dockerRegistries
     }
 
-    Docker withDockerRegistries(Map<String, DockerRegistry> dockerRegistries) {
+    Docker withDockerRegistries(Map<Environment, DockerRegistry> dockerRegistries) {
         this.dockerRegistries = dockerRegistries
         return this
     }
 
     Docker addDockerRegistries(String env, DockerRegistry dockerRegistry) {
+        Environment environment = new Environment(env);
+        this.dockerRegistries.put(environment, dockerRegistry)
+        return this
+    }
+
+    Docker addDockerRegistries(Environment env, DockerRegistry dockerRegistry) {
         this.dockerRegistries.put(env, dockerRegistry)
         return this
     }
