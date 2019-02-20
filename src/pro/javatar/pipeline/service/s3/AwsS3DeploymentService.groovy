@@ -34,8 +34,11 @@ class AwsS3DeploymentService implements DeploymentService {
         String credentials = s3Repo.getCredentialsId()
         String bucket = s3Repo.getBucket()
         String s3Path = getS3Path(releaseInfo, environment, s3Repo)
+        String s3LatestPath = getS3LatestPath(releaseInfo, environment, s3Repo)
         dsl.withAWS(region:region, credentials: credentials) {
             dsl.s3Upload bucket: bucket, file: "${releaseInfo.getUiDistributionFolder()}/",  path: s3Path
+            dsl.s3Delete bucket: bucket, path: s3LatestPath
+            dsl.s3Upload bucket: bucket, file: "${releaseInfo.getUiDistributionFolder()}/",  path: s3LatestPath
             def files = dsl.s3FindFiles bucket: bucket, path: s3Path, glob: "**", onlyFiles: true
             dsl.echo "${files.toString()}"
         }
@@ -46,6 +49,13 @@ class AwsS3DeploymentService implements DeploymentService {
             return "${env.getValue()}/${releaseInfo.getServiceName()}/${releaseInfo.getReleaseVersion()}/"
         }
         return "${releaseInfo.getServiceName()}/${releaseInfo.getReleaseVersion()}/"
+    }
+
+    def getS3LatestPath(ReleaseInfo releaseInfo, Env env, S3Repo s3Repo) {
+        if (s3Repo.hasEnvFolder()) {
+            return "${env.getValue()}/${releaseInfo.getServiceName()}/latest/"
+        }
+        return "${releaseInfo.getServiceName()}/latest/"
     }
 
 }
