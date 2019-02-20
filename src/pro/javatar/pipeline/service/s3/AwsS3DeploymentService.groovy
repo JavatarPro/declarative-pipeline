@@ -36,6 +36,7 @@ class AwsS3DeploymentService implements DeploymentService {
         String s3Path = getS3Path(releaseInfo, environment, s3Repo)
         String s3LatestPath = getS3LatestPath(releaseInfo, environment, s3Repo)
         dsl.withAWS(region:region, credentials: credentials) {
+            dsl.s3Delete bucket: bucket, path: s3Path
             dsl.s3Upload bucket: bucket, file: "${releaseInfo.getUiDistributionFolder()}/",  path: s3Path
             dsl.s3Delete bucket: bucket, path: s3LatestPath
             dsl.s3Upload bucket: bucket, file: "${releaseInfo.getUiDistributionFolder()}/",  path: s3LatestPath
