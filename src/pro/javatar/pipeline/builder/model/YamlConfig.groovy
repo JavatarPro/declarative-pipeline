@@ -32,6 +32,8 @@ class YamlConfig {
 
     CacheRequest cacheRequest = new CacheRequest()
 
+    Sonar sonar = new Sonar()
+
     YamlConfig populateServiceRepo() {
         service.setRepo(vcs.getRepo().get(service.getVcsRepoId()))
         return this
@@ -203,6 +205,19 @@ class YamlConfig {
 
     YamlConfig withAutoTest(AutoTest autoTest) {
         this.autoTest = autoTest
+        return this
+    }
+
+    Sonar getSonar() {
+        return sonar
+    }
+
+    void setSonar(Sonar sonar) {
+        this.sonar = sonar
+    }
+
+    YamlConfig withSonar(Sonar sonar) {
+        this.sonar = sonar
         return this
     }
 

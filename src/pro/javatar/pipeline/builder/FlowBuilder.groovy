@@ -429,6 +429,7 @@ class FlowBuilder implements Serializable {
     }
 
     FlowBuilder withS3(S3Builder s3Builder) {
+        if (s3Builder == null) return this
         this.awsS3DeploymentService = s3Builder.build()
         return this
     }

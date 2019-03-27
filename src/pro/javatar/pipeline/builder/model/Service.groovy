@@ -47,7 +47,11 @@ class Service {
     }
 
     Service withUseBuildNumberForVersion(Boolean useBuildNumberForVersion) {
-        this.useBuildNumberForVersion = useBuildNumberForVersion
+        if (useBuildNumberForVersion == null) {
+            this.useBuildNumberForVersion = false
+        } else {
+            this.useBuildNumberForVersion = useBuildNumberForVersion
+        }
         return this
     }
 

@@ -7,6 +7,8 @@ import pro.javatar.pipeline.builder.Maven
 import pro.javatar.pipeline.builder.RevisionControlBuilder
 import pro.javatar.pipeline.builder.S3Builder
 import pro.javatar.pipeline.builder.model.DockerRegistry
+import pro.javatar.pipeline.builder.SonarQubeBuilder
+import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.Mesos
 import pro.javatar.pipeline.builder.model.S3
 import pro.javatar.pipeline.builder.model.S3Repository
@@ -39,6 +41,7 @@ class FlowBuilderConverter {
                 .withDocker(toDockerBuilder(yamlFile))
                 .withCacheRequest(yamlFile.getCacheRequest())
                 .withBackEndAutoTestsServiceBuilder(toBackEndAutoTestsServiceBuilder(yamlFile))
+                .withSonar(toSonar(yamlFile))
     }
 
     BackEndAutoTestsServiceBuilder toBackEndAutoTestsServiceBuilder(YamlConfig yamlConfig) {
@@ -86,8 +89,9 @@ class FlowBuilderConverter {
 
     MesosService toMesosService(YamlConfig yamlFile) {
         dsl.echo "INFO: FlowBuilderConverter: toMesosService: started"
-        MesosService mesosService = new MesosService()
         Mesos mesos = yamlFile.getMesos()
+        if (mesos == null) return null
+        MesosService mesosService = new MesosService()
         Map<String, VcsRepo> vcsRepoMap = toVcsRepoMap(mesos.getVcsConfigRepos())
         mesosService.setVcsRepoMap(vcsRepoMap)
         yamlFile.getMesos()
@@ -103,6 +107,7 @@ class FlowBuilderConverter {
     }
 
     VcsRepo toVcsRepo(VcsRepoTO vcsRepoTO) {
+        if (vcsRepoTO == null) return null
         dsl.echo "toVcsRepo vcsRepoTO: ${vcsRepoTO.toString()}"
         return new VcsRepo()
                 .withCredentialsId(vcsRepoTO.getCredentialsId())
@@ -129,6 +134,9 @@ class FlowBuilderConverter {
 
     S3Builder toS3Builder(YamlConfig yamlFile) {
         S3 s3 = yamlFile.getS3()
+        if (s3 == null || s3.isEmpty()) {
+            return null
+        }
         Map<String, S3Repository> s3RepositoryMap = s3.getS3Repositories()
         S3Builder builder = new S3Builder()
         s3RepositoryMap.each { String key, S3Repository value ->
@@ -136,6 +144,17 @@ class FlowBuilderConverter {
                     value.getBucket(), value.getEnvFolder())
         }
         return builder
+    }
+
+    SonarQubeBuilder toSonar(YamlConfig yamlFile) {
+        def sonar = yamlFile.getSonar()
+        return new SonarQubeBuilder()
+                .withEnabled(sonar.getEnabled())
+                .withServerUrl(sonar.getServerUrl())
+                .withQualityGateEnabled(sonar.getQualityGateEnabled())
+                .withQualityGateSleepInSeconds(sonar.getQualityGateSleepInSeconds())
+                .withJenkinsSettingsName(sonar.getJenkinsSettingsName())
+                .withParams(sonar.getParams())
     }
 
 }
