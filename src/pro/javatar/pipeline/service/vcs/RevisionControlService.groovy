@@ -17,6 +17,8 @@ package pro.javatar.pipeline.service.vcs
 
 import pro.javatar.pipeline.exception.ReleaseFinishException
 import pro.javatar.pipeline.model.ReleaseInfo
+import pro.javatar.pipeline.service.vcs.model.VcsRepo
+import pro.javatar.pipeline.service.vcs.model.VscCheckoutRequest
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -73,6 +75,8 @@ abstract class RevisionControlService implements Serializable {
     abstract def checkoutRepo(String repoOwner, String repo, String branch)
 
     abstract def checkoutRepo(String repoUrl, String branch)
+
+    abstract def checkoutRepo(VscCheckoutRequest request)
 
     def checkoutProdBranch() {
         checkout(getProdBranch())

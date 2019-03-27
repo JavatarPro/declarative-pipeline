@@ -12,20 +12,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.builder
 
 import pro.javatar.pipeline.model.DockerOrchestrationServiceType
-import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService;
+import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
 import pro.javatar.pipeline.service.orchestration.DockerService
 import pro.javatar.pipeline.service.orchestration.KubernetesService
 import pro.javatar.pipeline.service.orchestration.MesosService
 import pro.javatar.pipeline.service.orchestration.SshDockerOrchestrationService
+import pro.javatar.pipeline.service.orchestration.model.DockerRegistryBO
 
 import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.KUBERNETES
 import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.MESOS
 import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.SSH
-import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.fromString;
+import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.fromString
 
 /**
  * @author Borys Zora
@@ -33,30 +33,25 @@ import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.fromStri
  */
 class DockerBuilder implements Serializable {
 
-    private String dockerRepo
-    private String dockerDevRepo
-    private String dockerCredentialsId
+    Map<String, DockerRegistryBO> dockerRegistries = new HashMap<>()
+
     private String customDockerFileName = ""
     private DockerOrchestrationService orchestrationService
 
     DockerService build() {
-        DockerService dockerService = new DockerService(dockerDevRepo, dockerRepo, orchestrationService)
-        dockerService.setDockerCredentialsId(dockerCredentialsId)
+        DockerService dockerService = new DockerService(dockerRegistries, orchestrationService)
         dockerService.setCustomDockerFileName(customDockerFileName)
         return dockerService
     }
 
-    DockerBuilder withRepo(String dockerRepo) {
-        this.dockerRepo = dockerRepo
+    DockerBuilder withDockerRegistry(String env, String credentialsId, String registry) {
+        dockerRegistries.put(env, new DockerRegistryBO()
+                .withCredentialsId(credentialsId)
+                .withRegistry(registry))
         return this
     }
 
-    DockerBuilder withDockerDevRepo(String dockerDevRepo) {
-        this.dockerDevRepo = dockerDevRepo
-        return this
-    }
-
-    DockerBuilder withDockerOrchestrationService(String dockerOrchestrationServiceType) {
+    DockerBuilder withOrchestrationServiceType(String dockerOrchestrationServiceType) {
         DockerOrchestrationServiceType type = fromString(dockerOrchestrationServiceType)
         if (type == KUBERNETES) {
             this.orchestrationService = new KubernetesService()
@@ -68,18 +63,39 @@ class DockerBuilder implements Serializable {
         return this
     }
 
-    DockerBuilder withDockerOrchestrationService(DockerOrchestrationService orchestrationService) {
+    DockerBuilder withOrchestrationService(DockerOrchestrationService orchestrationService) {
         this.orchestrationService = orchestrationService
         return this
     }
 
-    DockerBuilder withDockerCredentialsId(String dockerCredentialsId) {
-        this.dockerCredentialsId = dockerCredentialsId
-        return this
+    DockerOrchestrationService getOrchestrationService() {
+        return orchestrationService
+    }
+
+    void setOrchestrationService(DockerOrchestrationService orchestrationService) {
+        this.orchestrationService = orchestrationService
     }
 
     DockerBuilder withCustomDockerFileName(String customDockerFileName) {
         this.customDockerFileName = customDockerFileName
         return this
     }
+
+    String getCustomDockerFileName() {
+        return customDockerFileName
+    }
+
+    void setCustomDockerFileName(String customDockerFileName) {
+        this.customDockerFileName = customDockerFileName
+    }
+
+    @Override
+    public String toString() {
+        return "DockerBuilder{" +
+                "dockerRegistries=" + dockerRegistries +
+                ", customDockerFileName='" + customDockerFileName + '\'' +
+                ", orchestrationService=" + orchestrationService +
+                '}';
+    }
+
 }

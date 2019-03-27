@@ -15,8 +15,11 @@
 
 package pro.javatar.pipeline.model
 
+import pro.javatar.pipeline.service.infra.model.InfraRequest
+
 import static pro.javatar.pipeline.util.Utils.addPrefixIfNotExists
 import static pro.javatar.pipeline.util.Utils.isNotBlank
+import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
  * @author Borys Zora
@@ -34,11 +37,17 @@ class ReleaseInfo implements Serializable {
 
     String flowPrefix
 
-    String dockerImageName
+    List<String> dockerImageNames = new ArrayList<>()
+
+    Map<String, String> customDockerFileNames = new HashMap<>()
 
     String dockerImageVersion
 
     String buildReleaseVersion
+
+    String uiDistributionFolder = "dist"
+
+    InfraRequest infraRequest = new InfraRequest()
 
     String getReleaseVersion() {
         return releaseVersion
@@ -81,6 +90,10 @@ class ReleaseInfo implements Serializable {
     }
 
     String getDockerImageName() {
+        if (dockerImageNames.isEmpty()) {
+            return null
+        }
+        String dockerImageName = dockerImageNames.get(0)
         if (isNotBlank(dockerImageName)) {
             return dockerImageName
         }
@@ -88,7 +101,15 @@ class ReleaseInfo implements Serializable {
     }
 
     void setDockerImageName(String dockerImageName) {
-        this.dockerImageName = dockerImageName
+        this.dockerImageNames.set(0, dockerImageName)
+    }
+
+    void addDockerImageName(String dockerImageName) {
+        this.dockerImageNames.add(dockerImageName)
+    }
+
+    String getDockerImageName(int id) {
+        this.dockerImageNames.get(id)
     }
 
     String getDockerImageVersion() {
@@ -121,6 +142,63 @@ class ReleaseInfo implements Serializable {
         this.buildReleaseVersion = buildReleaseVersion
     }
 
+    String getUiDistributionFolder() {
+        return uiDistributionFolder
+    }
+
+    void setUiDistributionFolder(String uiDistributionFolder) {
+        this.uiDistributionFolder = uiDistributionFolder
+    }
+
+    InfraRequest getInfraRequest() {
+        return infraRequest
+    }
+
+    void setInfraRequest(InfraRequest infraRequest) {
+        this.infraRequest = infraRequest
+    }
+
+    ReleaseInfo withInfraRequest(InfraRequest infraRequest) {
+        this.infraRequest = infraRequest
+        return this
+    }
+
+    List<String> getDockerImageNames() {
+        return dockerImageNames
+    }
+
+    void setDockerImageNames(List<String> dockerImageNames) {
+        this.dockerImageNames = dockerImageNames
+    }
+
+    boolean isMultiDockerBuild() {
+        if (dockerImageNames == null) {
+            dsl.echo "WARN: dockerImageNames is null but isMultiDockerBuild was triggered "
+            return false
+        }
+        if (dockerImageNames.size() > 1) {
+            dsl.echo "INFO: multiDockerBuild is not best practice, please consider to refactor"
+            return true
+        }
+        return false
+    }
+
+    String getCustomDockerFileName(String dockerImageName) {
+        return customDockerFileNames.get(dockerImageName)
+    }
+
+    void addCustomDockerFileName(String dockerImageName, String customDockerFileName) {
+        customDockerFileNames.put(dockerImageName, customDockerFileName)
+    }
+
+    Map<String, String> getCustomDockerFileNames() {
+        return customDockerFileNames
+    }
+
+    void setCustomDockerFileNames(Map<String, String> customDockerFileNames) {
+        this.customDockerFileNames = customDockerFileNames
+    }
+
     @Override
     public String toString() {
         return "ReleaseInfo{" +
@@ -129,7 +207,9 @@ class ReleaseInfo implements Serializable {
                 ", repoFolder='" + repoFolder + '\'' +
                 ", serviceName='" + serviceName + '\'' +
                 ", flowPrefix='" + flowPrefix + '\'' +
-                ", dockerImageName='" + getDockerImageName() + '\'' +
+                ", uiDistributionFolder='" + uiDistributionFolder + '\'' +
+                ", dockerImageNames='" + getDockerImageNames() + '\'' +
+                ", customDockerFileNames='" + getCustomDockerFileNames() + '\'' +
                 ", dockerImageVersion='" + getDockerImageVersion() + '\'' +
                 ", buildReleaseVersion='" + getBuildReleaseVersion() + '\'' +
                 '}';

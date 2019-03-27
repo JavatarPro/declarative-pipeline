@@ -15,6 +15,8 @@
 
 package pro.javatar.pipeline.service.orchestration
 
+import pro.javatar.pipeline.service.infra.model.Infra
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
@@ -38,4 +40,8 @@ class SshDockerOrchestrationService implements DockerOrchestrationService {
         throw new UnsupportedOperationException("SshDockerOrchestrationService does not supported yet")
     }
 
+    @Override
+    def deployInfraContainer(Infra infra) {
+        return null
+    }
 }

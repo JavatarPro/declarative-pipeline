@@ -16,6 +16,7 @@
 package pro.javatar.pipeline.service.impl
 
 import pro.javatar.pipeline.model.Env
+import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.DeploymentService
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
@@ -29,6 +30,7 @@ class CdnDeploymentService implements DeploymentService {
     String service
     BuildService buildService
     MavenBuildService mavenBuildService
+    String cdnJobName = "common/cdn-deployment"
 
     CdnDeploymentService(String service, MavenBuildService mavenBuildService, BuildService buildService) {
         this.service = service
@@ -37,7 +39,8 @@ class CdnDeploymentService implements DeploymentService {
     }
 
     @Override
-    void deployArtifact(Env environment, String version) {
+    void deployArtifact(Env environment, ReleaseInfo releaseInfo) {
+        String version = releaseInfo.getReleaseVersion()
         dsl.echo "CdnDeploymentService deployArtifact to ${environment.getValue()} env and version: ${version} started"
         // TODO amend if not available qa nexus repo or other, only in this case do no use promotion
         if (environment == Env.DEV) mavenBuildService.deployFile(version, buildService.getArtifact())
@@ -49,7 +52,7 @@ class CdnDeploymentService implements DeploymentService {
     void deployUiArtifactsToCdn(String service, String version, String artifactUrl, String cdnEnv) {
         dsl.echo "deployUiArtifactsToCdn started with service: ${service}, version: ${version}, " +
                 "artifactUrl: ${artifactUrl}, " + "cdnEnv: ${cdnEnv}"
-        dsl.build job: 'Bravo/cdn-deployment', parameters: [
+        dsl.build job: cdnJobName, parameters: [
                 [$class: 'StringParameterValue', name: 'service', value: service],
                 [$class: 'StringParameterValue', name: 'version', value: version],
                 [$class: 'StringParameterValue', name: 'cdnEnv', value: cdnEnv],

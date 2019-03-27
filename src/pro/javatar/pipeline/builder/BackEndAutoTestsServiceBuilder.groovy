@@ -90,6 +90,11 @@ class BackEndAutoTestsServiceBuilder {
         return skipSystemTests
     }
 
+    BackEndAutoTestsServiceBuilder withSkipSystemTests(boolean skipSystemTests) {
+        this.skipSystemTests = skipSystemTests
+        return this
+    }
+
     BackEndAutoTestsServiceBuilder withSkipSystemTests(String skipSystemTests) {
         this.skipSystemTests = Boolean.valueOf(skipSystemTests)
         return this
@@ -99,6 +104,11 @@ class BackEndAutoTestsServiceBuilder {
         return skipCodeQualityVerification
     }
 
+    BackEndAutoTestsServiceBuilder withSkipCodeQualityVerification(boolean skipCodeQualityVerification) {
+        this.skipCodeQualityVerification = skipCodeQualityVerification
+        return this
+    }
+
     BackEndAutoTestsServiceBuilder withSkipCodeQualityVerification(String skipCodeQualityVerification) {
         this.skipCodeQualityVerification = Boolean.valueOf(skipCodeQualityVerification)
         return this
@@ -106,6 +116,11 @@ class BackEndAutoTestsServiceBuilder {
 
     int getSleepInSeconds() {
         return sleepInSeconds
+    }
+
+    BackEndAutoTestsServiceBuilder withSleepInSeconds(int sleepInSeconds) {
+        this.sleepInSeconds = sleepInSeconds
+        return this
     }
 
     BackEndAutoTestsServiceBuilder withSleepInSeconds(String sleepInSeconds) {

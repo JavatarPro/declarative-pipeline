@@ -41,6 +41,8 @@ class Npm implements Serializable {
 
     String moduleRepository
 
+    int buildTimeoutInMinutes = 5
+
     String getNpmVersion() {
         return npmVersion
     }
@@ -59,7 +61,8 @@ class Npm implements Serializable {
         dsl.echo "setModuleRepository succeeded"
         npmBuildService.setDistributionFolder(distributionFolder)
         dsl.echo "setDistributionFolder succeeded"
-        npmBuildService.setUp()
+        npmBuildService.withUnitTestsTimeout(buildTimeoutInMinutes)
+        // npmBuildService.setUp()
         return npmBuildService
     }
 
@@ -98,15 +101,15 @@ class Npm implements Serializable {
         this.npmType = npmType
     }
 
-    String getDistributionFolder() {
+    public String getDistributionFolder() {
         return distributionFolder
     }
 
-    void setDistributionFolder(String distributionFolder) {
+    public void setDistributionFolder(String distributionFolder) {
         this.distributionFolder = distributionFolder
     }
 
-    Npm withDistributionFolder(String distributionFolder) {
+    public Npm withDistributionFolder(String distributionFolder) {
         this.distributionFolder = distributionFolder
         return this
     }
@@ -121,6 +124,19 @@ class Npm implements Serializable {
 
     Npm withModuleRepository(String moduleRepository) {
         this.moduleRepository = moduleRepository
+        return this
+    }
+
+    int getBuildTimeoutInMinutes() {
+        return buildTimeoutInMinutes
+    }
+
+    void setBuildTimeoutInMinutes(int buildTimeoutInMinutes) {
+        this.buildTimeoutInMinutes = buildTimeoutInMinutes
+    }
+
+    Npm withBuildTimeoutInMinutes(String buildTimeoutInMinutes) {
+        this.buildTimeoutInMinutes = Integer.parseInt(buildTimeoutInMinutes)
         return this
     }
 

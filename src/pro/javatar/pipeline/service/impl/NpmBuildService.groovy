@@ -36,15 +36,21 @@ class NpmBuildService extends BuildService {
         def node = dsl.tool([name: npmVersion, type: type])
         dsl.echo "node setup successfully"
         dsl.env.PATH="${node}/bin:${dsl.env.PATH}"
-        dsl.sh "npm config set registry ${moduleRepository}"
+        // dsl.sh "npm config set registry ${moduleRepository}"
         dsl.sh 'node --version'
         dsl.sh 'npm -version'
-//        dsl.sh "mkdir -p ../${libraryFolder}"
-//        String buildFolder = dsl.env.WORKSPACE
-//        dsl.sh "pwd; ls -la; ls -la .."
-//        dsl.sh "ln -s ${buildFolder}/${libraryFolder} ${libraryFolder}"
-//        dsl.sh "pwd; ls -la; ls -la .."
+        // cacheLibraryFolder()
         dsl.sh "npm install --no-save"
+    }
+
+    def cacheLibraryFolder() {
+        String buildFolder = dsl.env.WORKSPACE
+        String libraryCacheFolder = "${buildFolder}/${libraryFolder}"
+        if (! dsl.fileExists(libraryCacheFolder)) {
+            dsl.sh "mkdir ${libraryCacheFolder}"
+        }
+        dsl.echo "ln -s ${libraryCacheFolder} ${libraryFolder}"
+        dsl.sh "ln -s ${libraryCacheFolder} ${libraryFolder}"
     }
 
     @Override
