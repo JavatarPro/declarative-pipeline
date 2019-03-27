@@ -32,6 +32,12 @@ This is shared library for jenkins CD declarative pipeline created by [Javatar L
 
 ### RELEASE NOTES ###
 
+* 1.2
+    - added yml configuration support
+    - ui deployment to s3
+    - sonar integration
+    - marathon/mesos deployment on dev env with docker images included build number
+    - multi docker project (multiple Dockerfiles in sub-folders)
 * 1.1
     - added python support
     - added github support
