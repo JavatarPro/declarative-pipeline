@@ -375,7 +375,10 @@ class FlowBuilder implements Serializable {
         return this
     }
 
-    FlowBuilder withUseBuildNumberForVersion(boolean useBuildNumberForVersion) {
+    FlowBuilder withUseBuildNumberForVersion(Boolean useBuildNumberForVersion) {
+        if(useBuildNumberForVersion == null) {
+            return
+        }
         this.useBuildNumberForVersion = useBuildNumberForVersion
         return this
     }

@@ -6,7 +6,7 @@ class Service {
 
     String buildType
 
-    boolean useBuildNumberForVersion
+    Boolean useBuildNumberForVersion
 
     VcsRepoTO repo
 
@@ -38,15 +38,15 @@ class Service {
         return this
     }
 
-    boolean getUseBuildNumberForVersion() {
+    Boolean getUseBuildNumberForVersion() {
         return useBuildNumberForVersion
     }
 
-    void setUseBuildNumberForVersion(boolean useBuildNumberForVersion) {
+    void setUseBuildNumberForVersion(Boolean useBuildNumberForVersion) {
         this.useBuildNumberForVersion = useBuildNumberForVersion
     }
 
-    Service withUseBuildNumberForVersion(boolean useBuildNumberForVersion) {
+    Service withUseBuildNumberForVersion(Boolean useBuildNumberForVersion) {
         this.useBuildNumberForVersion = useBuildNumberForVersion
         return this
     }
