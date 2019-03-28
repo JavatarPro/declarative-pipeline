@@ -1,6 +1,6 @@
 package pro.javatar.pipeline.builder.model
 
-import static pro.javatar.pipeline.util.Utils.isBlank
+import static pro.javatar.pipeline.util.StringUtils.isBlank
 
 class Vcs {
 

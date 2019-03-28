@@ -1,7 +1,7 @@
 package pro.javatar.pipeline.model
 
 import pro.javatar.pipeline.exception.UnrecognizedUiDeploymentTypeException
-import pro.javatar.pipeline.util.Utils
+import pro.javatar.pipeline.util.StringUtils
 
 /**
  * Author : Borys Zora
@@ -14,7 +14,7 @@ enum UiDeploymentType {
     NONE
 
     static UiDeploymentType fromString(String type) {
-        if (Utils.isBlank(type)) {
+        if (StringUtils.isBlank(type)) {
             return NONE
         }
         if("cdn-folder".equalsIgnoreCase(type) || "folder".equalsIgnoreCase(type)) {

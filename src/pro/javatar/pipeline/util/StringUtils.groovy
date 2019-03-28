@@ -19,7 +19,7 @@ package pro.javatar.pipeline.util
  * Author : Borys Zora
  * Date Created: 3/26/18 11:23
  */
-class Utils {
+class StringUtils {
 
     static boolean isBlank(final CharSequence cs) {
         int strLen;

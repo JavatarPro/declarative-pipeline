@@ -19,7 +19,7 @@ import pro.javatar.pipeline.service.test.BackEndAutoTestsLibrary
 import pro.javatar.pipeline.service.test.BackEndAutoTestsService
 import pro.javatar.pipeline.service.test.SonarQubeService
 
-import static pro.javatar.pipeline.util.Utils.isBlank
+import static pro.javatar.pipeline.util.StringUtils.isBlank
 
 /**
  * Author : Borys Zora

@@ -18,7 +18,7 @@ package pro.javatar.pipeline.service.test
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.Env
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-import static pro.javatar.pipeline.util.Utils.isBlank
+import static pro.javatar.pipeline.util.StringUtils.isBlank
 
 /**
  * @author Borys Zora

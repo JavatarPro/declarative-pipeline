@@ -19,7 +19,7 @@ import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.orchestration.model.DockerRegistryBO
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-import static pro.javatar.pipeline.util.Utils.isBlank
+import static pro.javatar.pipeline.util.StringUtils.isBlank
 
 /**
  * @author Borys Zora

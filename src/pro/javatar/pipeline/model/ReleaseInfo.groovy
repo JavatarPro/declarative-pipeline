@@ -17,8 +17,8 @@ package pro.javatar.pipeline.model
 
 import pro.javatar.pipeline.service.infra.model.InfraRequest
 
-import static pro.javatar.pipeline.util.Utils.addPrefixIfNotExists
-import static pro.javatar.pipeline.util.Utils.isNotBlank
+import static pro.javatar.pipeline.util.StringUtils.addPrefixIfNotExists
+import static pro.javatar.pipeline.util.StringUtils.isNotBlank
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**

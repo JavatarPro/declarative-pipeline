@@ -8,7 +8,6 @@ import pro.javatar.pipeline.builder.RevisionControlBuilder
 import pro.javatar.pipeline.builder.S3Builder
 import pro.javatar.pipeline.builder.model.DockerRegistry
 import pro.javatar.pipeline.builder.SonarQubeBuilder
-import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.Mesos
 import pro.javatar.pipeline.builder.model.S3
 import pro.javatar.pipeline.builder.model.S3Repository
@@ -21,7 +20,7 @@ import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
 import pro.javatar.pipeline.service.orchestration.MesosService
 import pro.javatar.pipeline.service.vcs.model.VcsRepo
 
-import static pro.javatar.pipeline.util.Utils.isEmpty
+import static pro.javatar.pipeline.util.StringUtils.isEmpty
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 class FlowBuilderConverter {

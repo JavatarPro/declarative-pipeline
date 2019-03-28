@@ -17,7 +17,7 @@ package pro.javatar.pipeline.builder;
 
 import pro.javatar.pipeline.service.test.SonarQubeService
 
-import static pro.javatar.pipeline.util.Utils.isBlank
+import static pro.javatar.pipeline.util.StringUtils.isBlank
 
 /**
  * @author Borys Zora

@@ -19,8 +19,8 @@ import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-import static pro.javatar.pipeline.util.Utils.isBlank
-import static pro.javatar.pipeline.util.Utils.isNotBlank
+import static pro.javatar.pipeline.util.StringUtils.isBlank
+import static pro.javatar.pipeline.util.StringUtils.isNotBlank
 
 /**
  * @author Borys Zora

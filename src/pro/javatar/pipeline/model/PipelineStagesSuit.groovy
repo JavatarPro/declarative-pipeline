@@ -17,7 +17,7 @@ package pro.javatar.pipeline.model
 
 import pro.javatar.pipeline.exception.UnrecognizedPipelineStagesSuitException
 
-import static pro.javatar.pipeline.util.Utils.isBlank
+import static pro.javatar.pipeline.util.StringUtils.isBlank
 
 /**
  * @author Borys Zora
