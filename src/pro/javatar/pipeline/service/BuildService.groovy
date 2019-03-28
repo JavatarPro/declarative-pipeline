@@ -26,17 +26,14 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 abstract class BuildService implements Serializable {
 
     protected int unitTestsTimeout = 25
+
     boolean useBuildNumberForVersion = true
+
     boolean skipUnitTests = true
-    protected String distributionFolder = "dist"
 
     abstract void buildAndUnitTests(ReleaseInfo releaseInfo)
 
     abstract void setUp()
-
-    String getArtifact() {
-        return "${distributionFolder}.zip"
-    }
 
     String getReleaseVersion() throws InvalidReleaseNumberException {
         String currentVersion = getCurrentVersion()
@@ -101,17 +98,6 @@ abstract class BuildService implements Serializable {
             dsl.echo "Error: buildNumber must be specified"
             throw new InvalidReleaseNumberException("buildNumber is not specified")
         }
-    }
-
-    protected def replace(String currentValue, String value, String fileName) {
-        dsl.echo "${fileName} before change currentValue: ${currentValue} to value: ${value}"
-        dsl.sh "cat ${fileName} | grep ${currentValue}"
-
-        dsl.sh "sed -i.bak s/${currentVersion}/${value}/g ${fileName}"
-        dsl.sh "rm ${fileName}.bak"
-
-        dsl.echo "${fileName} after change currentValue: ${currentValue} to value: ${value}"
-        dsl.sh "cat ${fileName} | grep ${value}"
     }
 
     void setDistributionFolder(String distributionFolder) {

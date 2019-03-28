@@ -16,14 +16,15 @@
 package pro.javatar.pipeline.service.impl
 
 import pro.javatar.pipeline.model.ReleaseInfo
-import pro.javatar.pipeline.service.BuildService
+import pro.javatar.pipeline.service.UiBuildService
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
  * @author Borys Zora
  * @since 2018-03-09
  */
-class NpmBuildService extends BuildService {
+class NpmBuildService extends UiBuildService {
     String moduleRepository
     protected String npmVersion
     protected String type

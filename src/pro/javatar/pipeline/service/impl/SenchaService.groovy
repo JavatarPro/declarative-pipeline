@@ -16,7 +16,8 @@
 package pro.javatar.pipeline.service.impl
 
 import pro.javatar.pipeline.model.ReleaseInfo
-import pro.javatar.pipeline.service.BuildService
+import pro.javatar.pipeline.service.UiBuildService
+import pro.javatar.pipeline.util.FileUtils
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -24,7 +25,7 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  * @author Borys Zora
  * @since 2018-03-09
  */
-class SenchaService extends BuildService {
+class SenchaService extends UiBuildService {
 
     String applicationFile = "app.json"
 
@@ -67,7 +68,7 @@ class SenchaService extends BuildService {
     def setupReleaseVersion(String releaseVersion) {
         dsl.echo "setupReleaseVersion: ${releaseVersion} started"
         String currentVersion = getCurrentVersion()
-        replace(currentVersion, releaseVersion, applicationFile)
+        FileUtils.replace(currentVersion, releaseVersion, applicationFile)
         dsl.echo "setupReleaseVersion: ${releaseVersion} finished"
     }
 
@@ -75,7 +76,7 @@ class SenchaService extends BuildService {
     def setupVersion(String version) {
         dsl.echo "setupVersion: ${version} started"
         String currentVersion = getCurrentVersion()
-        replace(currentVersion, version, applicationFile)
+        FileUtils.replace(currentVersion, version, applicationFile)
         dsl.echo "setupVersion: ${version} finished"
     }
 

@@ -3,6 +3,7 @@ package pro.javatar.pipeline.service.impl
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.orchestration.DockerService
+import pro.javatar.pipeline.util.FileUtils
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -45,7 +46,7 @@ class PhpBuildService extends BuildService {
     def setupReleaseVersion(String releaseVersion) {
         dsl.echo "setupReleaseVersion: ${releaseVersion} started"
         String currentVersion = getCurrentVersion()
-        replace(currentVersion, releaseVersion, applicationFile)
+        FileUtils.replace(currentVersion, releaseVersion, applicationFile)
         dsl.echo "setupReleaseVersion: ${releaseVersion} finished"
     }
 
@@ -53,7 +54,7 @@ class PhpBuildService extends BuildService {
     def setupVersion(String version) {
         dsl.echo "setupVersion: ${version} started"
         String currentVersion = getCurrentVersion()
-        replace(currentVersion, version, applicationFile)
+        FileUtils.replace(currentVersion, version, applicationFile)
         dsl.echo "setupVersion: ${version} finished"
     }
 

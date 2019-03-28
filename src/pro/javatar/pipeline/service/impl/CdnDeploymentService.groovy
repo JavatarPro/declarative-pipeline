@@ -17,8 +17,9 @@ package pro.javatar.pipeline.service.impl
 
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.model.ReleaseInfo
-import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.DeploymentService
+import pro.javatar.pipeline.service.UiBuildService
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
@@ -28,11 +29,11 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 class CdnDeploymentService implements DeploymentService {
 
     String service
-    BuildService buildService
+    UiBuildService buildService
     MavenBuildService mavenBuildService
     String cdnJobName = "common/cdn-deployment"
 
-    CdnDeploymentService(String service, MavenBuildService mavenBuildService, BuildService buildService) {
+    CdnDeploymentService(String service, MavenBuildService mavenBuildService, UiBuildService buildService) {
         this.service = service
         this.mavenBuildService = mavenBuildService
         this.buildService = buildService
@@ -43,7 +44,9 @@ class CdnDeploymentService implements DeploymentService {
         String version = releaseInfo.getReleaseVersion()
         dsl.echo "CdnDeploymentService deployArtifact to ${environment.getValue()} env and version: ${version} started"
         // TODO amend if not available qa nexus repo or other, only in this case do no use promotion
-        if (environment == Env.DEV) mavenBuildService.deployFile(version, buildService.getArtifact())
+        if (environment == Env.DEV) {
+            mavenBuildService.deployFile(version, buildService.getArtifact())
+        }
         String repoUrl = mavenBuildService.getMavenRepoUrl(version)
         deployUiArtifactsToCdn(service, version, repoUrl, environment.getValue())
         dsl.echo "CdnDeploymentService deployArtifact to ${environment.getValue()} env and version: ${version} finished"
