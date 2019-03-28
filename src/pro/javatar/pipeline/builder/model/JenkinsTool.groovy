@@ -6,6 +6,8 @@ class JenkinsTool {
 
     String maven
 
+    String gradle
+
     String npmVersion
 
     String npmType
@@ -33,6 +35,19 @@ class JenkinsTool {
 
     JenkinsTool withMaven(String maven) {
         this.maven = maven
+        return this
+    }
+
+    String getGradle() {
+        return gradle
+    }
+
+    void setGradle(String gradle) {
+        this.gradle = gradle
+    }
+
+    JenkinsTool withGradle(String gradle) {
+        this.gradle = gradle
         return this
     }
 
@@ -67,6 +82,7 @@ class JenkinsTool {
         return "JenkinsTool{" +
                 "java='" + java + '\'' +
                 ", maven='" + maven + '\'' +
+                ", gradle='" + gradle + '\'' +
                 ", npmVersion='" + npmVersion + '\'' +
                 ", npmType='" + npmType + '\'' +
                 '}';

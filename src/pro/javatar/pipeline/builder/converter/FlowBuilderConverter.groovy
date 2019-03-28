@@ -33,6 +33,7 @@ class FlowBuilderConverter {
                 .addPipelineStages(yamlFile.getPipeline().getPipelineSuit())
                 .addPipelineStages(yamlFile.getPipeline().getStages())
                 .addMaven(toMaven(yamlFile))
+                .addGradle(yamlFile.getGradle())
                 .addNpm(yamlFile.getNpm())
                 .withUiDeploymentType(yamlFile.getUi().getDeploymentType())
                 .withS3(toS3Builder(yamlFile))

@@ -1,6 +1,7 @@
 package pro.javatar.pipeline.builder.model
 
 import pro.javatar.pipeline.builder.Npm
+import pro.javatar.pipeline.util.StringUtils
 
 class YamlConfig {
 
@@ -11,6 +12,8 @@ class YamlConfig {
     Pipeline pipeline = new Pipeline()
 
     Maven maven = new Maven()
+
+    Gradle gradle = new Gradle()
 
     Npm npm = new Npm()
 
@@ -24,7 +27,7 @@ class YamlConfig {
 
     JenkinsTool jenkinsTool = new JenkinsTool()
 
-    String orchestrationService
+    String orchestrationService = null
 
     Mesos mesos = new Mesos()
 
@@ -71,6 +74,19 @@ class YamlConfig {
 
     void setMaven(Maven maven) {
         this.maven = maven
+    }
+
+    Gradle getGradle() {
+        return gradle
+    }
+
+    void setGradle(Gradle gradle) {
+        this.gradle = gradle
+    }
+
+    YamlConfig withGradle(Gradle gradle) {
+        this.gradle = gradle
+        return this
     }
 
     YamlConfig withMaven(Maven maven) {
@@ -170,15 +186,20 @@ class YamlConfig {
     }
 
     String getOrchestrationService() {
-        return orchestrationService
+        if (StringUtils.isNotBlank(orchestrationService)) {
+            return orchestrationService
+        }
+        return service // TODO compile
     }
 
     void setOrchestrationService(String orchestrationService) {
-        this.orchestrationService = orchestrationService
+        if (StringUtils.isNotBlank(orchestrationService)) {
+            this.orchestrationService = orchestrationService
+        }
     }
 
     YamlConfig withOrchestrationService(String orchestrationService) {
-        this.orchestrationService = orchestrationService
+        setOrchestrationService(orchestrationService)
         return this
     }
 

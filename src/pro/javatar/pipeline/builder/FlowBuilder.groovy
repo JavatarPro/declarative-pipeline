@@ -17,6 +17,7 @@ package pro.javatar.pipeline.builder
 
 import pro.javatar.pipeline.Flow
 import pro.javatar.pipeline.builder.model.CacheRequest
+import pro.javatar.pipeline.builder.model.Gradle
 import pro.javatar.pipeline.exception.*
 import pro.javatar.pipeline.model.*
 import pro.javatar.pipeline.service.*
@@ -33,6 +34,7 @@ import pro.javatar.pipeline.stage.sign.*
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
+ * TODO class too big, need some refactoring
  * @author Borys Zora
  * @since 2018-03-09
  */
@@ -54,6 +56,8 @@ class FlowBuilder implements Serializable {
     // services
     Maven maven
     MavenBuildService mavenBuildService
+    Gradle gradle
+    GradleBuildService gradleBuildService
     DockerMavenBuildService dockerMavenBuildService
     Npm npm = new Npm()
     String moduleRepository = ""
@@ -120,6 +124,8 @@ class FlowBuilder implements Serializable {
         dsl.echo "before maven build"
         mavenBuildService = buildMavenBuildService(maven)
         mavenBuildService.setUp()
+        gradleBuildService = buildGradleBuildService(gradle)
+        gradleBuildService.setUp()
         dockerMavenBuildService = new DockerMavenBuildService(mavenBuildService, dockerService)
         setupBuildService()
         cdnDeploymentService = new CdnDeploymentService(releaseInfo.getServiceName(), mavenBuildService, buildService)
@@ -129,6 +135,10 @@ class FlowBuilder implements Serializable {
         dsl.echo "created buildService: ${buildService.toString()}"
         populateServiceContextHolder()
         dsl.echo "createServices finished"
+    }
+
+    GradleBuildService buildGradleBuildService(Gradle gradle) {
+        return new GradleBuildService()
     }
 
     def prepareSonarQube() {
@@ -143,6 +153,7 @@ class FlowBuilder implements Serializable {
 
     DeploymentService getAppropriateDeploymentService(BuildServiceType buildServiceType) {
         if (buildType == BuildServiceType.MAVEN
+                || buildType == BuildServiceType.GRADLE
                 || buildType == BuildServiceType.PHP
                 || buildType == BuildServiceType.PYTHON) {
             return new DockerDeploymentService(releaseInfo, dockerService)
@@ -153,7 +164,7 @@ class FlowBuilder implements Serializable {
         if (buildType == BuildServiceType.NPM || buildType == BuildServiceType.SENCHA) {
             return cdnDeploymentService
         }
-        throw DeploymentServiceCreationException("Could not find this buildServiceType: ${buildServiceType}")
+        throw new DeploymentServiceCreationException("Could not find this buildServiceType: ${buildServiceType}")
     }
 
     void createStages() {
@@ -228,12 +239,14 @@ class FlowBuilder implements Serializable {
                 || buildType == BuildServiceType.SENCHA)
     }
 
+    // TODO just validate BuildServiceType instead of guessing
     void setupBuildServiceType() {
         dsl.echo "setupBuildServiceType started"
         if (buildType != null) {
             dsl.echo "setupBuildServiceType manually provided, buildType: ${buildType}"
             return
         }
+        // TODO it is better fail rather than guess
         if (revisionControlService.repo.endsWith("ui")) {
             buildType = BuildServiceType.NPM
         } else if (revisionControlService.repo.endsWith("service")) {
@@ -257,11 +270,16 @@ class FlowBuilder implements Serializable {
         dsl.echo "setupBuildService started buildType: ${buildType}, maven: ${maven.toString()}"
 
         if (buildType == BuildServiceType.MAVEN && suit == PipelineStagesSuit.SERVICE) {
+            // TODO refactor
             buildService = dockerMavenBuildService
         } else if (buildType == BuildServiceType.MAVEN && suit == PipelineStagesSuit.LIBRARY) {
+            // TODO refactor
             buildService = mavenBuildService
         } else if (buildType == BuildServiceType.MAVEN) {
             buildService = dockerMavenBuildService
+        } else if (buildType == BuildServiceType.GRADLE) {
+            // TODO refactor docker should be included
+            buildService = gradleBuildService
         } else if (buildType == BuildServiceType.NPM) {
             dsl.echo "before build npm"
             npmBuildService = npm.build()
@@ -346,7 +364,8 @@ class FlowBuilder implements Serializable {
     }
 
     ReleaseService getReleaseService() {
-        if (suit == PipelineStagesSuit.LIBRARY && buildType == BuildServiceType.MAVEN) {
+        if (suit == PipelineStagesSuit.LIBRARY
+                && (buildType == BuildServiceType.MAVEN || buildType == BuildServiceType.GRADLE)) {
             return new BackEndLibraryReleaseService(mavenBuildService, revisionControlService)
         }
         if (buildType == BuildServiceType.NPM || buildType == BuildServiceType.NPM_DOCKER
@@ -357,6 +376,7 @@ class FlowBuilder implements Serializable {
                 || buildType == BuildServiceType.PHP_PYTHON) {
             return new VcsAndDockerRelease(buildService, revisionControlService, dockerService)
         }
+        // TODO not obvious, why should not we throw exception at the end if no one matches
         return new BackEndReleaseService(mavenBuildService, revisionControlService, dockerService)
     }
 
@@ -395,6 +415,11 @@ class FlowBuilder implements Serializable {
 
     FlowBuilder addMaven(Maven maven) {
         this.maven = maven
+        return this
+    }
+
+    FlowBuilder addGradle(Gradle gradle) {
+        this.gradle = gradle
         return this
     }
 

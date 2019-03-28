@@ -5,6 +5,7 @@ import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.DockerRegistry
 import pro.javatar.pipeline.builder.model.Environment
+import pro.javatar.pipeline.builder.model.Gradle
 import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.builder.model.Maven
 import pro.javatar.pipeline.builder.Npm
@@ -32,6 +33,7 @@ class YamlConverter {
                 .withUi(retrieveUi(yml))
                 .withS3(retrieveS3(yml))
                 .withMaven(retrieveMaven(yml))
+                .withGradle(retrieveGradle(yml))
                 .withDocker(retrieveDocker(yml))
                 .withOrchestrationService(yml.orchestrationService)
                 .withMesos(retrieveMesos(yml))
@@ -55,12 +57,15 @@ class YamlConverter {
     Service retrieveService(def yml) {
         def service = yml.service
         dsl.echo "retrieveService: service: ${service}"
-        if (service == null) return new Service()
+        if (service == null) {
+            return new Service()
+        }
         return new Service()
                 .withName(service.name)
                 .withBuildType(service.buildType)
                 .withUseBuildNumberForVersion(service.useBuildNumberForVersion)
                 .withVcsRepoId(service.vcs_repo)
+                .withOrchestration(service.orchestration)
     }
 
     AutoTest retrieveAutoTest(def yml) {
@@ -177,6 +182,18 @@ class YamlConverter {
                 .withRepositoryId(maven.repository.id)
                 .withRepositoryUrl(maven.repository.url)
                 .withParams(maven.params)
+    }
+
+    Gradle retrieveGradle(def yml) {
+        def gradle = yml.gradle
+        if (gradle == null) {
+            return null
+        }
+        dsl.echo "retrieveGradle: gradle: ${gradle}"
+        return new Gradle()
+                .withRepositoryId(gradle.repository.id)
+                .withRepositoryUrl(gradle.repository.url)
+                .withParams(gradle.params)
     }
 
     Mesos retrieveMesos(def yml) {
