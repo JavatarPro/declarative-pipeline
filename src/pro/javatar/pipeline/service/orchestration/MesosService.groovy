@@ -16,6 +16,8 @@ package pro.javatar.pipeline.service.orchestration
 
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.infra.model.Infra
+import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
+import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
 import pro.javatar.pipeline.service.vcs.VcsHelper
 import pro.javatar.pipeline.service.vcs.model.VcsRepo
 
@@ -41,6 +43,7 @@ class MesosService implements DockerOrchestrationService {
         dsl.echo "MesosService: configurations checkout completed"
     }
 
+    // TODO replace depcon with own rest implementation
     @Override
     def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment) {
         dsl.echo "dockerDeployContainer(imageName: ${imageName}, imageVersion: ${imageVersion}, " +
@@ -56,6 +59,13 @@ class MesosService implements DockerOrchestrationService {
                     " (depcon -e ${environment} app rollback /${imageName}-${environment} " +
                     "--wait; echo 'Deploy failed!'; exit 2)"
         }
+    }
+
+    @Override
+    DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO request) {
+        // temporary
+        return dockerDeployContainer(request.getImageName(), request.getImageVersion(),
+                request.getDockerRepositoryUrl(), request.getEnvironment())
     }
 
     @Override

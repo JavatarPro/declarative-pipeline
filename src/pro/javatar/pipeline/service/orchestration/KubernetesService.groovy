@@ -12,10 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.service.orchestration
 
 import pro.javatar.pipeline.service.infra.model.Infra
+import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
+import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
 
 /**
  * Author : Borys Zora
@@ -30,6 +31,11 @@ class KubernetesService implements DockerOrchestrationService {
 
     @Override
     def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment) {
+        throw new UnsupportedOperationException("KubernetesService does not supported yet")
+    }
+
+    @Override
+    DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO deploymentRequest) {
         throw new UnsupportedOperationException("KubernetesService does not supported yet")
     }
 

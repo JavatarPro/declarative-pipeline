@@ -12,10 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.service.orchestration
 
 import pro.javatar.pipeline.service.infra.model.Infra
+import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
+import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
 
 /**
  * Author : Borys Zora
@@ -25,8 +26,10 @@ interface DockerOrchestrationService {
 
     def setup()
 
-    // deploy µService docker container
+    @Deprecated // @see dockerDeployContainer(DeploymentRequestBO deploymentRequest)
     def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment)
+
+    DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO deploymentRequest)
 
     def deployInfraContainer(Infra infra)
 

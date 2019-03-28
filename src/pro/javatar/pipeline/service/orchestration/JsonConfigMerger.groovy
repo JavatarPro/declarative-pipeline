@@ -14,29 +14,14 @@
  */
 package pro.javatar.pipeline.service.orchestration
 
-import pro.javatar.pipeline.service.infra.model.Infra
-import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
-import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
+/**
+ * @author Borys Zora
+ * @version 2019-03-29
+ */
+class JsonConfigMerger {
 
-class DockerSwarmService implements DockerOrchestrationService {
+    String merge(String mainConfigPath, String envConfigPath, String serviceConfigPath) {
 
-    @Override
-    def setup() {
-        return null
     }
 
-    @Override
-    def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment) {
-        return null
-    }
-
-    @Override
-    DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO deploymentRequest) {
-        return null
-    }
-
-    @Override
-    def deployInfraContainer(Infra infra) {
-        return null
-    }
 }

@@ -12,10 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.service.orchestration
 
 import pro.javatar.pipeline.service.infra.model.Infra
+import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
+import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -41,7 +42,12 @@ class SshDockerOrchestrationService implements DockerOrchestrationService {
     }
 
     @Override
+    DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO deploymentRequest) {
+        throw new UnsupportedOperationException("SshDockerOrchestrationService does not supported yet")
+    }
+
+    @Override
     def deployInfraContainer(Infra infra) {
-        return null
+        throw new UnsupportedOperationException("SshDockerOrchestrationService does not supported yet")
     }
 }

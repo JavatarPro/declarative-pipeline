@@ -14,20 +14,40 @@
  */
 package pro.javatar.pipeline.service.orchestration
 
+import pro.javatar.pipeline.builder.model.Nomad
 import pro.javatar.pipeline.service.infra.model.Infra
 import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
 import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
 
-class DockerSwarmService implements DockerOrchestrationService {
+import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
+
+/**
+ * HashiCorp Nomad - docker orchestration implementation
+ * Nomad has different deployment drivers, we cover only docker driver
+ * @see "https://www.nomadproject.io/api/index.html"
+ * @author Borys Zora
+ * @version 2019-03-28
+ */
+class NomadService implements DockerOrchestrationService {
+
+    private Nomad nomad
+
+    NomadService(Nomad nomad) {
+        this.nomad = nomad
+    }
 
     @Override
     def setup() {
-        return null
+        dsl.echo "NomadService setup: ${toString()}"
     }
 
     @Override
     def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment) {
-        return null
+        return dockerDeployContainer(new DeploymentRequestBO()
+                .withImageName(imageName)
+                .withImageVersion(imageVersion)
+                .withDockerRepositoryUrl(dockerRepositoryUrl)
+                .withEnvironment(environment))
     }
 
     @Override
@@ -38,5 +58,12 @@ class DockerSwarmService implements DockerOrchestrationService {
     @Override
     def deployInfraContainer(Infra infra) {
         return null
+    }
+
+    @Override
+    public String toString() {
+        return "NomadService{" +
+                "nomad=" + nomad +
+                '}';
     }
 }
