@@ -1,5 +1,8 @@
 package pro.javatar.pipeline.builder.model
 
+import pro.javatar.pipeline.util.Logger
+import pro.javatar.pipeline.util.StringUtils
+
 class Pipeline {
 
     // TODO validate enum PipelineStagesSuit
@@ -13,12 +16,16 @@ class Pipeline {
     }
 
     Pipeline withPipelineSuit(String pipelineSuit) {
-        this.pipelineSuit = pipelineSuit
+        Logger.info("Pipeline:withPipelineSuit: ${pipelineSuit}")
+        setPipelineSuit(pipelineSuit)
         return this
     }
 
     void setPipelineSuit(String pipelineSuit) {
-        this.pipelineSuit = pipelineSuit
+        Logger.info("Pipeline:setPipelineSuit: ${pipelineSuit}")
+        if (StringUtils.isBlank(pipelineSuit)) {
+            this.pipelineSuit = pipelineSuit
+        }
     }
 
     List<String> getStages() {
@@ -29,11 +36,13 @@ class Pipeline {
     }
 
     void setStages(List<String> stages) {
+        Logger.info("Pipeline:setStages: ${stages}")
         this.stages = stages
     }
 
     Pipeline withStages(List<String> stages) {
-        this.stages = stages
+        Logger.info("Pipeline:withStages: ${stages}")
+        setStages(stages)
         return this
     }
 

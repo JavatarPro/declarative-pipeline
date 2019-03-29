@@ -19,6 +19,8 @@ import pro.javatar.pipeline.builder.model.Ui
 import pro.javatar.pipeline.builder.model.Vcs
 import pro.javatar.pipeline.builder.model.VcsRepoTO
 import pro.javatar.pipeline.builder.model.YamlConfig
+import pro.javatar.pipeline.util.Logger
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 class YamlConverter {
@@ -138,7 +140,9 @@ class YamlConverter {
 
     Pipeline retrievePipeline(def yml) {
         def pipeline = yml.pipeline
-        if (pipeline == null) return new Pipeline()
+        if (pipeline == null) {
+            return new Pipeline()
+        }
         dsl.echo "retrievePipeline: pipeline: ${pipeline}"
         List<String> stages = new ArrayList<>()
         pipeline.stages.each{stage -> stages.add(stage)}
@@ -215,8 +219,11 @@ class YamlConverter {
 
     Npm retrieveNpm(def yml) {
         def npm = yml.npm
-        if (npm == null) return new Npm()
         dsl.echo "retrieveNpm: npm: ${npm}"
+        if (npm == null) {
+            Logger.info("npm is null new Npm will be returned")
+            return new Npm()
+        }
         return new Npm()
                 .withNpmType(npm.type)
                 .withNpmVersion(npm.version)
@@ -226,7 +233,9 @@ class YamlConverter {
 
     Ui retrieveUi(def yml) {
         def ui = yml.ui
-        if (ui == null) return new Ui()
+        if (ui == null) {
+            return new Ui()
+        }
         dsl.echo "retrieveUi: ui: ${ui}"
         return new Ui().withDeploymentType(ui.deploymentType)
     }
