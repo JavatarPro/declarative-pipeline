@@ -142,7 +142,7 @@ class YamlConverter {
         List<String> stages = new ArrayList<>()
         pipeline.stages.each{stage -> stages.add(stage)}
         return new Pipeline()
-                .withPipelineSuit(pipeline.pipelineSuit)
+                .withPipelineSuit(pipeline.suit)
                 .withStages(stages)
     }
 
