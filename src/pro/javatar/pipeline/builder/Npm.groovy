@@ -16,6 +16,7 @@
 package pro.javatar.pipeline.builder
 
 import pro.javatar.pipeline.service.impl.NpmBuildService
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -42,6 +43,10 @@ class Npm implements Serializable {
     String moduleRepository
 
     int buildTimeoutInMinutes = 5
+
+    Npm() {
+        Logger.debug("Npm:default constructor")
+    }
 
     String getNpmVersion() {
         return npmVersion

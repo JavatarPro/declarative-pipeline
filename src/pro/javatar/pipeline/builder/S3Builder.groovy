@@ -2,6 +2,7 @@ package pro.javatar.pipeline.builder
 
 import pro.javatar.pipeline.service.s3.AwsS3DeploymentService
 import pro.javatar.pipeline.service.s3.model.S3Repo
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -14,7 +15,7 @@ class S3Builder implements Serializable {
     Map<String, S3Repo> S3Repos = new HashMap<>()
 
     S3Builder() {
-        dsl.echo "S3Builder default constructor"
+        Logger.debug("S3Builder:default constructor")
     }
 
     AwsS3DeploymentService build() {

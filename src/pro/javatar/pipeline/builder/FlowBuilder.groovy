@@ -30,6 +30,7 @@ import pro.javatar.pipeline.service.vcs.RevisionControlService
 import pro.javatar.pipeline.stage.*
 import pro.javatar.pipeline.stage.deploy.*
 import pro.javatar.pipeline.stage.sign.*
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -78,9 +79,12 @@ class FlowBuilder implements Serializable {
     SwaggerService swaggerService
     PipelineStagesSuit suit
 
-    FlowBuilder() {}
+    FlowBuilder() {
+        Logger.debug("FlowBuilder:default constructor")
+    }
 
     FlowBuilder(def dsl) {
+        Logger.debug("FlowBuilder:dsl constructor")
         PipelineDslHolder.dsl = dsl
     }
 

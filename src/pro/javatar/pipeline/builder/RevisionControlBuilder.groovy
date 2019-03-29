@@ -22,6 +22,7 @@ import pro.javatar.pipeline.service.vcs.HgService
 import pro.javatar.pipeline.service.vcs.GitService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
 import pro.javatar.pipeline.service.vcs.VcsRepositoryUrlResolver
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -39,6 +40,10 @@ class RevisionControlBuilder implements Serializable {
     String domain
     RevisionControlType type
     VcsRepositoryType vcsRepositoryType
+
+    RevisionControlBuilder() {
+        Logger.debug("RevisionControlBuilder:default constructor")
+    }
 
     RevisionControlService build() {
         dsl.echo "RevisionControlService.build() started"

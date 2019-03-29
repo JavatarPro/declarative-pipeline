@@ -16,6 +16,7 @@
 package pro.javatar.pipeline.builder;
 
 import pro.javatar.pipeline.service.test.SonarQubeService
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.util.StringUtils.isBlank
 
@@ -31,6 +32,10 @@ class SonarQubeBuilder implements Serializable {
     private String serverUrl
     private String params
     private String jenkinsSettingsName
+
+    SonarQubeBuilder() {
+        Logger.debug("SonarQubeBuilder:default constructor")
+    }
 
     SonarQubeService build() {
         // TODO add validation if serverUrl is not provided fail build

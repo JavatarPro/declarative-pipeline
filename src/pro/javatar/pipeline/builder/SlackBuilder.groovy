@@ -15,7 +15,8 @@
 
 package pro.javatar.pipeline.builder;
 
-import pro.javatar.pipeline.service.SlackService;
+import pro.javatar.pipeline.service.SlackService
+import pro.javatar.pipeline.util.Logger;
 
 /**
  * @author Borys Zora
@@ -26,6 +27,10 @@ class SlackBuilder implements Serializable {
     private String channel;
     private String webHookUrl;
     private boolean enabled;
+
+    SlackBuilder() {
+        Logger.debug("SlackBuilder:default constructor")
+    }
 
     public SlackBuilder withChannel(String channel) {
         this.channel = channel;

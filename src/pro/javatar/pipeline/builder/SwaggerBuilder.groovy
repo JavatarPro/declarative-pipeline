@@ -13,7 +13,9 @@
  * limitations under the License.
  */
 
-package pro.javatar.pipeline.builder;
+package pro.javatar.pipeline.builder
+
+import pro.javatar.pipeline.util.Logger;
 
 /**
  * @author Borys Zora
@@ -26,6 +28,10 @@ class SwaggerBuilder implements Serializable {
     private String spaceKey;
     private String confluenceUrl;
     private String apiGatewayUrl;
+
+    SwaggerBuilder() {
+        Logger.debug("SwaggerBuilder:default constructor")
+    }
 
     public SwaggerBuilder withEnabled(boolean enabled) {
         this.enabled = enabled;

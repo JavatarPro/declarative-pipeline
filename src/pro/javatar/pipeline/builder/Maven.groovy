@@ -15,6 +15,8 @@
 
 package pro.javatar.pipeline.builder
 
+import pro.javatar.pipeline.util.Logger
+
 /**
  * @author Borys Zora
  * @since 2018-03-09
@@ -30,6 +32,10 @@ class Maven implements Serializable {
     String repositoryId
     String layout = "default"
     String repoUrl
+
+    Maven() {
+        Logger.debug("Maven:default constructor")
+    }
 
     String getJava() {
         return java

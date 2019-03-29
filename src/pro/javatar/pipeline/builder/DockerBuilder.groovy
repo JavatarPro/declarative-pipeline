@@ -21,6 +21,7 @@ import pro.javatar.pipeline.service.orchestration.KubernetesService
 import pro.javatar.pipeline.service.orchestration.MesosService
 import pro.javatar.pipeline.service.orchestration.SshDockerOrchestrationService
 import pro.javatar.pipeline.service.orchestration.model.DockerRegistryBO
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.KUBERNETES
 import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.MESOS
@@ -36,7 +37,12 @@ class DockerBuilder implements Serializable {
     Map<String, DockerRegistryBO> dockerRegistries = new HashMap<>()
 
     private String customDockerFileName = ""
+
     private DockerOrchestrationService orchestrationService
+
+    DockerBuilder() {
+        Logger.debug("DockerBuilder:default constructor")
+    }
 
     DockerService build() {
         DockerService dockerService = new DockerService(dockerRegistries, orchestrationService)

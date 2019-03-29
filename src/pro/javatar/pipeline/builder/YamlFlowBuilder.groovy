@@ -11,7 +11,7 @@ import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
-class YamlFlowBuilder {
+class YamlFlowBuilder implements Serializable {
 
     static final DEFAULT_CONFIG_FILE = "declarative-pipeline.yml"
 
@@ -25,11 +25,13 @@ class YamlFlowBuilder {
 
     YamlFlowBuilder(def dsl) {
         this(dsl, DEFAULT_CONFIG_FILE)
+        Logger.debug("YamlFlowBuilder:dsl constructor")
     }
 
     YamlFlowBuilder(def dsl, String configFile) {
         PipelineDslHolder.dsl = dsl
         this.configFile = configFile
+        Logger.debug("YamlFlowBuilder: dsl and configFile: ${configFile} constructor")
     }
 
     Flow build() {

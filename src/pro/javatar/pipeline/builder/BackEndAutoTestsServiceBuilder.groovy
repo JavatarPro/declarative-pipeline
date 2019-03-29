@@ -18,6 +18,7 @@ package pro.javatar.pipeline.builder
 import pro.javatar.pipeline.service.test.BackEndAutoTestsLibrary
 import pro.javatar.pipeline.service.test.BackEndAutoTestsService
 import pro.javatar.pipeline.service.test.SonarQubeService
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.util.StringUtils.isBlank
 
@@ -25,7 +26,7 @@ import static pro.javatar.pipeline.util.StringUtils.isBlank
  * Author : Borys Zora
  * Date Created: 3/29/18 14:06
  */
-class BackEndAutoTestsServiceBuilder {
+class BackEndAutoTestsServiceBuilder implements Serializable {
 
     SonarQubeService sonarQubeService
 
@@ -36,6 +37,10 @@ class BackEndAutoTestsServiceBuilder {
     boolean skipCodeQualityVerification
 
     int sleepInSeconds = -1
+
+    BackEndAutoTestsServiceBuilder() {
+        Logger.debug("BackEndAutoTestsServiceBuilder:default constructor")
+    }
 
     BackEndAutoTestsService build(SonarQubeBuilder sonarQubeBuilder) {
         if (sonarQubeBuilder != null) {
