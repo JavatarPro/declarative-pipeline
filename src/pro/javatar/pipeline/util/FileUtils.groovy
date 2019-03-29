@@ -8,7 +8,7 @@ class FileUtils {
         dsl.echo "${fileName} before change currentValue: ${currentValue} to value: ${value}"
         dsl.sh "cat ${fileName} | grep ${currentValue}"
 
-        dsl.sh "sed -i.bak s/${currentVersion}/${value}/g ${fileName}"
+        dsl.sh "sed -i.bak s/${currentValue}/${value}/g ${fileName}"
         dsl.sh "rm ${fileName}.bak"
 
         dsl.echo "${fileName} after change currentValue: ${currentValue} to value: ${value}"
