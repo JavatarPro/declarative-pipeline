@@ -1,8 +1,9 @@
 package pro.javatar.pipeline.builder.model
 
+import pro.javatar.pipeline.util.Logger
 import pro.javatar.pipeline.util.StringUtils
 
-class Service {
+class Service implements Serializable {
 
     String name
 
@@ -15,6 +16,10 @@ class Service {
     String vcsRepoId
 
     String orchestration
+
+    Service() {
+        Logger.debug("Service:default constructor")
+    }
 
     String getName() {
         return name

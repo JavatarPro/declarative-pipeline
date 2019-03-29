@@ -1,6 +1,8 @@
 package pro.javatar.pipeline.builder.model
 
-class S3Repository {
+import pro.javatar.pipeline.util.Logger
+
+class S3Repository implements Serializable {
 
     String region
 
@@ -9,6 +11,10 @@ class S3Repository {
     String bucket
 
     boolean envFolder = true
+
+    S3Repository() {
+        Logger.debug("S3Repository:default constructor")
+    }
 
     String getRegion() {
         return region

@@ -1,10 +1,16 @@
 package pro.javatar.pipeline.builder.model
 
-class Docker {
+import pro.javatar.pipeline.util.Logger
+
+class Docker implements Serializable {
 
     Map<Environment, DockerRegistry> dockerRegistries = new HashMap<>()
 
     String customDockerFileName = ""
+
+    Docker() {
+        Logger.debug("Docker:default constructor")
+    }
 
     Map<String, DockerRegistry> getDockerRegistries() {
         return dockerRegistries

@@ -8,7 +8,7 @@ package pro.javatar.pipeline.builder.model;
  * @author Borys Zora
  * @version 2019-02-17
  */
-class Environment {
+class Environment implements Serializable {
 
     // e.g. dev, qa, uat, prod
     private String env;

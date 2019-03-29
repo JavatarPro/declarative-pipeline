@@ -1,8 +1,14 @@
 package pro.javatar.pipeline.builder.model
 
-class Mesos {
+import pro.javatar.pipeline.util.Logger
+
+class Mesos implements Serializable {
 
     Map<String, VcsRepoTO> vcsConfigRepos = new HashMap<>()
+
+    Mesos() {
+        Logger.debug("Mesos:default constructor")
+    }
 
     Map<String, VcsRepoTO> getVcsConfigRepos() {
         return vcsConfigRepos

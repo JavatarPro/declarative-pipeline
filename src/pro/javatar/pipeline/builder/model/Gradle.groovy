@@ -1,12 +1,18 @@
 package pro.javatar.pipeline.builder.model
 
-class Gradle {
+import pro.javatar.pipeline.util.Logger
+
+class Gradle implements Serializable {
 
     String repositoryId = "nexus"
 
     String repositoryUrl = "nexus"
 
     String params = ""
+
+    Gradle() {
+        Logger.debug("Gradle:default constructor")
+    }
 
     String getRepositoryId() {
         return repositoryId

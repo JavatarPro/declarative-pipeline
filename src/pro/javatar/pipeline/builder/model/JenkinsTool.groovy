@@ -1,6 +1,8 @@
 package pro.javatar.pipeline.builder.model
 
-class JenkinsTool {
+import pro.javatar.pipeline.util.Logger
+
+class JenkinsTool implements Serializable {
 
     String java
 
@@ -11,6 +13,10 @@ class JenkinsTool {
     String npmVersion
 
     String npmType
+
+    JenkinsTool() {
+        Logger.debug("JenkinsTool:default constructor")
+    }
 
     String getJava() {
         return java

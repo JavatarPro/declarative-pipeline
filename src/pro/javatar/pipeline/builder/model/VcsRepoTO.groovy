@@ -1,6 +1,8 @@
 package pro.javatar.pipeline.builder.model
 
-class VcsRepoTO {
+import pro.javatar.pipeline.util.Logger
+
+class VcsRepoTO implements Serializable {
 
     String name
 
@@ -15,6 +17,10 @@ class VcsRepoTO {
     String revisionControl
 
     String branch
+
+    VcsRepoTO() {
+        Logger.debug("VcsRepoTO:default constructor")
+    }
 
     String getName() {
         return name

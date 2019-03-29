@@ -4,15 +4,21 @@
  */
 package pro.javatar.pipeline.builder.model
 
+import pro.javatar.pipeline.util.Logger
+
 /**
  * @author Borys Zora
  * @version 2018-10-15
  */
-class DockerRegistry {
+class DockerRegistry implements Serializable {
 
     String credentialsId
 
     String registry
+
+    DockerRegistry() {
+        Logger.debug("DockerRegistry:default constructor")
+    }
 
     String getCredentialsId() {
         return credentialsId

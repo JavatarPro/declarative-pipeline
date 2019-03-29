@@ -4,7 +4,7 @@ import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.util.Logger
 import pro.javatar.pipeline.util.StringUtils
 
-class YamlConfig {
+class YamlConfig implements Serializable {
 
     String version
 
@@ -37,6 +37,10 @@ class YamlConfig {
     CacheRequest cacheRequest = new CacheRequest()
 
     Sonar sonar = new Sonar()
+
+    YamlConfig() {
+        Logger.debug("YamlConfig:default constructor")
+    }
 
     YamlConfig populateServiceRepo() {
         Logger.info("YamlConfig:populateServiceRepo")

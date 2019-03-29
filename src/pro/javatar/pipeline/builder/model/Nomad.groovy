@@ -14,15 +14,21 @@
  */
 package pro.javatar.pipeline.builder.model
 
+import pro.javatar.pipeline.util.Logger
+
 import java.time.Period
 
 /**
  * @author Borys Zora
  * @version 2019-03-29
  */
-class Nomad {
+class Nomad implements Serializable {
 
     private Map<Environment, NomadItem> nomadConfig = new HashMap<>()
+
+    Nomad() {
+        Logger.debug("Nomad:default constructor")
+    }
 
     Map<Environment, NomadItem> getNomadConfig() {
         return nomadConfig

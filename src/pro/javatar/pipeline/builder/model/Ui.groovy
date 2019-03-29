@@ -7,7 +7,7 @@ class Ui implements Serializable {
     String deploymentType
 
     Ui() {
-        Logger.info("Ui constructor without params")
+        Logger.debug("Ui:default constructor")
     }
 
     Ui(String deploymentType) {
