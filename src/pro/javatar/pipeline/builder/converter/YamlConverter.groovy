@@ -24,6 +24,7 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 class YamlConverter {
 
     YamlConfig toYamlModel(def yml) {
+        dsl.echo "YamlConverter toYamlModel"
         return new YamlConfig()
                 .withJenkinsTool(retrieveJenkinsTools(yml))
                 .withVcs(retrieveVcs(yml))
