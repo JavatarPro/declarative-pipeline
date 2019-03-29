@@ -240,15 +240,19 @@ class YamlConverter {
             Logger.info("ui is null new Ui() will be returned")
             return new Ui()
         }
+        Logger.debug("YamlConverter:retrieveUi:ui:withDeploymentType")
         return new Ui().withDeploymentType(ui.deploymentType)
     }
 
     S3 retrieveS3(def yml) {
         def s3 = yml.s3
-        if (s3 == null) return Collections.emptyList()
-        dsl.echo "retrieveS3: s3: ${s3}"
+        Logger.debug("YamlConverter:retrieveS3: s3: ${s3}")
+        if (s3 == null) {
+            Logger.debug("YamlConverter:retrieveS3: empty list will be returned")
+            return Collections.emptyList()
+        }
         def s3Repositories = yml["s3-repositories"]
-        dsl.echo "retrieveS3: s3Repositories: ${s3Repositories}"
+        Logger.debug("YamlConverter:retrieveS3: s3Repositories: ${s3Repositories}")
         Map<String, S3Repository> repositoryMap = new HashMap<>()
         s3Repositories.each { String key, def value ->
             repositoryMap.put(key, new S3Repository()
@@ -256,11 +260,15 @@ class YamlConverter {
                     .withBucket(value.bucket)
                     .withRegion(value.region))
         }
+        Logger.debug("YamlConverter:retrieveS3: repositoryMap: ${repositoryMap}")
         Map<String, S3Repository> resultMap = new HashMap<>()
         s3.repositories.each { String key, String value ->
             resultMap.put(key, repositoryMap.get(value))
         }
-        return new S3().withS3Repositories(resultMap)
+        Logger.debug("YamlConverter:retrieveS3: resultMap: ${resultMap}")
+        S3 result = new S3().withS3Repositories(resultMap)
+        Logger.trace("YamlConverter:retrieveS3: result: ${result}")
+        return result
     }
 
 }
