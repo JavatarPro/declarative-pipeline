@@ -127,12 +127,6 @@ class MavenBuildService extends BuildService {
         deployMavenArtifactsToNexus(mavenParams)
     }
 
-    @Override
-    String getArtifact() {
-        artifactName(artifactId, version, packaging)
-        return "${artifactId}.${packaging}"
-    }
-
     // TODO verify in pom.xml if distributionManagement section exists
     String getAltDeploymentRepository() {
         if (isNotBlank(repositoryId) && isNotBlank(repoUrl)) {
