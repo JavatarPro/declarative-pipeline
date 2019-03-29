@@ -7,6 +7,8 @@ import pro.javatar.pipeline.builder.converter.JenkinsBuildParamsConverter
 import pro.javatar.pipeline.builder.converter.YamlConverter
 import pro.javatar.pipeline.builder.model.YamlConfig
 import pro.javatar.pipeline.service.PipelineDslHolder
+import pro.javatar.pipeline.util.Logger
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 class YamlFlowBuilder {
@@ -35,7 +37,7 @@ class YamlFlowBuilder {
         String yamlConfiguration = dsl.readTrusted configFile
         dsl.echo "yamlConfiguration: ${yamlConfiguration}"
         YamlConfig model = getYamlModelUsingJenkinsReadYamlCommand(yamlConfiguration)
-        dsl.echo "YamlConfig: ${model.toString()}"
+        dsl.echo "YamlConfig:build:model: ${model}"
         FlowBuilder flowBuilder = flowBuilderConverter.toFlowBuilder(model)
         dsl.echo "flowBuilder: ${flowBuilder.toString()}"
         return flowBuilder.build()
@@ -47,14 +49,20 @@ class YamlFlowBuilder {
         dsl.echo "yamlConfig after replaceVariables: ${yamlConfig}"
         def properties = dsl.readYaml text: yamlConfig
         jenkinsBuildParamsConverter.populateWithJenkinsBuildParams(properties)
-        return yamlConverter.toYamlModel(properties)
+        YamlConfig result = yamlConverter.toYamlModel(properties)
+        Logger.info("YamlFlowBuilder:getYamlModelUsingJenkinsReadYamlCommand:result: ${result}")
+        return result
     }
 
     String replaceVariables(String yamlConfiguration) {
+        Logger.info("YamlFlowBuilder:replaceVariables:yamlConfiguration: ${yamlConfiguration}")
         Map binding = dsl.params // variables map to be replaced
+        Logger.info("YamlFlowBuilder:replaceVariables: ${binding}")
         def engine = new GStringTemplateEngine()
         def template = engine.createTemplate(yamlConfiguration).make(binding)
-        return template.toString()
+        String result = template.toString()
+        Logger.info("YamlFlowBuilder:replaceVariables:result: ${result}")
+        return result
     }
 
     @Override

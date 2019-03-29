@@ -12,7 +12,7 @@ class JenkinsBuildParamsConverter {
     void setProperty(def param, def properties) {
         dsl.echo "param.key: ${param.key}, param.value: ${param.value}"
         if (!JenkinsBuildParams.hasKey(param.key)) {
-            dsl.echo "param.key: ${param.key} IS NOT a valid properity"
+            dsl.echo "param.key: ${param.key} IS NOT a valid property"
             return
         }
         dsl.echo "param.key: ${param.key} is valid properity"
