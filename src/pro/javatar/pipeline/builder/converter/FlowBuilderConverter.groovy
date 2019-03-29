@@ -140,8 +140,9 @@ class FlowBuilderConverter {
     }
 
     S3Builder toS3Builder(YamlConfig yamlFile) {
+        Logger.debug("FlowBuilderConverter:toS3Builder started")
         S3 s3 = yamlFile.getS3()
-        if (s3 == null || s3.isEmpty()) {
+        if (s3 == null) {
             return null
         }
         Map<String, S3Repository> s3RepositoryMap = s3.getS3Repositories()
@@ -150,6 +151,8 @@ class FlowBuilderConverter {
             builder.addS3Repository(key, value.getRegion(), value.getCredentialsId(),
                     value.getBucket(), value.getEnvFolder())
         }
+        Logger.debug("FlowBuilderConverter:toS3Builder finished")
+        Logger.trace("FlowBuilderConverter:toS3Builder builder: ${builder}")
         return builder
     }
 
