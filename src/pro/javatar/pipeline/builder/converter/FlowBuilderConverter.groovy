@@ -19,9 +19,9 @@ import pro.javatar.pipeline.model.VcsRepositoryType
 import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
 import pro.javatar.pipeline.service.orchestration.MesosService
 import pro.javatar.pipeline.service.vcs.model.VcsRepo
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.util.StringUtils.isEmpty
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 class FlowBuilderConverter {
 
@@ -55,6 +55,9 @@ class FlowBuilderConverter {
 
     Maven toMaven(YamlConfig yamlFile) {
         def mvn = yamlFile.getMaven()
+        if (mvn == null) {
+            return new Maven()
+        }
         def jenkinsTools = yamlFile.getJenkinsTool()
         return new Maven()
                 .withMavenParams(mvn.getParams())
@@ -76,7 +79,7 @@ class FlowBuilderConverter {
     }
 
     DockerOrchestrationService toOrchestrationService(YamlConfig yamlFile) {
-        dsl.echo "INFO: FlowBuilderConverter: toOrchestrationService: started"
+        Logger.info("FlowBuilderConverter: toOrchestrationService: started")
         String type = yamlFile.getOrchestrationService()
         if (isEmpty(type)) {
             return null
@@ -88,27 +91,31 @@ class FlowBuilderConverter {
     }
 
     MesosService toMesosService(YamlConfig yamlFile) {
-        dsl.echo "INFO: FlowBuilderConverter: toMesosService: started"
+        Logger.info("FlowBuilderConverter: toMesosService: started")
         Mesos mesos = yamlFile.getMesos()
-        if (mesos == null) return null
+        if (mesos == null) {
+            return null
+        }
         MesosService mesosService = new MesosService()
         Map<String, VcsRepo> vcsRepoMap = toVcsRepoMap(mesos.getVcsConfigRepos())
         mesosService.setVcsRepoMap(vcsRepoMap)
         yamlFile.getMesos()
-        dsl.echo "INFO: FlowBuilderConverter: toMesosService: finished"
+        Logger.info("FlowBuilderConverter: toMesosService: finished")
         return mesosService
     }
 
     Map<String, VcsRepo> toVcsRepoMap(Map<String, VcsRepoTO> vcsRepoToMap) {
-        dsl.echo "toVcsRepoMap vcsRepoToMap: ${vcsRepoToMap}"
+        Logger.info("toVcsRepoMap vcsRepoToMap: ${vcsRepoToMap}")
         Map<String, VcsRepo> result = new HashMap<>()
         vcsRepoToMap.each { key, value -> result.put(key, toVcsRepo(value)) }
         return result
     }
 
     VcsRepo toVcsRepo(VcsRepoTO vcsRepoTO) {
-        if (vcsRepoTO == null) return null
-        dsl.echo "toVcsRepo vcsRepoTO: ${vcsRepoTO.toString()}"
+        if (vcsRepoTO == null) {
+            return null
+        }
+        Logger.info("toVcsRepo vcsRepoTO: ${vcsRepoTO.toString()}")
         return new VcsRepo()
                 .withCredentialsId(vcsRepoTO.getCredentialsId())
                 .withType(VcsRepositoryType.fromString(vcsRepoTO.getType()))
