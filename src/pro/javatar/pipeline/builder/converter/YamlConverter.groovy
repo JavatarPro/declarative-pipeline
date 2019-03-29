@@ -248,8 +248,8 @@ class YamlConverter {
         def s3 = yml.s3
         Logger.debug("YamlConverter:retrieveS3: s3: ${s3}")
         if (s3 == null) {
-            Logger.debug("YamlConverter:retrieveS3: empty list will be returned")
-            return Collections.emptyList()
+            Logger.debug("YamlConverter:retrieveS3: new S3()")
+            return new S3()
         }
         def s3Repositories = yml["s3-repositories"]
         Logger.debug("YamlConverter:retrieveS3: s3Repositories: ${s3Repositories}")
