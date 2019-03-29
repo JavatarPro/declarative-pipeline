@@ -51,7 +51,7 @@ class Logger {
 
     private static print(def message, LogLevel loggerLevel) {
         try {
-            if (LEVEL.ordinal() <= loggerLevel.ordinal()) {
+            if (LEVEL.ordinal() >= loggerLevel.ordinal()) {
                 dsl.echo "${LEVEL.name()}: ${message}"
             }
         } catch (Exception e) {
