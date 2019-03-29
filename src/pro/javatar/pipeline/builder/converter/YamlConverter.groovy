@@ -38,7 +38,6 @@ class YamlConverter {
                 .withMaven(retrieveMaven(yml))
                 .withGradle(retrieveGradle(yml))
                 .withDocker(retrieveDocker(yml))
-                .withOrchestrationService(yml.orchestrationService)
                 .withMesos(retrieveMesos(yml))
                 .withSonar(retrieveSonar(yml))
                 .withAutoTest(retrieveAutoTest(yml))

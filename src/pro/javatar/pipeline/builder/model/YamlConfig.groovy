@@ -1,6 +1,7 @@
 package pro.javatar.pipeline.builder.model
 
 import pro.javatar.pipeline.builder.Npm
+import pro.javatar.pipeline.util.Logger
 import pro.javatar.pipeline.util.StringUtils
 
 class YamlConfig {
@@ -38,6 +39,7 @@ class YamlConfig {
     Sonar sonar = new Sonar()
 
     YamlConfig populateServiceRepo() {
+        Logger.info("YamlConfig:populateServiceRepo")
         service.setRepo(vcs.getRepo().get(service.getVcsRepoId()))
         return this
     }
@@ -85,7 +87,8 @@ class YamlConfig {
     }
 
     YamlConfig withGradle(Gradle gradle) {
-        this.gradle = gradle
+        Logger.info("YamlConfig:withGradle: ${gradle}")
+        setGradle(gradle)
         return this
     }
 
@@ -212,7 +215,8 @@ class YamlConfig {
     }
 
     YamlConfig withMesos(Mesos mesos) {
-        this.mesos = mesos
+        Logger.info("YamlConfig:withMesos: ${mesos}")
+        setMesos(mesos)
         return this
     }
 

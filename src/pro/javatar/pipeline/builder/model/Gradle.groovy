@@ -6,7 +6,7 @@ class Gradle {
 
     String repositoryUrl = "nexus"
 
-    String params
+    String params = ""
 
     String getRepositoryId() {
         return repositoryId
