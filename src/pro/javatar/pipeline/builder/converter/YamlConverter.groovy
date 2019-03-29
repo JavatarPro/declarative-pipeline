@@ -220,7 +220,7 @@ class YamlConverter {
         def npm = yml.npm
         dsl.echo "retrieveNpm: npm: ${npm}"
         if (npm == null) {
-            Logger.info("npm is null new Npm will be returned")
+            Logger.info("npm is null new Npm() will be returned")
             return new Npm()
         }
         return new Npm()
@@ -232,10 +232,11 @@ class YamlConverter {
 
     Ui retrieveUi(def yml) {
         def ui = yml.ui
+        dsl.echo "retrieveUi: ui: ${ui}"
         if (ui == null) {
+            Logger.info("ui is null new Ui() will be returned")
             return new Ui()
         }
-        dsl.echo "retrieveUi: ui: ${ui}"
         return new Ui().withDeploymentType(ui.deploymentType)
     }
 

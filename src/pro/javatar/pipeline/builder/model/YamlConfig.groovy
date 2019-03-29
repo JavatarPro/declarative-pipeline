@@ -93,7 +93,8 @@ class YamlConfig {
     }
 
     YamlConfig withMaven(Maven maven) {
-        this.maven = maven
+        Logger.info("YamlConfig:withMaven: ${maven}")
+        setMaven(maven)
         return this
     }
 
@@ -119,7 +120,8 @@ class YamlConfig {
     }
 
     YamlConfig withUi(Ui ui) {
-        this.ui = ui
+        Logger.info("YamlConfig:withUi: ${ui}")
+        setUi(ui)
         return this
     }
 
@@ -180,11 +182,15 @@ class YamlConfig {
     }
 
     void setS3(S3 s3) {
+        if (s3 == null) {
+            return
+        }
         this.s3 = s3
     }
 
     YamlConfig withS3(S3 s3) {
-        this.s3 = s3
+        Logger.info("YamlConfig:withS3: ${s3}")
+        setS3(s3)
         return this
     }
 
