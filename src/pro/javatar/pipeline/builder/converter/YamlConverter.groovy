@@ -26,8 +26,8 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 class YamlConverter {
 
     YamlConfig toYamlModel(def yml) {
-        dsl.echo "YamlConverter toYamlModel"
-        return new YamlConfig()
+        Logger.info("YamlConverter:toYamlModel:started")
+        YamlConfig result = new YamlConfig()
                 .withJenkinsTool(retrieveJenkinsTools(yml))
                 .withVcs(retrieveVcs(yml))
                 .withService(retrieveService(yml))
@@ -43,6 +43,9 @@ class YamlConverter {
                 .withAutoTest(retrieveAutoTest(yml))
                 .withCacheRequest(retrieveCacheRequest(yml))
                 .populateServiceRepo()
+        Logger.info("YamlConverter:toYamlModel:finished")
+        Logger.debug("YamlConverter:toYamlModel:result: ${result}")
+        return result
     }
 
     JenkinsTool retrieveJenkinsTools(yml) {

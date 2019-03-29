@@ -49,6 +49,7 @@ class YamlFlowBuilder {
         dsl.echo "yamlConfig after replaceVariables: ${yamlConfig}"
         def properties = dsl.readYaml text: yamlConfig
         jenkinsBuildParamsConverter.populateWithJenkinsBuildParams(properties)
+        Logger.info("YamlFlowBuilder:getYamlModelUsingJenkinsReadYamlCommand: before: yamlConverter.toYamlModel")
         YamlConfig result = yamlConverter.toYamlModel(properties)
         Logger.info("YamlFlowBuilder:getYamlModelUsingJenkinsReadYamlCommand:result: ${result}")
         return result
