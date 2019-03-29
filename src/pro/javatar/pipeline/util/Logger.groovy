@@ -16,6 +16,7 @@ package pro.javatar.pipeline.util
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl;
 import static pro.javatar.pipeline.util.LogLevel.*
+import com.cloudbees.groovy.cps.NonCPS
 
 /**
  * @author Borys Zora
@@ -25,30 +26,37 @@ class Logger {
 
     static LogLevel LEVEL = TRACE
 
+    @NonCPS
     static void fatal(def message) {
         print(message, FATAL)
     }
 
+    @NonCPS
     static void error(def message) {
         print(message, ERROR)
     }
 
+    @NonCPS
     static void warn(def message) {
         print(message, WARN)
     }
 
+    @NonCPS
     static void info(def message) {
         print(message, INFO)
     }
 
+    @NonCPS
     static void debug(def message) {
         print(message, DEBUG)
     }
 
+    @NonCPS
     static void trace(def message) {
         print(message, TRACE)
     }
 
+    @NonCPS
     private static print(def message, LogLevel loggerLevel) {
         try {
             if (LEVEL.ordinal() >= loggerLevel.ordinal()) {
