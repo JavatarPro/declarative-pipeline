@@ -59,7 +59,7 @@ class FlowBuilder implements Serializable {
     MavenBuildService mavenBuildService
     Gradle gradle
     GradleBuildService gradleBuildService
-    DockerMavenBuildService dockerMavenBuildService
+    DockerBuildService dockerBuildService
     Npm npm = new Npm()
     String moduleRepository = ""
     NpmBuildService npmBuildService
@@ -112,33 +112,49 @@ class FlowBuilder implements Serializable {
     }
 
     void createServices() {
-        dsl.echo "createServices started"
-        revisionControlService = revisionControlBuilder.build()
-        dsl.echo "created revisionControlService: ${revisionControlService.toString()}"
-        setupBuildServiceType()
-        dsl.echo "complete setup build service"
-        dsl.echo "current build type ${buildType}"
-        populate(maven)
-        dsl.echo "population complete"
+        Logger.debug("FlowBuilder:createServices started")
+        prepareRevisionControl()
         dockerService = dockerBuilder.build()
-        dsl.echo "docker service preparation complete"
+        Logger.debug("docker service preparation complete")
         prepareSonarQube()
-        // dsl.echo "dockerMavenBuildService.populateMaven(maven)"
-        // dockerMavenBuildService.populateMaven(maven)
-        dsl.echo "before maven build"
-        mavenBuildService = buildMavenBuildService(maven)
-        mavenBuildService.setUp()
-        gradleBuildService = buildGradleBuildService(gradle)
-        gradleBuildService.setUp()
-        dockerMavenBuildService = new DockerMavenBuildService(mavenBuildService, dockerService)
-        setupBuildService()
-        cdnDeploymentService = new CdnDeploymentService(releaseInfo.getServiceName(), mavenBuildService, buildService)
-        deploymentService = getAppropriateDeploymentService(buildType)
+        prepareBuildService()
+        prepareDeploymentService()
         autoTestsService = getAutoTestsService()
         releaseService = getReleaseService()
-        dsl.echo "created buildService: ${buildService.toString()}"
         populateServiceContextHolder()
-        dsl.echo "createServices finished"
+        Logger.debug("FlowBuilder:createServices finished")
+    }
+
+    void prepareRevisionControl() {
+        Logger.debug("FlowBuilder:prepareRevisionControl started")
+        revisionControlService = revisionControlBuilder.build()
+        Logger.debug("created revisionControlService: ${revisionControlService}")
+        Logger.debug("FlowBuilder:prepareRevisionControl finished")
+    }
+
+    void prepareDeploymentService() {
+        cdnDeploymentService = new CdnDeploymentService(releaseInfo.getServiceName(), mavenBuildService, buildService)
+        deploymentService = getAppropriateDeploymentService(buildType)
+    }
+
+    void prepareBuildService() {
+        dsl.echo "complete setup build service"
+        setupBuildServiceType()
+        if (buildType == BuildServiceType.MAVEN) {
+            dsl.echo "current build type ${buildType}"
+            populate(maven)
+            dsl.echo "population complete"
+            dsl.echo "before maven build"
+            mavenBuildService = buildMavenBuildService(maven)
+            mavenBuildService.setUp()
+            dockerBuildService = new DockerBuildService(mavenBuildService, dockerService)
+        } else if (buildType == BuildServiceType.GRADLE) {
+            gradleBuildService = buildGradleBuildService(gradle)
+            gradleBuildService.setUp()
+            dockerBuildService = new DockerBuildService(gradleBuildService, dockerService)
+        }
+        setupBuildService()
+        dsl.echo "created buildService: ${buildService.toString()}"
     }
 
     GradleBuildService buildGradleBuildService(Gradle gradle) {
@@ -275,12 +291,12 @@ class FlowBuilder implements Serializable {
 
         if (buildType == BuildServiceType.MAVEN && suit == PipelineStagesSuit.SERVICE) {
             // TODO refactor
-            buildService = dockerMavenBuildService
+            buildService = dockerBuildService
         } else if (buildType == BuildServiceType.MAVEN && suit == PipelineStagesSuit.LIBRARY) {
             // TODO refactor
             buildService = mavenBuildService
         } else if (buildType == BuildServiceType.MAVEN) {
-            buildService = dockerMavenBuildService
+            buildService = dockerBuildService
         } else if (buildType == BuildServiceType.GRADLE) {
             // TODO refactor docker should be included
             buildService = gradleBuildService
@@ -484,7 +500,7 @@ class FlowBuilder implements Serializable {
 
     void populateServiceContextHolder() {
         ServiceContextHolder.addService(mavenBuildService)
-        ServiceContextHolder.addService(dockerMavenBuildService)
+        ServiceContextHolder.addService(dockerBuildService)
         ServiceContextHolder.addService(npmBuildService)
         ServiceContextHolder.addService(senchaService)
         ServiceContextHolder.addService(buildService)

@@ -17,6 +17,7 @@ package pro.javatar.pipeline.service.impl
 
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 import static pro.javatar.pipeline.util.StringUtils.isBlank
@@ -39,18 +40,18 @@ class MavenBuildService extends BuildService {
     protected String repoUrl
 
     MavenBuildService() {
-        dsl.echo "MavenBuildService default constructor"
+        Logger.info("MavenBuildService default constructor")
     }
 
     @Override
     void setUp() {
-        dsl.echo "setUp started"
+        Logger.info("MavenBuildService: setUp started")
         dsl.env.M2_HOME="${dsl.tool maven}"
         dsl.env.JAVA_HOME="${dsl.tool java}"
         dsl.env.PATH="${dsl.env.JAVA_HOME}/bin:${dsl.env.M2_HOME}/bin:${dsl.env.PATH}"
         dsl.sh 'java -version'
         dsl.sh 'mvn -version'
-        dsl.echo "setUp finished"
+        Logger.info("MavenBuildService: setUp finished")
     }
 
     @Override
