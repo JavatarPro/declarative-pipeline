@@ -21,6 +21,7 @@ import pro.javatar.pipeline.service.orchestration.MesosService
 import pro.javatar.pipeline.service.vcs.model.VcsRepo
 import pro.javatar.pipeline.util.Logger
 
+import static pro.javatar.pipeline.util.StringUtils.isBlank
 import static pro.javatar.pipeline.util.StringUtils.isEmpty
 
 class FlowBuilderConverter {
@@ -74,14 +75,15 @@ class FlowBuilderConverter {
         dockerRegistryMap.each { String key, DockerRegistry value ->
             builder.withDockerRegistry(key, value.getCredentialsId(), value.getRegistry())
         }
-        return builder.withCustomDockerFileName(yamlFile.getDocker().getCustomDockerFileName())
+        return builder
+                .withCustomDockerFileName(yamlFile.getDocker().getCustomDockerFileName())
                 .withOrchestrationService(toOrchestrationService(yamlFile))
     }
 
     DockerOrchestrationService toOrchestrationService(YamlConfig yamlFile) {
         Logger.info("FlowBuilderConverter: toOrchestrationService: started")
         String type = yamlFile.getOrchestrationService()
-        if (isEmpty(type)) {
+        if (isBlank(type)) {
             return null
         }
         DockerOrchestrationServiceType orchestrationServiceType = DockerOrchestrationServiceType.fromString(type)

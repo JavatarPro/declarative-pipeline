@@ -199,10 +199,7 @@ class YamlConfig implements Serializable {
     }
 
     String getOrchestrationService() {
-        if (StringUtils.isNotBlank(orchestrationService)) {
-            return orchestrationService
-        }
-        return service // TODO compile
+        return service.getOrchestration()
     }
 
     void setOrchestrationService(String orchestrationService) {
