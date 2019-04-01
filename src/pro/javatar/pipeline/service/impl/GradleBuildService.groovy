@@ -31,6 +31,7 @@ class GradleBuildService extends BuildService {
     String params
 
     GradleBuildService(String gradleTool, String javaTool) {
+        Logger.debug("GradleBuildService: gradleTool: ${gradleTool} javaTool: ${javaTool}")
         this.gradle = gradleTool
         this.java = javaTool
     }
