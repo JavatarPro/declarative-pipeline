@@ -58,7 +58,7 @@ class YamlConverter {
         return new JenkinsTool()
                 .withJava(tool.java)
                 .withMaven(tool.maven)
-                .withJava(tool.gradle)
+                .withGradle(tool.gradle)
                 .withNpmVersion(tool["npm.version"])
                 .withNpmType(tool["npm.type"])
     }
