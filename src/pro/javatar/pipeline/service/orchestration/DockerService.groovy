@@ -17,6 +17,7 @@ package pro.javatar.pipeline.service.orchestration
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.orchestration.model.DockerRegistryBO
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 import static pro.javatar.pipeline.util.StringUtils.isBlank
@@ -28,11 +29,13 @@ import static pro.javatar.pipeline.util.StringUtils.isBlank
 class DockerService implements Serializable {
 
     static final String LATEST_LABEL = "latest"
+
     static final String DEFAULT_DOCKER_FILE = "Dockerfile"
 
     Map<String, DockerRegistryBO> dockerRegistries
 
     DockerOrchestrationService orchestrationService
+
     String customDockerFileName
 
     DockerService(Map<String, DockerRegistryBO> dockerRegistries, DockerOrchestrationService orchestrationService) {
@@ -68,30 +71,32 @@ class DockerService implements Serializable {
     }
 
     def dockerBuildImage(String imageName, String imageVersion, String customDockerFileName) {
-        dsl.echo "dockerBuildImage for imageName: ${imageName} with imageVersion: ${imageVersion} started"
+        Logger.debug("dockerBuildImage for imageName: ${imageName} with imageVersion: ${imageVersion} started")
         dsl.sh 'docker -v'
         dsl.sh "docker build -t ${imageName}:${imageVersion} -f ${customDockerFileName} ."
-        dsl.echo "dockerBuildImage for service: ${imageName} with releaseVersion: ${imageVersion} finished"
+        Logger.debug("dockerBuildImage for service: ${imageName} with releaseVersion: ${imageVersion} finished")
     }
 
     def dockerBuildImage(String imageName, String imageVersion) {
-        dsl.echo "dockerBuildImage for imageName: ${imageName} with imageVersion: ${imageVersion} started"
+        Logger.debug("dockerBuildImage for imageName: ${imageName} with imageVersion: ${imageVersion} started")
         dsl.sh 'docker -v'
         dsl.sh "docker build -t ${imageName}:${imageVersion} ${getCustomDockerFileInstruction()} ."
-        dsl.echo "dockerBuildImage for service: ${imageName} with releaseVersion: ${imageVersion} finished"
+        Logger.debug("dockerBuildImage for service: ${imageName} with releaseVersion: ${imageVersion} finished")
     }
 
     def dockerPublish(String imageName, String imageVersion, Env env) {
+        Logger.info("DockerService:dockerPublish: ${imageName}:${imageVersion} to env: ${env}")
         DockerRegistryBO dockerRegistry = dockerRegistries.get(env.getValue())
+        Logger.info("DockerService:dockerPublish:dockerRegistry: ${dockerRegistry}")
         String registry = dockerRegistry.getRegistry()
         String credentials = dockerRegistry.getCredentialsId()
         if (DockerHolder.isImageAlreadyPublished(imageName, imageVersion, registry)) {
-            dsl.echo "INFO: image: ${imageName}:${imageVersion} has already been published into registry: ${registry}, " +
-                    "will skip publishing"
+            Logger.info("image: ${imageName}:${imageVersion} has already been published into registry: ${registry}, " +
+                    "will skip publishing")
             return
         }
         dockerPushImageToRegistry(imageName, imageVersion, registry, credentials)
-        if (env == Env.DEV) {
+        if (env == Env.DEV) { // TODO docker push could be done in build & unit test stage
             dockerPushImageWithBuildNumberToRegistryWithoutLogin(imageName, imageVersion, registry)
         }
     }
@@ -102,7 +107,7 @@ class DockerService implements Serializable {
 
     def dockerLoginAndPushImageToRegistry(String imageName, String imageVersion,
                                           String dockerRegistryUrl, String credentialsId) {
-        dsl.echo "withDockerRegistry([credentialsId: ${credentialsId}, url: 'http://${dockerRegistryUrl}'])"
+        Logger.debug("withDockerRegistry([credentialsId: ${credentialsId}, url: 'http://${dockerRegistryUrl}'])")
         dsl.withDockerRegistry([credentialsId: credentialsId, url: 'http://${dockerRegistryUrl}']) {
             dsl.sh "docker images"
             dsl.docker.image("${dockerRegistryUrl}/${imageName}:${imageVersion}").push()
@@ -110,7 +115,8 @@ class DockerService implements Serializable {
     }
 
     def dockerPushImageToRegistryWithoutLogin(String imageName, String imageVersion, String dockerRegistryUrl) {
-        dsl.echo "INFO: dockerPushImageToRegistryWithoutLogin (${imageName}, ${imageVersion}, ${dockerRegistryUrl})"
+        Logger.info("DockerService:dockerPushImageToRegistryWithoutLogin " +
+                "(imageName: ${imageName}, imageVersion: ${imageVersion}, dockerRegistryUrl: ${dockerRegistryUrl})")
         dsl.sh "docker images"
         dsl.sh "docker tag ${imageName}:${imageVersion} ${dockerRegistryUrl}/${imageName}:${imageVersion}"
         dsl.sh "docker push ${dockerRegistryUrl}/${imageName}:${imageVersion}"
@@ -119,7 +125,8 @@ class DockerService implements Serializable {
 
     def dockerPushImageWithBuildNumberToRegistryWithoutLogin(String imageName, String imageVersion,
                                                              String dockerRegistryUrl) {
-        dsl.echo "INFO: dockerPushImageWithBuildNumberToRegistryWithoutLogin (${imageName}, ${imageVersion}, ${dockerRegistryUrl})"
+        Logger.info("DockerService:dockerPushImageWithBuildNumberToRegistryWithoutLogin (${imageName}, " +
+                "${imageVersion}, ${dockerRegistryUrl})")
         dsl.sh "docker images"
         String versionWithBuildNumber = getImageVersionWithBuildNumber(imageVersion)
         dsl.sh "docker tag ${imageName}:${imageVersion} ${dockerRegistryUrl}/${imageName}:${versionWithBuildNumber}"
@@ -128,7 +135,8 @@ class DockerService implements Serializable {
     }
 
     def dockerPushLatestImageToRegistryWithoutLogin(String imageName, String imageVersion, String dockerRegistryUrl) {
-        dsl.echo "INFO: dockerPushLatestImageToRegistryWithoutLogin (${imageName}, ${imageVersion}, ${dockerRegistryUrl})"
+        Logger.info("DockerService:dockerPushLatestImageToRegistryWithoutLogin (${imageName}, ${imageVersion}, " +
+                "${dockerRegistryUrl})")
         dsl.sh "docker images"
         dsl.sh "docker tag ${imageName}:${imageVersion} ${dockerRegistryUrl}/${imageName}:${LATEST_LABEL}"
         dsl.sh "docker push ${dockerRegistryUrl}/${imageName}:${LATEST_LABEL}"
@@ -137,13 +145,17 @@ class DockerService implements Serializable {
 
     def dockerPushImageToRegistry(String imageName, String imageVersion,
                                   String dockerRegistryUrl, String credentialsId) {
+        Logger.debug("DockerService:dockerPushImageToRegistry: imageName: ${imageName}, imageVersion: ${imageVersion}"
+                + ", dockerRegistryUrl: ${dockerRegistryUrl}, credentialsId: ${credentialsId}")
         dockerLogin(dockerRegistryUrl, credentialsId)
         dockerPushImageToRegistryWithoutLogin(imageName, imageVersion, dockerRegistryUrl)
     }
 
     def dockerLogin(String dockerRegistryUrl, String credentialsId) {
+        Logger.debug("DockerService:dockerLogin: dockerRegistryUrl: ${dockerRegistryUrl}, " +
+                "credentialsId: ${credentialsId}")
         if (isBlank(credentialsId)) {
-            dsl.echo "WARN: credentialsId is blank (${credentialsId}), skip login"
+            Logger.warn("DockerService:dockerLogin: credentialsId is blank (${credentialsId}), skip login")
             return
         }
         dsl.withCredentials([[$class: 'UsernamePasswordMultiBinding',
@@ -155,7 +167,7 @@ class DockerService implements Serializable {
     }
 
     def dockerDeployContainer(String imageName, String imageVersion, Env env) {
-        dsl.echo "dockerDeployContainer(${imageName}, ${imageVersion}, ${env.getValue()})"
+        Logger.info("dockerDeployContainer(${imageName}, ${imageVersion}, ${env.getValue()})")
         if (env == Env.DEV) {
             orchestrationService.setup()
             String versionWithBuildNumber = getImageVersionWithBuildNumber(imageVersion)
@@ -182,10 +194,11 @@ class DockerService implements Serializable {
 
     // TODO simplify
     def populateReleaseInfo(ReleaseInfo releaseInfo) {
+        Logger.debug("DockerService:populateReleaseInfo:started with releaseInfo: ${releaseInfo}")
         String output = dsl.sh returnStdout: true, script: 'ls -d */*'
         List<String> dockerFiles = output.split().findAll {it -> it.contains(DEFAULT_DOCKER_FILE)}
         if (dockerFiles == null) {
-            dsl.echo "WARN: no Dockerfile has been found"
+            Logger.warn("DockerService:populateReleaseInfo: No Dockerfile has been found")
             return
         }
         String theDockerFile = null
@@ -198,14 +211,14 @@ class DockerService implements Serializable {
             }
         }
         if (theDockerFile != null) {
-            dsl.echo "INFO: main docker file exists no need populate release info"
+            Logger.info("DockerService:populateReleaseInfo: main docker file exists no need populate release info")
             if (!multipleDockerFiles.isEmpty()) {
-                dsl.echo "WARN: will be ignored next docker files: ${multipleDockerFiles}"
+                Logger.warn("DockerService:populateReleaseInfo: will be ignored next docker files: ${multipleDockerFiles}")
             }
             return
         }
         if (multipleDockerFiles.isEmpty()) {
-            dsl.echo "ERROR: no docker file provided"
+            Logger.error("DockerService:populateReleaseInfo: No docker file provided")
             return
         }
         for (String dockerfile: multipleDockerFiles) {
@@ -215,9 +228,10 @@ class DockerService implements Serializable {
                 releaseInfo.addDockerImageName(dockerImageName)
                 releaseInfo.addCustomDockerFileName(dockerImageName, dockerfile)
             } else {
-                dsl.echo "WARN: dockerfile: ${dockerfile} will be ignored"
+                Logger.warn("DockerService:populateReleaseInfo: dockerfile: ${dockerfile} will be ignored")
             }
         }
+        Logger.debug("DockerService:populateReleaseInfo:finished")
     }
 
     @Override
