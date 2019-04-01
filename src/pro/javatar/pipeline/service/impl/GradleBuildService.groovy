@@ -21,6 +21,7 @@ import pro.javatar.pipeline.util.FileUtils
 import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
+import static pro.javatar.pipeline.util.StringUtils.isBlank
 
 class GradleBuildService extends BuildService {
 
@@ -52,7 +53,7 @@ class GradleBuildService extends BuildService {
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
         dsl.echo "GradleBuildService buildAndUnitTests started"
-        dsl.sh "gradle clean build ${params}"
+        dsl.sh "gradle clean build ${getParams()}"
         dsl.echo "GradleBuildService buildAndUnitTests finished"
     }
 
@@ -102,4 +103,10 @@ class GradleBuildService extends BuildService {
         return this
     }
 
+    String getParams() {
+        if (isBlank(params)) {
+            return ""
+        }
+        return params
+    }
 }
