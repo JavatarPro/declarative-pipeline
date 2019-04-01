@@ -50,11 +50,15 @@ class YamlConverter {
 
     JenkinsTool retrieveJenkinsTools(yml) {
         def tool = yml.jenkins_tool
-        if (tool == null) return null
         dsl.echo "retrieveJenkinsTools: jenkins_tool: ${tool}"
+        if (tool == null) {
+            Logger.warn("jenkins_tool is not provided in configuration")
+            return null
+        }
         return new JenkinsTool()
                 .withJava(tool.java)
                 .withMaven(tool.maven)
+                .withJava(tool.gradle)
                 .withNpmVersion(tool["npm.version"])
                 .withNpmType(tool["npm.type"])
     }
