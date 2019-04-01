@@ -135,7 +135,6 @@ class FlowBuilder implements Serializable {
     }
 
     void prepareDeploymentService() {
-        cdnDeploymentService = new CdnDeploymentService(releaseInfo.getServiceName(), mavenBuildService, buildService)
         deploymentService = getAppropriateDeploymentService(buildType)
     }
 
@@ -185,7 +184,8 @@ class FlowBuilder implements Serializable {
             return awsS3DeploymentService
         }
         if (buildType == BuildServiceType.NPM || buildType == BuildServiceType.SENCHA) {
-            return cdnDeploymentService
+            // TODO choose deployment type
+            return new CdnDeploymentService(releaseInfo.getServiceName(), mavenBuildService, buildService)
         }
         throw new DeploymentServiceCreationException("Could not find this buildServiceType: ${buildServiceType}")
     }
