@@ -30,6 +30,8 @@ class GradleBuildService extends BuildService {
 
     String params
 
+    String versionFile = "gradle.properties"
+
     GradleBuildService(String gradleTool, String javaTool) {
         Logger.debug("GradleBuildService: gradleTool: ${gradleTool} javaTool: ${javaTool}")
         this.gradle = gradleTool
@@ -78,16 +80,20 @@ class GradleBuildService extends BuildService {
 
     @Override
     def setupVersion(String version) {
-        dsl.echo "GradleBuildService setupVersion: ${releaseVersion} started"
+        Logger.info("GradleBuildService setupVersion: ${version} started")
         String currentVersion = getCurrentVersion()
-        FileUtils.replace(currentVersion, releaseVersion, applicationFile)
-        dsl.echo "GradleBuildService setupVersion: ${releaseVersion} finished"
+        Logger.trace("GradleBuildService ${versionFile} before version setup")
+        dsl.sh "cat ${versionFile}"
+        FileUtils.replace(currentVersion, version, versionFile)
+        Logger.trace("GradleBuildService ${versionFile} after version setup")
+        dsl.sh "cat ${versionFile}"
+        Logger.info("GradleBuildService setupVersion: ${version} finished")
     }
 
     @Override
     def publishArtifacts(ReleaseInfo releaseInfo) {
         Logger.info("GradleBuildService:publishArtifacts:started ${releaseInfo}")
-
+        dsl.sh "gradle publish"
         Logger.info("GradleBuildService:publishArtifacts:finished")
     }
 
