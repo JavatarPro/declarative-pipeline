@@ -18,6 +18,7 @@ package pro.javatar.pipeline.builder
 import pro.javatar.pipeline.Flow
 import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.Gradle
+import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.exception.*
 import pro.javatar.pipeline.model.*
 import pro.javatar.pipeline.service.*
@@ -59,6 +60,7 @@ class FlowBuilder implements Serializable {
     MavenBuildService mavenBuildService
     Gradle gradle
     GradleBuildService gradleBuildService
+    JenkinsTool jenkinsTool
     DockerBuildService dockerBuildService
     Npm npm = new Npm()
     String moduleRepository = ""
@@ -158,7 +160,8 @@ class FlowBuilder implements Serializable {
     }
 
     GradleBuildService buildGradleBuildService(Gradle gradle) {
-        return new GradleBuildService()
+        return new GradleBuildService(jenkinsTool.gradle, jenkinsTool.java)
+                .withParams(gradle.params)
     }
 
     def prepareSonarQube() {
@@ -441,6 +444,11 @@ class FlowBuilder implements Serializable {
     FlowBuilder addGradle(Gradle gradle) {
         this.gradle = gradle
         return this
+    }
+
+    FlowBuilder addJenkinsTool(JenkinsTool jenkinsTool) {
+        this.jenkinsTool = jenkinsTool
+        return this;
     }
 
     FlowBuilder withServiceName(String serviceName) {

@@ -17,6 +17,7 @@ package pro.javatar.pipeline.service
 
 import pro.javatar.pipeline.exception.InvalidReleaseNumberException
 import pro.javatar.pipeline.model.ReleaseInfo
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 /**
@@ -65,6 +66,10 @@ abstract class BuildService implements Serializable {
 
     def populateReleaseInfo(ReleaseInfo releaseInfo) {
         dsl.echo "default populateReleaseInfo, nothing to change"
+    }
+
+    def publishArtifacts(ReleaseInfo releaseInfo) {
+        Logger.info("default publish implementation will do nothing")
     }
 
     // helper methods

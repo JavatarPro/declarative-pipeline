@@ -18,6 +18,7 @@ import pro.javatar.pipeline.exception.MalformedReleaseVersionException
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.util.FileUtils
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -29,20 +30,20 @@ class GradleBuildService extends BuildService {
 
     String params
 
-    GradleBuildService(String gradle, String java) {
-        this.gradle = gradle
-        this.java = java
+    GradleBuildService(String gradleTool, String javaTool) {
+        this.gradle = gradleTool
+        this.java = javaTool
     }
 
     @Override
     void setUp() {
-        dsl.echo "GradleBuildService setUp started"
+        Logger.debug("GradleBuildService setUp started")
         dsl.env.GRADLE_HOME="${dsl.tool gradle}"
         dsl.env.JAVA_HOME="${dsl.tool java}"
         dsl.env.PATH="${dsl.env.JAVA_HOME}/bin:${dsl.env.GRADLE_HOME}/bin:${dsl.env.PATH}"
         dsl.sh 'gradle -v'
         dsl.sh 'java -version'
-        dsl.echo "GradleBuildService setUp finished"
+        Logger.debug("GradleBuildService setUp finished")
     }
 
     @Override
@@ -54,23 +55,24 @@ class GradleBuildService extends BuildService {
 
     @Override
     String getCurrentVersion() {
-        dsl.echo "GradleBuildService getCurrentVersion started"
-        dsl.echo "WARN: expected that in properties project version has variable with name: version"
+        Logger.debug("GradleBuildService getCurrentVersion started")
+        Logger.info("expected that in properties project version has variable with name: version")
         String version = dsl.sh returnStdout: true, script: "gradle  properties --no-daemon --console=plain -q | grep ^version: | awk '{printf \$2}'"
+        Logger.info("GradleBuildService:getCurrentVersion:result: ${version}")
+        Logger.debug("GradleBuildService getCurrentVersion finished")
         return version.trim()
-        dsl.echo "GradleBuildService getCurrentVersion finished"
     }
 
     @Override
     def setupReleaseVersion(String releaseVersion) {
-        dsl.echo "GradleBuildService setupReleaseVersion: ${releaseVersion} started"
+        Logger.debug("GradleBuildService setupReleaseVersion: ${releaseVersion} started")
         if (releaseVersion.contains("SNAPSHOT")) {
             String msg = "Release version must not contain SNAPSHOT, but was: ${releaseVersion}"
-            dsl.echo "${msg}"
+            Logger.error(msg)
             throw new MalformedReleaseVersionException(msg)
         }
         setupVersion(releaseVersion)
-        dsl.echo "GradleBuildService setupReleaseVersion: ${releaseVersion} finished"
+        Logger.debug("GradleBuildService setupReleaseVersion: ${releaseVersion} finished")
     }
 
     @Override
@@ -81,8 +83,16 @@ class GradleBuildService extends BuildService {
         dsl.echo "GradleBuildService setupVersion: ${releaseVersion} finished"
     }
 
+    @Override
+    def publishArtifacts(ReleaseInfo releaseInfo) {
+        Logger.info("GradleBuildService:publishArtifacts:started ${releaseInfo}")
+
+        Logger.info("GradleBuildService:publishArtifacts:finished")
+    }
+
     GradleBuildService withParams(String params) {
         this.params = params
+        return this
     }
 
 }
