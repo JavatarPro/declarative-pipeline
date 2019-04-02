@@ -151,6 +151,7 @@ class DockerService implements Serializable {
         dockerPushImageToRegistryWithoutLogin(imageName, imageVersion, dockerRegistryUrl)
     }
 
+    // TODO security issue after --password-stdin stopped working
     def dockerLogin(String dockerRegistryUrl, String credentialsId) {
         Logger.debug("DockerService:dockerLogin: dockerRegistryUrl: ${dockerRegistryUrl}, " +
                 "credentialsId: ${credentialsId}")
@@ -162,7 +163,7 @@ class DockerService implements Serializable {
                               credentialsId: credentialsId,
                               usernameVariable: 'DOCKER_REGISTRY_USERNAME',
                               passwordVariable: 'DOCKER_REGISTRY_PASSWORD']]) {
-            dsl.sh("echo ${dsl.env.DOCKER_REGISTRY_PASSWORD} | docker login ${dockerRegistryUrl} -u ${dsl.env.DOCKER_REGISTRY_USERNAME} --password-stdin")
+            dsl.sh("docker login ${dockerRegistryUrl} -u ${dsl.env.DOCKER_REGISTRY_USERNAME} -p${dsl.env.DOCKER_REGISTRY_PASSWORD}")
         }
     }
 
