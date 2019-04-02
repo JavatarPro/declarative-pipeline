@@ -101,7 +101,7 @@ class YamlConverter {
         return new CacheRequest().withCaches(cacheMap)
     }
 
-    LogLevel retrieveAndSetLogLevel() {
+    LogLevel retrieveAndSetLogLevel(def yml) {
         def log = yml.log
         dsl.echo "YamlConverter:retrieveAndSetLogLevel: log: ${log}"
         if (log == null) {
