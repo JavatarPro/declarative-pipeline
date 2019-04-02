@@ -20,6 +20,12 @@ class DockerRegistry implements Serializable {
         Logger.debug("DockerRegistry:default constructor")
     }
 
+    DockerRegistry(String credentialsId, String registry) {
+        Logger.debug("DockerRegistry: credentialsId: ${credentialsId}, registry: ${registry}")
+        this.credentialsId = credentialsId
+        this.registry = registry
+    }
+
     String getCredentialsId() {
         return credentialsId
     }
