@@ -54,7 +54,7 @@ class DockerRegistry implements Serializable {
 
     @Override
     public String toString() {
-        return "DockerRegistryBO {" +
+        return "DockerRegistry {" +
                 "credentialsId='" + credentialsId + '\'' +
                 ", registry='" + registry + '\'' +
                 '}';

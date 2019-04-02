@@ -21,7 +21,8 @@ class Environment implements Serializable {
         return env;
     }
 
-    boolean equals(o) {
+    @Override
+    boolean equals(Object o) {
         if (this.is(o)) return true
         if (getClass() != o.class) return false
 
@@ -32,7 +33,9 @@ class Environment implements Serializable {
         return true
     }
 
+    @Override
     int hashCode() {
         return (env != null ? env.hashCode() : 0)
     }
+
 }
