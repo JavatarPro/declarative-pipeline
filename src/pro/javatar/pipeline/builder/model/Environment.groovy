@@ -23,19 +23,17 @@ class Environment implements Serializable {
 
     @Override
     boolean equals(Object o) {
-        if (this.is(o)) return true
-        if (getClass() != o.class) return false
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Environment that = (Environment) o
+        Environment that = (Environment) o;
 
-        if (env != that.env) return false
-
-        return true
+        return env != null ? env.equals(that.env) : that.env == null;
     }
 
     @Override
     int hashCode() {
-        return (env != null ? env.hashCode() : 0)
+        return env != null ? env.hashCode() : 0;
     }
 
 }
