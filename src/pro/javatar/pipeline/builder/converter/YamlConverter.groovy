@@ -168,7 +168,8 @@ class YamlConverter {
         def dockerRegistries = yml["docker-registries"]
         Logger.debug("YamlConverter:retrieveDocker: dockerRegistries: ${dockerRegistries}")
         Map<String, DockerRegistry> dockerRegistryMap = new HashMap<>()
-        dockerRegistries.each{ String key, def value ->
+        dockerRegistries.each { String key, def value ->
+            Logger.trace("YamlConverter:retrieveDocker: dockerRegistries.each: key: ${key}, value: ${value}")
             dockerRegistryMap.put(key, new DockerRegistry()
                     .withCredentialsId(value.credentialsId)
                     .withRegistry(value.registry))
