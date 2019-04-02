@@ -172,6 +172,8 @@ class YamlConverter {
             Logger.trace("YamlConverter:retrieveDocker: dockerRegistries.each: key: ${key}, value: ${value}")
             String credentialsId = value.credentialsId
             String registry = value.registry
+            Logger.trace("YamlConverter:retrieveDocker: dockerRegistries.each: " +
+                    "credentialsId: ${credentialsId}, registry: ${registry}")
             DockerRegistry dockerRegistry = new DockerRegistry(credentialsId, registry)
             Logger.trace("YamlConverter:retrieveDocker: dockerRegistries.each: key: ${key}, " +
                     "dockerRegistry: ${dockerRegistry}")
