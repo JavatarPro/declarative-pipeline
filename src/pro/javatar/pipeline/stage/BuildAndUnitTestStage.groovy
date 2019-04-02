@@ -18,6 +18,8 @@ package pro.javatar.pipeline.stage;
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
+import pro.javatar.pipeline.util.Logger
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 /**
  * @author Borys Zora
@@ -36,7 +38,7 @@ class BuildAndUnitTestStage extends Stage {
 
     @Override
     void execute() throws PipelineException {
-        dsl.echo "BuildAndUnitTestStage execute started: ${toString()}"
+        Logger.info("BuildAndUnitTestStage execute started: ${toString()}")
         dsl.timeout(time: buildService.unitTestsTimeout, unit: 'MINUTES') {
             revisionControl.cleanUp()
             dsl.dir(revisionControl.folder) {
@@ -57,7 +59,7 @@ class BuildAndUnitTestStage extends Stage {
         }
         dsl.currentBuild.description =
                 "build of ${releaseInfo.serviceName}:${releaseInfo.getBuildReleaseVersion()} completed"
-        dsl.echo "BuildAndUnitTestStage execute finished: ${toString()}"
+        Logger.info("BuildAndUnitTestStage execute finished: ${toString()}")
     }
 
     @Override
@@ -66,13 +68,13 @@ class BuildAndUnitTestStage extends Stage {
     }
 
     def populateReleaseInfo(String releaseVersion) {
-        dsl.echo "BuildAndUnitTestStage populateReleaseInfo started with releaseVersion: ${releaseVersion}"
+        Logger.info("BuildAndUnitTestStage populateReleaseInfo started with releaseVersion: ${releaseVersion}")
         releaseInfo.setRepoFolder(revisionControl.folder)
         releaseInfo.setReleaseVersion(releaseVersion)
         releaseInfo.setDevelopVersion(buildService.getDevelopVersion(releaseVersion))
         releaseInfo.setFlowPrefix(revisionControl.getFlowPrefix())
         buildService.populateReleaseInfo(releaseInfo)
-        dsl.echo "BuildAndUnitTestStage populateReleaseInfo finished: ${releaseInfo.toString()}"
+        Logger.info("BuildAndUnitTestStage populateReleaseInfo finished: ${releaseInfo.toString()}")
     }
 
     @Override
