@@ -159,6 +159,7 @@ class DockerService implements Serializable {
             Logger.warn("DockerService:dockerLogin: credentialsId is blank (${credentialsId}), skip login")
             return
         }
+        dsl.sh "whoami"
         dsl.withCredentials([[$class: 'UsernamePasswordMultiBinding',
                               credentialsId: credentialsId,
                               usernameVariable: 'DOCKER_REGISTRY_USERNAME',
