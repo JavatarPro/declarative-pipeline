@@ -196,7 +196,7 @@ class YamlConverter {
 
         Docker result = new Docker().withDockerRegistries(resultMap)
                 .withCustomDockerFileName(docker.customDockerFileName)
-        Logger.debug("YamlConverter:retrieveDocker:finished with result: ${result}")
+        Logger.debug("YamlConverter:retrieveDocker:finished with result: ${result.size()}")
         return result
     }
 
