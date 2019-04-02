@@ -179,7 +179,8 @@ class YamlConverter {
                     "dockerRegistry: ${dockerRegistry}")
             dockerRegistryMap.put(key, dockerRegistry);
         }
-        Logger.debug("YamlConverter:retrieveDocker: dockerRegistryMap: ${dockerRegistryMap}")
+        Logger.trace("YamlConverter:retrieveDocker: next line in logs does not appeared")
+        Logger.debug("YamlConverter:retrieveDocker: dockerRegistryMap: ${dockerRegistryMap.size()}")
 
         Map<String, DockerRegistry> resultMap = new HashMap<>()
         docker.registries.each { String key, String value ->
