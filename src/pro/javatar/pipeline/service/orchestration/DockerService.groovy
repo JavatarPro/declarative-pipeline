@@ -115,8 +115,8 @@ class DockerService implements Serializable {
     }
 
     def dockerPushImageToRegistryWithoutLogin(String imageName, String imageVersion, String dockerRegistryUrl) {
-        Logger.info("DockerService:dockerPushImageToRegistryWithoutLogin " +
-                "(imageName: ${imageName}, imageVersion: ${imageVersion}, dockerRegistryUrl: ${dockerRegistryUrl})")
+        Logger.info("DockerService:dockerPushImageToRegistryWithoutLogin (imageName: ${imageName}, " +
+                "imageVersion: ${imageVersion}, dockerRegistryUrl: ${dockerRegistryUrl})")
         dsl.sh "docker images"
         dsl.sh "docker tag ${imageName}:${imageVersion} ${dockerRegistryUrl}/${imageName}:${imageVersion}"
         dsl.sh "docker push ${dockerRegistryUrl}/${imageName}:${imageVersion}"
