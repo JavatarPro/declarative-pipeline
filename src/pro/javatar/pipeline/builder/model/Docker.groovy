@@ -21,11 +21,6 @@ class Docker implements Serializable {
     }
 
     Docker withDockerRegistries(Map<String, DockerRegistry> dockerRegistries) {
-        Logger.trace("withDockerRegistries: for testing purposes")
-        return this
-    }
-
-    Docker withDockerRegistries(Map<Environment, DockerRegistry> dockerRegistries) {
         this.dockerRegistries = dockerRegistries
         return this
     }
