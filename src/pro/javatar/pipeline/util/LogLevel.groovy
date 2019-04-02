@@ -31,4 +31,11 @@ enum LogLevel {
     DEBUG,
     TRACE
 
+    static LogLevel fromString(String level) {
+        try {
+            return valueOf(level.toUpperCase())
+        } catch (Exception e) {
+            return INFO
+        }
+    }
 }

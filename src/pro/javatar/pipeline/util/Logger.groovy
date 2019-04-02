@@ -19,12 +19,13 @@ import static pro.javatar.pipeline.util.LogLevel.*
 import com.cloudbees.groovy.cps.NonCPS
 
 /**
+ * TODO append all logs to file and in console only that specified
  * @author Borys Zora
  * @version 2019-03-29
  */
 class Logger {
 
-    static LogLevel LEVEL = TRACE
+    static LogLevel LEVEL = INFO
 
     @NonCPS
     static void fatal(def message) {

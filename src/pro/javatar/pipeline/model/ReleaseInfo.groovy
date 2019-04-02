@@ -12,14 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.model
 
 import pro.javatar.pipeline.service.infra.model.InfraRequest
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.util.StringUtils.addPrefixIfNotExists
 import static pro.javatar.pipeline.util.StringUtils.isNotBlank
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
  * @author Borys Zora
@@ -37,6 +36,7 @@ class ReleaseInfo implements Serializable {
 
     String flowPrefix
 
+    // we use list for multi docker deployments support
     List<String> dockerImageNames = new ArrayList<>()
 
     Map<String, String> customDockerFileNames = new HashMap<>()
@@ -173,11 +173,11 @@ class ReleaseInfo implements Serializable {
 
     boolean isMultiDockerBuild() {
         if (dockerImageNames == null) {
-            dsl.echo "WARN: dockerImageNames is null but isMultiDockerBuild was triggered "
+            Logger.warn("dockerImageNames is null but isMultiDockerBuild was triggered ")
             return false
         }
         if (dockerImageNames.size() > 1) {
-            dsl.echo "INFO: multiDockerBuild is not best practice, please consider to refactor"
+            Logger.info("multiDockerBuild is not best practice, please consider to refactor")
             return true
         }
         return false

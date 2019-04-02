@@ -1,6 +1,7 @@
 package pro.javatar.pipeline.builder.model
 
 import pro.javatar.pipeline.builder.Npm
+import pro.javatar.pipeline.util.LogLevel
 import pro.javatar.pipeline.util.Logger
 import pro.javatar.pipeline.util.StringUtils
 
@@ -37,6 +38,8 @@ class YamlConfig implements Serializable {
     CacheRequest cacheRequest = new CacheRequest()
 
     Sonar sonar = new Sonar()
+
+    LogLevel logLevel = LogLevel.INFO
 
     YamlConfig() {
         Logger.debug("YamlConfig:default constructor")
@@ -263,6 +266,19 @@ class YamlConfig implements Serializable {
 
     YamlConfig withCacheRequest(CacheRequest cacheRequest) {
         this.cacheRequest = cacheRequest
+        return this
+    }
+
+    LogLevel getLogLevel() {
+        return logLevel
+    }
+
+    void setLogLevel(LogLevel logLevel) {
+        this.logLevel = logLevel
+    }
+
+    YamlConfig withLogLevel(LogLevel logLevel) {
+        this.logLevel = logLevel
         return this
     }
 

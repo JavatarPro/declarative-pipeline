@@ -159,6 +159,7 @@ class DockerService implements Serializable {
             Logger.warn("DockerService:dockerLogin: credentialsId is blank (${credentialsId}), skip login")
             return
         }
+        // TODO known issues if user not added to docker group or added but jenkins node not restarted
         dsl.sh "whoami"
         dsl.withCredentials([[$class: 'UsernamePasswordMultiBinding',
                               credentialsId: credentialsId,

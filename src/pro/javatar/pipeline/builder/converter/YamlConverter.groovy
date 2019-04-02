@@ -4,7 +4,6 @@ import pro.javatar.pipeline.builder.model.AutoTest
 import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.DockerRegistry
-import pro.javatar.pipeline.builder.model.Environment
 import pro.javatar.pipeline.builder.model.Gradle
 import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.builder.model.Maven
@@ -19,6 +18,7 @@ import pro.javatar.pipeline.builder.model.Ui
 import pro.javatar.pipeline.builder.model.Vcs
 import pro.javatar.pipeline.builder.model.VcsRepoTO
 import pro.javatar.pipeline.builder.model.YamlConfig
+import pro.javatar.pipeline.util.LogLevel
 import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
@@ -28,6 +28,7 @@ class YamlConverter {
     YamlConfig toYamlModel(def yml) {
         Logger.info("YamlConverter:toYamlModel:started")
         YamlConfig result = new YamlConfig()
+                .withLogLevel(retrieveAndSetLogLevel(yml))
                 .withJenkinsTool(retrieveJenkinsTools(yml))
                 .withVcs(retrieveVcs(yml))
                 .withService(retrieveService(yml))
@@ -98,6 +99,17 @@ class YamlConverter {
             cacheMap.put(service, folderList)
         }
         return new CacheRequest().withCaches(cacheMap)
+    }
+
+    LogLevel retrieveAndSetLogLevel() {
+        def log = yml.log
+        dsl.echo "YamlConverter:retrieveAndSetLogLevel: log: ${log}"
+        if (log == null) {
+            return
+        }
+        LogLevel logLevel = LogLevel.fromString(log.level)
+        Logger.LEVEL = logLevel
+        return logLevel
     }
 
     Sonar retrieveSonar(def yml) {
