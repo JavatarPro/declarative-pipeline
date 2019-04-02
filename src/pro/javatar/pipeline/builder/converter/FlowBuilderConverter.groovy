@@ -22,7 +22,6 @@ import pro.javatar.pipeline.service.vcs.model.VcsRepo
 import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.util.StringUtils.isBlank
-import static pro.javatar.pipeline.util.StringUtils.isEmpty
 
 class FlowBuilderConverter {
 
@@ -70,15 +69,21 @@ class FlowBuilderConverter {
     }
 
     DockerBuilder toDockerBuilder(YamlConfig yamlFile) {
+        Logger.debug("FlowBuilderConverter:toDockerBuilder:started")
         Map<String, DockerRegistry> dockerRegistryMap = yamlFile.getDocker().getDockerRegistries()
+
+        Logger.debug("FlowBuilderConverter:toDockerBuilder:dockerRegistryMap: ${dockerRegistryMap}")
         DockerBuilder builder = new DockerBuilder()
 
         dockerRegistryMap.each { String key, DockerRegistry value ->
-            builder.withDockerRegistry(key, value.getCredentialsId(), value.getRegistry())
+            builder.addDockerRegistry(key, value.getCredentialsId(), value.getRegistry())
         }
-        return builder
-                .withCustomDockerFileName(yamlFile.getDocker().getCustomDockerFileName())
+
+        builder.withCustomDockerFileName(yamlFile.getDocker().getCustomDockerFileName())
                 .withOrchestrationService(toOrchestrationService(yamlFile))
+
+        Logger.debug("FlowBuilderConverter:toDockerBuilder:finished builder: ${builder}")
+        return builder
     }
 
     DockerOrchestrationService toOrchestrationService(YamlConfig yamlFile) {

@@ -19,12 +19,14 @@ import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
 import pro.javatar.pipeline.service.orchestration.DockerService
 import pro.javatar.pipeline.service.orchestration.KubernetesService
 import pro.javatar.pipeline.service.orchestration.MesosService
+import pro.javatar.pipeline.service.orchestration.NomadService
 import pro.javatar.pipeline.service.orchestration.SshDockerOrchestrationService
 import pro.javatar.pipeline.service.orchestration.model.DockerRegistryBO
 import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.KUBERNETES
 import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.MESOS
+import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.NOMAD
 import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.SSH
 import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.fromString
 
@@ -50,7 +52,7 @@ class DockerBuilder implements Serializable {
         return dockerService
     }
 
-    DockerBuilder withDockerRegistry(String env, String credentialsId, String registry) {
+    DockerBuilder addDockerRegistry(String env, String credentialsId, String registry) {
         dockerRegistries.put(env, new DockerRegistryBO()
                 .withCredentialsId(credentialsId)
                 .withRegistry(registry))
@@ -63,6 +65,8 @@ class DockerBuilder implements Serializable {
             this.orchestrationService = new KubernetesService()
         } else if (type == MESOS) {
             this.orchestrationService = new MesosService()
+        } else if (type == NOMAD) {
+            this.orchestrationService = new NomadService()
         } else if (type == SSH) {
             this.orchestrationService = new SshDockerOrchestrationService();
         }
