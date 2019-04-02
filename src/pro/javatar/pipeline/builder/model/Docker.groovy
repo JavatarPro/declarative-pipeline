@@ -53,7 +53,7 @@ class Docker implements Serializable {
     @Override
     public String toString() {
         return "Docker{" +
-                "dockerRegistries=" + dockerRegistries +
+                "dockerRegistries=" + dockerRegistries.size() +
                 ", customDockerFileName='" + customDockerFileName + '\'' +
                 '}';
     }
