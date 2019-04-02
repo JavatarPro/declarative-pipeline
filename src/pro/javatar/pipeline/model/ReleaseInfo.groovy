@@ -208,8 +208,8 @@ class ReleaseInfo implements Serializable {
                 ", serviceName='" + serviceName + '\'' +
                 ", flowPrefix='" + flowPrefix + '\'' +
                 ", uiDistributionFolder='" + uiDistributionFolder + '\'' +
-                ", dockerImageNames='" + getDockerImageNames() + '\'' +
-                ", customDockerFileNames='" + getCustomDockerFileNames() + '\'' +
+                ", dockerImageNames='" + getDockerImageNames().size() + '\'' +
+                ", customDockerFileNames='" + getCustomDockerFileNames().size() + '\'' +
                 ", dockerImageVersion='" + getDockerImageVersion() + '\'' +
                 ", buildReleaseVersion='" + getBuildReleaseVersion() + '\'' +
                 '}';

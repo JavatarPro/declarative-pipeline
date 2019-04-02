@@ -109,4 +109,14 @@ class GradleBuildService extends BuildService {
         }
         return params
     }
+
+    @Override
+    public String toString() {
+        return "GradleBuildService{" +
+                "gradle='" + gradle + '\'' +
+                ", java='" + java + '\'' +
+                ", params='" + params + '\'' +
+                ", versionFile='" + versionFile + '\'' +
+                '}';
+    }
 }

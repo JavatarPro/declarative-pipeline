@@ -18,6 +18,7 @@ import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.cache.CacheService
 import pro.javatar.pipeline.service.orchestration.DockerService
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -28,28 +29,32 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 class DockerBuildService extends BuildService {
 
     BuildService buildService
+
     DockerService dockerService
+
     CacheService cacheService = new CacheService()
 
     DockerBuildService(BuildService buildService, DockerService dockerService) {
-        dsl.echo "DockerMavenBuildService constructor with buildService & dockerService started"
+        Logger.debug("DockerMavenBuildService constructor with buildService & dockerService started")
         this.dockerService = dockerService
         this.buildService = buildService
-        dsl.echo "DockerMavenBuildService constructor with buildService & dockerService finished"
+        Logger.debug("DockerMavenBuildService constructor with buildService & dockerService finished")
     }
 
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
-        dsl.echo "DockerMavenBuildService buildAndUnitTests started"
+        Logger.debug("DockerMavenBuildService buildAndUnitTests started")
         buildService.buildAndUnitTests(releaseInfo)
         dockerService.dockerBuildImage(releaseInfo)
-        dsl.echo "DockerMavenBuildService buildAndUnitTests finished"
+        Logger.debug("DockerMavenBuildService buildAndUnitTests finished")
     }
 
     @Override
     def populateReleaseInfo(ReleaseInfo releaseInfo) {
+        Logger.debug("DockerBuildService:populateReleaseInfo:started")
         buildService.populateReleaseInfo(releaseInfo)
         dockerService.populateReleaseInfo(releaseInfo)
+        Logger.debug("DockerBuildService:populateReleaseInfo:finished")
     }
 
     @Override
