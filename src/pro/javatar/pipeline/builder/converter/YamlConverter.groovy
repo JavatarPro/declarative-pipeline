@@ -158,24 +158,32 @@ class YamlConverter {
     }
 
     Docker retrieveDocker(def yml) {
+        Logger.debug("YamlConverter:retrieveDocker:started")
         def docker = yml.docker
-        if (docker == null) return Collections.emptyList()
-        dsl.echo "retrieveDocker: docker: ${docker}"
+        if (docker == null) {
+            Logger.debug("YamlConverter:retrieveDocker: docker is null stub will be returned")
+            return new Docker()
+        }
+        Logger.debug("YamlConverter:retrieveDocker: docker: ${docker}")
         def dockerRegistries = yml["docker-registries"]
-        dsl.echo "retrieve: dockerRegistries: ${dockerRegistries}"
+        Logger.debug("YamlConverter:retrieve: dockerRegistries: ${dockerRegistries}")
         Map<String, DockerRegistry> dockerRegistryMap = new HashMap<>()
         dockerRegistries.each{ String key, def value ->
             dockerRegistryMap.put(key, new DockerRegistry()
                     .withCredentialsId(value.credentialsId)
                     .withRegistry(value.registry))
         }
+
         Map<Environment, DockerRegistry> resultMap = new HashMap<>()
         docker.registries.each { String key, String value ->
             resultMap.put(new Environment(key), dockerRegistryMap.get(value))
         }
-        return new Docker()
-                .withDockerRegistries(resultMap)
+        Logger.debug("YamlConverter:retrieveDocker: resultMap: ${resultMap}")
+
+        Docker result = new Docker().withDockerRegistries(resultMap)
                 .withCustomDockerFileName(docker.customDockerFileName)
+        Logger.debug("YamlConverter:retrieveDocker:finished with result: ${result}")
+        return result
     }
 
     List<String> retrieveEnvList(def env) {
