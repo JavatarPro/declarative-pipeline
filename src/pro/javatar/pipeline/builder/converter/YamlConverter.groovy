@@ -181,16 +181,18 @@ class YamlConverter {
         }
         Logger.debug("YamlConverter:retrieveDocker: dockerRegistryMap: ${dockerRegistryMap}")
 
-        Map<Environment, DockerRegistry> resultMap = new HashMap<>()
+        Map<String, DockerRegistry> resultMap = new HashMap<>()
         docker.registries.each { String key, String value ->
             Logger.trace("YamlConverter:retrieveDocker:docker.registries.each: key: ${key}, value: ${value}")
-            Environment env = new Environment(key)
+            // Environment env = new Environment(key)
+            String env = key;
             DockerRegistry dockerRegistry = dockerRegistryMap.get(value)
             Logger.trace("YamlConverter:retrieveDocker:docker.registries.each: env: ${env}," +
                     " dockerRegistry: ${dockerRegistry}")
             resultMap.put(env, dockerRegistry)
         }
-        Logger.debug("YamlConverter:retrieveDocker: resultMap: ${resultMap}")
+
+        Logger.debug("YamlConverter:retrieveDocker:resultMap: ${resultMap}")
 
         Docker result = new Docker().withDockerRegistries(resultMap)
                 .withCustomDockerFileName(docker.customDockerFileName)
