@@ -21,8 +21,6 @@ import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
 import pro.javatar.pipeline.service.orchestration.model.NomadBO
 import pro.javatar.pipeline.util.Logger
 
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-
 /**
  * HashiCorp Nomad - docker orchestration implementation
  * Nomad has different deployment drivers, we cover only docker driver

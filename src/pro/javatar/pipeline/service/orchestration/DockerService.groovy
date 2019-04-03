@@ -195,6 +195,11 @@ class DockerService implements Serializable {
         this.customDockerFileName = customDockerFileName
     }
 
+    @Deprecated
+    String getImageVersionWithBuildNumber(String imageVersion) {
+        return "${imageVersion}.${dsl.currentBuild.number}"
+    }
+
     // TODO simplify
     def populateReleaseInfo(ReleaseInfo releaseInfo) {
         Logger.debug("DockerService:populateReleaseInfo:started with releaseInfo: ${releaseInfo}")
