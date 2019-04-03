@@ -116,8 +116,7 @@ class FlowBuilder implements Serializable {
     void createServices() {
         Logger.debug("FlowBuilder:createServices started")
         prepareRevisionControl()
-        dockerService = dockerBuilder.build()
-        Logger.debug("docker service preparation complete")
+        prepareDockerService()
         prepareSonarQube()
         prepareBuildService()
         prepareDeploymentService()
@@ -125,6 +124,11 @@ class FlowBuilder implements Serializable {
         releaseService = getReleaseService()
         populateServiceContextHolder()
         Logger.debug("FlowBuilder:createServices finished")
+    }
+
+    def prepareDockerService() {
+        dockerService = dockerBuilder.build()
+        Logger.debug("docker service preparation complete")
     }
 
     void prepareRevisionControl() {

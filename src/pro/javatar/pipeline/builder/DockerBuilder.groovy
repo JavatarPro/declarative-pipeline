@@ -59,6 +59,7 @@ class DockerBuilder implements Serializable {
         return this
     }
 
+    // TODO make this method primary to create orchestrationService
     DockerBuilder withOrchestrationServiceType(String dockerOrchestrationServiceType) {
         DockerOrchestrationServiceType type = fromString(dockerOrchestrationServiceType)
         if (type == KUBERNETES) {

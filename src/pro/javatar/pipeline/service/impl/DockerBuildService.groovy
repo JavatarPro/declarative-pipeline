@@ -20,9 +20,8 @@ import pro.javatar.pipeline.service.cache.CacheService
 import pro.javatar.pipeline.service.orchestration.DockerService
 import pro.javatar.pipeline.util.Logger
 
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-
 /**
+ * TODO move to deployment service docker stuff, this class
  * @author Borys Zora
  * @since 2018-03-09
  */

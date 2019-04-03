@@ -30,6 +30,7 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class NomadService implements DockerOrchestrationService {
 
+    // TODO use NomadBO instead coupling on building converter
     private Nomad nomad
 
     NomadService(Nomad nomad) {

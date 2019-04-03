@@ -169,6 +169,7 @@ class DockerService implements Serializable {
         }
     }
 
+    // TODO move to deployment service
     def dockerDeployContainer(String imageName, String imageVersion, Env env) {
         Logger.info("dockerDeployContainer(${imageName}, ${imageVersion}, ${env.getValue()})")
         if (env == Env.DEV) {

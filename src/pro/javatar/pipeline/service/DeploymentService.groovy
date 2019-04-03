@@ -18,6 +18,8 @@ import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.model.ReleaseInfo
 
 /**
+ * Deployment to environment (dev, qa, uat, prod) chosen type of artifacts (e.g. docker, ui zip archive, jar)
+ * Artifacts should be prepared if needed, and promoted to appropriate level, depends on env
  * @author Borys Zora
  * @since 2018-03-09
  */

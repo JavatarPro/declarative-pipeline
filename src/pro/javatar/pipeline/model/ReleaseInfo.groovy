@@ -90,10 +90,7 @@ class ReleaseInfo implements Serializable {
     }
 
     String getDockerImageName() {
-        if (dockerImageNames.isEmpty()) {
-            return null
-        }
-        String dockerImageName = dockerImageNames.get(0)
+        String dockerImageName = getDockerImageName(0)
         if (isNotBlank(dockerImageName)) {
             return dockerImageName
         }
@@ -105,10 +102,14 @@ class ReleaseInfo implements Serializable {
     }
 
     void addDockerImageName(String dockerImageName) {
+
         this.dockerImageNames.add(dockerImageName)
     }
 
     String getDockerImageName(int id) {
+        if (dockerImageNames.isEmpty()) {
+            return null
+        }
         this.dockerImageNames.get(id)
     }
 
