@@ -31,7 +31,9 @@ enum JenkinsBuildParams {
     JENKINS_TOOL_MAVEN("jenkins_tool.maven", "maven"),
     JENKINS_TOOL_JAVA("jenkins_tool.java", "jdk"),
     JENKINS_TOOL_NPM_VERSION("jenkins_tool.npm.version", "nodejs"),
-    JENKINS_TOOL_NPM_TYPE("jenkins_tool.npm.type", "nodejs")
+    JENKINS_TOOL_NPM_TYPE("jenkins_tool.npm.type", "nodejs"),
+
+    LOG_LEVEL("log.level", "info")
 
     // instance variables
 
