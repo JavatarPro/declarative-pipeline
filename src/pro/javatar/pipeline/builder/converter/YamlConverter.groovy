@@ -11,6 +11,7 @@ import pro.javatar.pipeline.builder.model.Maven
 import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.builder.model.Mesos
 import pro.javatar.pipeline.builder.model.Nomad
+import pro.javatar.pipeline.builder.model.NomadItem
 import pro.javatar.pipeline.builder.model.Pipeline
 import pro.javatar.pipeline.builder.model.S3
 import pro.javatar.pipeline.builder.model.S3Repository
@@ -274,7 +275,7 @@ class YamlConverter {
         nomad.each { String env, def nomadItem ->
             Period period = isNotBlank(nomadItem.period) ? null : Period.parse(nomadItem.period)
             Environment environment = new Environment(env)
-            Nomad.NomadItem item = new Nomad.NomadItem()
+            NomadItem item = new NomadItem()
                     .withUrl(nomadItem.url)
                     .withPeriod(period)
                     .withVcsConfig(nomadItem.vcsConfig)
