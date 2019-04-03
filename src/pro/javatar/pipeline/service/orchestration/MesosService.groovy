@@ -20,6 +20,7 @@ import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
 import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
 import pro.javatar.pipeline.service.vcs.VcsHelper
 import pro.javatar.pipeline.service.vcs.model.VcsRepo
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -46,8 +47,8 @@ class MesosService implements DockerOrchestrationService {
     // TODO replace depcon with own rest implementation
     @Override
     def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment) {
-        dsl.echo "dockerDeployContainer(imageName: ${imageName}, imageVersion: ${imageVersion}, " +
-                "dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})"
+        Logger.info("MesosService:dockerDeployContainer(imageName: ${imageName}, imageVersion: ${imageVersion}, " +
+                "dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})")
 
         dsl.sh "pwd; ls -l; ls -l .. "
 

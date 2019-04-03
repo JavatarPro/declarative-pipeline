@@ -5,12 +5,13 @@
 package pro.javatar.pipeline.service.orchestration.model
 
 import pro.javatar.pipeline.model.Env
+import pro.javatar.pipeline.util.Logger
 
 /**
  * @author Borys Zora
  * @version 2019-03-28
  */
-class DeploymentRequestBO {
+class DeploymentRequestBO implements Serializable {
 
     String imageName
 
@@ -21,6 +22,10 @@ class DeploymentRequestBO {
     Env environment
 
     String buildNumber
+
+    DeploymentRequestBO() {
+        Logger.info("DeploymentRequestBO:default constructor")
+    }
 
     String getImageVersionWithBuildNumber() {
         return "${imageVersion}.${buildNumber}"
