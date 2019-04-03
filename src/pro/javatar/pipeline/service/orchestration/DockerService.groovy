@@ -173,11 +173,11 @@ class DockerService implements Serializable {
     // TODO move to deployment service
     def dockerDeployContainer(String imageName, String imageVersion, Env env) {
         Logger.debug("DockerService:dockerDeployContainer(${imageName}, ${imageVersion}, ${env.getValue()})")
-        String dockerRegistry = dockerRegistries.get(env.getValue())
+        def dockerRegistry = dockerRegistries.get(env.getValue())
         def request = new DeploymentRequestBO()
                 .withImageName(imageName)
                 .withImageVersion(imageVersion)
-                .withDockerRepositoryUrl(dockerRegistry)
+                .withDockerRegistry(dockerRegistry)
                 .withEnvironment(env)
                 .withBuildNumber("${dsl.currentBuild.number}")
         Logger.debug("DockerService:dockerDeployContainer: setup")

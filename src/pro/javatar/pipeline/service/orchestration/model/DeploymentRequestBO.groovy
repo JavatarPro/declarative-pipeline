@@ -17,7 +17,7 @@ class DeploymentRequestBO implements Serializable {
 
     String imageVersion
 
-    String dockerRepositoryUrl
+    DockerRegistryBO dockerRegistry
 
     Env environment
 
@@ -57,17 +57,17 @@ class DeploymentRequestBO implements Serializable {
         return this;
     }
 
-    String getDockerRepositoryUrl() {
-        return dockerRepositoryUrl
+    DockerRegistryBO getDockerRegistry() {
+        return dockerRegistry
     }
 
-    void setDockerRepositoryUrl(String dockerRepositoryUrl) {
-        this.dockerRepositoryUrl = dockerRepositoryUrl
+    void setDockerRegistry(DockerRegistryBO dockerRegistry) {
+        this.dockerRegistry = dockerRegistry
     }
 
-    DeploymentRequestBO withDockerRepositoryUrl(String dockerRepositoryUrl) {
-        setDockerRepositoryUrl(dockerRepositoryUrl)
-        return this
+    DeploymentRequestBO withDockerRegistry(DockerRegistryBO dockerRegistry) {
+        setDockerRegistry(dockerRegistry)
+        return this;
     }
 
     Env getEnvironment() {
@@ -101,7 +101,7 @@ class DeploymentRequestBO implements Serializable {
         return "DeploymentRequestBO{" +
                 "imageName='" + imageName + '\'' +
                 ", imageVersion='" + imageVersion + '\'' +
-                ", dockerRepositoryUrl='" + dockerRepositoryUrl + '\'' +
+                ", dockerRegistry='" + dockerRegistry + '\'' +
                 ", environment='" + environment + '\'' +
                 '}';
     }
