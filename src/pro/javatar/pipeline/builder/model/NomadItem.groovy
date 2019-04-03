@@ -8,7 +8,7 @@ class NomadItem {
 
     String vcsConfig
 
-    Period period
+    Period deploymentTimeout
 
     String getUrl() {
         return url
@@ -36,16 +36,16 @@ class NomadItem {
         return this
     }
 
-    Period getPeriod() {
-        return period
+    Period getDeploymentTimeout() {
+        return deploymentTimeout
     }
 
-    void setPeriod(Period period) {
-        this.period = period
+    void setDeploymentTimeout(Period deploymentTimeout) {
+        this.deploymentTimeout = deploymentTimeout
     }
 
-    NomadItem withPeriod(Period period) {
-        setPeriod(period)
+    NomadItem withDeploymentTimeout(Period deploymentTimeout) {
+        setDeploymentTimeout(deploymentTimeout)
         return this
     }
 
@@ -54,7 +54,7 @@ class NomadItem {
         return "NomadItem{" +
                 "url='" + url + '\'' +
                 ", vcsConfig='" + vcsConfig + '\'' +
-                ", period=" + period +
+                ", deploymentTimeout=" + deploymentTimeout +
                 '}';
     }
 }

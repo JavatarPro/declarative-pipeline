@@ -273,11 +273,11 @@ class YamlConverter {
         }
         Nomad result = new Nomad()
         nomad.each { String env, def nomadItem ->
-            Period period = isNotBlank(nomadItem.period) ? null : Period.parse(nomadItem.period)
+            Period deploymentTimeout = isNotBlank(nomadItem.period) ? Period.parse(nomadItem.deploymentTimeout) : null
             Environment environment = new Environment(env)
             NomadItem item = new NomadItem()
                     .withUrl(nomadItem.url)
-                    .withPeriod(period)
+                    .withDeploymentTimeout(deploymentTimeout)
                     .withVcsConfig(nomadItem.vcsConfig)
             result.addNomadItem(environment, item)
         }
