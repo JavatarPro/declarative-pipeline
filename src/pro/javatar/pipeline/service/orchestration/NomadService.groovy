@@ -65,7 +65,7 @@ class NomadService implements DockerOrchestrationService {
     @Override
     public String toString() {
         return "NomadService{" +
-                "nomad=" + nomad +
+                "nomadConfig=" + nomadConfig.size() +
                 '}';
     }
 }
