@@ -14,10 +14,12 @@
  */
 package pro.javatar.pipeline.service.orchestration
 
+import pro.javatar.pipeline.builder.model.Environment
 import pro.javatar.pipeline.builder.model.Nomad
 import pro.javatar.pipeline.service.infra.model.Infra
 import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
 import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
+import pro.javatar.pipeline.service.orchestration.model.NomadBO
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -30,11 +32,10 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class NomadService implements DockerOrchestrationService {
 
-    // TODO use NomadBO instead coupling on building converter
-    private Nomad nomad
+    private Map<Environment, NomadBO> nomadConfig
 
-    NomadService(Nomad nomad) {
-        this.nomad = nomad
+    NomadService(Map<Environment, NomadBO> nomadConfig) {
+        this.nomadConfig = nomadConfig
     }
 
     @Override

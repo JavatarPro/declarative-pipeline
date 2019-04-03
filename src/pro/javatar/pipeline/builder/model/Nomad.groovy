@@ -51,7 +51,7 @@ class Nomad implements Serializable {
     @Override
     public String toString() {
         return "Nomad{" +
-                "nomadConfig=" + nomadConfig +
+                "nomadConfig=" + nomadConfig.size() +
                 '}';
     }
 

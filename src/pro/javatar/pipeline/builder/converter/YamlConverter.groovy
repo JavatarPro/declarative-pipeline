@@ -4,11 +4,13 @@ import pro.javatar.pipeline.builder.model.AutoTest
 import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.DockerRegistry
+import pro.javatar.pipeline.builder.model.Environment
 import pro.javatar.pipeline.builder.model.Gradle
 import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.builder.model.Maven
 import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.builder.model.Mesos
+import pro.javatar.pipeline.builder.model.Nomad
 import pro.javatar.pipeline.builder.model.Pipeline
 import pro.javatar.pipeline.builder.model.S3
 import pro.javatar.pipeline.builder.model.S3Repository
@@ -21,7 +23,10 @@ import pro.javatar.pipeline.builder.model.YamlConfig
 import pro.javatar.pipeline.util.LogLevel
 import pro.javatar.pipeline.util.Logger
 
+import java.time.Period
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
+import static pro.javatar.pipeline.util.StringUtils.isNotBlank
 
 class YamlConverter {
 
@@ -40,6 +45,7 @@ class YamlConverter {
                 .withGradle(retrieveGradle(yml))
                 .withDocker(retrieveDocker(yml))
                 .withMesos(retrieveMesos(yml))
+                .withNomad(retrieveNomad(yml))
                 .withSonar(retrieveSonar(yml))
                 .withAutoTest(retrieveAutoTest(yml))
                 .withCacheRequest(retrieveCacheRequest(yml))
@@ -254,6 +260,27 @@ class YamlConverter {
         vcsConfigRepos.each { key, value -> vcsRepos.put(key, vcsRepoMap.get(value)) }
         result.setVcsConfigRepos(vcsRepos)
         dsl.echo "retrieveMesos: result: ${result}"
+        return result
+    }
+
+    Nomad retrieveNomad(def yml) {
+        def nomad = yml.nomad
+        Logger.debug("YamlConverter:retrieveNomad: nomad: ${nomad}")
+        if (nomad == null) {
+            Logger.debug("nomad not provided")
+            return null
+        }
+        Nomad result = new Nomad()
+        nomad.each { String env, def nomadItem ->
+            Period period = isNotBlank(nomadItem.period) ? null : Period.parse(nomadItem.period)
+            Environment environment = new Environment(env)
+            Nomad.NomadItem item = new Nomad.NomadItem()
+                    .withUrl(nomadItem.url)
+                    .withPeriod(period)
+                    .withVcsConfig(nomadItem.vcsConfig)
+            result.addNomadItem(environment, item)
+        }
+        Logger.debug("YamlConverter:retrieveNomad: result: ${result}")
         return result
     }
 

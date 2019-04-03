@@ -33,6 +33,8 @@ class YamlConfig implements Serializable {
 
     Mesos mesos = new Mesos()
 
+    Nomad nomad = new Nomad()
+
     AutoTest autoTest = new AutoTest()
 
     CacheRequest cacheRequest = new CacheRequest()
@@ -227,6 +229,20 @@ class YamlConfig implements Serializable {
     YamlConfig withMesos(Mesos mesos) {
         Logger.info("YamlConfig:withMesos: ${mesos}")
         setMesos(mesos)
+        return this
+    }
+
+    Nomad getNomad() {
+        return nomad
+    }
+
+    void setNomad(Nomad nomad) {
+        this.nomad = nomad
+    }
+
+    YamlConfig withNomad(Nomad nomad) {
+        Logger.info("YamlConfig:withNomad: ${nomad}")
+        setNomad(nomad)
         return this
     }
 

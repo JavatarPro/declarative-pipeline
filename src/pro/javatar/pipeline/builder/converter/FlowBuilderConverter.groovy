@@ -8,7 +8,9 @@ import pro.javatar.pipeline.builder.RevisionControlBuilder
 import pro.javatar.pipeline.builder.S3Builder
 import pro.javatar.pipeline.builder.model.DockerRegistry
 import pro.javatar.pipeline.builder.SonarQubeBuilder
+import pro.javatar.pipeline.builder.model.Environment
 import pro.javatar.pipeline.builder.model.Mesos
+import pro.javatar.pipeline.builder.model.Nomad
 import pro.javatar.pipeline.builder.model.S3
 import pro.javatar.pipeline.builder.model.S3Repository
 import pro.javatar.pipeline.builder.model.VcsRepoTO
@@ -18,6 +20,8 @@ import pro.javatar.pipeline.model.RevisionControlType
 import pro.javatar.pipeline.model.VcsRepositoryType
 import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
 import pro.javatar.pipeline.service.orchestration.MesosService
+import pro.javatar.pipeline.service.orchestration.NomadService
+import pro.javatar.pipeline.service.orchestration.model.NomadBO
 import pro.javatar.pipeline.service.vcs.model.VcsRepo
 import pro.javatar.pipeline.util.Logger
 
@@ -96,6 +100,10 @@ class FlowBuilderConverter {
         if (orchestrationServiceType == DockerOrchestrationServiceType.MESOS) {
             return toMesosService(yamlFile)
         }
+        if (orchestrationServiceType == DockerOrchestrationServiceType.NOMAD) {
+            return toNomadService(yamlFile)
+        }
+
     }
 
     MesosService toMesosService(YamlConfig yamlFile) {
@@ -110,6 +118,25 @@ class FlowBuilderConverter {
         yamlFile.getMesos()
         Logger.info("FlowBuilderConverter: toMesosService: finished")
         return mesosService
+    }
+
+    NomadService toNomadService(YamlConfig yamlFile) {
+        Logger.info("FlowBuilderConverter:toNomadService: started")
+        Nomad nomad = yamlFile.getNomad()
+        if (nomad == null) {
+            return null
+        }
+        Map<Environment, NomadBO> nomadConfig = new HashMap<>()
+        nomad.nomadConfig.each { env, nomadItem ->
+            NomadBO nomadBO = new NomadBO()
+                    .withUrl(nomadItem.getUrl())
+                    .withEnv(env.getEnv())
+                    .withPeriod(nomadItem.getPeriod())
+            nomadConfig.put(env, nomadBO)
+        }
+        NomadService nomadService = new NomadService(nomadConfig)
+        Logger.info("FlowBuilderConverter:toNomadService: finished")
+        return nomadService
     }
 
     Map<String, VcsRepo> toVcsRepoMap(Map<String, VcsRepoTO> vcsRepoToMap) {

@@ -172,6 +172,7 @@ class DockerService implements Serializable {
     // TODO move to deployment service
     def dockerDeployContainer(String imageName, String imageVersion, Env env) {
         Logger.info("dockerDeployContainer(${imageName}, ${imageVersion}, ${env.getValue()})")
+        // TODO should not depend on env, remove if
         if (env == Env.DEV) {
             orchestrationService.setup()
             String versionWithBuildNumber = getImageVersionWithBuildNumber(imageVersion)
