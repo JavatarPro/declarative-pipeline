@@ -15,11 +15,11 @@
 package pro.javatar.pipeline.service.orchestration
 
 import pro.javatar.pipeline.builder.model.Environment
-import pro.javatar.pipeline.builder.model.Nomad
 import pro.javatar.pipeline.service.infra.model.Infra
 import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
 import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
 import pro.javatar.pipeline.service.orchestration.model.NomadBO
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -40,7 +40,7 @@ class NomadService implements DockerOrchestrationService {
 
     @Override
     def setup() {
-        dsl.echo "NomadService setup: ${toString()}"
+        Logger.info("NomadService setup: ${toString()}")
     }
 
     @Override
@@ -54,7 +54,8 @@ class NomadService implements DockerOrchestrationService {
 
     @Override
     DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO deploymentRequest) {
-        return null
+        Logger.info("deploymentRequest: ${deploymentRequest}")
+        return new DeploymentResponseBO()
     }
 
     @Override

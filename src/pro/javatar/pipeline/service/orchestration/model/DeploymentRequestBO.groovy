@@ -4,6 +4,8 @@
  */
 package pro.javatar.pipeline.service.orchestration.model
 
+import pro.javatar.pipeline.model.Env
+
 /**
  * @author Borys Zora
  * @version 2019-03-28
@@ -16,7 +18,13 @@ class DeploymentRequestBO {
 
     String dockerRepositoryUrl
 
-    String environment
+    Env environment
+
+    String buildNumber
+
+    String getImageVersionWithBuildNumber() {
+        return "${imageVersion}.${buildNumber}"
+    }
 
     String getImageName() {
         return imageName
@@ -57,16 +65,29 @@ class DeploymentRequestBO {
         return this
     }
 
-    String getEnvironment() {
+    Env getEnvironment() {
         return environment
     }
 
-    void setEnvironment(String environment) {
+    void setEnvironment(Env environment) {
         this.environment = environment
     }
 
-    DeploymentRequestBO withEnvironment(String environment) {
-        this.environment = environment
+    DeploymentRequestBO withEnvironment(Env environment) {
+        setEnvironment(environment)
+        return this
+    }
+
+    String getBuildNumber() {
+        return buildNumber
+    }
+
+    void setBuildNumber(String buildNumber) {
+        this.buildNumber = buildNumber
+    }
+
+    DeploymentRequestBO withBuildNumber(String buildNumber) {
+        setBuildNumber(buildNumber)
         return this
     }
 

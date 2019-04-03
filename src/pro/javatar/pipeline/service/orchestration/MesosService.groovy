@@ -63,9 +63,12 @@ class MesosService implements DockerOrchestrationService {
 
     @Override
     DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO request) {
-        // temporary
-        return dockerDeployContainer(request.getImageName(), request.getImageVersion(),
-                request.getDockerRepositoryUrl(), request.getEnvironment())
+        String version = request.getImageVersion()
+        if (request.getEnvironment() == Env.DEV) {
+            version = request.getImageVersionWithBuildNumber()
+        }
+        return dockerDeployContainer(request.getImageName(), version,
+                request.getDockerRepositoryUrl(), request.getEnvironment().getValue())
     }
 
     @Override

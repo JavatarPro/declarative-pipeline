@@ -16,6 +16,7 @@ package pro.javatar.pipeline.service.orchestration
 
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.model.ReleaseInfo
+import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
 import pro.javatar.pipeline.service.orchestration.model.DockerRegistryBO
 import pro.javatar.pipeline.util.Logger
 
@@ -172,14 +173,15 @@ class DockerService implements Serializable {
     // TODO move to deployment service
     def dockerDeployContainer(String imageName, String imageVersion, Env env) {
         Logger.info("dockerDeployContainer(${imageName}, ${imageVersion}, ${env.getValue()})")
-        // TODO should not depend on env, remove if
-        if (env == Env.DEV) {
-            orchestrationService.setup()
-            String versionWithBuildNumber = getImageVersionWithBuildNumber(imageVersion)
-            orchestrationService.dockerDeployContainer(imageName, versionWithBuildNumber, devRepo, env.getValue())
-        } else {
-            orchestrationService.dockerDeployContainer(imageName, imageVersion, prodRepo, env.getValue())
-        }
+        String dockerRegistry = dockerRegistries.get(env.getValue())
+        def request = new DeploymentRequestBO()
+                .withImageName(imageName)
+                .withImageVersion(imageVersion)
+                .withDockerRepositoryUrl(dockerRegistry)
+                .withEnvironment(env.getValue())
+                .withBuildNumber(dsl.currentBuild.number)
+        orchestrationService.setup()
+        orchestrationService.dockerDeployContainer(request)
     }
 
     String getCustomDockerFileInstruction() {
@@ -191,10 +193,6 @@ class DockerService implements Serializable {
 
     void setCustomDockerFileName(String customDockerFileName) {
         this.customDockerFileName = customDockerFileName
-    }
-
-    String getImageVersionWithBuildNumber(String imageVersion) {
-        return "${imageVersion}.${dsl.currentBuild.number}"
     }
 
     // TODO simplify
