@@ -375,19 +375,9 @@ class FlowBuilder implements Serializable {
         if (isUi(releaseInfo.getServiceName())) {
             return new UiAutoTestsService().withUiSystemTestsJobName("common/ui-system-tests")
         } else {
-            if (backEndAutoTestsServiceBuilder == null) {
-                backEndAutoTestsServiceBuilder = new BackEndAutoTestsServiceBuilder()
-            }
-            if (suit == PipelineStagesSuit.LIBRARY) {
-                if (sonarQubeService == null) {
-                    return backEndAutoTestsServiceBuilder.buildLibrary();
-                }
-                return backEndAutoTestsServiceBuilder.buildLibrary(sonarQubeService)
-            }
-            if (sonarQubeService == null) {
-                return backEndAutoTestsServiceBuilder.build();
-            }
-            return backEndAutoTestsServiceBuilder.build(sonarQubeService)
+            backEndAutoTestsServiceBuilder.withSonarQubeService(sonarQubeService)
+                    .withBuildService(buildService)
+                    .withSuit(suit).build()
         }
     }
 

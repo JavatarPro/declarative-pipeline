@@ -80,6 +80,14 @@ class MavenBuildService extends BuildService {
         dsl.echo "setupVersion: ${version} finished"
     }
 
+    @Override
+    def runIntegrationTests() {
+        Logger.info("MavenBuildService:integrationTests with mavenParams: ${mavenParams} started")
+        dsl.sh "mvn -B verify ${mavenParams} -DskipITs=false"
+        //dsl.sh "mvn failsafe:integration-test -DskipITs=false ${mavenParams}"
+        Logger.info("MavenBuildService:integrationTests:finished")
+    }
+
     def deployFile(String version, String file) {
         dsl.echo "deployFile version: ${version}, file: ${file} started"
         deployFile(groupId, artifactId, version, packaging, file, repositoryId, repoUrl)

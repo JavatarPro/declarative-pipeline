@@ -17,8 +17,8 @@ package pro.javatar.pipeline.service.test
 
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.Env
-
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
+import pro.javatar.pipeline.service.BuildService
+import pro.javatar.pipeline.util.Logger
 
 /**
  * Author : Borys Zora
@@ -26,10 +26,15 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class BackEndAutoTestsLibrary extends BackEndAutoTestsService {
 
+    BackEndAutoTestsLibrary(BuildService buildService) {
+        super(buildService)
+        Logger.info("BackEndAutoTestsLibrary:constructor finished")
+    }
+
     @Override
-    void runAutoTests(String service, Env environment) throws PipelineException {
-        dsl.echo "runAutoTests with service: ${service}, environment: ${environment.getValue()}"
-        integrationTests(mavenParams)
+    void runAutoTests(String service, Env env) throws PipelineException {
+        Logger.info("BackEndAutoTestsLibrary:runAutoTests with service: ${service}, env: ${env.getValue()}")
+        buildService.runIntegrationTests()
         verifyCodeQuality(service)
     }
 }

@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.service
 
 import pro.javatar.pipeline.exception.InvalidReleaseNumberException
@@ -63,6 +62,10 @@ abstract class BuildService implements Serializable {
     abstract def setupReleaseVersion(String releaseVersion)
 
     abstract def setupVersion(String version)
+
+    def runIntegrationTests() {
+        Logger.info("BuildService:runIntegrationTests")
+    }
 
     def populateReleaseInfo(ReleaseInfo releaseInfo) {
         dsl.echo "default populateReleaseInfo, nothing to change"
