@@ -127,10 +127,12 @@ class FlowBuilderConverter {
             return null
         }
         Map<Environment, NomadBO> nomadConfig = new HashMap<>()
+        Map<String, VcsRepo> repos = toVcsRepoMap(yamlFile.getVcs().getRepo())
         nomad.nomadConfig.each { env, nomadItem ->
             NomadBO nomadBO = new NomadBO()
                     .withUrl(nomadItem.getUrl())
                     .withEnv(env.getEnv())
+                    .withVcsRepo(repos.get(nomadItem.vcsConfig))
                     .withPeriod(nomadItem.getPeriod())
             nomadConfig.put(env, nomadBO)
         }
