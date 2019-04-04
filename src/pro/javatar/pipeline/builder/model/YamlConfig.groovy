@@ -241,7 +241,7 @@ class YamlConfig implements Serializable {
     }
 
     YamlConfig withNomad(Nomad nomad) {
-        Logger.info("YamlConfig:withNomad: ${nomad}")
+        Logger.info("YamlConfig:withNomad: ${nomad.toString()}")
         setNomad(nomad)
         return this
     }
