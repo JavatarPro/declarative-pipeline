@@ -132,7 +132,7 @@ class FlowBuilderConverter {
         nomad.getNomadConfig().each { env, nomadItem ->
             Logger.trace("FlowBuilderConverter:toNomadService:nomad.nomadConfig.each: " +
                     "env: ${env.toString()}, nomadItem: ${nomadItem.toString()}")
-            def vcsRepo = repos.get(nomadItem.vcsConfig)
+            def vcsRepo = repos.get(nomadItem.getVcsConfig())
             Logger.trace("FlowBuilderConverter:toNomadService:nomad.nomadConfig.each: vcsRepo: ${vcsRepo.toString()}")
             NomadBO nomadBO = new NomadBO()
                     .withUrl(nomadItem.getUrl())

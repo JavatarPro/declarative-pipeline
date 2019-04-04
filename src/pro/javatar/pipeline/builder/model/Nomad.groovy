@@ -44,6 +44,7 @@ class Nomad implements Serializable {
     }
 
     Nomad addNomadItem(Environment env, NomadItem nomadItem) {
+        Logger.trace("Nomad:addNomadItem: env: ${env.getEnv()}, nomadItem: ${nomadItem.toString()}")
         nomadConfig.put(env, nomadItem)
         return this
     }
