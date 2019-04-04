@@ -14,6 +14,8 @@
  */
 package pro.javatar.pipeline.util
 
+import com.cloudbees.groovy.cps.NonCPS
+
 /**
  * Author : Borys Zora
  * Date Created: 3/26/18 11:23
