@@ -28,24 +28,27 @@ class OrchestrationRequest implements Serializable {
         return imageName
     }
 
-    void setImageName(String imageName) {
+    OrchestrationRequest withImageName(String imageName) {
         this.imageName = imageName
+        return this
     }
 
     String getImageVersion() {
         return imageVersion
     }
 
-    void setImageVersion(String imageVersion) {
+    OrchestrationRequest withImageVersion(String imageVersion) {
         this.imageVersion = imageVersion
+        return this
     }
 
     String getEnv() {
         return env
     }
 
-    void setEnv(String env) {
+    OrchestrationRequest withEnv(String env) {
         this.env = env
+        return this
     }
 
     String getTemplateFolder() {
@@ -56,36 +59,45 @@ class OrchestrationRequest implements Serializable {
         this.templateFolder = templateFolder
     }
 
+    OrchestrationRequest withTemplateFolder(String templateFolder) {
+        this.templateFolder = templateFolder
+        return this
+    }
+
     List<String> getTemplateFiles() {
         return templateFiles
     }
 
-    void setTemplateFiles(List<String> templateFiles) {
+    OrchestrationRequest withTemplateFiles(List<String> templateFiles) {
         this.templateFiles = templateFiles
+        return this
     }
 
     String getService() {
         return service
     }
 
-    void setService(String service) {
+    OrchestrationRequest withService(String service) {
         this.service = service
+        return this
     }
 
     String getBuildNumber() {
         return buildNumber
     }
 
-    void setBuildNumber(String buildNumber) {
+    OrchestrationRequest withBuildNumber(String buildNumber) {
         this.buildNumber = buildNumber
+        return this
     }
 
     Map<String, Object> getTemplateVariables() {
         return templateVariables
     }
 
-    void setTemplateVariables(Map<String, Object> templateVariables) {
+    OrchestrationRequest withTemplateVariables(Map<String, Object> templateVariables) {
         this.templateVariables = templateVariables
+        return this
     }
 
     @Override

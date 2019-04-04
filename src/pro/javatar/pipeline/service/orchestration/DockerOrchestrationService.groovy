@@ -22,7 +22,7 @@ import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
  * Author : Borys Zora
  * Date Created: 3/22/18 22:11
  */
-interface DockerOrchestrationService {
+interface DockerOrchestrationService extends Serializable {
 
     def setup()
 

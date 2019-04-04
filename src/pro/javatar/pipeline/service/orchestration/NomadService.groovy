@@ -15,10 +15,13 @@
 package pro.javatar.pipeline.service.orchestration
 
 import pro.javatar.pipeline.builder.model.Environment
+import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.service.infra.model.Infra
 import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
 import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
 import pro.javatar.pipeline.service.orchestration.model.NomadBO
+import pro.javatar.pipeline.service.orchestration.model.OrchestrationRequest
+import pro.javatar.pipeline.service.orchestration.template.JsonTemplatesRequestProvider
 import pro.javatar.pipeline.util.Logger
 
 /**
@@ -32,13 +35,16 @@ class NomadService implements DockerOrchestrationService {
 
     private Map<Environment, NomadBO> nomadConfig
 
+    private OrchestrationRequestProvider requestProvider = new JsonTemplatesRequestProvider()
+
     NomadService(Map<Environment, NomadBO> nomadConfig) {
+        Logger.debug("NomadService:constructor: nomadConfig: ${nomadConfig.size()}")
         this.nomadConfig = nomadConfig
     }
 
     @Override
     def setup() {
-        Logger.info("NomadService setup: ${toString()}")
+        Logger.info("NomadService:setup: ${toString()}")
     }
 
     @Override
@@ -52,8 +58,12 @@ class NomadService implements DockerOrchestrationService {
 
     @Override
     DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO deploymentRequest) {
-        Logger.info("deploymentRequest: ${deploymentRequest}")
-        return new DeploymentResponseBO()
+        Logger.info("NomadService:dockerDeployContainer:deploymentRequest ${deploymentRequest}")
+        OrchestrationRequest request = new OrchestrationRequest()
+                .withService(deploymentRequest.getImageName())
+                .withEnv(deploymentRequest.getEnvironment().getValue())
+        requestProvider.createRequest(request)
+        throw new PipelineException("fail fast, for testing purposes")
     }
 
     @Override

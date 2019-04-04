@@ -14,6 +14,9 @@
  */
 package pro.javatar.pipeline.util
 
+import java.nio.file.Files
+import java.nio.file.Paths
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 class FileUtils {
@@ -29,4 +32,13 @@ class FileUtils {
         dsl.sh "cat ${fileName} | grep ${value}"
     }
 
+    static String readFile(String path) {
+        return new String(Files.readAllBytes(Paths.get(path)))
+    }
+
+    static Map<String, Object> propertyFileToMap(String path) {
+        Properties properties = new Properties()
+        properties.load(Paths.getResourceAsStream(path))
+        return new HashMap<String, Object>(properties)
+    }
 }

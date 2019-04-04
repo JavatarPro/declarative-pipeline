@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pro.javatar.pipeline.service.orchestration
+package pro.javatar.pipeline.service.orchestration.template
 
 /**
  * @author Borys Zora
@@ -20,8 +20,8 @@ package pro.javatar.pipeline.service.orchestration
  */
 class JsonConfigMerger {
 
-    String merge(String mainConfigPath, String envConfigPath, String serviceConfigPath) {
-
+    String merge(List<String> jsonFiles) {
+        return null
     }
 
 }
