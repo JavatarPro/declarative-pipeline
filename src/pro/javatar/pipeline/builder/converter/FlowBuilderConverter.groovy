@@ -136,7 +136,7 @@ class FlowBuilderConverter {
             Logger.trace("FlowBuilderConverter:toNomadService:nomad.nomadConfig.each: vcsRepo: ${vcsRepo.toString()}")
             NomadBO nomadBO = new NomadBO()
                     .withUrl(nomadItem.getUrl())
-                    .withEnv(env.getEnv())
+                    .withEnv(env)
                     .withVcsRepo(vcsRepo)
                     .withPeriod(nomadItem.getPeriod())
             Logger.trace("FlowBuilderConverter:toNomadService:nomad.nomadConfig.each: " +
