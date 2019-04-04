@@ -10,7 +10,7 @@ class NomadBO {
 
     String url
 
-    Period period
+    Period deploymentTimeout
 
     VcsRepo vcsRepo
 
@@ -40,16 +40,16 @@ class NomadBO {
         return this
     }
 
-    Period getPeriod() {
-        return period
+    Period getDeploymentTimeout() {
+        return deploymentTimeout
     }
 
-    void setPeriod(Period period) {
-        this.period = period
+    void setDeploymentTimeout(Period deploymentTimeout) {
+        this.deploymentTimeout = deploymentTimeout
     }
 
-    NomadBO withPeriod(Period period) {
-        setPeriod(period)
+    NomadBO withDeploymentTimeout(Period deploymentTimeout) {
+        setDeploymentTimeout(deploymentTimeout)
         return this
     }
 

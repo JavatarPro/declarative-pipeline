@@ -138,7 +138,7 @@ class FlowBuilderConverter {
                     .withUrl(nomadItem.getUrl())
                     .withEnv(env)
                     .withVcsRepo(vcsRepo)
-                    .withPeriod(nomadItem.getPeriod())
+                    .withDeploymentTimeout(nomadItem.getDeploymentTimeout())
             Logger.trace("FlowBuilderConverter:toNomadService:nomad.nomadConfig.each: " +
                     "env: ${env.toString()}, nomadBO: ${nomadBO.toString()}")
             nomadConfig.put(env, nomadBO)
