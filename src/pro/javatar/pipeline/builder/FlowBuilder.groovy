@@ -53,7 +53,7 @@ class FlowBuilder implements Serializable {
     DockerBuilder dockerBuilder // TODO
     SonarQubeBuilder sonarQubeBuilder // TODO
     SwaggerBuilder swaggerBuilder // TODO
-    BackEndAutoTestsServiceBuilder backEndAutoTestsServiceBuilder
+    BackEndAutoTestsServiceBuilder backEndAutoTestsServiceBuilder = new BackEndAutoTestsServiceBuilder()
 
     // services
     Maven maven
