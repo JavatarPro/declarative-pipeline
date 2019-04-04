@@ -281,7 +281,7 @@ class YamlConverter {
         }
         Nomad result = new Nomad()
         nomad.each { String env, def nomadItem ->
-            Period deploymentTimeout = isNotBlank(nomadItem.period) ? Period.parse(nomadItem.deploymentTimeout) : null
+            Period deploymentTimeout = isNotBlank(nomadItem.deploymentTimeout) ? Period.parse(nomadItem.deploymentTimeout) : null
             Environment environment = new Environment(env)
             NomadItem item = new NomadItem()
                     .withUrl(nomadItem.url)
