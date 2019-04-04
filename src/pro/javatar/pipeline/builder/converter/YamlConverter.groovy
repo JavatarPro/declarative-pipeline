@@ -154,6 +154,7 @@ class YamlConverter {
             vcsRepos.put(key, retrieveVcsRepo(value))
         }
         Logger.trace("YamlConverter:retrieveVcsRepos:vcsRepos: ${vcsRepos.toString()}")
+        Logger.debug("YamlConverter:retrieveVcsRepos:vcsRepos:size: ${vcsRepos.size()}")
         return vcsRepos
     }
 
@@ -166,7 +167,7 @@ class YamlConverter {
                 .withType(vcsRepo.type)
                 .withBranch(vcsRepo.branch)
                 .withRevisionControl(vcsRepo.revisionControl)
-        Logger.trace("YamlConverter:retrieveVcsRepo:result: ${new JsonBuilder(result).toString()}")
+        Logger.trace("YamlConverter:retrieveVcsRepo:result: ${result.toString()}")
         return result
     }
 
