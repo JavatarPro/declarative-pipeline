@@ -138,7 +138,7 @@ class FlowBuilderConverter {
             nomadConfig.put(env, nomadBO)
         }
         NomadService nomadService = new NomadService(nomadConfig)
-        Logger.trace("FlowBuilderConverter:toNomadService: nomadService: ${nomadService}")
+        Logger.trace("FlowBuilderConverter:toNomadService: nomadService: ${nomadService.toString()}")
         Logger.info("FlowBuilderConverter:toNomadService: finished")
         return nomadService
     }
