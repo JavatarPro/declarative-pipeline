@@ -55,6 +55,7 @@ class StringUtils {
         return "${prefix}-${source}"
     }
 
+    @NonCPS
     static String toString(Map map) {
         StringBuilder sb = new StringBuilder("{")
         map.each { key, value ->
@@ -65,6 +66,7 @@ class StringUtils {
         return sb.toString()
     }
 
+    @NonCPS
     static String toString(def other) {
         if (other instanceof Map) {
             return toString((Map) other)
