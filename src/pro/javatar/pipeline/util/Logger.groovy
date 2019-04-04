@@ -48,6 +48,12 @@ class Logger {
     }
 
     @NonCPS
+    static void info(String message, def value) {
+        String msg = message.replace("{}", StringUtils.toString(value))
+        print(msg, INFO)
+    }
+
+    @NonCPS
     static void debug(def message) {
         print(message, DEBUG)
     }
