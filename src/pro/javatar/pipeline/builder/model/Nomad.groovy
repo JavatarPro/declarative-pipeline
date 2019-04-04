@@ -35,6 +35,9 @@ class Nomad implements Serializable {
     }
 
     void setNomadConfig(Map<Environment, NomadItem> nomadConfig) {
+        if (nomadConfig == null) {
+            return
+        }
         this.nomadConfig = nomadConfig
     }
 

@@ -36,4 +36,10 @@ class Environment implements Serializable {
         return env != null ? env.hashCode() : 0;
     }
 
+    @Override
+    public String toString() {
+        return "Environment{" +
+                "env='" + env + '\'' +
+                '}';
+    }
 }

@@ -289,7 +289,7 @@ class YamlConverter {
                     .withVcsConfig(nomadItem.vcsConfig)
             result.addNomadItem(environment, item)
         }
-        Logger.debug("YamlConverter:retrieveNomad: result: ${result}")
+        Logger.debug("YamlConverter:retrieveNomad: result: ${result.toString()}")
         return result
     }
 
