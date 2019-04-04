@@ -59,9 +59,11 @@ class NomadService implements DockerOrchestrationService {
     @Override
     DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO deploymentRequest) {
         Logger.info("NomadService:dockerDeployContainer:deploymentRequest ${deploymentRequest}")
+        NomadBO nomad = nomadConfig.get(deploymentRequest.getEnvironment())
         OrchestrationRequest request = new OrchestrationRequest()
                 .withService(deploymentRequest.getImageName())
                 .withEnv(deploymentRequest.getEnvironment().getValue())
+                .withTemplateFolder("../${nomad.getVcsRepo().getName()}")
         requestProvider.createRequest(request)
         throw new PipelineException("fail fast, for testing purposes")
     }
