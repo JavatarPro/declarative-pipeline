@@ -4,7 +4,7 @@ import pro.javatar.pipeline.util.Logger
 
 class Docker implements Serializable {
 
-    Map<Environment, DockerRegistry> dockerRegistries = new HashMap<>()
+    Map<String, DockerRegistry> dockerRegistries = new HashMap<>()
 
     String customDockerFileName = ""
 
@@ -16,7 +16,7 @@ class Docker implements Serializable {
         return dockerRegistries
     }
 
-    void setDockerRegistries(Map<Environment, DockerRegistry> dockerRegistries) {
+    void setDockerRegistries(Map<String, DockerRegistry> dockerRegistries) {
         this.dockerRegistries = dockerRegistries
     }
 
@@ -26,12 +26,6 @@ class Docker implements Serializable {
     }
 
     Docker addDockerRegistries(String env, DockerRegistry dockerRegistry) {
-        Environment environment = new Environment(env);
-        this.dockerRegistries.put(environment, dockerRegistry)
-        return this
-    }
-
-    Docker addDockerRegistries(Environment env, DockerRegistry dockerRegistry) {
         this.dockerRegistries.put(env, dockerRegistry)
         return this
     }

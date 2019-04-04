@@ -5,7 +5,6 @@ import pro.javatar.pipeline.builder.model.AutoTest
 import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.DockerRegistry
-import pro.javatar.pipeline.builder.model.Environment
 import pro.javatar.pipeline.builder.model.Gradle
 import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.builder.model.Maven
@@ -272,7 +271,6 @@ class YamlConverter {
         return result
     }
 
-    // TODO
     Nomad retrieveNomad(def yml) {
         def nomad = yml.nomad
         Logger.debug("YamlConverter:retrieveNomad: nomad: ${nomad}")
@@ -283,16 +281,12 @@ class YamlConverter {
         Nomad result = new Nomad()
         nomad.each { String env, def nomadItem ->
             Period deploymentTimeout = isNotBlank(nomadItem.deploymentTimeout) ? Period.parse(nomadItem.deploymentTimeout) : null
-            Environment environment = new Environment(env)
             NomadItem item = new NomadItem()
                     .withUrl(nomadItem.url)
                     .withDeploymentTimeout(deploymentTimeout)
                     .withVcsConfig(nomadItem.vcsConfig)
-            // TRACE: Nomad:addNomadItem: env: dev, nomadItem: NomadItem{url='http://host:port', vcsConfig='nomad-dev', deploymentTimeout=P3M}
-            // TRACE: Nomad:addNomadItem: env: qa, nomadItem: NomadItem{url='http://host:port', vcsConfig='nomad-dev', deploymentTimeout=P3M}
-            result.addNomadItem(environment, item)
+            result.addNomadItem(env, item)
         }
-        // DEBUG: YamlConverter:retrieveNomad: result: Nomad{nomadConfig=0}
         Logger.debug("YamlConverter:retrieveNomad: result: ${result.toString()}")
         return result
     }

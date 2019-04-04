@@ -8,7 +8,6 @@ import pro.javatar.pipeline.builder.RevisionControlBuilder
 import pro.javatar.pipeline.builder.S3Builder
 import pro.javatar.pipeline.builder.model.DockerRegistry
 import pro.javatar.pipeline.builder.SonarQubeBuilder
-import pro.javatar.pipeline.builder.model.Environment
 import pro.javatar.pipeline.builder.model.Mesos
 import pro.javatar.pipeline.builder.model.Nomad
 import pro.javatar.pipeline.builder.model.S3
@@ -126,7 +125,7 @@ class FlowBuilderConverter {
         if (nomad == null) {
             return null
         }
-        Map<Environment, NomadBO> nomadConfig = new HashMap<>()
+        Map<String, NomadBO> nomadConfig = new HashMap<>()
         Map<String, VcsRepo> repos = toVcsRepoMap(yamlFile.getVcs().getRepo())
         Logger.info("FlowBuilderConverter:toNomadService: repos: ${repos.size()}")
         Logger.info("FlowBuilderConverter:toNomadService: nomad.getNomadConfig().size(): ${nomad.getNomadConfig().size()}")

@@ -24,30 +24,31 @@ import java.time.Period
  */
 class Nomad implements Serializable {
 
-    private Map<Environment, NomadItem> nomadConfig = new HashMap<>()
+    private Map<String, NomadItem> nomadConfig = new HashMap<>()
 
     Nomad() {
         Logger.debug("Nomad:default constructor")
     }
 
-    Map<Environment, NomadItem> getNomadConfig() {
+    Map<String, NomadItem> getNomadConfig() {
         return nomadConfig
     }
 
-    void setNomadConfig(Map<Environment, NomadItem> nomadConfig) {
+    void setNomadConfig(Map<String, NomadItem> nomadConfig) {
         if (nomadConfig == null) {
             return
         }
         this.nomadConfig = nomadConfig
     }
 
-    Nomad withNomadConfig(Map<Environment, NomadItem> nomadConfig) {
+    Nomad withNomadConfig(Map<String, NomadItem> nomadConfig) {
         setNomadConfig(nomadConfig)
         return this
     }
 
-    Nomad addNomadItem(Environment env, NomadItem nomadItem) {
+    Nomad addNomadItem(String env, NomadItem nomadItem) {
         Logger.trace("Nomad:addNomadItem: env: ${env.toString()}, nomadItem: ${nomadItem.toString()}")
+        // does not work if map Map<Environment, NomadItem>
         nomadConfig.put(env, nomadItem)
         Logger.trace("Nomad:addNomadItem: this.toString(): ${toString()}")
         return this

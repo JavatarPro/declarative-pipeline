@@ -5,6 +5,7 @@
 package pro.javatar.pipeline.builder.model;
 
 /**
+ * TODO remove does not work
  * @author Borys Zora
  * @version 2019-02-17
  */

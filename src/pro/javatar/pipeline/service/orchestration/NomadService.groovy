@@ -14,7 +14,6 @@
  */
 package pro.javatar.pipeline.service.orchestration
 
-import pro.javatar.pipeline.builder.model.Environment
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.service.infra.model.Infra
 import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
@@ -33,11 +32,11 @@ import pro.javatar.pipeline.util.Logger
  */
 class NomadService implements DockerOrchestrationService {
 
-    private Map<Environment, NomadBO> nomadConfig
+    private Map<String, NomadBO> nomadConfig
 
     private OrchestrationRequestProvider requestProvider = new JsonTemplatesRequestProvider()
 
-    NomadService(Map<Environment, NomadBO> nomadConfig) {
+    NomadService(Map<String, NomadBO> nomadConfig) {
         Logger.debug("NomadService:constructor: nomadConfig: ${nomadConfig.size()}")
         this.nomadConfig = nomadConfig
     }
