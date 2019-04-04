@@ -272,11 +272,12 @@ class YamlConverter {
         return result
     }
 
+    // TODO
     Nomad retrieveNomad(def yml) {
         def nomad = yml.nomad
         Logger.debug("YamlConverter:retrieveNomad: nomad: ${nomad}")
         if (nomad == null) {
-            Logger.debug("nomad not provided")
+            Logger.debug("YamlConverter:retrieveNomad: nomad not provided")
             return null
         }
         Nomad result = new Nomad()
@@ -287,8 +288,11 @@ class YamlConverter {
                     .withUrl(nomadItem.url)
                     .withDeploymentTimeout(deploymentTimeout)
                     .withVcsConfig(nomadItem.vcsConfig)
+            // TRACE: Nomad:addNomadItem: env: dev, nomadItem: NomadItem{url='http://host:port', vcsConfig='nomad-dev', deploymentTimeout=P3M}
+            // TRACE: Nomad:addNomadItem: env: qa, nomadItem: NomadItem{url='http://host:port', vcsConfig='nomad-dev', deploymentTimeout=P3M}
             result.addNomadItem(environment, item)
         }
+        // DEBUG: YamlConverter:retrieveNomad: result: Nomad{nomadConfig=0}
         Logger.debug("YamlConverter:retrieveNomad: result: ${result.toString()}")
         return result
     }
