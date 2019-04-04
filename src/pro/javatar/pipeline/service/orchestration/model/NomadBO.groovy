@@ -72,7 +72,7 @@ class NomadBO {
                 "env='" + env + '\'' +
                 ", url='" + url + '\'' +
                 ", period=" + period +
-                ", vcsRepo=" + vcsRepo +
+                ", vcsRepo=" + vcsRepo.toString() +
                 '}';
     }
 }

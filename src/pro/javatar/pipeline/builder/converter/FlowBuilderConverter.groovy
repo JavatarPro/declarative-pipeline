@@ -128,6 +128,7 @@ class FlowBuilderConverter {
         }
         Map<Environment, NomadBO> nomadConfig = new HashMap<>()
         Map<String, VcsRepo> repos = toVcsRepoMap(yamlFile.getVcs().getRepo())
+        Logger.info("FlowBuilderConverter:toNomadService: repos: ${repos.toString()}")
         nomad.nomadConfig.each { env, nomadItem ->
             NomadBO nomadBO = new NomadBO()
                     .withUrl(nomadItem.getUrl())
@@ -142,7 +143,7 @@ class FlowBuilderConverter {
     }
 
     Map<String, VcsRepo> toVcsRepoMap(Map<String, VcsRepoTO> vcsRepoToMap) {
-        Logger.info("toVcsRepoMap vcsRepoToMap: ${vcsRepoToMap.toString()}")
+        Logger.info("FlowBuilderConverter:toVcsRepoMap vcsRepoToMap: ${vcsRepoToMap.toString()}")
         Map<String, VcsRepo> result = new HashMap<>()
         vcsRepoToMap.each { key, value -> result.put(key, toVcsRepo(value)) }
         return result
@@ -152,7 +153,7 @@ class FlowBuilderConverter {
         if (vcsRepoTO == null) {
             return null
         }
-        Logger.info("toVcsRepo vcsRepoTO: ${vcsRepoTO.toString()}")
+        Logger.info("FlowBuilderConverter:toVcsRepo vcsRepoTO: ${vcsRepoTO.toString()}")
         return new VcsRepo()
                 .withCredentialsId(vcsRepoTO.getCredentialsId())
                 .withType(VcsRepositoryType.fromString(vcsRepoTO.getType()))
