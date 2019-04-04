@@ -180,9 +180,9 @@ class DockerService implements Serializable {
                 .withDockerRegistry(dockerRegistry)
                 .withEnvironment(env)
                 .withBuildNumber("${dsl.currentBuild.number}")
-        Logger.debug("DockerService:dockerDeployContainer: setup")
+        Logger.debug("DockerService:dockerDeployContainer: orchestrationService.setup")
         orchestrationService.setup()
-        Logger.debug("DockerService:dockerDeployContainer: dockerDeployContainer")
+        Logger.debug("DockerService:dockerDeployContainer: orchestrationService.dockerDeployContainer")
         orchestrationService.dockerDeployContainer(request)
         Logger.debug("DockerService:dockerDeployContainer:finish")
     }
