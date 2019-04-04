@@ -66,6 +66,9 @@ class StringUtils {
     }
 
     static String toString(def other) {
+        if (other instanceof Map) {
+            return toString((Map) other)
+        }
         return other.toString()
     }
 
