@@ -149,7 +149,7 @@ class YamlConverter {
     Map<String, VcsRepoTO> retrieveVcsRepos(def vcs) {
         Map<String, VcsRepoTO> vcsRepos = new HashMap<>()
         def repos = vcs.repo
-        repos.each { key, value ->
+        repos.each {String key, def value ->
             Logger.trace("YamlConverter:retrieveVcsRepos: key: ${key}, value: ${value}")
             vcsRepos.put(key, retrieveVcsRepo(value))
         }
