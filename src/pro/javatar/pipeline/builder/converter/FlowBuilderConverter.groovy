@@ -129,6 +129,7 @@ class FlowBuilderConverter {
         Map<Environment, NomadBO> nomadConfig = new HashMap<>()
         Map<String, VcsRepo> repos = toVcsRepoMap(yamlFile.getVcs().getRepo())
         Logger.info("FlowBuilderConverter:toNomadService: repos: ${repos.size()}")
+        Logger.info("FlowBuilderConverter:toNomadService: nomad.getNomadConfig().size(): ${nomad.getNomadConfig().size()}")
         nomad.getNomadConfig().each { env, nomadItem ->
             Logger.trace("FlowBuilderConverter:toNomadService:nomad.nomadConfig.each: " +
                     "env: ${env.toString()}, nomadItem: ${nomadItem.toString()}")
