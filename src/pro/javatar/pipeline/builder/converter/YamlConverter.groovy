@@ -140,7 +140,7 @@ class YamlConverter {
         if (vcs == null) return new Vcs()
         dsl.echo "retrieveVcsRepo: vcs: ${vcs}"
         return new Vcs()
-                .withRevisionControl(yml.revisionControl)
+                .withRevisionControl(yml.vcs.revisionControl)
                 .withRepo(retrieveVcsRepos(vcs))
                 .populateRevisionControl()
     }
@@ -148,12 +148,16 @@ class YamlConverter {
     Map<String, VcsRepoTO> retrieveVcsRepos(def vcs) {
         Map<String, VcsRepoTO> vcsRepos = new HashMap<>()
         def repos = vcs.repo
-        repos.each { key, value -> vcsRepos.put(key, retrieveVcsRepo(value)) }
+        repos.each { key, value ->
+            Logger.trace("YamlConverter:retrieveVcsRepos: key: ${key}, value: ${value}")
+            vcsRepos.put(key, retrieveVcsRepo(value))
+        }
+        Logger.trace("YamlConverter:retrieveVcsRepos:vcsRepos: ${vcsRepos.toString()}")
         return vcsRepos
     }
 
     VcsRepoTO retrieveVcsRepo(def vcsRepo) {
-        return new VcsRepoTO()
+        VcsRepoTO result = new VcsRepoTO()
                 .withName(vcsRepo.name)
                 .withOwner(vcsRepo.owner)
                 .withCredentialsId(vcsRepo.credentialsId)
@@ -161,6 +165,8 @@ class YamlConverter {
                 .withType(vcsRepo.type)
                 .withBranch(vcsRepo.branch)
                 .withRevisionControl(vcsRepo.revisionControl)
+        Logger.trace("YamlConverter:retrieveVcsRepo:result: ${result.toString()}")
+        return result
     }
 
     Pipeline retrievePipeline(def yml) {
