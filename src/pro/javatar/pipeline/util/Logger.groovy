@@ -48,7 +48,7 @@ class Logger {
     }
 
     @NonCPS
-    static void info(String message, def value) {
+    static void info(String message, Map value) {
         String msg = message.replace("{}", StringUtils.toString(value))
         print(msg, INFO)
     }
