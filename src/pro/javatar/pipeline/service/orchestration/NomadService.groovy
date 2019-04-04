@@ -58,7 +58,7 @@ class NomadService implements DockerOrchestrationService {
     @Override
     DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO deploymentRequest) {
         Logger.info("NomadService:dockerDeployContainer:deploymentRequest ${deploymentRequest}")
-        NomadBO nomad = nomadConfig.get(deploymentRequest.getEnvironment())
+        NomadBO nomad = nomadConfig.get(deploymentRequest.getEnvironment().getValue())
         OrchestrationRequest request = new OrchestrationRequest()
                 .withService(deploymentRequest.getImageName())
                 .withEnv(deploymentRequest.getEnvironment().getValue())
