@@ -142,7 +142,7 @@ class FlowBuilderConverter {
     }
 
     Map<String, VcsRepo> toVcsRepoMap(Map<String, VcsRepoTO> vcsRepoToMap) {
-        Logger.info("toVcsRepoMap vcsRepoToMap: ${vcsRepoToMap}")
+        Logger.info("toVcsRepoMap vcsRepoToMap: ${vcsRepoToMap.size()}")
         Map<String, VcsRepo> result = new HashMap<>()
         vcsRepoToMap.each { key, value -> result.put(key, toVcsRepo(value)) }
         return result
