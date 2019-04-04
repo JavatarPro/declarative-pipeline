@@ -71,7 +71,7 @@ class NomadBO {
         return "NomadBO{" +
                 "env='" + env + '\'' +
                 ", url='" + url + '\'' +
-                ", period=" + period +
+                ", deploymentTimeout=" + deploymentTimeout +
                 ", vcsRepo=" + vcsRepo.toString() +
                 '}';
     }
