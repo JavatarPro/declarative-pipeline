@@ -1,5 +1,6 @@
 package pro.javatar.pipeline.builder.converter
 
+import groovy.json.JsonBuilder
 import pro.javatar.pipeline.builder.model.AutoTest
 import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.Docker
@@ -165,7 +166,7 @@ class YamlConverter {
                 .withType(vcsRepo.type)
                 .withBranch(vcsRepo.branch)
                 .withRevisionControl(vcsRepo.revisionControl)
-        Logger.trace("YamlConverter:retrieveVcsRepo:result: ${result.toString()}")
+        Logger.trace("YamlConverter:retrieveVcsRepo:result: ${new JsonBuilder(result).toString()}")
         return result
     }
 
