@@ -118,6 +118,7 @@ class BackEndAutoTestsServiceBuilder implements Serializable {
 
     BackEndAutoTestsServiceBuilder withSuit(PipelineStagesSuit suit) {
         this.suit = suit
+        return this
     }
 
     @Override
