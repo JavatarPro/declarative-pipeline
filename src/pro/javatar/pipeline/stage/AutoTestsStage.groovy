@@ -15,6 +15,7 @@
 
 package pro.javatar.pipeline.stage
 
+import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.test.AutoTestsService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
@@ -37,7 +38,7 @@ class AutoTestsStage extends Stage {
     }
 
     @Override
-    void execute() throws Exception {
+    void execute() throws PipelineException {
         dsl.echo "AutoTestsStage execute started: ${toString()}"
         dsl.timeout(time: 10, unit: 'MINUTES') {
             dsl.dir(revisionControl.folder) {
