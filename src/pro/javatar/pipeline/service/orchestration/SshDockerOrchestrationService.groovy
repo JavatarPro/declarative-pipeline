@@ -17,6 +17,7 @@ package pro.javatar.pipeline.service.orchestration
 import pro.javatar.pipeline.service.infra.model.Infra
 import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
 import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -33,11 +34,11 @@ class SshDockerOrchestrationService implements DockerOrchestrationService {
 
     @Override
     def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment) {
-        dsl.echo "SshDockerOrchestrationService started dockerDeployContainer(imageName: ${imageName}, " +
-                "imageVersion: ${imageVersion}, dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})"
+        Logger.info("SshDockerOrchestrationService started dockerDeployContainer(imageName: ${imageName}, " +
+                "imageVersion: ${imageVersion}, dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})")
 
-        dsl.echo "SshDockerOrchestrationService finished dockerDeployContainer(imageName: ${imageName}, " +
-                "imageVersion: ${imageVersion}, dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})"
+        Logger.info("SshDockerOrchestrationService finished dockerDeployContainer(imageName: ${imageName}, " +
+                "imageVersion: ${imageVersion}, dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})")
         throw new UnsupportedOperationException("SshDockerOrchestrationService does not supported yet")
     }
 

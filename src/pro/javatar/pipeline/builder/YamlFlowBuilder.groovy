@@ -35,20 +35,20 @@ class YamlFlowBuilder implements Serializable {
     }
 
     Flow build() {
-        dsl.echo "YamlFlowBuilder used configFile: ${configFile}"
+        Logger.info("YamlFlowBuilder used configFile: ${configFile}")
         String yamlConfiguration = dsl.readTrusted configFile
-        dsl.echo "yamlConfiguration: ${yamlConfiguration}"
+        Logger.trace("yamlConfiguration: ${yamlConfiguration}")
         YamlConfig model = getYamlModelUsingJenkinsReadYamlCommand(yamlConfiguration)
-        dsl.echo "YamlConfig:build:model: ${model}"
+        Logger.debug("YamlConfig:build:model: ${model}")
         FlowBuilder flowBuilder = flowBuilderConverter.toFlowBuilder(model)
-        dsl.echo "flowBuilder: ${flowBuilder.toString()}"
+        Logger.debug("flowBuilder: ${flowBuilder.toString()}")
         return flowBuilder.build()
     }
 
     YamlConfig getYamlModelUsingJenkinsReadYamlCommand(String yamlConfiguration) {
-        dsl.echo "yamlConfiguration before replaceVariables: ${yamlConfiguration}"
+        Logger.debug("yamlConfiguration before replaceVariables: ${yamlConfiguration}")
         String yamlConfig = replaceVariables(yamlConfiguration)
-        dsl.echo "yamlConfig after replaceVariables: ${yamlConfig}"
+        Logger.debug("yamlConfig after replaceVariables: ${yamlConfig}")
         def properties = dsl.readYaml text: yamlConfig
         jenkinsBuildParamsConverter.populateWithJenkinsBuildParams(properties)
         Logger.info("YamlFlowBuilder:getYamlModelUsingJenkinsReadYamlCommand: before: yamlConverter.toYamlModel")

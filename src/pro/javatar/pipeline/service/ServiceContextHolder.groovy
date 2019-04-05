@@ -15,6 +15,8 @@
 
 package pro.javatar.pipeline.service
 
+import pro.javatar.pipeline.util.Logger
+
 import java.util.concurrent.ConcurrentHashMap
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -41,12 +43,12 @@ class ServiceContextHolder {
     }
 
     static def getService(Class service) {
-        dsl.echo "ServiceContextHolder: getService: ${service}"
+        Logger.trace("ServiceContextHolder: getService: ${service}")
         if (service == null) {
             return
         }
         def result = serviceHolder.get(service)
-        dsl.echo "ServiceContextHolder: getService: result: ${result}"
+        Logger.trace("ServiceContextHolder: getService: result: ${result}")
         return result
     }
 

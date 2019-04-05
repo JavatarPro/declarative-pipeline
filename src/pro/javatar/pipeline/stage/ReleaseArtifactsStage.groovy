@@ -17,6 +17,7 @@ package pro.javatar.pipeline.stage
 
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.service.ReleaseService
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -34,12 +35,12 @@ class ReleaseArtifactsStage extends Stage {
 
     @Override
     void execute() throws PipelineException {
-        dsl.echo "ReleaseArtifactsStage execute started: ${toString()}"
+        Logger.info("ReleaseArtifactsStage execute started: ${toString()}")
         dsl.dir(releaseInfo.repoFolder) {
             releaseService.release(releaseInfo)
             dsl.currentBuild.description = "${releaseInfo.serviceName}:${releaseInfo.releaseVersion}"
         }
-        dsl.echo "ReleaseArtifactsStage execute finished"
+        Logger.info("ReleaseArtifactsStage execute finished")
     }
 
     @Override

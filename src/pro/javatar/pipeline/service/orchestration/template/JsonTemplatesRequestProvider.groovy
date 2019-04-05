@@ -18,6 +18,7 @@ class JsonTemplatesRequestProvider implements OrchestrationRequestProvider {
 
     static final String MAIN_TEMPLATE = "request.json"
     static final String SERVICE_TEMPLATE = "{{service}}-request.json"
+    static final String ENV_TEMPLATE = "{{env}}/request.json"
     static final String ENV_SERVICE_TEMPLATE = "{{env}}/{{service}}-request.json"
     static final String MAIN_VARIABLES = "variables.properties"
     static final String SERVICE_VARIABLES = "{{service}}-variables.properties"
@@ -47,6 +48,7 @@ class JsonTemplatesRequestProvider implements OrchestrationRequestProvider {
         Logger.debug("JsonTemplatesRequestProvider:getTemplateFileContents:started")
         List<String> result = new ArrayList<>(3)
         result.add(mainTemplate(request))
+        result.add(envTemplate(request))
         result.add(serviceTemplate(request))
         result.add(envServiceTemplate(request))
         Logger.debug("JsonTemplatesRequestProvider:getTemplateFileContents:finished")
@@ -68,6 +70,11 @@ class JsonTemplatesRequestProvider implements OrchestrationRequestProvider {
 
     String mainTemplate(OrchestrationRequest request) {
         return readTemplate(request, MAIN_TEMPLATE)
+    }
+
+    String envTemplate(OrchestrationRequest request) {
+        return readTemplate(request, ENV_TEMPLATE
+                .replace("{{env}}", request.getEnv()))
     }
 
     String serviceTemplate(OrchestrationRequest request) {

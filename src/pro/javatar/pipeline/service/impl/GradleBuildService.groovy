@@ -52,9 +52,9 @@ class GradleBuildService extends BuildService {
 
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
-        dsl.echo "GradleBuildService buildAndUnitTests started"
+        Logger.info("GradleBuildService buildAndUnitTests started")
         dsl.sh "gradle clean build ${getParams()}"
-        dsl.echo "GradleBuildService buildAndUnitTests finished"
+        Logger.info("GradleBuildService buildAndUnitTests finished")
     }
 
     @Override

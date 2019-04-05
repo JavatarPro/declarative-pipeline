@@ -15,6 +15,8 @@
 
 package pro.javatar.pipeline.service
 
+import pro.javatar.pipeline.util.Logger
+
 /**
  * @author Borys Zora
  * @since 2018-03-09
@@ -27,7 +29,7 @@ class PipelineDslHolder {
         try {
             return dsl.getProperty(propertyName)
         } catch (Exception e) {
-            dsl.echo "could not find property ${propertyName}, default will be used instead: ${defaultValue}"
+            Logger.error("could not find property ${propertyName}, default will be used instead: ${defaultValue}")
             return defaultValue
         }
     }

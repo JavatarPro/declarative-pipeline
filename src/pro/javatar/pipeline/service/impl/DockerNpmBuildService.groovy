@@ -7,6 +7,7 @@ package pro.javatar.pipeline.service.impl
 import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.orchestration.DockerService
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -25,12 +26,12 @@ class DockerNpmBuildService extends NpmBuildService {
     }
 
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
-        dsl.echo 'DockerNpmBuildService buildAndUnitTests start'
+        Logger.info('DockerNpmBuildService buildAndUnitTests start')
         dsl.sh "pwd; ls -la"
         if (!skipUnitTests) dsl.sh 'npm run test'
         dsl.sh 'npm run build'
         dsl.sh "pwd; ls -la"
         dockerService.dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
-        dsl.echo 'DockerNpmBuildService buildAndUnitTests end'
+        Logger.info('DockerNpmBuildService buildAndUnitTests end')
     }
 }

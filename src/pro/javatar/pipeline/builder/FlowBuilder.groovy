@@ -91,20 +91,20 @@ class FlowBuilder implements Serializable {
     }
 
     Flow build() {
-        dsl.echo "build Flow started"
+        Logger.info("build Flow started")
         createServices()
         createStages()
 
         Flow flow = new Flow(releaseInfo)
         populateStages(flow, stageTypes)
 
-        dsl.echo "build Flow finished: ${toString()}"
+        Logger.info("build Flow finished: ${toString()}")
         return flow
     }
 
     def populateStages(Flow flow, List<StageType> stageTypes) {
         for (StageType stageType: stageTypes) {
-            dsl.echo "populateStages for stageType: ${stageType.name()}"
+            Logger.info("populateStages for stageType: ${stageType.name()}")
             Stage stage = availableStages.get(stageType)
             if (stageTypesToBeSkipped.contains(stageType)) {
                 stage.skipStage = true
@@ -143,13 +143,12 @@ class FlowBuilder implements Serializable {
     }
 
     void prepareBuildService() {
-        dsl.echo "complete setup build service"
+        Logger.info("complete setup build service")
         setupBuildServiceType()
         if (buildType == BuildServiceType.MAVEN) {
-            dsl.echo "current build type ${buildType}"
+            Logger.debug("FlowBuilder:prepareBuildService: current build type ${buildType}")
+            // TODO refactor, previously it does not work because of CPS jenkins issue
             populate(maven)
-            dsl.echo "population complete"
-            dsl.echo "before maven build"
             mavenBuildService = buildMavenBuildService(maven)
             mavenBuildService.setUp()
             dockerBuildService = new DockerBuildService(mavenBuildService, dockerService)
@@ -159,7 +158,7 @@ class FlowBuilder implements Serializable {
             dockerBuildService = new DockerBuildService(gradleBuildService, dockerService)
         }
         setupBuildService()
-        dsl.echo "created buildService: ${buildService.toString()}"
+        Logger.info("FlowBuilder:prepareBuildService: created buildService: ${buildService.toString()}")
     }
 
     GradleBuildService buildGradleBuildService(Gradle gradle) {
@@ -169,11 +168,11 @@ class FlowBuilder implements Serializable {
 
     def prepareSonarQube() {
         if (sonarQubeBuilder != null) {
-            dsl.echo "sonarQubeBuilder start build: ${sonarQubeBuilder.toString()}"
+            Logger.debug("sonarQubeBuilder start build: ${sonarQubeBuilder.toString()}")
             sonarQubeService = sonarQubeBuilder.build()
-            dsl.echo "sonarQubeBuilder finish build"
+            Logger.debug("sonarQubeBuilder finish build")
         } else {
-            dsl.echo "sonarQubeBuilder is not provided"
+            Logger.info("sonarQubeBuilder is not provided")
         }
     }
 
@@ -195,35 +194,35 @@ class FlowBuilder implements Serializable {
     }
 
     void createStages() {
-        dsl.echo "createStages started"
+        Logger.info("FlowBuilder:createStages: createStages started")
         availableStages.put(StageType.BUILD_AND_UNIT_TESTS,
                 new BuildAndUnitTestStage(buildService, revisionControlService))
         availableStages.put(StageType.AUTO_TESTS, new AutoTestsStage(autoTestsService, revisionControlService))
         availableStages.put(StageType.RELEASE, new ReleaseArtifactsStage(releaseService))
         createSignOffStages()
         createDeployStages()
-        dsl.echo "createStages finished"
+        Logger.info("FlowBuilder:createStages: createStages finished")
     }
 
     void createDeployStages() {
-        dsl.echo "createDeployStages started"
+        Logger.info("FlowBuilder:createDeployStages started")
         availableStages.put(StageType.DEPLOY_ON_DEV_ENV, new DeployToDevEnvStage(deploymentService))
         availableStages.put(StageType.DEPLOY_ON_QA_ENV, new DeployToQAEnvStage(deploymentService))
         availableStages.put(StageType.DEPLOY_ON_STAGING_ENV, new DeployToStagingEnvStage(deploymentService))
         availableStages.put(StageType.DEPLOY_ON_PROD_ENV, new DeployToProdEnvStage(deploymentService))
-        dsl.echo "createDeployStages finished"
+        Logger.info("FlowBuilder:createDeployStages finished")
     }
 
     void createSignOffStages() {
-        dsl.echo "createSignOffStages started"
+        Logger.info("FlowBuilder:createSignOffStages started")
         availableStages.put(StageType.DEV_SIGN_OFF, new DeveloperSignOffStage())
         availableStages.put(StageType.QA_SIGN_OFF, new QaSignOffStage())
         availableStages.put(StageType.DEVOPS_SIGN_OFF, new DevOpsSignOffStage())
-        dsl.echo "createSignOffStages finished"
+        Logger.info("FlowBuilder:createSignOffStages finished")
     }
 
     FlowBuilder skipStage(StageType stageType) {
-        dsl.echo "skipStage stageType: ${stageType.name()}"
+        Logger.info("FlowBuilder:skipStage stageType: ${stageType.name()}")
         stageTypesToBeSkipped.add(stageType)
         return this
     }
@@ -251,13 +250,13 @@ class FlowBuilder implements Serializable {
         return this
     }
 
-    def populate(Maven maven) { // TODO
-        dsl.echo "populate maven: ${maven} started"
+    def populate(Maven maven) { // TODO replace with more preferable
+        Logger.debug("FlowBuilder:populate maven: ${maven} started")
         if (isUi(releaseInfo.getServiceName())) {
             maven.withPackaging("zip")
             maven.withArtifactId(releaseInfo.getServiceName().replace("-ui", ""))
         }
-        dsl.echo "populate maven: ${maven} finished"
+        Logger.debug("populate maven: ${maven} finished")
     }
 
     boolean isUi(String repo) {
@@ -268,9 +267,9 @@ class FlowBuilder implements Serializable {
 
     // TODO just validate BuildServiceType instead of guessing
     void setupBuildServiceType() {
-        dsl.echo "setupBuildServiceType started"
+        Logger.debug("setupBuildServiceType started")
         if (buildType != null) {
-            dsl.echo "setupBuildServiceType manually provided, buildType: ${buildType}"
+            Logger.debug("setupBuildServiceType manually provided, buildType: ${buildType}")
             return
         }
         // TODO it is better fail rather than guess
@@ -283,7 +282,7 @@ class FlowBuilder implements Serializable {
                 throw new UnrecognizedBuildServiceTypeException("type is null");
             }
         }
-        dsl.echo "setupBuildServiceType finished, buildType: ${buildType}"
+        Logger.debug("setupBuildServiceType finished, buildType: ${buildType}")
     }
 
     boolean isNpm() {
@@ -294,7 +293,7 @@ class FlowBuilder implements Serializable {
     }
 
     def setupBuildService() {
-        dsl.echo "setupBuildService started buildType: ${buildType}, maven: ${maven.toString()}"
+        Logger.debug("setupBuildService started buildType: ${buildType}, maven: ${maven.toString()}")
 
         if (buildType == BuildServiceType.MAVEN && suit == PipelineStagesSuit.SERVICE) {
             // TODO refactor
@@ -309,9 +308,7 @@ class FlowBuilder implements Serializable {
         } else if (buildType == BuildServiceType.GRADLE && suit == PipelineStagesSuit.LIBRARY) {
             buildService = gradleBuildService
         } else if (buildType == BuildServiceType.NPM) {
-            dsl.echo "before build npm"
             npmBuildService = npm.build()
-            dsl.echo "after build npm"
             buildService = npmBuildService
         } else if (buildType == BuildServiceType.NPM_DOCKER) {
             dockerNpmBuildService = new DockerNpmBuildService(dockerService, npm)
@@ -326,8 +323,8 @@ class FlowBuilder implements Serializable {
         }
 
         buildService.useBuildNumberForVersion = useBuildNumberForVersion
-        dsl.echo "buildService: ${buildService.toString()}"
-        dsl.echo "setupBuildService finished"
+        Logger.debug("buildService: ${buildService.toString()}")
+        Logger.info("setupBuildService finished")
     }
 
     void validate() throws PipelineException {

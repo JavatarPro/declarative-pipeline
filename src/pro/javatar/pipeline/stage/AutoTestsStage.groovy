@@ -19,6 +19,7 @@ import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.test.AutoTestsService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 /**
@@ -39,13 +40,13 @@ class AutoTestsStage extends Stage {
 
     @Override
     void execute() throws PipelineException {
-        dsl.echo "AutoTestsStage execute started: ${toString()}"
+        Logger.info("AutoTestsStage execute started: ${toString()}")
         dsl.timeout(time: 10, unit: 'MINUTES') {
             dsl.dir(revisionControl.folder) {
                 autoTestsService.runAutoTests(releaseInfo.getServiceName(), Env.DEV)
             }
         }
-        dsl.echo "AutoTestsStage execute finished"
+        Logger.info("AutoTestsStage execute finished")
     }
 
     @Override

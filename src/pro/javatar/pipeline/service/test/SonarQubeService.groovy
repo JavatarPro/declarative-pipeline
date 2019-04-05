@@ -15,6 +15,8 @@
 
 package pro.javatar.pipeline.service.test
 
+import pro.javatar.pipeline.util.Logger
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
@@ -40,7 +42,7 @@ class SonarQubeService implements Serializable {
 
     def sonar() {
         if (!sonarQubeEnabled) {
-            dsl.echo "sonar is disabled"
+            Logger.debug("sonar is disabled")
         }
         dsl.timeout(time: 5, unit: 'MINUTES') {
             verifyQuality()
@@ -61,22 +63,22 @@ class SonarQubeService implements Serializable {
                 dsl.sh sonarMvnCmd
             }
         } catch (java.lang.NoSuchMethodError | java.lang.IllegalArgumentException e) {
-            dsl.echo "\nWarning: Jenkins plugin \"SonarQube Scanner for Jenkins\" not installed " +
-                    "or settings name \"${sonarQubeJenkinsSettingsName}\" not found.\n"
+            Logger.warn("\nWarning: Jenkins plugin \"SonarQube Scanner for Jenkins\" not installed " +
+                    "or settings name \"${sonarQubeJenkinsSettingsName}\" not found.\n")
             dsl.sh sonarMvnCmd
         }
     }
 
     def checkStatusOfQualityGateVerifier() {
         if (!qualityGateEnabled) {
-            dsl.echo "qualityGateEnabled: ${qualityGateEnabled} is disabled"
+            Logger.debug("qualityGateEnabled: ${qualityGateEnabled} is disabled")
             return
         }
-        dsl.echo "wait for sonar check: ${qualityGateSleepInSeconds} seconds"
+        Logger.info("wait for sonar check: ${qualityGateSleepInSeconds} seconds")
         dsl.sleep(qualityGateSleepInSeconds)
         def qualityGate = dsl.waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
         if (qualityGate.status != 'OK') {
-            dsl.error "Pipeline aborted due to quality gate failure: ${qualityGate.status}"
+            Logger.error("Pipeline aborted due to quality gate failure: ${qualityGate.status}")
         }
     }
 

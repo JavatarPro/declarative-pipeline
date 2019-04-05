@@ -19,6 +19,7 @@ import pro.javatar.pipeline.exception.ReleaseFinishException
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.vcs.model.VcsRepo
 import pro.javatar.pipeline.service.vcs.model.VscCheckoutRequest
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -42,13 +43,13 @@ abstract class RevisionControlService implements Serializable {
     protected String userName
 
     void cleanUp() {
-        dsl.echo "start cleanup"
+        Logger.debug("start cleanup")
         dsl.sh "pwd; ls -la"
         dsl.sh "rm -rf ${folder}"
         dsl.sh "rm -rf ${folder}@tmp"
         dsl.sh "mkdir ${folder}"
         dsl.sh "pwd; ls -la"
-        dsl.echo "end cleanup"
+        Logger.debug("end cleanup")
     }
 
     String getBranchWithPrefix(String prefix, String branch) {

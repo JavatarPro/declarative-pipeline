@@ -53,21 +53,14 @@ class Npm implements Serializable {
     }
 
     NpmBuildService build() {
-        dsl.echo "NpmBuildService build"
+        Logger.debug("Npm:build started")
         NpmBuildService npmBuildService = new NpmBuildService()
-        dsl.echo "new NpmBuildService() succeeded"
         npmBuildService.setLibraryFolder(libraryFolder)
-        dsl.echo "setLibraryFolder succeeded"
         npmBuildService.setType(npmType)
-        dsl.echo "setType succeeded"
         npmBuildService.setNpmVersion(npmVersion)
-        dsl.echo "setNpmVersion succeeded"
         npmBuildService.setModuleRepository(moduleRepository)
-        dsl.echo "setModuleRepository succeeded"
         npmBuildService.setDistributionFolder(distributionFolder)
-        dsl.echo "setDistributionFolder succeeded"
         npmBuildService.withUnitTestsTimeout(buildTimeoutInMinutes)
-        // npmBuildService.setUp()
         return npmBuildService
     }
 

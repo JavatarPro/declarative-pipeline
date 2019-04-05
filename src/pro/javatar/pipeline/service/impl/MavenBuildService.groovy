@@ -56,9 +56,9 @@ class MavenBuildService extends BuildService {
 
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
-        dsl.echo "MavenBuildService buildAndUnitTests started"
+        Logger.info("MavenBuildService buildAndUnitTests started")
         dsl.sh "mvn clean package ${mavenParams}"
-        dsl.echo "MavenBuildService buildAndUnitTests finished"
+        Logger.info("MavenBuildService buildAndUnitTests finished")
     }
 
     @Override
@@ -74,10 +74,10 @@ class MavenBuildService extends BuildService {
 
     @Override
     def setupVersion(String version) {
-        dsl.echo "setupVersion: ${version} started"
+        Logger.info("setupVersion: ${version} started")
         dsl.sh "mvn versions:set -DnewVersion=${version}"
         dsl.sh "mvn versions:commit"
-        dsl.echo "setupVersion: ${version} finished"
+        Logger.info("setupVersion: ${version} finished")
     }
 
     @Override
@@ -89,9 +89,9 @@ class MavenBuildService extends BuildService {
     }
 
     def deployFile(String version, String file) {
-        dsl.echo "deployFile version: ${version}, file: ${file} started"
+        Logger.info("deployFile version: ${version}, file: ${file} started")
         deployFile(groupId, artifactId, version, packaging, file, repositoryId, repoUrl)
-        dsl.echo "deployFile version: ${version}, file: ${file} finished"
+        Logger.info("deployFile version: ${version}, file: ${file} finished")
     }
 
     def deployFile(String groupId, String artifactId, String version, String packaging, String file,
@@ -103,7 +103,7 @@ class MavenBuildService extends BuildService {
 
     def downloadArtifact(String repoUrl, String groupId, String artifactId, String version, String packaging) {
         String url = getMavenRepoUrl(repoUrl, groupId, artifactId, version, packaging)
-        dsl.echo "downloadArtifact url: ${url}"
+        Logger.debug("downloadArtifact url: ${url}")
         dsl.sh "curl -O ${url}"
     }
 

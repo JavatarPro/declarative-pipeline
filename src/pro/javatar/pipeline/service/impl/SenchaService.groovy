@@ -18,6 +18,7 @@ package pro.javatar.pipeline.service.impl
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.UiBuildService
 import pro.javatar.pipeline.util.FileUtils
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -37,12 +38,12 @@ class SenchaService extends UiBuildService {
         dsl.env.PATH="${senchaPath}:${dsl.env.PATH}"
         dsl.sh "env"
         dsl.sh 'sencha help'
-        dsl.echo "sencha setup successfully"
+        Logger.debug("sencha setup successfully")
     }
 
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
-        dsl.echo 'SenchaService buildAndUnitTests start'
+        Logger.info('SenchaService buildAndUnitTests start')
         dsl.sh "pwd; ls -la"
         dsl.sh 'sencha app install --framework=/opt/ext-6.2.0/'
         dsl.sh 'sencha app build production'
@@ -50,7 +51,7 @@ class SenchaService extends UiBuildService {
         dsl.sh "ln -s build/production/${getApplicationName()} ${distributionFolder}"
         dsl.sh "zip -r ${getArtifact()} ${distributionFolder}"
         dsl.sh "pwd; ls -la; ls -la *"
-        dsl.echo 'SenchaService buildAndUnitTests end'
+        Logger.info('SenchaService buildAndUnitTests end')
     }
 
     @Override
@@ -66,18 +67,18 @@ class SenchaService extends UiBuildService {
 
     @Override
     def setupReleaseVersion(String releaseVersion) {
-        dsl.echo "setupReleaseVersion: ${releaseVersion} started"
+        Logger.info("setupReleaseVersion: ${releaseVersion} started")
         String currentVersion = getCurrentVersion()
         FileUtils.replace(currentVersion, releaseVersion, applicationFile)
-        dsl.echo "setupReleaseVersion: ${releaseVersion} finished"
+        Logger.info("setupReleaseVersion: ${releaseVersion} finished")
     }
 
     @Override
     def setupVersion(String version) {
-        dsl.echo "setupVersion: ${version} started"
+        Logger.info("setupVersion: ${version} started")
         String currentVersion = getCurrentVersion()
         FileUtils.replace(currentVersion, version, applicationFile)
-        dsl.echo "setupVersion: ${version} finished"
+        Logger.info("setupVersion: ${version} finished")
     }
 
 }

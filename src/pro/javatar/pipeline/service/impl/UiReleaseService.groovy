@@ -19,6 +19,7 @@ import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.ReleaseService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -38,7 +39,7 @@ class UiReleaseService implements ReleaseService {
 
     @Override
     def release(ReleaseInfo releaseInfo) {
-        dsl.echo "UiReleaseService releaseRevisionControl() started"
+        Logger.info("UiReleaseService releaseRevisionControl() started")
         // String releaseVersion = buildService.getCurrentVersion()
         // String developVersion = buildService.getDevelopVersion(releaseVersion)
         revisionControlService.release(releaseInfo.releaseVersion)
@@ -46,7 +47,7 @@ class UiReleaseService implements ReleaseService {
         buildService.setupVersion(releaseInfo.developVersion)
         revisionControlService.commitChanges("Update develop version to :${releaseInfo.developVersion}")
         revisionControlService.pushRelease()
-        dsl.echo "UiReleaseService releaseRevisionControl() finished"
+        Logger.info("UiReleaseService releaseRevisionControl() finished")
     }
 
 }

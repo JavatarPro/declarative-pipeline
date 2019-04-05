@@ -58,7 +58,7 @@ class YamlConverter {
 
     JenkinsTool retrieveJenkinsTools(yml) {
         def tool = yml.jenkins_tool
-        dsl.echo "retrieveJenkinsTools: jenkins_tool: ${tool}"
+        Logger.info("retrieveJenkinsTools: jenkins_tool: ${tool}")
         if (tool == null) {
             Logger.warn("jenkins_tool is not provided in configuration")
             return null
@@ -73,7 +73,7 @@ class YamlConverter {
 
     Service retrieveService(def yml) {
         def service = yml.service
-        dsl.echo "retrieveService: service: ${service}"
+        Logger.info("retrieveService: service: ${service}")
         if (service == null) {
             return new Service()
         }
@@ -88,7 +88,7 @@ class YamlConverter {
     AutoTest retrieveAutoTest(def yml) {
         def autoTest = yml["auto-test"]
         if (autoTest == null) return null
-        dsl.echo "retrieveAutoTest: autoTest: ${autoTest}"
+        Logger.info("retrieveAutoTest: autoTest: ${autoTest}")
         return new AutoTest()
                 .withJobName(autoTest.jobName)
                 .withSkipCodeQualityVerification(autoTest.skipCodeQualityVerification)
@@ -98,7 +98,7 @@ class YamlConverter {
 
     CacheRequest retrieveCacheRequest(def yml) {
         def cache = yml.cache
-        dsl.echo "retrieveCacheRequest: cache: ${cache}"
+        Logger.info("retrieveCacheRequest: cache: ${cache}")
         Map<String, List<String>> cacheMap = new HashMap<>()
         cache.each {String service, List<String> folders ->
             List<String> folderList = new ArrayList<>()
@@ -110,7 +110,7 @@ class YamlConverter {
 
     LogLevel retrieveAndSetLogLevel(def yml) {
         def log = yml.log_level
-        dsl.echo "YamlConverter:retrieveAndSetLogLevel: logLevel: ${log}"
+        Logger.info("YamlConverter:retrieveAndSetLogLevel: logLevel: ${log}")
         if (log == null) {
             return
         }
@@ -121,9 +121,9 @@ class YamlConverter {
 
     Sonar retrieveSonar(def yml) {
         def sonar = yml.sonar
-        dsl.echo "retrieveSonar: sonar: ${sonar}"
+        Logger.info("retrieveSonar: sonar: ${sonar}")
         if (sonar == null) {
-            dsl.echo "empty sonar will be returned"
+            Logger.info("empty sonar will be returned")
             return new Sonar()
         }
         return new Sonar()
@@ -138,7 +138,7 @@ class YamlConverter {
     Vcs retrieveVcs(def yml) {
         def vcs = yml.vcs
         if (vcs == null) return new Vcs()
-        dsl.echo "retrieveVcsRepo: vcs: ${vcs}"
+        Logger.debug("retrieveVcsRepo: vcs: ${vcs}")
         return new Vcs()
                 .withRevisionControl(yml.vcs.revisionControl)
                 .withRepo(retrieveVcsRepos(vcs))
@@ -175,7 +175,7 @@ class YamlConverter {
         if (pipeline == null) {
             return new Pipeline()
         }
-        dsl.echo "retrievePipeline: pipeline: ${pipeline}"
+        Logger.info("retrievePipeline: pipeline: ${pipeline}")
         List<String> stages = new ArrayList<>()
         pipeline.stages.each{stage -> stages.add(stage)}
         return new Pipeline()
@@ -227,7 +227,7 @@ class YamlConverter {
     }
 
     List<String> retrieveEnvList(def env) {
-        dsl.echo "retrieveEnvList: env: ${env}"
+        Logger.debug("retrieveEnvList: env: ${env}")
         List<String> envList = new ArrayList<>()
         env.each{envItem -> envList.add(envItem)}
         return envList
@@ -236,7 +236,7 @@ class YamlConverter {
     Maven retrieveMaven(def yml) {
         def maven = yml.maven
         if (maven == null) return null
-        dsl.echo "retrieveMaven: maven: ${maven}"
+        Logger.debug("retrieveMaven: maven: ${maven}")
         return new Maven()
                 .withRepositoryId(maven.repository.id)
                 .withRepositoryUrl(maven.repository.url)
@@ -248,7 +248,7 @@ class YamlConverter {
         if (gradle == null) {
             return null
         }
-        dsl.echo "retrieveGradle: gradle: ${gradle}"
+        Logger.debug("retrieveGradle: gradle: ${gradle}")
         return new Gradle()
                 .withRepositoryId(gradle.repository.id)
                 .withRepositoryUrl(gradle.repository.url)
@@ -258,16 +258,16 @@ class YamlConverter {
     Mesos retrieveMesos(def yml) {
         def mesos = yml.mesos
         if (mesos == null) return null
-        dsl.echo "retrieveMesos: mesos: ${mesos}"
+        Logger.debug("retrieveMesos: mesos: ${mesos}")
         def vcsConfigRepos = mesos.vcsConfigRepos
-        dsl.echo "retrieveMesos: vcsConfigRepos: ${vcsConfigRepos}"
+        Logger.debug("retrieveMesos: vcsConfigRepos: ${vcsConfigRepos}")
         Mesos result = new Mesos()
         Map<String, VcsRepoTO> vcsRepos = new HashMap<>()
         Map<String, VcsRepoTO> vcsRepoMap = retrieveVcs(yml).getRepo()
-        dsl.echo "retrieveMesos: vcsRepoMap: ${vcsRepoMap}"
+        Logger.debug("retrieveMesos: vcsRepoMap: ${vcsRepoMap}")
         vcsConfigRepos.each { key, value -> vcsRepos.put(key, vcsRepoMap.get(value)) }
         result.setVcsConfigRepos(vcsRepos)
-        dsl.echo "retrieveMesos: result: ${result}"
+        Logger.debug("retrieveMesos: result: ${result}")
         return result
     }
 
@@ -293,7 +293,7 @@ class YamlConverter {
 
     Npm retrieveNpm(def yml) {
         def npm = yml.npm
-        dsl.echo "retrieveNpm: npm: ${npm}"
+        Logger.debug("retrieveNpm: npm: ${npm}")
         if (npm == null) {
             Logger.info("npm is null new Npm() will be returned")
             return new Npm()
@@ -307,7 +307,7 @@ class YamlConverter {
 
     Ui retrieveUi(def yml) {
         def ui = yml.ui
-        dsl.echo "retrieveUi: ui: ${ui}"
+        Logger.debug("retrieveUi: ui: ${ui}")
         if (ui == null) {
             Logger.info("ui is null new Ui() will be returned")
             return new Ui()

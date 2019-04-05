@@ -17,6 +17,7 @@ package pro.javatar.pipeline.service.impl
 
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.UiBuildService
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -32,10 +33,10 @@ class NpmBuildService extends UiBuildService {
 
     @Override
     void setUp() {
-        dsl.echo "NpmBuildService setUp"
-        dsl.echo "dsl.tool([name: ${npmVersion}, type: ${type}])"
+        Logger.debug("NpmBuildService setUp")
+        Logger.debug("dsl.tool([name: ${npmVersion}, type: ${type}])")
         def node = dsl.tool([name: npmVersion, type: type])
-        dsl.echo "node setup successfully"
+        Logger.debug("node setup successfully")
         dsl.env.PATH="${node}/bin:${dsl.env.PATH}"
         // dsl.sh "npm config set registry ${moduleRepository}"
         dsl.sh 'node --version'
@@ -50,19 +51,19 @@ class NpmBuildService extends UiBuildService {
         if (! dsl.fileExists(libraryCacheFolder)) {
             dsl.sh "mkdir ${libraryCacheFolder}"
         }
-        dsl.echo "ln -s ${libraryCacheFolder} ${libraryFolder}"
+        Logger.debug("ln -s ${libraryCacheFolder} ${libraryFolder}")
         dsl.sh "ln -s ${libraryCacheFolder} ${libraryFolder}"
     }
 
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
-        dsl.echo 'npm buildAndUnitTests start'
+        Logger.info('npm buildAndUnitTests start')
         dsl.sh "pwd; ls -la"
         if (!skipUnitTests) dsl.sh 'npm run test'
         dsl.sh 'npm run build'
         dsl.sh "zip -r ${getArtifact()} ${distributionFolder}"
         dsl.sh "pwd; ls -la"
-        dsl.echo 'npm buildAndUnitTests end'
+        Logger.info('npm buildAndUnitTests end')
     }
 
     @Override
@@ -73,24 +74,24 @@ class NpmBuildService extends UiBuildService {
 
     @Override
     def setupReleaseVersion(String releaseVersion) { // TODO delete, switch to setupVersion method
-        dsl.echo "setupReleaseVersion: ${releaseVersion} started"
-        dsl.echo "package.json before change version"
+        Logger.info("setupReleaseVersion: ${releaseVersion} started")
+        Logger.debug("package.json before change version")
         dsl.sh "cat package.json | grep version | grep -v flow"
         dsl.sh "npm --no-git-tag-version version ${releaseVersion}"
-        dsl.echo "package.json after change version"
+        Logger.debug("package.json after change version")
         dsl.sh "cat package.json | grep version | grep -v flow"
-        dsl.echo "setupReleaseVersion: ${releaseVersion} finished"
+        Logger.info("setupReleaseVersion: ${releaseVersion} finished")
     }
 
     @Override
     def setupVersion(String version) {
-        dsl.echo "setupVersion: ${version} started"
-        dsl.echo "package.json before change version"
+        Logger.info("setupVersion: ${version} started")
+        Logger.debug("package.json before change version")
         dsl.sh "cat package.json | grep version | grep -v flow"
         dsl.sh "npm --no-git-tag-version version ${version}"
-        dsl.echo "package.json after change version"
+        Logger.debug("package.json after change version")
         dsl.sh "cat package.json | grep version | grep -v flow"
-        dsl.echo "setupVersion: ${version} finished"
+        Logger.info("setupVersion: ${version} finished")
     }
 
     String archiveContent() {

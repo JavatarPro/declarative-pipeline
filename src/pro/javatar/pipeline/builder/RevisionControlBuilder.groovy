@@ -46,7 +46,7 @@ class RevisionControlBuilder implements Serializable {
     }
 
     RevisionControlService build() {
-        dsl.echo "RevisionControlService.build() started"
+        Logger.info("RevisionControlService.build() started")
         RevisionControlService result
         if (type == RevisionControlType.MERCURIAL) {
             result = new HgService(repo, credentialsId, repoOwner, flowPrefix)
@@ -55,7 +55,7 @@ class RevisionControlBuilder implements Serializable {
         }
         result.setUrlResolver(new VcsRepositoryUrlResolver(vcsRepositoryType, true, result))
         result.setDomain(domain)
-        dsl.echo "RevisionControlService.build() finished"
+        Logger.info("RevisionControlService.build() finished")
         return result
     }
 

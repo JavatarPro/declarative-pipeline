@@ -20,6 +20,7 @@ import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.DeploymentService
 import pro.javatar.pipeline.service.ServiceContextHolder
 import pro.javatar.pipeline.stage.Stage
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -33,13 +34,13 @@ abstract class DeployToEnvStage extends Stage {
 
     @Override
     void execute() throws PipelineException {
-        dsl.echo "DeployToEnvStage to ${getEnv().getValue()} execute started: ${toString()}"
+        Logger.info("DeployToEnvStage to ${getEnv().getValue()} execute started: ${toString()}")
         dsl.timeout(time: 10, unit: 'MINUTES') {
             dsl.dir(releaseInfo.repoFolder) {
                 deploymentService.deployArtifact(getEnv(), releaseInfo)
             }
         }
-        dsl.echo "DeployToEnvStage to ${getEnv().getValue()} execute finished"
+        Logger.info("DeployToEnvStage to ${getEnv().getValue()} execute finished")
     }
 
     abstract Env getEnv()

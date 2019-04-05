@@ -36,12 +36,12 @@ class MesosService implements DockerOrchestrationService {
 
     def setup() {
         // TODO prepare vcsRepos on builder stage
-        dsl.echo "MesosService: checkout configurations for vcsRepoMap: ${vcsRepoMap}"
+        Logger.debug("MesosService: checkout configurations for vcsRepoMap: ${vcsRepoMap}")
         VcsRepo vcsRepo = vcsRepoMap.get(Env.DEV.getValue())
         VcsHelper.checkoutRepo(vcsRepo, getFolder(vcsRepo))
         // TODO checkout prod repo securely on different agent (e.g. pipeline-prod)
 //        VcsHelper.checkoutRepo(vcsRepoMap.get(Env.PROD.getValue()))
-        dsl.echo "MesosService: configurations checkout completed"
+        Logger.debug("MesosService: configurations checkout completed")
     }
 
     // TODO replace depcon with own rest implementation

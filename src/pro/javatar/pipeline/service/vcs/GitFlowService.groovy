@@ -15,6 +15,8 @@
 
 package pro.javatar.pipeline.service.vcs
 
+import pro.javatar.pipeline.util.Logger
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
@@ -37,7 +39,7 @@ class GitFlowService extends AbstractFlowService<GitService> {
         String initGitFlowCommand = "echo '${flowPrefix}-master/\\n${flowPrefix}-develop/\\n${flowPrefix}-feature/\\n" +
                 "${flowPrefix}-bugfix/\\n${flowPrefix}-release/\\n${flowPrefix}-hotfix/\\n${flowPrefix}-support/" +
                 "\\n${flowPrefix}-' | git flow init -f"
-        dsl.echo initGitFlowCommand
+        Logger.info(initGitFlowCommand)
         dsl.sh initGitFlowCommand
         revService.showConfigFile()
     }

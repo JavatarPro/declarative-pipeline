@@ -19,6 +19,7 @@ import pro.javatar.pipeline.exception.InvalidReleaseNumberException
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.ReleaseService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -38,31 +39,31 @@ class BackEndLibraryReleaseService implements ReleaseService {
 
     @Override
     def release(ReleaseInfo releaseInfo) {
-        dsl.echo "BackEndLibraryReleaseService start release: ${releaseInfo.toString()}"
+        Logger.info("BackEndLibraryReleaseService start release: ${releaseInfo.toString()}")
 
         validateReleaseVersion(releaseInfo.releaseVersion)
         buildService.deployMavenArtifactsToNexus()
 
-        dsl.echo "BackEndLibraryReleaseService releaseRevisionControl() started"
+        Logger.debug("BackEndLibraryReleaseService releaseRevisionControl() started")
         revisionControlService.release(releaseInfo.releaseVersion)
         revisionControlService.switchToDevelopBranch()
         buildService.setupVersion(releaseInfo.developVersion)
         revisionControlService.commitChanges("Update version to ${releaseInfo.developVersion}")
         revisionControlService.pushRelease()
-        dsl.echo "BackEndLibraryReleaseService releaseRevisionControl() finished"
+        Logger.debug("BackEndLibraryReleaseService releaseRevisionControl() finished")
 
-        dsl.echo "BackEndLibraryReleaseService end release"
+        Logger.info("BackEndLibraryReleaseService end release")
     }
 
     // TODO duplicated code
     def validateReleaseVersion(String releaseVersion) {
-        dsl.echo "BackEndLibraryReleaseService validateReleaseVersion: ${releaseVersion}"
+        Logger.debug("BackEndLibraryReleaseService validateReleaseVersion: ${releaseVersion}")
         String currentVersion = buildService.getCurrentVersion()
         if (currentVersion.equalsIgnoreCase(releaseVersion)) {
-            dsl.echo "release version: ${releaseVersion} successfully validated"
+            Logger.debug("release version: ${releaseVersion} successfully validated")
         } else {
             String errorMsg = "release version: ${releaseVersion} is not valid, current version is ${currentVersion}"
-            dsl.echo "ERROR: ${errorMsg}"
+            Logger.error("${errorMsg}")
             throw new InvalidReleaseNumberException(errorMsg)
         }
     }
