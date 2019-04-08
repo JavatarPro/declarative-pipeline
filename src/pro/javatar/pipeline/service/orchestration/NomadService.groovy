@@ -34,11 +34,17 @@ class NomadService implements DockerOrchestrationService {
 
     private Map<String, NomadBO> nomadConfig
 
-    private OrchestrationRequestProvider requestProvider = new JsonTemplatesRequestProvider()
+    private OrchestrationRequestProvider requestProvider
 
     NomadService(Map<String, NomadBO> nomadConfig) {
-        Logger.debug("NomadService:constructor: nomadConfig: ${nomadConfig.size()}")
+        this(nomadConfig, new JsonTemplatesRequestProvider())
+        Logger.debug("NomadService:constructor with nomadConfig only")
+    }
+
+    NomadService(Map<String, NomadBO> nomadConfig, OrchestrationRequestProvider requestProvider) {
+        Logger.debug("NomadService:constructor with nomadConfig and requestProvider")
         this.nomadConfig = nomadConfig
+        this.requestProvider = requestProvider
     }
 
     @Override
