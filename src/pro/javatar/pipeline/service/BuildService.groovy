@@ -82,7 +82,7 @@ abstract class BuildService implements Serializable {
         validateCurrentVersion(currentVersion)
         String releaseVersion = currentVersion.replace("-SNAPSHOT", "")
         if (releaseVersion.isEmpty()) {
-            Logger.error("BuildService:getReleaseNumber: releaseVersion must be defined"
+            Logger.error("BuildService:getReleaseNumber: releaseVersion must be defined")
             throw new InvalidReleaseNumberException("releaseVersion must be defined")
         }
         return releaseVersion
@@ -105,7 +105,7 @@ abstract class BuildService implements Serializable {
 
     protected void validateBuildNumber(def buildNumber) throws InvalidReleaseNumberException {
         if (buildNumber == null || buildNumber.isEmpty()) {
-            Logger.error("BuildService:validateBuildNumber: buildNumber must be specified"
+            Logger.error("BuildService:validateBuildNumber: buildNumber must be specified")
             throw new InvalidReleaseNumberException("buildNumber is not specified")
         }
     }
