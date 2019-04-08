@@ -4,6 +4,8 @@ import pro.javatar.pipeline.service.vcs.model.VcsRepo
 
 import java.time.Period
 
+import static pro.javatar.pipeline.util.StringUtils.isBlank
+
 class NomadBO {
 
     String env
@@ -13,6 +15,8 @@ class NomadBO {
     Period deploymentTimeout
 
     VcsRepo vcsRepo
+
+    String nomadFolder
 
     String getEnv() {
         return env
@@ -48,6 +52,10 @@ class NomadBO {
         this.deploymentTimeout = deploymentTimeout
     }
 
+    void setDeploymentTimeout(String deploymentTimeout) {
+        this.deploymentTimeout = Period.parse(deploymentTimeout)
+    }
+
     NomadBO withDeploymentTimeout(Period deploymentTimeout) {
         setDeploymentTimeout(deploymentTimeout)
         return this
@@ -66,12 +74,29 @@ class NomadBO {
         return this
     }
 
+    String getNomadFolder() {
+        if (isBlank(nomadFolder)) {
+            return "../${getVcsRepo().getName()}"
+        }
+        return nomadFolder
+    }
+
+    void setNomadFolder(String nomadFolder) {
+        this.nomadFolder = nomadFolder
+    }
+
+    NomadBO withNomadFolder(String nomadFolder) {
+        this.nomadFolder = nomadFolder
+        return this
+    }
+
     @Override
     public String toString() {
         return "NomadBO{" +
                 "env='" + env + '\'' +
                 ", url='" + url + '\'' +
                 ", deploymentTimeout=" + deploymentTimeout +
+                ", nomadFolder=" + nomadFolder +
                 ", vcsRepo=" + vcsRepo.toString() +
                 '}';
     }

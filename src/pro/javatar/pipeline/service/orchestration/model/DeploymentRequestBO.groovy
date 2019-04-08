@@ -21,7 +21,7 @@ class DeploymentRequestBO implements Serializable {
 
     Env environment
 
-    String buildNumber
+    Integer buildNumber
 
     DeploymentRequestBO() {
         Logger.info("DeploymentRequestBO:default constructor")
@@ -78,20 +78,24 @@ class DeploymentRequestBO implements Serializable {
         this.environment = environment
     }
 
+    void setEnvironment(String environment) {
+        this.environment = Env.fromString(environment)
+    }
+
     DeploymentRequestBO withEnvironment(Env environment) {
         setEnvironment(environment)
         return this
     }
 
-    String getBuildNumber() {
+    Integer getBuildNumber() {
         return buildNumber
     }
 
-    void setBuildNumber(String buildNumber) {
+    void setBuildNumber(Integer buildNumber) {
         this.buildNumber = buildNumber
     }
 
-    DeploymentRequestBO withBuildNumber(String buildNumber) {
+    DeploymentRequestBO withBuildNumber(Integer buildNumber) {
         setBuildNumber(buildNumber)
         return this
     }

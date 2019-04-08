@@ -81,6 +81,10 @@ class VcsRepo {
         this.type = type
     }
 
+    void setType(String type) {
+        this.type = VcsRepositoryType.fromString(type)
+    }
+
     VcsRepo withType(VcsRepositoryType type) {
         this.type = type
         return this
@@ -122,6 +126,10 @@ class VcsRepo {
 
     void setRevisionControlType(RevisionControlType revisionControlType) {
         this.revisionControlType = revisionControlType
+    }
+
+    void setRevisionControlType(String revisionControlType) {
+        this.revisionControlType = RevisionControlType.fromString(revisionControlType)
     }
 
     VcsRepo withRevisionControlType(RevisionControlType revisionControlType) {
