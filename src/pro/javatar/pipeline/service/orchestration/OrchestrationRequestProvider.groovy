@@ -7,6 +7,7 @@ package pro.javatar.pipeline.service.orchestration
 import pro.javatar.pipeline.service.orchestration.model.OrchestrationRequest
 
 /**
+ * Provides requests body for orchestration services
  * @author Borys Zora
  * @version 2019-04-04
  */

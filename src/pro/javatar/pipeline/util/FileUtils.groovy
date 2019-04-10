@@ -37,8 +37,13 @@ class FileUtils {
     }
 
     static Map<String, Object> propertyFileToMap(String path) {
+        File file = new File(path)
+        if (!file.exists()) {
+            Logger.info("FileUtils:propertyFileToMap: file: ${path} does not exists. No variable overrides needed")
+            return
+        }
         Properties properties = new Properties()
-        properties.load(Paths.getResourceAsStream(path))
+        properties.load(file.newInputStream())
         return new HashMap<String, Object>(properties)
     }
 }

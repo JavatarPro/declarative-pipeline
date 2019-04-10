@@ -29,7 +29,7 @@ class OrchestrationRequest implements Serializable {
     }
 
     OrchestrationRequest withImageName(String imageName) {
-        this.imageName = imageName
+        setImageName(imageName)
         return this
     }
 
@@ -38,7 +38,7 @@ class OrchestrationRequest implements Serializable {
     }
 
     OrchestrationRequest withImageVersion(String imageVersion) {
-        this.imageVersion = imageVersion
+        setImageVersion(imageVersion)
         return this
     }
 
@@ -47,7 +47,7 @@ class OrchestrationRequest implements Serializable {
     }
 
     OrchestrationRequest withEnv(String env) {
-        this.env = env
+        setEnv(env)
         return this
     }
 
@@ -60,7 +60,7 @@ class OrchestrationRequest implements Serializable {
     }
 
     OrchestrationRequest withTemplateFolder(String templateFolder) {
-        this.templateFolder = templateFolder
+        setTemplateFolder(templateFolder)
         return this
     }
 
@@ -78,7 +78,7 @@ class OrchestrationRequest implements Serializable {
     }
 
     OrchestrationRequest withService(String service) {
-        this.service = service
+        setService(service)
         return this
     }
 
@@ -87,7 +87,7 @@ class OrchestrationRequest implements Serializable {
     }
 
     OrchestrationRequest withBuildNumber(String buildNumber) {
-        this.buildNumber = buildNumber
+        setBuildNumber(buildNumber)
         return this
     }
 
@@ -96,8 +96,41 @@ class OrchestrationRequest implements Serializable {
     }
 
     OrchestrationRequest withTemplateVariables(Map<String, Object> templateVariables) {
-        this.templateVariables = templateVariables
+        setTemplateVariables(templateVariables)
         return this
+    }
+
+    void setImageName(String imageName) {
+        templateVariables.put("imageName", imageName)
+        this.imageName = imageName
+    }
+
+    void setImageVersion(String imageVersion) {
+        templateVariables.put("imageVersion", imageVersion)
+        this.imageVersion = imageVersion
+    }
+
+    void setEnv(String env) {
+        templateVariables.put("env", env)
+        this.env = env
+    }
+
+    void setTemplateFiles(List<String> templateFiles) {
+        this.templateFiles = templateFiles
+    }
+
+    void setService(String service) {
+        templateVariables.put("service", service)
+        this.service = service
+    }
+
+    void setBuildNumber(String buildNumber) {
+        templateVariables.put("buildNumber", buildNumber)
+        this.buildNumber = buildNumber
+    }
+
+    void setTemplateVariables(Map<String, Object> templateVariables) {
+        this.templateVariables = templateVariables
     }
 
     @Override
