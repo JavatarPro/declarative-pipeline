@@ -14,6 +14,10 @@
  */
 package pro.javatar.pipeline.service.orchestration.template
 
+import groovy.json.JsonSlurper
+
+import static pro.javatar.pipeline.util.StringUtils.toJsonString
+
 /**
  * @author Borys Zora
  * @version 2019-03-29
@@ -21,7 +25,47 @@ package pro.javatar.pipeline.service.orchestration.template
 class JsonConfigMerger {
 
     String merge(List<String> jsonFiles) {
-        return null
+        if (jsonFiles == null || jsonFiles.isEmpty()) {
+            return null
+        }
+        if (jsonFiles.size() == 1) {
+            return jsonFiles.get(0)
+        }
+        return mergeMultipleJsons(jsonFiles)
     }
+
+    protected String mergeMultipleJsons(List<String> jsonFiles) {
+        def mainJson = new JsonSlurper().parseText(jsonFiles.get(0))
+        for(int i = 1; i < jsonFiles.size(); i++) {
+            def json = new JsonSlurper().parseText(jsonFiles.get(i))
+            merge(mainJson, json)
+        }
+        return toJsonString(mainJson)
+    }
+
+    protected void merge(def mainJson, def jsonToMerge) {
+        if (jsonToMerge instanceof Map) {
+            mergeMap(mainJson, jsonToMerge)
+        } else {
+            mergeArray(mainJson, jsonToMerge)
+        }
+    }
+
+    protected void mergeMap(def mainJson, def jsonToMerge) {
+        jsonToMerge.each { key, value ->
+            if (mainJson.containsKey(key)) {
+                
+            } else {
+                mainJson.put(key, value)
+            }
+        }
+    }
+
+    protected void mergeArray(def mainJson, def jsonToMerge) {
+        jsonToMerge.each {
+
+        }
+    }
+
 
 }

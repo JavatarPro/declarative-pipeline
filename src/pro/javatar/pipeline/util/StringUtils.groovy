@@ -15,6 +15,9 @@
 package pro.javatar.pipeline.util
 
 import com.cloudbees.groovy.cps.NonCPS
+import groovy.json.JsonBuilder
+import groovy.text.GStringTemplateEngine
+import org.apache.commons.io.IOUtils
 
 /**
  * Author : Borys Zora
@@ -74,6 +77,20 @@ class StringUtils {
             return toString((Map) other)
         }
         return other.toString()
+    }
+
+    @NonCPS
+    static def renderTemplate(String template, Map binding) {
+        def engine = new GStringTemplateEngine()
+        def result = engine.createTemplate(template).make(binding)
+        return result.toString()
+    }
+
+    static String toJsonString(def object) {
+        if (object == null) {
+            return null
+        }
+        return new JsonBuilder(object).toPrettyString()
     }
 
 }
