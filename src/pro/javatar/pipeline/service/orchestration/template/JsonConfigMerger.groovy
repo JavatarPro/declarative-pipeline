@@ -46,8 +46,8 @@ class JsonConfigMerger {
     protected void merge(def mainJson, def jsonToMerge) {
         if (jsonToMerge instanceof Map) {
             mergeMap(mainJson, jsonToMerge)
-        } else {
-            mergeArray(mainJson, jsonToMerge)
+        } else if (jsonToMerge instanceof List) {
+            mergeList(mainJson, jsonToMerge)
         }
     }
 
@@ -61,9 +61,13 @@ class JsonConfigMerger {
         }
     }
 
-    protected void mergeArray(def mainJson, def jsonToMerge) {
-        jsonToMerge.each {
+    protected void mergeList(def mainJson, def jsonToMerge) {
+        jsonToMerge.each { item ->
+            if (mainJson.contains(item)) {
 
+            } else {
+                mainJson.add(item)
+            }
         }
     }
 
