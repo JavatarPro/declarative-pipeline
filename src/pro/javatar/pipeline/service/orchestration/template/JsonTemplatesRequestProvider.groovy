@@ -9,6 +9,8 @@ import pro.javatar.pipeline.service.orchestration.model.OrchestrationRequest
 import pro.javatar.pipeline.util.FileUtils
 import pro.javatar.pipeline.util.Logger
 
+import static pro.javatar.pipeline.util.StringUtils.isNotBlank
+
 /**
  * TODO add responsible team folder in alternative impl
  * This provider collects all data from files with specific naming convention
@@ -52,11 +54,15 @@ class JsonTemplatesRequestProvider implements OrchestrationRequestProvider {
 
     protected List<String> getTemplateFileContents(OrchestrationRequest request) {
         Logger.debug("JsonTemplatesRequestProvider:getTemplateFileContents:started")
-        List<String> result = new ArrayList<>(3)
-        result.add(mainTemplate(request))
-        result.add(envTemplate(request))
-        result.add(serviceTemplate(request))
-        result.add(envServiceTemplate(request))
+        List<String> result = new ArrayList<>(4)
+        addTemplate(result, readTemplate(request, MAIN_TEMPLATE))
+        addTemplate(result, readTemplate(request, ENV_TEMPLATE
+                .replace("{{env}}", request.getEnv())))
+        addTemplate(result, readTemplate(request, SERVICE_TEMPLATE
+                .replace("{{service}}", request.getService())))
+        addTemplate(result, readTemplate(request, ENV_SERVICE_TEMPLATE
+                .replace("{{service}}", request.getService())
+                .replace("{{env}}", request.getEnv())))
         Logger.debug("JsonTemplatesRequestProvider:getTemplateFileContents:finished")
         return result
     }
@@ -77,25 +83,6 @@ class JsonTemplatesRequestProvider implements OrchestrationRequestProvider {
         return result
     }
 
-    protected String mainTemplate(OrchestrationRequest request) {
-        return readTemplate(request, MAIN_TEMPLATE)
-    }
-
-    protected String envTemplate(OrchestrationRequest request) {
-        return readTemplate(request, ENV_TEMPLATE
-                .replace("{{env}}", request.getEnv()))
-    }
-
-    protected String serviceTemplate(OrchestrationRequest request) {
-        return readTemplate(request, SERVICE_TEMPLATE.replace("{{service}}", request.getService()))
-    }
-
-    protected String envServiceTemplate(OrchestrationRequest request) {
-        return readTemplate(request, ENV_SERVICE_TEMPLATE
-                .replace("{{service}}", request.getService())
-                .replace("{{env}}", request.getEnv()))
-    }
-
     protected String readTemplate(OrchestrationRequest request, String path) {
         String fullPath = "${request.getTemplateFolder()}/${path}"
         Logger.debug("JsonTemplatesRequestProvider:readTemplate:started fullPath: ${fullPath}")
@@ -113,6 +100,12 @@ class JsonTemplatesRequestProvider implements OrchestrationRequestProvider {
         }
         Logger.debug("${result.size()} variables found in file: ${path}")
         return result
+    }
+
+    void addTemplate(List<String> templates, String content) {
+        if (isNotBlank(content)) {
+            templates.add(content)
+        }
     }
 
     JsonTemplatesRequestProvider withTemplateResolver(OrchestrationTemplateResolver templateResolver) {

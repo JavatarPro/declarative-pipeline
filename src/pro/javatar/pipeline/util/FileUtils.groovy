@@ -33,7 +33,12 @@ class FileUtils {
     }
 
     static String readFile(String path) {
-        return new String(Files.readAllBytes(Paths.get(path)))
+        if (new File(path).exists()) {
+            Logger.debug("FileUtils:readFile: file: ${path} exists")
+            return new String(Files.readAllBytes(Paths.get(path)))
+        }
+        Logger.warn("FileUtils:readFile: file: ${path} does not exists")
+        return null
     }
 
     static Map<String, Object> propertyFileToMap(String path) {
