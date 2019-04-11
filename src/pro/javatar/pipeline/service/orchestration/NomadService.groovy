@@ -23,6 +23,8 @@ import pro.javatar.pipeline.service.orchestration.model.OrchestrationRequest
 import pro.javatar.pipeline.service.orchestration.template.JsonTemplatesRequestProvider
 import pro.javatar.pipeline.util.Logger
 
+import static pro.javatar.pipeline.util.StringUtils.isNotBlank
+
 /**
  * HashiCorp Nomad - docker orchestration implementation
  * Nomad has different deployment drivers, we cover only docker driver
@@ -67,7 +69,33 @@ class NomadService implements DockerOrchestrationService {
         Logger.info("NomadService:dockerDeployContainer:deploymentRequest ${deploymentRequest}")
         def request = toOrchestrationRequest(deploymentRequest)
         String requestBody = requestProvider.createRequest(request)
+        createOrReplaceDockerService(deploymentRequest, requestBody)
         throw new PipelineException("fail fast, for testing purposes")
+    }
+
+    def createOrReplaceDockerService(DeploymentRequestBO req, String requestBody) {
+        NomadBO nomad = nomadConfig.get(req.getEnvironment().getValue())
+        String nomadUrl = nomad.getUrl()
+        String currentVersion = getCurrentVersion(nomadUrl)
+        String versionToDeploy = req.getImageVersion()
+        if (isNotBlank(currentVersion)) {
+            replaceDockerService(requestBody)
+        } else {
+            createDockerService(requestBody)
+        }
+    }
+
+    def createDockerService(String s) {
+
+    }
+
+    def replaceDockerService(String s) {
+        null
+    }
+
+
+    String getCurrentVersion(String nomadUrl) {
+        null // TODO
     }
 
     @Override

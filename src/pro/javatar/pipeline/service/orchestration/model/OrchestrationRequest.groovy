@@ -28,6 +28,14 @@ class OrchestrationRequest implements Serializable {
         return env
     }
 
+    String getDockerRegistry() {
+        return dockerRegistry
+    }
+
+    String getDockerImage() {
+        return dockerImage
+    }
+
     OrchestrationRequest withEnv(String env) {
         setEnv(env)
         return this
