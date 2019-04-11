@@ -23,6 +23,8 @@ class DeploymentRequestBO implements Serializable {
 
     Integer buildNumber
 
+    String service
+
     DeploymentRequestBO() {
         Logger.info("DeploymentRequestBO:default constructor")
     }
@@ -82,6 +84,11 @@ class DeploymentRequestBO implements Serializable {
         this.environment = Env.fromString(environment)
     }
 
+    DeploymentRequestBO withEnvironment(String environment) {
+        setEnvironment(environment)
+        return this
+    }
+
     DeploymentRequestBO withEnvironment(Env environment) {
         setEnvironment(environment)
         return this
@@ -100,13 +107,28 @@ class DeploymentRequestBO implements Serializable {
         return this
     }
 
+    String getService() {
+        return service
+    }
+
+    void setService(String service) {
+        this.service = service
+    }
+
+    DeploymentRequestBO withService(String service) {
+        setService(service)
+        return this
+    }
+
     @Override
     public String toString() {
         return "DeploymentRequestBO{" +
                 "imageName='" + imageName + '\'' +
                 ", imageVersion='" + imageVersion + '\'' +
-                ", dockerRegistry='" + dockerRegistry + '\'' +
-                ", environment='" + environment + '\'' +
+                ", dockerRegistry=" + dockerRegistry +
+                ", environment=" + environment +
+                ", buildNumber=" + buildNumber +
+                ", service='" + service + '\'' +
                 '}';
     }
 }

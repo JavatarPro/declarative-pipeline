@@ -56,6 +56,7 @@ class NomadService implements DockerOrchestrationService {
     def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment) {
         return dockerDeployContainer(new DeploymentRequestBO()
                 .withImageName(imageName)
+                .withService(imageName)
                 .withImageVersion(imageVersion)
                 .withDockerRepositoryUrl(dockerRepositoryUrl)
                 .withEnvironment(environment))
@@ -74,13 +75,16 @@ class NomadService implements DockerOrchestrationService {
         return null
     }
 
-    OrchestrationRequest toOrchestrationRequest(DeploymentRequestBO deploymentRequest) {
-        NomadBO nomad = nomadConfig.get(deploymentRequest.getEnvironment().getValue())
-        OrchestrationRequest request = new OrchestrationRequest()
-                .withService(deploymentRequest.getImageName())
-                .withEnv(deploymentRequest.getEnvironment().getValue())
+    OrchestrationRequest toOrchestrationRequest(DeploymentRequestBO req) {
+        NomadBO nomad = nomadConfig.get(req.getEnvironment().getValue())
+        OrchestrationRequest result = new OrchestrationRequest()
+                .withEnv(req.getEnvironment().getValue())
+                .withDockerRegistry(req.dockerRegistry.registry)
+                .withDockerImage("${req.getImageName()}:${req.getImageVersion()}")
+                .withService(req.getService())
                 .withTemplateFolder(nomad.getNomadFolder())
-        return request
+                .withBuildNumber(req.getBuildNumber())
+        return result
     }
 
     @Override

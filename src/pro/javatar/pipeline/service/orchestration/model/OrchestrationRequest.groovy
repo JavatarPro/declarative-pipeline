@@ -4,11 +4,11 @@ import pro.javatar.pipeline.util.Logger
 
 class OrchestrationRequest implements Serializable {
 
-    String imageName
-
-    String imageVersion
-
     String env
+
+    String dockerRegistry
+
+    String dockerImage
 
     String templateFolder
 
@@ -16,30 +16,12 @@ class OrchestrationRequest implements Serializable {
 
     String service
 
-    String buildNumber
+    Integer buildNumber
 
     Map<String, Object> templateVariables = new HashMap<>()
 
     OrchestrationRequest() {
         Logger.debug("OrchestrationRequest default constructor")
-    }
-
-    String getImageName() {
-        return imageName
-    }
-
-    OrchestrationRequest withImageName(String imageName) {
-        setImageName(imageName)
-        return this
-    }
-
-    String getImageVersion() {
-        return imageVersion
-    }
-
-    OrchestrationRequest withImageVersion(String imageVersion) {
-        setImageVersion(imageVersion)
-        return this
     }
 
     String getEnv() {
@@ -69,7 +51,7 @@ class OrchestrationRequest implements Serializable {
     }
 
     OrchestrationRequest withTemplateFiles(List<String> templateFiles) {
-        this.templateFiles = templateFiles
+        setTemplateFiles(templateFiles)
         return this
     }
 
@@ -82,11 +64,11 @@ class OrchestrationRequest implements Serializable {
         return this
     }
 
-    String getBuildNumber() {
+    Integer getBuildNumber() {
         return buildNumber
     }
 
-    OrchestrationRequest withBuildNumber(String buildNumber) {
+    OrchestrationRequest withBuildNumber(Integer buildNumber) {
         setBuildNumber(buildNumber)
         return this
     }
@@ -98,11 +80,6 @@ class OrchestrationRequest implements Serializable {
     OrchestrationRequest withTemplateVariables(Map<String, Object> templateVariables) {
         setTemplateVariables(templateVariables)
         return this
-    }
-
-    void setImageName(String imageName) {
-        templateVariables.put("imageName", imageName)
-        this.imageName = imageName
     }
 
     void setImageVersion(String imageVersion) {
@@ -124,9 +101,29 @@ class OrchestrationRequest implements Serializable {
         this.service = service
     }
 
-    void setBuildNumber(String buildNumber) {
+    void setBuildNumber(Integer buildNumber) {
         templateVariables.put("buildNumber", buildNumber)
         this.buildNumber = buildNumber
+    }
+
+    void setDockerRegistry(String dockerRegistry) {
+        templateVariables.put("dockerRegistry", dockerRegistry)
+        this.dockerRegistry = dockerRegistry
+    }
+
+    OrchestrationRequest withDockerRegistry(String dockerRegistry) {
+        setDockerRegistry(dockerRegistry)
+        return this
+    }
+
+    void setDockerImage(String dockerImage) {
+        templateVariables.put("dockerImage", dockerImage)
+        this.dockerImage = dockerImage
+    }
+
+    OrchestrationRequest withDockerImage(String dockerImage) {
+        setDockerImage(dockerImage)
+        return this
     }
 
     void setTemplateVariables(Map<String, Object> templateVariables) {
@@ -136,8 +133,8 @@ class OrchestrationRequest implements Serializable {
     @Override
     public String toString() {
         return "OrchestrationRequest{" +
-                "imageName='" + imageName + '\'' +
-                ", imageVersion='" + imageVersion + '\'' +
+                "dockerRegistry='" + dockerRegistry + '\'' +
+                ", dockerImage='" + dockerImage + '\'' +
                 ", env='" + env + '\'' +
                 ", templateFolder='" + templateFolder + '\'' +
                 ", templateFiles=" + templateFiles.size() +
