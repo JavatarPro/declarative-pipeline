@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.service
 
 import pro.javatar.pipeline.exception.InvalidReleaseNumberException
 import pro.javatar.pipeline.model.ReleaseInfo
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 /**
@@ -26,17 +26,14 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 abstract class BuildService implements Serializable {
 
     protected int unitTestsTimeout = 25
+
     boolean useBuildNumberForVersion = true
+
     boolean skipUnitTests = true
-    protected String distributionFolder = "dist"
 
     abstract void buildAndUnitTests(ReleaseInfo releaseInfo)
 
     abstract void setUp()
-
-    String getArtifact() {
-        return "${distributionFolder}.zip"
-    }
 
     String getReleaseVersion() throws InvalidReleaseNumberException {
         String currentVersion = getCurrentVersion()
@@ -47,12 +44,12 @@ abstract class BuildService implements Serializable {
     }
 
     String getDevelopVersion(String version) {
-        dsl.echo "getDevelopVersion for version: ${version}"
+        Logger.info("getDevelopVersion for version: ${version}")
         if (version.contains("-SNAPSHOT")) {
-            dsl.echo "it seams this artifact: ${version} has not been released, no need increment version"
+            Logger.error("it seams this artifact: ${version} has not been released, no need increment version")
             throw new IllegalStateException("artifact should not contain SNAPSHOT");
         }
-        dsl.echo "current version: ${version}"
+        Logger.debug("current version: ${version}")
         int idx = version.lastIndexOf(".") + 1;
         String result = version.substring(0, idx);
         int smallerVersion = Integer.parseInt(version.substring(idx, version.length()));
@@ -66,52 +63,51 @@ abstract class BuildService implements Serializable {
 
     abstract def setupVersion(String version)
 
+    def runIntegrationTests() {
+        Logger.info("BuildService:runIntegrationTests")
+    }
+
     def populateReleaseInfo(ReleaseInfo releaseInfo) {
-        dsl.echo "default populateReleaseInfo, nothing to change"
+        Logger.debug("default populateReleaseInfo, nothing to change")
+    }
+
+    def publishArtifacts(ReleaseInfo releaseInfo) {
+        Logger.info("default publish implementation will do nothing")
     }
 
     // helper methods
 
     String getReleaseNumber(String currentVersion) {
-        dsl.echo "getReleaseNumber with currentVersion: ${currentVersion}"
+        Logger.debug("BuildService:getReleaseNumber: with currentVersion: ${currentVersion}")
         validateCurrentVersion(currentVersion)
         String releaseVersion = currentVersion.replace("-SNAPSHOT", "")
         if (releaseVersion.isEmpty()) {
-            dsl.echo "Error: releaseVersion must be defined"
+            Logger.error("BuildService:getReleaseNumber: releaseVersion must be defined")
             throw new InvalidReleaseNumberException("releaseVersion must be defined")
         }
         return releaseVersion
     }
 
     String getReleaseNumber(String currentVersion, def buildNumber) throws InvalidReleaseNumberException {
-        dsl.echo "getReleaseNumber with currentVersion: ${currentVersion} using buildNumber: ${buildNumber}"
+        Logger.debug("BuildService:getReleaseNumber with currentVersion: ${currentVersion} " +
+                "using buildNumber: ${buildNumber}")
         validateBuildNumber(buildNumber)
         return "${getReleaseNumber()}.${buildNumber}"
     }
 
     protected void validateCurrentVersion(String currentVersion) throws InvalidReleaseNumberException {
         if (!currentVersion.contains("-SNAPSHOT")) {
-            dsl.echo "Error: it seems this artifact: ${currentVersion} has been released already"
+            Logger.error("BuildService:validateCurrentVersion:" +
+                    " it seems this artifact: ${currentVersion} has been released already")
             throw new InvalidReleaseNumberException("currentVersion: ${currentVersion} does not contain -SNAPSHOT")
         }
     }
 
     protected void validateBuildNumber(def buildNumber) throws InvalidReleaseNumberException {
         if (buildNumber == null || buildNumber.isEmpty()) {
-            dsl.echo "Error: buildNumber must be specified"
+            Logger.error("BuildService:validateBuildNumber: buildNumber must be specified")
             throw new InvalidReleaseNumberException("buildNumber is not specified")
         }
-    }
-
-    protected def replace(String currentValue, String value, String fileName) {
-        dsl.echo "${fileName} before change currentValue: ${currentValue} to value: ${value}"
-        dsl.sh "cat ${fileName} | grep ${currentValue}"
-
-        dsl.sh "sed -i.bak s/${currentVersion}/${value}/g ${fileName}"
-        dsl.sh "rm ${fileName}.bak"
-
-        dsl.echo "${fileName} after change currentValue: ${currentValue} to value: ${value}"
-        dsl.sh "cat ${fileName} | grep ${value}"
     }
 
     void setDistributionFolder(String distributionFolder) {

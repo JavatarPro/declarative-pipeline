@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@ import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.orchestration.DockerService
 import pro.javatar.pipeline.service.ReleaseService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -43,7 +44,7 @@ class BackEndReleaseService implements ReleaseService {
 
     @Override
     def release(ReleaseInfo releaseInfo) {
-        dsl.echo "BackEndReleaseService start release: ${releaseInfo.toString()}"
+        Logger.info("BackEndReleaseService start release: ${releaseInfo.toString()}")
         validateReleaseVersion(releaseInfo.releaseVersion)
         buildService.deployMavenArtifactsToNexus()
         // TODO comment out promotion of docker, it should be after QA sign off
@@ -52,27 +53,27 @@ class BackEndReleaseService implements ReleaseService {
         }, 'release docker artifacts': {
             dockerService.dockerPushImageToProdRegistry(releaseInfo.serviceName, releaseInfo.releaseVersion)
         }
-        dsl.echo "BackEndReleaseService end release"
+        Logger.info("BackEndReleaseService end release")
     }
 
     def releaseRevisionControl(ReleaseInfo releaseInfo) {
-        dsl.echo "BackEndReleaseService: releaseRevisionControl() started"
+        Logger.info("BackEndReleaseService: releaseRevisionControl() started")
         revisionControlService.release(releaseInfo.releaseVersion)
         revisionControlService.switchToDevelopBranch()
         buildService.setupVersion(releaseInfo.developVersion)
         revisionControlService.commitChanges("Update version to ${releaseInfo.developVersion}")
         revisionControlService.pushRelease()
-        dsl.echo "BackEndReleaseService: releaseRevisionControl() finished"
+        Logger.info("BackEndReleaseService: releaseRevisionControl() finished")
     }
 
     def validateReleaseVersion(String releaseVersion) {
-        dsl.echo "BackEndReleaseService validateReleaseVersion: ${releaseVersion}"
+        Logger.debug("BackEndReleaseService validateReleaseVersion: ${releaseVersion}")
         String currentVersion = buildService.getCurrentVersion()
         if (currentVersion.equalsIgnoreCase(releaseVersion)) {
-            dsl.echo "release version: ${releaseVersion} successfully validated"
+            Logger.debug("release version: ${releaseVersion} successfully validated")
         } else {
             String errorMsg = "release version: ${releaseVersion} is not valid, current version is ${currentVersion}"
-            dsl.echo "ERROR: ${errorMsg}"
+            Logger.error("${errorMsg}")
             throw new InvalidReleaseNumberException(errorMsg)
         }
     }

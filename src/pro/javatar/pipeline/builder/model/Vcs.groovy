@@ -1,12 +1,18 @@
 package pro.javatar.pipeline.builder.model
 
-import static pro.javatar.pipeline.util.Utils.isBlank
+import pro.javatar.pipeline.util.Logger
 
-class Vcs {
+import static pro.javatar.pipeline.util.StringUtils.isBlank
+
+class Vcs implements Serializable {
 
     String revisionControl
 
     Map<String, VcsRepoTO> repo
+
+    Vcs() {
+        Logger.debug("Vcs:default constructor")
+    }
 
     Vcs populateRevisionControl() {
         for (VcsRepoTO vcsRepo: repo.values()) {

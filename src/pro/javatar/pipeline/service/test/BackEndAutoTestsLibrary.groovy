@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,8 +17,8 @@ package pro.javatar.pipeline.service.test
 
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.Env
-
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
+import pro.javatar.pipeline.service.BuildService
+import pro.javatar.pipeline.util.Logger
 
 /**
  * Author : Borys Zora
@@ -26,10 +26,15 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class BackEndAutoTestsLibrary extends BackEndAutoTestsService {
 
+    BackEndAutoTestsLibrary(BuildService buildService) {
+        super(buildService)
+        Logger.info("BackEndAutoTestsLibrary:constructor finished")
+    }
+
     @Override
-    void runAutoTests(String service, Env environment) throws PipelineException {
-        dsl.echo "runAutoTests with service: ${service}, environment: ${environment.getValue()}"
-        integrationTests(mavenParams)
+    void runAutoTests(String service, Env env) throws PipelineException {
+        Logger.info("BackEndAutoTestsLibrary:runAutoTests with service: ${service}, env: ${env.getValue()}")
+        buildService.runIntegrationTests()
         verifyCodeQuality(service)
     }
 }

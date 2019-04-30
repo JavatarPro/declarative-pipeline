@@ -4,6 +4,7 @@ import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.DeploymentService
 import pro.javatar.pipeline.service.s3.model.S3Repo
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -29,6 +30,7 @@ class AwsS3DeploymentService implements DeploymentService {
     }
 
     def deployToS3Bucket(ReleaseInfo releaseInfo, Env environment) {
+        Logger.info("AwsS3DeploymentService:deployToS3Bucket:started")
         S3Repo s3Repo = s3RepoMap.get(environment.getValue())
         String region = s3Repo.getRegion()
         String credentials = s3Repo.getCredentialsId()
@@ -41,8 +43,9 @@ class AwsS3DeploymentService implements DeploymentService {
             dsl.s3Delete bucket: bucket, path: s3LatestPath
             dsl.s3Upload bucket: bucket, file: "${releaseInfo.getUiDistributionFolder()}/",  path: s3LatestPath
             def files = dsl.s3FindFiles bucket: bucket, path: s3Path, glob: "**", onlyFiles: true
-            dsl.echo "${files.toString()}"
+            Logger.info("AwsS3DeploymentService:deployToS3Bucket:files: ${files.toString()}")
         }
+        Logger.info("AwsS3DeploymentService:deployToS3Bucket:finished")
     }
 
     def getS3Path(ReleaseInfo releaseInfo, Env env, S3Repo s3Repo) {

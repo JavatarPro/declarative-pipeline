@@ -1,13 +1,15 @@
 package pro.javatar.pipeline.service.cache
 
+import pro.javatar.pipeline.util.Logger
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 class CacheService {
 
     void setup(String service) {
-        dsl.echo "CacheService: setup service: ${service} started"
+        Logger.debug("CacheService: setup service: ${service} started")
         CacheRequestHolder.getCaches(service).each {String folder -> createRepoFolderWorkspaceSymbolicLink(folder)}
-        dsl.echo "CacheService: setup service: ${service} finished"
+        Logger.debug("CacheService: setup service: ${service} finished")
     }
 
     void createRepoFolderWorkspaceSymbolicLink(String folderToBeCached) {
@@ -15,24 +17,24 @@ class CacheService {
     }
 
     void createRepoFolderWorkspaceSymbolicLink(String folderToBeCached, String alias) {
-        dsl.echo "CacheService: createFolderWorkspaceSymbolicLink with folderToBeCached: ${folderToBeCached} " +
-                "& alias ${alias} started"
+        Logger.info("CacheService: createFolderWorkspaceSymbolicLink with folderToBeCached: ${folderToBeCached} " +
+                "& alias ${alias} started")
         String buildFolder = dsl.env.WORKSPACE
         String cacheFolder = "${buildFolder}/cache/${alias}"
         String repoFolder = "${buildFolder}/repo/${folderToBeCached}"
         createFolderSymbolicLink(cacheFolder, repoFolder)
-        dsl.echo "CacheService: createFolderWorkspaceSymbolicLink finished"
+        Logger.info("CacheService: createFolderWorkspaceSymbolicLink finished")
     }
 
     void createFolderSymbolicLink(String cacheFolder, String targetFolder) {
-        dsl.echo "CacheService: createFolderSymbolicLink with cacheFolder: ${cacheFolder} " +
-                "& targetFolder ${targetFolder} started"
+        Logger.info("CacheService: createFolderSymbolicLink with cacheFolder: ${cacheFolder} " +
+                "& targetFolder ${targetFolder} started")
         if (! dsl.fileExists(cacheFolder)) {
             dsl.sh "mkdir -p ${cacheFolder}"
         }
-        dsl.echo "ln -s ${cacheFolder} ${targetFolder}"
+        Logger.trace("ln -s ${cacheFolder} ${targetFolder}")
         dsl.sh "ln -s ${cacheFolder} ${targetFolder}"
-        dsl.echo "CacheService: createFolderSymbolicLink finished"
+        Logger.info("CacheService: createFolderSymbolicLink finished")
     }
 
 }

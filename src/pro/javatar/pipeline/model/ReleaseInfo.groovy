@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,14 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.model
 
 import pro.javatar.pipeline.service.infra.model.InfraRequest
+import pro.javatar.pipeline.util.Logger
 
-import static pro.javatar.pipeline.util.Utils.addPrefixIfNotExists
-import static pro.javatar.pipeline.util.Utils.isNotBlank
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
+import static pro.javatar.pipeline.util.StringUtils.addPrefixIfNotExists
+import static pro.javatar.pipeline.util.StringUtils.isNotBlank
 
 /**
  * @author Borys Zora
@@ -37,6 +36,7 @@ class ReleaseInfo implements Serializable {
 
     String flowPrefix
 
+    // we use list for multi docker deployments support
     List<String> dockerImageNames = new ArrayList<>()
 
     Map<String, String> customDockerFileNames = new HashMap<>()
@@ -90,10 +90,7 @@ class ReleaseInfo implements Serializable {
     }
 
     String getDockerImageName() {
-        if (dockerImageNames.isEmpty()) {
-            return null
-        }
-        String dockerImageName = dockerImageNames.get(0)
+        String dockerImageName = getDockerImageName(0)
         if (isNotBlank(dockerImageName)) {
             return dockerImageName
         }
@@ -105,10 +102,14 @@ class ReleaseInfo implements Serializable {
     }
 
     void addDockerImageName(String dockerImageName) {
+
         this.dockerImageNames.add(dockerImageName)
     }
 
     String getDockerImageName(int id) {
+        if (dockerImageNames.isEmpty()) {
+            return null
+        }
         this.dockerImageNames.get(id)
     }
 
@@ -173,11 +174,11 @@ class ReleaseInfo implements Serializable {
 
     boolean isMultiDockerBuild() {
         if (dockerImageNames == null) {
-            dsl.echo "WARN: dockerImageNames is null but isMultiDockerBuild was triggered "
+            Logger.warn("dockerImageNames is null but isMultiDockerBuild was triggered ")
             return false
         }
         if (dockerImageNames.size() > 1) {
-            dsl.echo "INFO: multiDockerBuild is not best practice, please consider to refactor"
+            Logger.info("multiDockerBuild is not best practice, please consider to refactor")
             return true
         }
         return false
@@ -208,8 +209,8 @@ class ReleaseInfo implements Serializable {
                 ", serviceName='" + serviceName + '\'' +
                 ", flowPrefix='" + flowPrefix + '\'' +
                 ", uiDistributionFolder='" + uiDistributionFolder + '\'' +
-                ", dockerImageNames='" + getDockerImageNames() + '\'' +
-                ", customDockerFileNames='" + getCustomDockerFileNames() + '\'' +
+                ", dockerImageNames='" + getDockerImageNames().size() + '\'' +
+                ", customDockerFileNames='" + getCustomDockerFileNames().size() + '\'' +
                 ", dockerImageVersion='" + getDockerImageVersion() + '\'' +
                 ", buildReleaseVersion='" + getBuildReleaseVersion() + '\'' +
                 '}';

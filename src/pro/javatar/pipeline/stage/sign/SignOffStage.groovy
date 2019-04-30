@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,7 @@ import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.ReleaseApprovalStatus
 import pro.javatar.pipeline.service.SlackService
 import pro.javatar.pipeline.stage.Stage
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -32,19 +33,19 @@ abstract class SignOffStage extends Stage {
 
     @Override
     void execute() throws PipelineException {
-        dsl.echo "SignOffStage execute started: ${toString()}"
+        Logger.info("SignOffStage execute started: ${toString()}")
         def releaseApproval = getReleaseApprovedStatus()
-        dsl.echo "releaseApproval: ${releaseApproval}"
+        Logger.debug("releaseApproval: ${releaseApproval}")
 
         if (ReleaseApprovalStatus.RELEASE != releaseApproval) {
-            dsl.echo "Technical commit without release"
+            Logger.info("Technical commit without release")
             exitFromPipeline = true
         }
-        dsl.echo "SignOffStage execute finished"
+        Logger.info("SignOffStage execute finished")
     }
 
     def getReleaseApprovedStatus() {
-        dsl.echo "release approval status by developer"
+        Logger.info("release approval status by developer")
         try {
             dsl.timeout(time: 30, unit: 'MINUTES') {
                 return dsl.input(
@@ -63,7 +64,7 @@ abstract class SignOffStage extends Stage {
                 )
             }
         } catch (Exception e) {
-            dsl.echo "some exception occured in getReleaseApprovedStatus: ${e.getMessage()}"
+            Logger.error("some exception occured in getReleaseApprovedStatus: ${e.getMessage()}")
             return "${ReleaseApprovalStatus.NOT_RELEASE}"
         }
     }

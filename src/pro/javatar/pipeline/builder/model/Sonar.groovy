@@ -4,11 +4,13 @@
  */
 package pro.javatar.pipeline.builder.model
 
+import pro.javatar.pipeline.util.Logger
+
 /**
  * @author Borys Zora
  * @version 2018-12-04
  */
-class Sonar {
+class Sonar implements Serializable {
 
     String serverUrl
 
@@ -21,6 +23,10 @@ class Sonar {
     String jenkinsSettingsName
 
     String params
+
+    Sonar() {
+        Logger.debug("Sonar:default constructor")
+    }
 
     String getServerUrl() {
         return serverUrl

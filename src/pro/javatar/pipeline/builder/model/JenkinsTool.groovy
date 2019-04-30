@@ -1,14 +1,22 @@
 package pro.javatar.pipeline.builder.model
 
-class JenkinsTool {
+import pro.javatar.pipeline.util.Logger
+
+class JenkinsTool implements Serializable {
 
     String java
 
     String maven
 
+    String gradle
+
     String npmVersion
 
     String npmType
+
+    JenkinsTool() {
+        Logger.debug("JenkinsTool:default constructor")
+    }
 
     String getJava() {
         return java
@@ -33,6 +41,19 @@ class JenkinsTool {
 
     JenkinsTool withMaven(String maven) {
         this.maven = maven
+        return this
+    }
+
+    String getGradle() {
+        return gradle
+    }
+
+    void setGradle(String gradle) {
+        this.gradle = gradle
+    }
+
+    JenkinsTool withGradle(String gradle) {
+        this.gradle = gradle
         return this
     }
 
@@ -67,6 +88,7 @@ class JenkinsTool {
         return "JenkinsTool{" +
                 "java='" + java + '\'' +
                 ", maven='" + maven + '\'' +
+                ", gradle='" + gradle + '\'' +
                 ", npmVersion='" + npmVersion + '\'' +
                 ", npmType='" + npmType + '\'' +
                 '}';

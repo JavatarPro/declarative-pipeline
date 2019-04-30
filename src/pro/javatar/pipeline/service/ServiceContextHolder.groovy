@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,6 +14,8 @@
  */
 
 package pro.javatar.pipeline.service
+
+import pro.javatar.pipeline.util.Logger
 
 import java.util.concurrent.ConcurrentHashMap
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
@@ -41,12 +43,12 @@ class ServiceContextHolder {
     }
 
     static def getService(Class service) {
-        dsl.echo "ServiceContextHolder: getService: ${service}"
+        Logger.trace("ServiceContextHolder: getService: ${service}")
         if (service == null) {
             return
         }
         def result = serviceHolder.get(service)
-        dsl.echo "ServiceContextHolder: getService: result: ${result}"
+        Logger.trace("ServiceContextHolder: getService: result: ${result}")
         return result
     }
 

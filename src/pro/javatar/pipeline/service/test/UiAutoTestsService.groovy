@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,6 +17,7 @@ package pro.javatar.pipeline.service.test
 
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.Env
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -31,7 +32,7 @@ class UiAutoTestsService implements AutoTestsService {
     @Override
     void runAutoTests(String service, Env environment) throws PipelineException {
         String env = environment.getValue()
-        dsl.echo "runAutoTests with service: ${service}, env: ${env}"
+        Logger.info("runAutoTests with service: ${service}, env: ${env}")
         dsl.build job: uiSystemTestsJobName, parameters: [
                 [$class: 'StringParameterValue', name: 'service', value: service],
                 [$class: 'StringParameterValue', name: 'test_env', value: env]

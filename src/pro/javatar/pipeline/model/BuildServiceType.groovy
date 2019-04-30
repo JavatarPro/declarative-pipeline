@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,6 +25,7 @@ import pro.javatar.pipeline.exception.UnrecognizedRevisionControlTypeException
 enum BuildServiceType implements Serializable {
 
     MAVEN,
+    GRADLE,
     NPM, // e.g. angular + AWS S3
     NPM_DOCKER, // e.g. react + docker
     SENCHA,
@@ -38,6 +39,9 @@ enum BuildServiceType implements Serializable {
         }
         if("maven".equalsIgnoreCase(type) || "mvn".equalsIgnoreCase(type)) {
             return MAVEN
+        }
+        if("gradle".equalsIgnoreCase(type) || "gradlew".equalsIgnoreCase(type)) {
+            return GRADLE
         }
         if ("npm".equalsIgnoreCase(type) || "node".equalsIgnoreCase(type)
                 || "nodejs".equalsIgnoreCase(type) || "npm_cdn".equalsIgnoreCase(type)) {

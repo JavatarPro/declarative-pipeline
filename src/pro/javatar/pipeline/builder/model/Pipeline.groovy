@@ -1,6 +1,9 @@
 package pro.javatar.pipeline.builder.model
 
-class Pipeline {
+import pro.javatar.pipeline.util.Logger
+import pro.javatar.pipeline.util.StringUtils
+
+class Pipeline implements Serializable {
 
     // TODO validate enum PipelineStagesSuit
     String pipelineSuit = "service"
@@ -8,17 +11,25 @@ class Pipeline {
     // TODO validate all String exists in enum if suit custom
     List<String> stages = new ArrayList<>()
 
+    Pipeline() {
+        Logger.debug("Pipeline:default constructor")
+    }
+
     String getPipelineSuit() {
         return pipelineSuit
     }
 
     Pipeline withPipelineSuit(String pipelineSuit) {
-        this.pipelineSuit = pipelineSuit
+        Logger.info("Pipeline:withPipelineSuit: ${pipelineSuit}")
+        setPipelineSuit(pipelineSuit)
         return this
     }
 
     void setPipelineSuit(String pipelineSuit) {
-        this.pipelineSuit = pipelineSuit
+        Logger.info("Pipeline:setPipelineSuit: ${pipelineSuit}")
+        if (StringUtils.isBlank(pipelineSuit)) {
+            this.pipelineSuit = pipelineSuit
+        }
     }
 
     List<String> getStages() {
@@ -29,11 +40,13 @@ class Pipeline {
     }
 
     void setStages(List<String> stages) {
+        Logger.info("Pipeline:setStages: ${stages}")
         this.stages = stages
     }
 
     Pipeline withStages(List<String> stages) {
-        this.stages = stages
+        Logger.info("Pipeline:withStages: ${stages}")
+        setStages(stages)
         return this
     }
 

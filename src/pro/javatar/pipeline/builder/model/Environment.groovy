@@ -5,10 +5,11 @@
 package pro.javatar.pipeline.builder.model;
 
 /**
+ * TODO remove does not work
  * @author Borys Zora
  * @version 2019-02-17
  */
-class Environment {
+class Environment implements Serializable {
 
     // e.g. dev, qa, uat, prod
     private String env;
@@ -21,18 +22,25 @@ class Environment {
         return env;
     }
 
-    boolean equals(o) {
-        if (this.is(o)) return true
-        if (getClass() != o.class) return false
+    @Override
+    boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Environment that = (Environment) o
+        Environment that = (Environment) o;
 
-        if (env != that.env) return false
-
-        return true
+        return env != null ? env.equals(that.env) : that.env == null;
     }
 
+    @Override
     int hashCode() {
-        return (env != null ? env.hashCode() : 0)
+        return env != null ? env.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Environment{" +
+                "env='" + env + '\'' +
+                '}';
     }
 }

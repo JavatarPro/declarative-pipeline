@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +15,8 @@
 
 package pro.javatar.pipeline.builder;
 
-import pro.javatar.pipeline.service.SlackService;
+import pro.javatar.pipeline.service.SlackService
+import pro.javatar.pipeline.util.Logger;
 
 /**
  * @author Borys Zora
@@ -26,6 +27,10 @@ class SlackBuilder implements Serializable {
     private String channel;
     private String webHookUrl;
     private boolean enabled;
+
+    SlackBuilder() {
+        Logger.debug("SlackBuilder:default constructor")
+    }
 
     public SlackBuilder withChannel(String channel) {
         this.channel = channel;

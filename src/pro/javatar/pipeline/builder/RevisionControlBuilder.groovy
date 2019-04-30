@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,7 @@ import pro.javatar.pipeline.service.vcs.HgService
 import pro.javatar.pipeline.service.vcs.GitService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
 import pro.javatar.pipeline.service.vcs.VcsRepositoryUrlResolver
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -40,8 +41,12 @@ class RevisionControlBuilder implements Serializable {
     RevisionControlType type
     VcsRepositoryType vcsRepositoryType
 
+    RevisionControlBuilder() {
+        Logger.debug("RevisionControlBuilder:default constructor")
+    }
+
     RevisionControlService build() {
-        dsl.echo "RevisionControlService.build() started"
+        Logger.info("RevisionControlService.build() started")
         RevisionControlService result
         if (type == RevisionControlType.MERCURIAL) {
             result = new HgService(repo, credentialsId, repoOwner, flowPrefix)
@@ -50,7 +55,7 @@ class RevisionControlBuilder implements Serializable {
         }
         result.setUrlResolver(new VcsRepositoryUrlResolver(vcsRepositoryType, true, result))
         result.setDomain(domain)
-        dsl.echo "RevisionControlService.build() finished"
+        Logger.info("RevisionControlService.build() finished")
         return result
     }
 

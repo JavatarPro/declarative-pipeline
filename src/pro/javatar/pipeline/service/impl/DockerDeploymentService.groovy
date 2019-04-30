@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,7 @@ import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.DeploymentService
 import pro.javatar.pipeline.service.orchestration.DockerService
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -38,46 +39,46 @@ class DockerDeploymentService implements DeploymentService {
 
     @Override
     void deployArtifact(Env environment, ReleaseInfo releaseInfo) {
-        dsl.echo "DockerDeploymentService deployArtifact started"
+        Logger.info("DockerDeploymentService deployArtifact started")
         if (releaseInfo.isMultiDockerBuild()) {
             deployMultipleArtifacts(environment, releaseInfo)
         } else {
             deploySingleArtifact(environment, releaseInfo)
         }
-        dsl.echo "DockerDeploymentService deployArtifact finished"
+        Logger.info("DockerDeploymentService deployArtifact finished")
     }
 
     void deploySingleArtifact(Env environment, ReleaseInfo releaseInfo) {
         String version = releaseInfo.getReleaseVersion()
-        dsl.echo "DockerDeploymentService deploySingleArtifact to ${environment.getValue()} " +
-                "env and version: ${version} started"
+        Logger.debug("DockerDeploymentService deploySingleArtifact to ${environment.getValue()} " +
+                "env and version: ${version} started")
         // TODO move & split this method to do it on build and release stage
         if (environment == Env.DEV) {
             dockerService.dockerPublish(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion(), environment)
         }
         dockerService.dockerDeployContainer(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion(),
                 environment)
-        dsl.echo "DockerDeploymentService deploySingleArtifact to ${environment.getValue()} " +
-                "env and version: ${version} finished"
+        Logger.debug("DockerDeploymentService deploySingleArtifact to ${environment.getValue()} " +
+                "env and version: ${version} finished")
     }
 
     void deploySingleArtifactForMultiDocker(Env environment, String dockerImageName, ReleaseInfo releaseInfo) {
         String version = releaseInfo.getReleaseVersion()
-        dsl.echo "DockerDeploymentService deploySingleArtifactForMultiDocker to ${environment.getValue()}, " +
-                "dockerImageName: ${dockerImageName}, env and version: ${version} started"
+        Logger.debug("DockerDeploymentService deploySingleArtifactForMultiDocker to ${environment.getValue()}, " +
+                "dockerImageName: ${dockerImageName}, env and version: ${version} started")
         // TODO move & split this method to do it on build and release stage
         if (environment == Env.DEV) {
             dockerService.dockerPublish(dockerImageName, releaseInfo.getDockerImageVersion(), environment)
         }
         dockerService.dockerDeployContainer(dockerImageName, releaseInfo.getDockerImageVersion(), environment)
-        dsl.echo "DockerDeploymentService deploySingleArtifactForMultiDocker to ${environment.getValue()}, " +
-                "dockerImageName: ${dockerImageName}, env and version: ${version} finished"
+        Logger.debug("DockerDeploymentService deploySingleArtifactForMultiDocker to ${environment.getValue()}, " +
+                "dockerImageName: ${dockerImageName}, env and version: ${version} finished")
     }
 
     // deployment with prefix not yet supported
     void deployMultipleArtifacts(Env environment, ReleaseInfo releaseInfo) {
-        dsl.echo "DockerDeploymentService deployMultipleArtifacts with environment: ${environment} " +
-                "& releaseInfo: ${releaseInfo} started"
+        Logger.debug("DockerDeploymentService deployMultipleArtifacts with environment: ${environment} " +
+                "& releaseInfo: ${releaseInfo} started")
         def stepsForParallel = [:]
         releaseInfo.getCustomDockerFileNames().each {
             key, value -> stepsForParallel[key] = {
@@ -85,8 +86,8 @@ class DockerDeploymentService implements DeploymentService {
             }
         }
         dsl.parallel stepsForParallel
-        dsl.echo "DockerDeploymentService deployMultipleArtifacts with environment: ${environment} " +
-                "& releaseInfo: ${releaseInfo} finished"
+        Logger.debug("DockerDeploymentService deployMultipleArtifacts with environment: ${environment} " +
+                "& releaseInfo: ${releaseInfo} finished")
     }
 
 }

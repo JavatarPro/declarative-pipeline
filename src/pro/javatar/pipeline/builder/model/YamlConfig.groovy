@@ -1,8 +1,11 @@
 package pro.javatar.pipeline.builder.model
 
 import pro.javatar.pipeline.builder.Npm
+import pro.javatar.pipeline.util.LogLevel
+import pro.javatar.pipeline.util.Logger
+import pro.javatar.pipeline.util.StringUtils
 
-class YamlConfig {
+class YamlConfig implements Serializable {
 
     String version
 
@@ -11,6 +14,8 @@ class YamlConfig {
     Pipeline pipeline = new Pipeline()
 
     Maven maven = new Maven()
+
+    Gradle gradle = new Gradle()
 
     Npm npm = new Npm()
 
@@ -24,9 +29,11 @@ class YamlConfig {
 
     JenkinsTool jenkinsTool = new JenkinsTool()
 
-    String orchestrationService
+    String orchestrationService = null
 
     Mesos mesos = new Mesos()
+
+    Nomad nomad = new Nomad()
 
     AutoTest autoTest = new AutoTest()
 
@@ -34,7 +41,14 @@ class YamlConfig {
 
     Sonar sonar = new Sonar()
 
+    LogLevel logLevel = LogLevel.INFO
+
+    YamlConfig() {
+        Logger.debug("YamlConfig:default constructor")
+    }
+
     YamlConfig populateServiceRepo() {
+        Logger.info("YamlConfig:populateServiceRepo")
         service.setRepo(vcs.getRepo().get(service.getVcsRepoId()))
         return this
     }
@@ -73,8 +87,23 @@ class YamlConfig {
         this.maven = maven
     }
 
+    Gradle getGradle() {
+        return gradle
+    }
+
+    void setGradle(Gradle gradle) {
+        this.gradle = gradle
+    }
+
+    YamlConfig withGradle(Gradle gradle) {
+        Logger.info("YamlConfig:withGradle: ${gradle}")
+        setGradle(gradle)
+        return this
+    }
+
     YamlConfig withMaven(Maven maven) {
-        this.maven = maven
+        Logger.info("YamlConfig:withMaven: ${maven}")
+        setMaven(maven)
         return this
     }
 
@@ -100,7 +129,8 @@ class YamlConfig {
     }
 
     YamlConfig withUi(Ui ui) {
-        this.ui = ui
+        Logger.info("YamlConfig:withUi: ${ui}")
+        setUi(ui)
         return this
     }
 
@@ -161,24 +191,30 @@ class YamlConfig {
     }
 
     void setS3(S3 s3) {
+        if (s3 == null) {
+            return
+        }
         this.s3 = s3
     }
 
     YamlConfig withS3(S3 s3) {
-        this.s3 = s3
+        Logger.info("YamlConfig:withS3: ${s3}")
+        setS3(s3)
         return this
     }
 
     String getOrchestrationService() {
-        return orchestrationService
+        return service.getOrchestration()
     }
 
     void setOrchestrationService(String orchestrationService) {
-        this.orchestrationService = orchestrationService
+        if (StringUtils.isNotBlank(orchestrationService)) {
+            this.orchestrationService = orchestrationService
+        }
     }
 
     YamlConfig withOrchestrationService(String orchestrationService) {
-        this.orchestrationService = orchestrationService
+        setOrchestrationService(orchestrationService)
         return this
     }
 
@@ -191,7 +227,22 @@ class YamlConfig {
     }
 
     YamlConfig withMesos(Mesos mesos) {
-        this.mesos = mesos
+        Logger.info("YamlConfig:withMesos: ${mesos}")
+        setMesos(mesos)
+        return this
+    }
+
+    Nomad getNomad() {
+        return nomad
+    }
+
+    void setNomad(Nomad nomad) {
+        this.nomad = nomad
+    }
+
+    YamlConfig withNomad(Nomad nomad) {
+        Logger.info("YamlConfig:withNomad: ${nomad.toString()}")
+        setNomad(nomad)
         return this
     }
 
@@ -231,6 +282,19 @@ class YamlConfig {
 
     YamlConfig withCacheRequest(CacheRequest cacheRequest) {
         this.cacheRequest = cacheRequest
+        return this
+    }
+
+    LogLevel getLogLevel() {
+        return logLevel
+    }
+
+    void setLogLevel(LogLevel logLevel) {
+        this.logLevel = logLevel
+    }
+
+    YamlConfig withLogLevel(LogLevel logLevel) {
+        this.logLevel = logLevel
         return this
     }
 

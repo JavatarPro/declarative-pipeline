@@ -1,8 +1,14 @@
 package pro.javatar.pipeline.builder.model
 
-class CacheRequest {
+import pro.javatar.pipeline.util.Logger
+
+class CacheRequest implements Serializable {
 
     Map<String, List<String>> caches = new HashMap<>()
+
+    CacheRequest() {
+        Logger.debug("CacheRequest:default constructor")
+    }
 
     Map<String, List<String>> getCaches() {
         return caches

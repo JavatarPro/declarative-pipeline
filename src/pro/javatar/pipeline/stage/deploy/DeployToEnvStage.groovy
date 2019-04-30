@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@ import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.DeploymentService
 import pro.javatar.pipeline.service.ServiceContextHolder
 import pro.javatar.pipeline.stage.Stage
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -33,13 +34,13 @@ abstract class DeployToEnvStage extends Stage {
 
     @Override
     void execute() throws PipelineException {
-        dsl.echo "DeployToEnvStage to ${getEnv().getValue()} execute started: ${toString()}"
+        Logger.info("DeployToEnvStage to ${getEnv().getValue()} execute started: ${toString()}")
         dsl.timeout(time: 10, unit: 'MINUTES') {
             dsl.dir(releaseInfo.repoFolder) {
                 deploymentService.deployArtifact(getEnv(), releaseInfo)
             }
         }
-        dsl.echo "DeployToEnvStage to ${getEnv().getValue()} execute finished"
+        Logger.info("DeployToEnvStage to ${getEnv().getValue()} execute finished")
     }
 
     abstract Env getEnv()

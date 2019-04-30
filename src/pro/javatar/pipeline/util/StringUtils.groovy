@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,14 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.util
+
+import com.cloudbees.groovy.cps.NonCPS
+import groovy.json.JsonBuilder
+import groovy.text.GStringTemplateEngine
+import org.apache.commons.io.IOUtils
 
 /**
  * Author : Borys Zora
  * Date Created: 3/26/18 11:23
  */
-class Utils {
+class StringUtils {
 
     static boolean isBlank(final CharSequence cs) {
         int strLen;
@@ -54,6 +58,39 @@ class Utils {
             return source
         }
         return "${prefix}-${source}"
+    }
+
+    @NonCPS
+    static String toString(Map map) {
+        StringBuilder sb = new StringBuilder("{")
+        map.each { key, value ->
+            sb.append("key: ${key}")
+                    .append(", value: ${value}")
+        }
+        sb.append("}")
+        return sb.toString()
+    }
+
+    @NonCPS
+    static String toString(def other) {
+        if (other instanceof Map) {
+            return toString((Map) other)
+        }
+        return other.toString()
+    }
+
+    @NonCPS
+    static def renderTemplate(String template, Map binding) {
+        def engine = new GStringTemplateEngine()
+        def result = engine.createTemplate(template).make(binding)
+        return result.toString()
+    }
+
+    static String toJsonString(def object) {
+        if (object == null) {
+            return null
+        }
+        return new JsonBuilder(object).toPrettyString()
     }
 
 }

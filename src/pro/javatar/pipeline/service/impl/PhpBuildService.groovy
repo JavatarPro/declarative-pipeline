@@ -3,6 +3,8 @@ package pro.javatar.pipeline.service.impl
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.orchestration.DockerService
+import pro.javatar.pipeline.util.FileUtils
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -14,7 +16,7 @@ class PhpBuildService extends BuildService {
 
     PhpBuildService(DockerService dockerService) {
         this.dockerService = dockerService
-        dsl.echo "PhpBuildService constructor"
+        Logger.debug("PhpBuildService constructor")
     }
 
     PhpBuildService(DockerService dockerService, String applicationFile) {
@@ -29,10 +31,10 @@ class PhpBuildService extends BuildService {
 
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
-        dsl.echo 'PhpBuildService buildAndUnitTests start'
+        Logger.info('PhpBuildService buildAndUnitTests start')
         dsl.sh "pwd; ls -la; ls -la *"
         dockerService.dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
-        dsl.echo 'PhpBuildService buildAndUnitTests end'
+        Logger.info('PhpBuildService buildAndUnitTests end')
     }
 
     @Override
@@ -43,18 +45,18 @@ class PhpBuildService extends BuildService {
 
     @Override
     def setupReleaseVersion(String releaseVersion) {
-        dsl.echo "setupReleaseVersion: ${releaseVersion} started"
+        Logger.info("setupReleaseVersion: ${releaseVersion} started")
         String currentVersion = getCurrentVersion()
-        replace(currentVersion, releaseVersion, applicationFile)
-        dsl.echo "setupReleaseVersion: ${releaseVersion} finished"
+        FileUtils.replace(currentVersion, releaseVersion, applicationFile)
+        Logger.info("setupReleaseVersion: ${releaseVersion} finished")
     }
 
     @Override
     def setupVersion(String version) {
-        dsl.echo "setupVersion: ${version} started"
+        Logger.info("setupVersion: ${version} started")
         String currentVersion = getCurrentVersion()
-        replace(currentVersion, version, applicationFile)
-        dsl.echo "setupVersion: ${version} finished"
+        FileUtils.replace(currentVersion, version, applicationFile)
+        Logger.info("setupVersion: ${version} finished")
     }
 
 }

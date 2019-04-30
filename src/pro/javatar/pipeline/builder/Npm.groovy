@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
 package pro.javatar.pipeline.builder
 
 import pro.javatar.pipeline.service.impl.NpmBuildService
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -43,26 +44,23 @@ class Npm implements Serializable {
 
     int buildTimeoutInMinutes = 5
 
+    Npm() {
+        Logger.debug("Npm:default constructor")
+    }
+
     String getNpmVersion() {
         return npmVersion
     }
 
     NpmBuildService build() {
-        dsl.echo "NpmBuildService build"
+        Logger.debug("Npm:build started")
         NpmBuildService npmBuildService = new NpmBuildService()
-        dsl.echo "new NpmBuildService() succeeded"
         npmBuildService.setLibraryFolder(libraryFolder)
-        dsl.echo "setLibraryFolder succeeded"
         npmBuildService.setType(npmType)
-        dsl.echo "setType succeeded"
         npmBuildService.setNpmVersion(npmVersion)
-        dsl.echo "setNpmVersion succeeded"
         npmBuildService.setModuleRepository(moduleRepository)
-        dsl.echo "setModuleRepository succeeded"
         npmBuildService.setDistributionFolder(distributionFolder)
-        dsl.echo "setDistributionFolder succeeded"
         npmBuildService.withUnitTestsTimeout(buildTimeoutInMinutes)
-        // npmBuildService.setUp()
         return npmBuildService
     }
 

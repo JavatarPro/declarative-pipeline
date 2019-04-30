@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,21 +12,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.service.orchestration
 
 import pro.javatar.pipeline.service.infra.model.Infra
+import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
+import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
 
 /**
  * Author : Borys Zora
  * Date Created: 3/22/18 22:11
  */
-interface DockerOrchestrationService {
+interface DockerOrchestrationService extends Serializable {
 
     def setup()
 
-    // deploy µService docker container
+    @Deprecated // @see dockerDeployContainer(DeploymentRequestBO deploymentRequest)
     def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment)
+
+    DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO deploymentRequest)
 
     def deployInfraContainer(Infra infra)
 

@@ -1,6 +1,8 @@
 package pro.javatar.pipeline.builder.model
 
-class AutoTest {
+import pro.javatar.pipeline.util.Logger
+
+class AutoTest implements Serializable {
 
     String jobName
 
@@ -9,6 +11,10 @@ class AutoTest {
     boolean skipCodeQualityVerification
 
     int sleepInSeconds = -1
+
+    AutoTest() {
+        Logger.debug("AutoTest:default constructor")
+    }
 
     String getJobName() {
         return jobName

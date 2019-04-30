@@ -1,8 +1,19 @@
 package pro.javatar.pipeline.builder.model
 
-class Ui {
+import pro.javatar.pipeline.util.Logger
+
+class Ui implements Serializable {
 
     String deploymentType
+
+    Ui() {
+        Logger.debug("Ui:default constructor")
+    }
+
+    Ui(String deploymentType) {
+        Logger.info("Ui constructor with deploymentType: ${deploymentType}")
+        this.deploymentType = deploymentType
+    }
 
     String getDeploymentType() {
         return deploymentType
@@ -13,7 +24,7 @@ class Ui {
     }
 
     Ui withDeploymentType(String deploymentType) {
-        this.deploymentType = deploymentType
+        setDeploymentType(deploymentType)
         return this
     }
 

@@ -16,8 +16,6 @@ class DockerRegistryBO {
 
     String registry
 
-    DockerOrchestrationService orchestrationService
-
     String getCredentialsId() {
         return credentialsId
     }
@@ -41,19 +39,6 @@ class DockerRegistryBO {
 
     DockerRegistryBO withRegistry(String registry) {
         this.registry = registry
-        return this
-    }
-
-    DockerOrchestrationService getOrchestrationService() {
-        return orchestrationService
-    }
-
-    void setOrchestrationService(DockerOrchestrationService orchestrationService) {
-        this.orchestrationService = orchestrationService
-    }
-
-    DockerRegistryBO withOrchestrationService(DockerOrchestrationService orchestrationService) {
-        this.orchestrationService = orchestrationService
         return this
     }
 

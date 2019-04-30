@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,11 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline
 
 import pro.javatar.pipeline.model.ReleaseInfo;
-import pro.javatar.pipeline.stage.Stage;
+import pro.javatar.pipeline.stage.Stage
+import pro.javatar.pipeline.util.Logger;
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 /**
  * @author Borys Zora
@@ -40,7 +41,7 @@ class Flow implements Serializable {
             stage.setReleaseInfo(releaseInfo)
             execute(stage)
             if (stage.exitFromPipeline) {
-                dsl.echo "pipeline will be stopped due to exitFromPipeline is ${stage.exitFromPipeline}"
+                Logger.info("pipeline will be stopped due to exitFromPipeline is ${stage.exitFromPipeline}")
                 return
             }
         }
@@ -49,7 +50,7 @@ class Flow implements Serializable {
     void execute(Stage stage) {
         dsl.stage(stage.getName()) {
             if (stage.shouldSkip()) {
-                dsl.echo "stage will be skipped"
+                Logger.warn("stage will be skipped")
                 return
             }
             stage.execute();

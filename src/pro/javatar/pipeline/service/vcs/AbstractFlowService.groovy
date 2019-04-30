@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.service.vcs
 
 import pro.javatar.pipeline.model.ReleaseInfo
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -37,34 +37,34 @@ abstract class AbstractFlowService<VCS extends RevisionControlService> {
 
     def initFlow() {
         if (revService.hasFlowPrefix()) {
-            dsl.echo "started AbstractFlowService initFlow with prefix"
+            Logger.info("started AbstractFlowService initFlow with prefix")
             createBranchesIfNotExists(revService.getFlowPrefix())
             initFlowWithPrefix(revService.getFlowPrefix())
         } else {
-            dsl.echo "started AbstractFlowService initFlow without prefix"
+            Logger.info("started AbstractFlowService initFlow without prefix")
             createBranchesIfNotExists(null)
             initDefaultFlow()
         }
-        dsl.echo "finished AbstractFlowService initFlow"
+        Logger.info("finished AbstractFlowService initFlow")
     }
 
     def createBranchesIfNotExists(String prefix) {
-        dsl.echo "started createBranchesIfNotExists prefix: ${prefix}"
+        Logger.info("started createBranchesIfNotExists prefix: ${prefix}")
         String prodBranch = revService.getProdBranch()
         String prodBranchWithPrefix = revService.getProdBranchWithPrefix(prefix)
         String developWithPrefix = revService.getDevBranchWithPrefix(prefix)
         if (!revService.isBranchExists(prodBranchWithPrefix)) {
-            dsl.echo "createBranchesIfNotExists: missing branch prodBranchWithPrefix: ${prodBranchWithPrefix}"
+            Logger.debug("createBranchesIfNotExists: missing branch prodBranchWithPrefix: ${prodBranchWithPrefix}")
             revService.switchToBranch(prodBranch)
             revService.createAndPushBranch(prodBranchWithPrefix)
         }
         if (!revService.isBranchExists(developWithPrefix)) {
-            dsl.echo "createBranchesIfNotExists: missing branch developWithPrefix: ${developWithPrefix}"
+            Logger.debug("createBranchesIfNotExists: missing branch developWithPrefix: ${developWithPrefix}")
             revService.switchToBranch(prodBranchWithPrefix)
             revService.createAndPushBranch(developWithPrefix)
         }
         revService.switchToBranch(developWithPrefix)
-        dsl.echo "finished createBranchesIfNotExists prefix: ${prefix}"
+        Logger.info("finished createBranchesIfNotExists prefix: ${prefix}")
     }
 
     def getReleaseBranchFolder() {

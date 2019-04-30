@@ -1,31 +1,31 @@
 package pro.javatar.pipeline.builder.model
 
-class Docker {
+import pro.javatar.pipeline.util.Logger
 
-    Map<Environment, DockerRegistry> dockerRegistries = new HashMap<>()
+class Docker implements Serializable {
+
+    Map<String, DockerRegistry> dockerRegistries = new HashMap<>()
 
     String customDockerFileName = ""
+
+    Docker() {
+        Logger.debug("Docker:default constructor")
+    }
 
     Map<String, DockerRegistry> getDockerRegistries() {
         return dockerRegistries
     }
 
-    void setDockerRegistries(Map<Environment, DockerRegistry> dockerRegistries) {
+    void setDockerRegistries(Map<String, DockerRegistry> dockerRegistries) {
         this.dockerRegistries = dockerRegistries
     }
 
-    Docker withDockerRegistries(Map<Environment, DockerRegistry> dockerRegistries) {
+    Docker withDockerRegistries(Map<String, DockerRegistry> dockerRegistries) {
         this.dockerRegistries = dockerRegistries
         return this
     }
 
     Docker addDockerRegistries(String env, DockerRegistry dockerRegistry) {
-        Environment environment = new Environment(env);
-        this.dockerRegistries.put(environment, dockerRegistry)
-        return this
-    }
-
-    Docker addDockerRegistries(Environment env, DockerRegistry dockerRegistry) {
         this.dockerRegistries.put(env, dockerRegistry)
         return this
     }
@@ -47,7 +47,7 @@ class Docker {
     @Override
     public String toString() {
         return "Docker{" +
-                "dockerRegistries=" + dockerRegistries +
+                "dockerRegistries=" + dockerRegistries.size() +
                 ", customDockerFileName='" + customDockerFileName + '\'' +
                 '}';
     }

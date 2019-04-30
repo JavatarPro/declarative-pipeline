@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,73 +12,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.builder
 
+import pro.javatar.pipeline.model.PipelineStagesSuit
+import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.test.BackEndAutoTestsLibrary
 import pro.javatar.pipeline.service.test.BackEndAutoTestsService
 import pro.javatar.pipeline.service.test.SonarQubeService
+import pro.javatar.pipeline.util.Logger
 
-import static pro.javatar.pipeline.util.Utils.isBlank
+import static pro.javatar.pipeline.util.StringUtils.isBlank
 
 /**
  * Author : Borys Zora
  * Date Created: 3/29/18 14:06
  */
-class BackEndAutoTestsServiceBuilder {
+class BackEndAutoTestsServiceBuilder implements Serializable {
+
+    BuildService buildService
 
     SonarQubeService sonarQubeService
 
     String jobName
 
-    boolean skipSystemTests
+    Boolean skipSystemTests
 
-    boolean skipCodeQualityVerification
+    Boolean skipCodeQualityVerification
 
-    int sleepInSeconds = -1
+    Integer sleepInSeconds = -1
 
-    BackEndAutoTestsService build(SonarQubeBuilder sonarQubeBuilder) {
-        if (sonarQubeBuilder != null) {
-            this.sonarQubeService = sonarQubeBuilder.build()
-        }
-        return build()
-    }
+    PipelineStagesSuit suit
 
-    BackEndAutoTestsService buildLibrary(SonarQubeService sonarQubeService) {
-        this.sonarQubeService = sonarQubeService
-        return buildLibrary()
-    }
-
-    BackEndAutoTestsService buildLibrary(SonarQubeBuilder sonarQubeBuilder) {
-        if (sonarQubeBuilder != null) {
-            this.sonarQubeService = sonarQubeBuilder.build()
-        }
-        return buildLibrary()
-    }
-
-    BackEndAutoTestsService build(SonarQubeService sonarQubeService) {
-        this.sonarQubeService = sonarQubeService
-        return build()
+    BackEndAutoTestsServiceBuilder() {
+        Logger.debug("BackEndAutoTestsServiceBuilder:default constructor")
     }
 
     BackEndAutoTestsService build() {
-        return new BackEndAutoTestsService()
-                .withSkipSystemTests(skipSystemTests)
+        BackEndAutoTestsService autoTestsService
+        if (suit == PipelineStagesSuit.SERVICE) {
+            autoTestsService = new BackEndAutoTestsService(buildService)
+        } else if (suit == PipelineStagesSuit.LIBRARY) {
+            autoTestsService = new BackEndAutoTestsLibrary(buildService)
+        }
+        return autoTestsService.withSkipSystemTests(skipSystemTests)
                 .withSleepInSeconds(sleepInSeconds)
                 .withSonarQubeService(sonarQubeService)
                 .withJobName(jobName)
     }
 
-    BackEndAutoTestsService buildLibrary() {
-        return new BackEndAutoTestsLibrary()
-                .withSkipSystemTests(skipSystemTests)
-                .withSleepInSeconds(sleepInSeconds)
-                .withSonarQubeService(sonarQubeService)
-                .withJobName(jobName)
-    }
-
-    String getJobName() {
-        return jobName
+    BackEndAutoTestsServiceBuilder withBuildService(BuildService buildService) {
+        this.buildService = buildService
+        return this
     }
 
     BackEndAutoTestsServiceBuilder withJobName(String jobName) {
@@ -86,11 +70,7 @@ class BackEndAutoTestsServiceBuilder {
         return this
     }
 
-    boolean getSkipSystemTests() {
-        return skipSystemTests
-    }
-
-    BackEndAutoTestsServiceBuilder withSkipSystemTests(boolean skipSystemTests) {
+    BackEndAutoTestsServiceBuilder withSkipSystemTests(Boolean skipSystemTests) {
         this.skipSystemTests = skipSystemTests
         return this
     }
@@ -100,11 +80,7 @@ class BackEndAutoTestsServiceBuilder {
         return this
     }
 
-    boolean getSkipCodeQualityVerification() {
-        return skipCodeQualityVerification
-    }
-
-    BackEndAutoTestsServiceBuilder withSkipCodeQualityVerification(boolean skipCodeQualityVerification) {
+    BackEndAutoTestsServiceBuilder withSkipCodeQualityVerification(Boolean skipCodeQualityVerification) {
         this.skipCodeQualityVerification = skipCodeQualityVerification
         return this
     }
@@ -114,23 +90,20 @@ class BackEndAutoTestsServiceBuilder {
         return this
     }
 
-    int getSleepInSeconds() {
-        return sleepInSeconds
-    }
-
-    BackEndAutoTestsServiceBuilder withSleepInSeconds(int sleepInSeconds) {
+    BackEndAutoTestsServiceBuilder withSleepInSeconds(Integer sleepInSeconds) {
+        if (sleepInSeconds == null) {
+            return this
+        }
         this.sleepInSeconds = sleepInSeconds
         return this
     }
 
     BackEndAutoTestsServiceBuilder withSleepInSeconds(String sleepInSeconds) {
-        if (isBlank(sleepInSeconds)) return this
+        if (isBlank(sleepInSeconds)) {
+            return this
+        }
         this.sleepInSeconds = Integer.parseInt(sleepInSeconds)
         return this
-    }
-
-    SonarQubeService getSonarQubeService() {
-        return sonarQubeService
     }
 
     BackEndAutoTestsServiceBuilder withSonarQubeService(SonarQubeService sonarQubeService) {
@@ -143,24 +116,9 @@ class BackEndAutoTestsServiceBuilder {
         return this
     }
 
-    void setSonarQubeService(SonarQubeService sonarQubeService) {
-        this.sonarQubeService = sonarQubeService
-    }
-
-    void setJobName(String jobName) {
-        this.jobName = jobName
-    }
-
-    void setSkipSystemTests(boolean skipSystemTests) {
-        this.skipSystemTests = skipSystemTests
-    }
-
-    void setSkipCodeQualityVerification(boolean skipCodeQualityVerification) {
-        this.skipCodeQualityVerification = skipCodeQualityVerification
-    }
-
-    void setSleepInSeconds(int sleepInSeconds) {
-        this.sleepInSeconds = sleepInSeconds
+    BackEndAutoTestsServiceBuilder withSuit(PipelineStagesSuit suit) {
+        this.suit = suit
+        return this
     }
 
     @Override

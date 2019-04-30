@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@ import pro.javatar.pipeline.exception.HgFlowReleaseFinishException
 import pro.javatar.pipeline.exception.ReleaseFinishException
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.vcs.model.VscCheckoutRequest
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -47,9 +48,9 @@ class HgService extends RevisionControlService {
 
     @Override
     def setUp() {
-        dsl.echo "setUp mercurial started"
+        Logger.info("setUp mercurial started")
         dsl.sh "hg --version"
-        dsl.echo "setUp mercurial finished"
+        Logger.info("setUp mercurial finished")
     }
 
     @Override
@@ -59,7 +60,7 @@ class HgService extends RevisionControlService {
 
     @Override
     def checkout(String branch) {
-        dsl.echo "mercurial start checkout branch: ${branch}"
+        Logger.info("mercurial start checkout branch: ${branch}")
         dsl.withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentialsId,
                               usernameVariable: 'HG_USERNAME', passwordVariable: 'HG_PASSWORD']]) {
             dsl.sh "hg clone https://${username}:${dsl.env.HG_PASSWORD}@bitbucket.org/${repoOwner}/${repo} ."
@@ -67,7 +68,7 @@ class HgService extends RevisionControlService {
         dsl.sh "pwd; ls -la"
         switchToBranch(branch)
         dsl.sh "pwd; ls -la"
-        dsl.echo "mercurial finish checkout branch: ${branch}"
+        Logger.info("mercurial finish checkout branch: ${branch}")
     }
 
     @Override
@@ -99,28 +100,28 @@ class HgService extends RevisionControlService {
 
     @Override
     def createReleaseBranchLocally(String releaseVersion) {
-        dsl.echo "createReleaseBranchLocally releaseVersion - ${releaseVersion}"
+        Logger.info("createReleaseBranchLocally releaseVersion - ${releaseVersion}")
         dsl.sh "hg flow release start ${releaseVersion}"
-        dsl.echo "release branch created"
+        Logger.info("release branch created")
     }
 
     @Override
     def commitChanges(String message) {
-        dsl.echo "commit changes with message: ${message}"
+        Logger.info("commit changes with message: ${message}")
         dsl.sh "hg commit -m \'${message}\'"
-        dsl.echo "successfully committed"
+        Logger.info("successfully committed")
     }
 
     @Override
     def release(String releaseVersion) throws ReleaseFinishException {
-        dsl.echo "mercurial release: ${releaseVersion} started"
-        dsl.echo "creates tag, removes release branch"
+        Logger.info("mercurial release: ${releaseVersion} started")
+        Logger.debug("creates tag, removes release branch")
         validateReleaseVersion(releaseVersion)
         revertAllUncommitedChanges()
         dsl.sh "hg flow release finish -t ${releaseVersion}"
         // validateReleaseFinish() // TODO validate release branch in status closed instead
         validateTagCreated(releaseVersion)
-        dsl.echo "mercurial release: ${releaseVersion} finished"
+        Logger.info("mercurial release: ${releaseVersion} finished")
     }
 
     def validateReleaseVersion(String releaseVersion) throws HgFlowReleaseFinishException {
@@ -129,23 +130,23 @@ class HgService extends RevisionControlService {
         if (!expectedBranch.equalsIgnoreCase(currentBranch)) {
             String errorMessage = "ERROR: [hg flow release finish] failed! " +
                     "Expected branch same as releaseVersion: ${expectedBranch} but was ${currentBranch}"
-            dsl.echo errorMessage
+            Logger.error(errorMessage)
             getDebugInfo()
             throw new HgFlowReleaseFinishException(errorMessage)
         }
     }
 
     def validateTagCreated(String tag) {
-        dsl.echo "validateTagCreated: ${tag} started"
+        Logger.info("validateTagCreated: ${tag} started")
         String actualTag = dsl.sh returnStdout: true, script: "hg log -r${tag} | grep tag:"
         actualTag = actualTag.trim()
         if (!actualTag.endsWith(tag)){
             String errorMessage = "Invalid branch, expected: ${tag}, but was: ${actualTag}"
-            dsl.echo errorMessage
+            Logger.error(errorMessage)
             getDebugInfo()
             throw new InvalidBranchException(errorMessage)
         }
-        dsl.echo "validateTagCreated: ${tag} finished"
+        Logger.info("validateTagCreated: ${tag} finished")
     }
 
     def validateReleaseFinish() throws HgFlowReleaseFinishException {
@@ -155,7 +156,7 @@ class HgService extends RevisionControlService {
         if(!"default".equalsIgnoreCase(currentBranch)) {
             String errorMessage = "ERROR: [hg flow release finish] failed! " +
                     "Expected branch default but was ${currentBranch}"
-            dsl.echo errorMessage
+            Logger.error(errorMessage)
             getDebugInfo()
             throw new HgFlowReleaseFinishException(errorMessage)
         }
@@ -185,9 +186,9 @@ class HgService extends RevisionControlService {
     }
 
     def switchToBranch(String branch) {
-        dsl.echo "switchToBranch: ${branch} started"
+        Logger.debug("switchToBranch: ${branch} started")
         dsl.sh "hg up ${branch}"
-        dsl.echo "switchToBranch: ${branch} finished"
+        Logger.debug("switchToBranch: ${branch} finished")
     }
 
     @Override
@@ -246,11 +247,11 @@ class HgService extends RevisionControlService {
 
 
     def getDebugInfo() {
-        dsl.echo "getDebugInfo started"
+        Logger.debug("getDebugInfo started")
         dsl.sh "hg branch"
         dsl.sh "hg status"
         dsl.sh "hg diff"
-        dsl.echo "getDebugInfo finished"
+        Logger.debug("getDebugInfo finished")
     }
 
     public String toString() {

@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,7 @@ import pro.javatar.pipeline.exception.ReleaseFinishException
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.vcs.model.VcsRepo
 import pro.javatar.pipeline.service.vcs.model.VscCheckoutRequest
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -42,13 +43,13 @@ abstract class RevisionControlService implements Serializable {
     protected String userName
 
     void cleanUp() {
-        dsl.echo "start cleanup"
+        Logger.debug("start cleanup")
         dsl.sh "pwd; ls -la"
         dsl.sh "rm -rf ${folder}"
         dsl.sh "rm -rf ${folder}@tmp"
         dsl.sh "mkdir ${folder}"
         dsl.sh "pwd; ls -la"
-        dsl.echo "end cleanup"
+        Logger.debug("end cleanup")
     }
 
     String getBranchWithPrefix(String prefix, String branch) {

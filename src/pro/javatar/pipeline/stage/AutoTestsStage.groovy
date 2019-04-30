@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,9 +15,11 @@
 
 package pro.javatar.pipeline.stage
 
+import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.test.AutoTestsService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 /**
@@ -37,14 +39,14 @@ class AutoTestsStage extends Stage {
     }
 
     @Override
-    void execute() throws Exception {
-        dsl.echo "AutoTestsStage execute started: ${toString()}"
+    void execute() throws PipelineException {
+        Logger.info("AutoTestsStage execute started: ${toString()}")
         dsl.timeout(time: 10, unit: 'MINUTES') {
             dsl.dir(revisionControl.folder) {
                 autoTestsService.runAutoTests(releaseInfo.getServiceName(), Env.DEV)
             }
         }
-        dsl.echo "AutoTestsStage execute finished"
+        Logger.info("AutoTestsStage execute finished")
     }
 
     @Override

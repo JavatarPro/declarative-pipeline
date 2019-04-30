@@ -3,6 +3,7 @@ package pro.javatar.pipeline.builder.model
 import pro.javatar.pipeline.model.BuildServiceType
 import pro.javatar.pipeline.model.UiDeploymentType
 
+//TODO a lot default values, it is better to use direct values and print to log if something not provided and fail build
 enum JenkinsBuildParams {
 
     PROFILES("profile", ""),
@@ -30,7 +31,9 @@ enum JenkinsBuildParams {
     JENKINS_TOOL_MAVEN("jenkins_tool.maven", "maven"),
     JENKINS_TOOL_JAVA("jenkins_tool.java", "jdk"),
     JENKINS_TOOL_NPM_VERSION("jenkins_tool.npm.version", "nodejs"),
-    JENKINS_TOOL_NPM_TYPE("jenkins_tool.npm.type", "nodejs")
+    JENKINS_TOOL_NPM_TYPE("jenkins_tool.npm.type", "nodejs"),
+
+    LOG_LEVEL("log_level", "info")
 
     // instance variables
 

@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,9 @@
 package pro.javatar.pipeline.service.impl
 
 import pro.javatar.pipeline.model.ReleaseInfo
-import pro.javatar.pipeline.service.BuildService
+import pro.javatar.pipeline.service.UiBuildService
+import pro.javatar.pipeline.util.FileUtils
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -24,7 +26,7 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  * @author Borys Zora
  * @since 2018-03-09
  */
-class SenchaService extends BuildService {
+class SenchaService extends UiBuildService {
 
     String applicationFile = "app.json"
 
@@ -36,12 +38,12 @@ class SenchaService extends BuildService {
         dsl.env.PATH="${senchaPath}:${dsl.env.PATH}"
         dsl.sh "env"
         dsl.sh 'sencha help'
-        dsl.echo "sencha setup successfully"
+        Logger.debug("sencha setup successfully")
     }
 
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
-        dsl.echo 'SenchaService buildAndUnitTests start'
+        Logger.info('SenchaService buildAndUnitTests start')
         dsl.sh "pwd; ls -la"
         dsl.sh 'sencha app install --framework=/opt/ext-6.2.0/'
         dsl.sh 'sencha app build production'
@@ -49,7 +51,7 @@ class SenchaService extends BuildService {
         dsl.sh "ln -s build/production/${getApplicationName()} ${distributionFolder}"
         dsl.sh "zip -r ${getArtifact()} ${distributionFolder}"
         dsl.sh "pwd; ls -la; ls -la *"
-        dsl.echo 'SenchaService buildAndUnitTests end'
+        Logger.info('SenchaService buildAndUnitTests end')
     }
 
     @Override
@@ -65,18 +67,18 @@ class SenchaService extends BuildService {
 
     @Override
     def setupReleaseVersion(String releaseVersion) {
-        dsl.echo "setupReleaseVersion: ${releaseVersion} started"
+        Logger.info("setupReleaseVersion: ${releaseVersion} started")
         String currentVersion = getCurrentVersion()
-        replace(currentVersion, releaseVersion, applicationFile)
-        dsl.echo "setupReleaseVersion: ${releaseVersion} finished"
+        FileUtils.replace(currentVersion, releaseVersion, applicationFile)
+        Logger.info("setupReleaseVersion: ${releaseVersion} finished")
     }
 
     @Override
     def setupVersion(String version) {
-        dsl.echo "setupVersion: ${version} started"
+        Logger.info("setupVersion: ${version} started")
         String currentVersion = getCurrentVersion()
-        replace(currentVersion, version, applicationFile)
-        dsl.echo "setupVersion: ${version} finished"
+        FileUtils.replace(currentVersion, version, applicationFile)
+        Logger.info("setupVersion: ${version} finished")
     }
 
 }

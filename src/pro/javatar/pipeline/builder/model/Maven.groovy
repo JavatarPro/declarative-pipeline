@@ -1,12 +1,18 @@
 package pro.javatar.pipeline.builder.model
 
-class Maven {
+import pro.javatar.pipeline.util.Logger
+
+class Maven implements Serializable {
 
     String repositoryId = "nexus"
 
     String repositoryUrl = "nexus"
 
     String params
+
+    Maven() {
+        Logger.debug("Maven:default constructor")
+    }
 
     String getRepositoryId() {
         return repositoryId

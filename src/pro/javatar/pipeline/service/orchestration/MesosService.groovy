@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,11 @@ package pro.javatar.pipeline.service.orchestration
 
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.infra.model.Infra
+import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
+import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
 import pro.javatar.pipeline.service.vcs.VcsHelper
 import pro.javatar.pipeline.service.vcs.model.VcsRepo
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -33,18 +36,19 @@ class MesosService implements DockerOrchestrationService {
 
     def setup() {
         // TODO prepare vcsRepos on builder stage
-        dsl.echo "MesosService: checkout configurations for vcsRepoMap: ${vcsRepoMap}"
+        Logger.debug("MesosService: checkout configurations for vcsRepoMap: ${vcsRepoMap}")
         VcsRepo vcsRepo = vcsRepoMap.get(Env.DEV.getValue())
         VcsHelper.checkoutRepo(vcsRepo, getFolder(vcsRepo))
         // TODO checkout prod repo securely on different agent (e.g. pipeline-prod)
 //        VcsHelper.checkoutRepo(vcsRepoMap.get(Env.PROD.getValue()))
-        dsl.echo "MesosService: configurations checkout completed"
+        Logger.debug("MesosService: configurations checkout completed")
     }
 
+    // TODO replace depcon with own rest implementation
     @Override
     def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment) {
-        dsl.echo "dockerDeployContainer(imageName: ${imageName}, imageVersion: ${imageVersion}, " +
-                "dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})"
+        Logger.info("MesosService:dockerDeployContainer(imageName: ${imageName}, imageVersion: ${imageVersion}, " +
+                "dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})")
 
         dsl.sh "pwd; ls -l; ls -l .. "
 
@@ -56,6 +60,16 @@ class MesosService implements DockerOrchestrationService {
                     " (depcon -e ${environment} app rollback /${imageName}-${environment} " +
                     "--wait; echo 'Deploy failed!'; exit 2)"
         }
+    }
+
+    @Override
+    DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO request) {
+        String version = request.getImageVersion()
+        if (request.getEnvironment() == Env.DEV) {
+            version = request.getImageVersionWithBuildNumber()
+        }
+        return dockerDeployContainer(request.getImageName(), version,
+                request.getDockerRepositoryUrl(), request.getEnvironment().getValue())
     }
 
     @Override

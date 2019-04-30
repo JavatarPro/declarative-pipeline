@@ -1,8 +1,14 @@
 package pro.javatar.pipeline.builder.model
 
-class S3 {
+import pro.javatar.pipeline.util.Logger
+
+class S3 implements Serializable {
 
     Map<String, S3Repository> S3Repositories = new HashMap<>()
+
+    S3() {
+        Logger.debug("S3:default constructor")
+    }
 
     Map<String, S3Repository> getS3Repositories() {
         return S3Repositories

@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,10 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.service.orchestration
 
 import pro.javatar.pipeline.service.infra.model.Infra
+import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
+import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -32,16 +34,21 @@ class SshDockerOrchestrationService implements DockerOrchestrationService {
 
     @Override
     def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment) {
-        dsl.echo "SshDockerOrchestrationService started dockerDeployContainer(imageName: ${imageName}, " +
-                "imageVersion: ${imageVersion}, dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})"
+        Logger.info("SshDockerOrchestrationService started dockerDeployContainer(imageName: ${imageName}, " +
+                "imageVersion: ${imageVersion}, dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})")
 
-        dsl.echo "SshDockerOrchestrationService finished dockerDeployContainer(imageName: ${imageName}, " +
-                "imageVersion: ${imageVersion}, dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})"
+        Logger.info("SshDockerOrchestrationService finished dockerDeployContainer(imageName: ${imageName}, " +
+                "imageVersion: ${imageVersion}, dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})")
+        throw new UnsupportedOperationException("SshDockerOrchestrationService does not supported yet")
+    }
+
+    @Override
+    DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO deploymentRequest) {
         throw new UnsupportedOperationException("SshDockerOrchestrationService does not supported yet")
     }
 
     @Override
     def deployInfraContainer(Infra infra) {
-        return null
+        throw new UnsupportedOperationException("SshDockerOrchestrationService does not supported yet")
     }
 }

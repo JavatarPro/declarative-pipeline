@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,10 +17,11 @@ package pro.javatar.pipeline.service.impl
 
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
+import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-import static pro.javatar.pipeline.util.Utils.isBlank
-import static pro.javatar.pipeline.util.Utils.isNotBlank
+import static pro.javatar.pipeline.util.StringUtils.isBlank
+import static pro.javatar.pipeline.util.StringUtils.isNotBlank
 
 /**
  * @author Borys Zora
@@ -39,25 +40,25 @@ class MavenBuildService extends BuildService {
     protected String repoUrl
 
     MavenBuildService() {
-        dsl.echo "MavenBuildService default constructor"
+        Logger.info("MavenBuildService default constructor")
     }
 
     @Override
     void setUp() {
-        dsl.echo "setUp started"
+        Logger.info("MavenBuildService: setUp started")
         dsl.env.M2_HOME="${dsl.tool maven}"
         dsl.env.JAVA_HOME="${dsl.tool java}"
         dsl.env.PATH="${dsl.env.JAVA_HOME}/bin:${dsl.env.M2_HOME}/bin:${dsl.env.PATH}"
         dsl.sh 'java -version'
         dsl.sh 'mvn -version'
-        dsl.echo "setUp finished"
+        Logger.info("MavenBuildService: setUp finished")
     }
 
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
-        dsl.echo "MavenBuildService buildAndUnitTests started"
+        Logger.info("MavenBuildService buildAndUnitTests started")
         dsl.sh "mvn clean package ${mavenParams}"
-        dsl.echo "MavenBuildService buildAndUnitTests finished"
+        Logger.info("MavenBuildService buildAndUnitTests finished")
     }
 
     @Override
@@ -73,16 +74,24 @@ class MavenBuildService extends BuildService {
 
     @Override
     def setupVersion(String version) {
-        dsl.echo "setupVersion: ${version} started"
+        Logger.info("setupVersion: ${version} started")
         dsl.sh "mvn versions:set -DnewVersion=${version}"
         dsl.sh "mvn versions:commit"
-        dsl.echo "setupVersion: ${version} finished"
+        Logger.info("setupVersion: ${version} finished")
+    }
+
+    @Override
+    def runIntegrationTests() {
+        Logger.info("MavenBuildService:integrationTests with mavenParams: ${mavenParams} started")
+        dsl.sh "mvn -B verify ${mavenParams} -DskipITs=false"
+        //dsl.sh "mvn failsafe:integration-test -DskipITs=false ${mavenParams}"
+        Logger.info("MavenBuildService:integrationTests:finished")
     }
 
     def deployFile(String version, String file) {
-        dsl.echo "deployFile version: ${version}, file: ${file} started"
+        Logger.info("deployFile version: ${version}, file: ${file} started")
         deployFile(groupId, artifactId, version, packaging, file, repositoryId, repoUrl)
-        dsl.echo "deployFile version: ${version}, file: ${file} finished"
+        Logger.info("deployFile version: ${version}, file: ${file} finished")
     }
 
     def deployFile(String groupId, String artifactId, String version, String packaging, String file,
@@ -94,7 +103,7 @@ class MavenBuildService extends BuildService {
 
     def downloadArtifact(String repoUrl, String groupId, String artifactId, String version, String packaging) {
         String url = getMavenRepoUrl(repoUrl, groupId, artifactId, version, packaging)
-        dsl.echo "downloadArtifact url: ${url}"
+        Logger.debug("downloadArtifact url: ${url}")
         dsl.sh "curl -O ${url}"
     }
 
@@ -125,12 +134,6 @@ class MavenBuildService extends BuildService {
 
     def deployMavenArtifactsToNexus() {
         deployMavenArtifactsToNexus(mavenParams)
-    }
-
-    @Override
-    String getArtifact() {
-        artifactName(artifactId, version, packaging)
-        return "${artifactId}.${packaging}"
     }
 
     // TODO verify in pom.xml if distributionManagement section exists

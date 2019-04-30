@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,9 @@
  * limitations under the License.
  */
 
-package pro.javatar.pipeline.builder;
+package pro.javatar.pipeline.builder
+
+import pro.javatar.pipeline.util.Logger;
 
 /**
  * @author Borys Zora
@@ -26,6 +28,10 @@ class SwaggerBuilder implements Serializable {
     private String spaceKey;
     private String confluenceUrl;
     private String apiGatewayUrl;
+
+    SwaggerBuilder() {
+        Logger.debug("SwaggerBuilder:default constructor")
+    }
 
     public SwaggerBuilder withEnabled(boolean enabled) {
         this.enabled = enabled;

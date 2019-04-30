@@ -1,6 +1,8 @@
 package pro.javatar.pipeline.builder.converter
 
 import pro.javatar.pipeline.builder.model.JenkinsBuildParams
+import pro.javatar.pipeline.util.Logger
+
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 class JenkinsBuildParamsConverter {
@@ -10,25 +12,25 @@ class JenkinsBuildParamsConverter {
     }
 
     void setProperty(def param, def properties) {
-        dsl.echo "param.key: ${param.key}, param.value: ${param.value}"
+        Logger.debug("param.key: ${param.key}, param.value: ${param.value}")
         if (!JenkinsBuildParams.hasKey(param.key)) {
-            dsl.echo "param.key: ${param.key} IS NOT a valid properity"
+            Logger.debug("param.key: ${param.key} IS NOT a valid property")
             return
         }
-        dsl.echo "param.key: ${param.key} is valid properity"
+        Logger.debug("param.key: ${param.key} is valid properity")
         if (JenkinsBuildParams.PROFILES.getKey().equalsIgnoreCase(param.key)) {
             amendAccordingToProfile(param.value, properties)
         } else {
-            dsl.echo "properties.put(param.key: ${param.key}, param.value: ${param.value}"
+            Logger.debug("properties.put(param.key: ${param.key}, param.value: ${param.value}")
             properties.put(param.key, param.value)
         }
     }
 
     void amendAccordingToProfile(String profileName, def properties) {
-        dsl.echo "detected profile change: '${profileName}' profile will be applied"
+        Logger.info("detected profile change: '${profileName}' profile will be applied")
         def profile = properties.profile[profileName]
-        dsl.echo "profile variables: ${profile}"
-        dsl.echo "properties before apply: ${properties}"
+        Logger.info("profile variables: ${profile}")
+        Logger.trace("properties before apply: ${properties}")
         profile.each {key, value ->
             String[] keys = key.split("\\.")
             def target = properties
@@ -37,7 +39,7 @@ class JenkinsBuildParamsConverter {
             }
             target.put(keys[keys.length - 1], value)
         }
-        dsl.echo "properties after apply: ${properties}"
+        Logger.trace("properties after apply: ${properties}")
     }
 
 }

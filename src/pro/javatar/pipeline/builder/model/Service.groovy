@@ -1,6 +1,9 @@
 package pro.javatar.pipeline.builder.model
 
-class Service {
+import pro.javatar.pipeline.util.Logger
+import pro.javatar.pipeline.util.StringUtils
+
+class Service implements Serializable {
 
     String name
 
@@ -11,6 +14,12 @@ class Service {
     VcsRepoTO repo
 
     String vcsRepoId
+
+    String orchestration
+
+    Service() {
+        Logger.debug("Service:default constructor")
+    }
 
     String getName() {
         return name
@@ -81,6 +90,21 @@ class Service {
         return this
     }
 
+    String getOrchestration() {
+        return orchestration
+    }
+
+    void setOrchestration(String orchestration) {
+        if (StringUtils.isNotBlank(orchestration)) {
+            this.orchestration = orchestration
+        }
+    }
+
+    Service withOrchestration(String orchestration) {
+        setOrchestration(orchestration)
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Service{" +
@@ -89,6 +113,7 @@ class Service {
                 ", useBuildNumberForVersion=" + useBuildNumberForVersion +
                 ", repo=" + repo +
                 ", vcsRepoId='" + vcsRepoId + '\'' +
+                ", orchestration='" + orchestration + '\'' +
                 '}';
     }
 }

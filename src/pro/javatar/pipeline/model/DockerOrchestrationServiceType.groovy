@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://github.com/JavatarPro/pipeline-utils/blob/master/LICENSE
+ *     https://github.com/JavatarPro/declarative-pipeline/blob/master/LICENSE
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.model
 
 import pro.javatar.pipeline.exception.UnrecognizedDockerOrchestrationTypeException
@@ -25,6 +24,7 @@ import pro.javatar.pipeline.exception.UnrecognizedRevisionControlTypeException
 enum DockerOrchestrationServiceType implements Serializable {
 
     MESOS,
+    NOMAD,
     KUBERNETES,
     SSH
 
@@ -35,6 +35,9 @@ enum DockerOrchestrationServiceType implements Serializable {
         if("mesos".equalsIgnoreCase(type) || "mesosphere".equalsIgnoreCase(type)
                 || "marathon".equalsIgnoreCase(type)) {
             return MESOS
+        }
+        if("nomad".equalsIgnoreCase(type) || "HashiCorp".equalsIgnoreCase(type)) {
+            return NOMAD
         }
         if ("kub".equalsIgnoreCase(type) || "kubernetes".equalsIgnoreCase(type)) {
             return KUBERNETES
