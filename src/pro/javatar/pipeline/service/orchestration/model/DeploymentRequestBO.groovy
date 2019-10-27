@@ -20,7 +20,7 @@ class DeploymentRequestBO implements Serializable {
 
     DockerRegistryBO dockerRegistry
 
-    Env environment
+    Env env
 
     Integer buildNumber
 
@@ -74,15 +74,15 @@ class DeploymentRequestBO implements Serializable {
     }
 
     Env getEnvironment() {
-        return environment
+        return env
     }
 
     void setEnvironment(Env environment) {
-        this.environment = environment
+        this.env = environment
     }
 
     void setEnvironment(String environment) {
-        this.environment = Env.fromString(environment)
+        setEnvironment(Env.fromString(environment))
     }
 
     DeploymentRequestBO withEnvironment(String environment) {
