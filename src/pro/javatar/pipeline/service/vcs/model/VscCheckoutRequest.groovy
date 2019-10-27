@@ -1,5 +1,6 @@
 package pro.javatar.pipeline.service.vcs.model
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.model.RevisionControlType
 
 class VscCheckoutRequest implements Serializable {
@@ -107,6 +108,7 @@ class VscCheckoutRequest implements Serializable {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "VscCheckoutRequest{" +

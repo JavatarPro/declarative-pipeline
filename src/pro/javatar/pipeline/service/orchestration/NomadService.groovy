@@ -14,6 +14,7 @@
  */
 package pro.javatar.pipeline.service.orchestration
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.service.infra.model.Infra
 import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
@@ -51,7 +52,7 @@ class NomadService implements DockerOrchestrationService {
 
     @Override
     def setup() {
-        Logger.info("NomadService:setup: ${toString()}")
+        Logger.info("NomadService:setup: " + toString())
     }
 
     @Override
@@ -115,6 +116,7 @@ class NomadService implements DockerOrchestrationService {
         return result
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "NomadService{" +

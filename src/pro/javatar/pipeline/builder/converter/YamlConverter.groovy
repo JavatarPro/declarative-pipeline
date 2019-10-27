@@ -152,8 +152,8 @@ class YamlConverter {
             Logger.trace("YamlConverter:retrieveVcsRepos: key: ${key}, value: ${value}")
             vcsRepos.put(key, retrieveVcsRepo(value))
         }
-        Logger.trace("YamlConverter:retrieveVcsRepos:vcsRepos: ${vcsRepos.toString()}")
-        Logger.debug("YamlConverter:retrieveVcsRepos:vcsRepos:size: ${vcsRepos.size()}")
+        Logger.trace("YamlConverter:retrieveVcsRepos:vcsRepos: " + vcsRepos.toString())
+        Logger.debug("YamlConverter:retrieveVcsRepos:vcsRepos:size: " + vcsRepos.size())
         return vcsRepos
     }
 
@@ -166,7 +166,7 @@ class YamlConverter {
                 .withType(vcsRepo.type)
                 .withBranch(vcsRepo.branch)
                 .withRevisionControl(vcsRepo.revisionControl)
-        Logger.trace("YamlConverter:retrieveVcsRepo:result: ${result.toString()}")
+        Logger.trace("YamlConverter:retrieveVcsRepo:result: " + result.toString())
         return result
     }
 
@@ -222,7 +222,7 @@ class YamlConverter {
 
         Docker result = new Docker().withDockerRegistries(resultMap)
                 .withCustomDockerFileName(docker.customDockerFileName)
-        Logger.debug("YamlConverter:retrieveDocker:finished with result: ${result.toString()}")
+        Logger.debug("YamlConverter:retrieveDocker:finished with result: " + result.toString())
         return result
     }
 
@@ -287,7 +287,7 @@ class YamlConverter {
                     .withVcsConfig(nomadItem.vcsConfig)
             result.addNomadItem(env, item)
         }
-        Logger.debug("YamlConverter:retrieveNomad: result: ${result.toString()}")
+        Logger.debug("YamlConverter:retrieveNomad: result: " + result.toString())
         return result
     }
 

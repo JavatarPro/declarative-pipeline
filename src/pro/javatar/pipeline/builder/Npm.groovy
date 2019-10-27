@@ -15,6 +15,7 @@
 
 package pro.javatar.pipeline.builder
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.service.impl.NpmBuildService
 import pro.javatar.pipeline.util.Logger
 
@@ -138,6 +139,7 @@ class Npm implements Serializable {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "Npm{" +

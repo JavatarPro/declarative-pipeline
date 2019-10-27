@@ -1,5 +1,7 @@
 package pro.javatar.pipeline.service.infra.model
 
+import com.cloudbees.groovy.cps.NonCPS
+
 class InfraRequest {
 
     List<Infra> serviceInfraDependencies = new ArrayList<>()
@@ -32,6 +34,7 @@ class InfraRequest {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "InfraRequest{" +

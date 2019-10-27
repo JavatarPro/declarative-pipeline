@@ -1,5 +1,7 @@
 package pro.javatar.pipeline.service.infra.model
 
+import com.cloudbees.groovy.cps.NonCPS
+
 abstract class Infra {
 
     static final String DEFAULT_BELONGS_TO =  "common-for-all-env"
@@ -139,6 +141,7 @@ abstract class Infra {
         this.hostPath = hostPath
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "Infra{" +

@@ -1,5 +1,6 @@
 package pro.javatar.pipeline.service.orchestration.model
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.util.Logger
 
 class OrchestrationRequest implements Serializable {
@@ -138,6 +139,7 @@ class OrchestrationRequest implements Serializable {
         this.templateVariables = templateVariables
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "OrchestrationRequest{" +

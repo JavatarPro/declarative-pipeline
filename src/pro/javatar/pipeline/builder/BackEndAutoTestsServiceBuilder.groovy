@@ -14,6 +14,7 @@
  */
 package pro.javatar.pipeline.builder
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.model.PipelineStagesSuit
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.test.BackEndAutoTestsLibrary
@@ -121,6 +122,7 @@ class BackEndAutoTestsServiceBuilder implements Serializable {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "BackEndAutoTestsServiceBuilder{" +

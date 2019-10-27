@@ -14,6 +14,7 @@
  */
 package pro.javatar.pipeline.builder
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.model.DockerOrchestrationServiceType
 import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
 import pro.javatar.pipeline.service.orchestration.DockerService
@@ -100,6 +101,7 @@ class DockerBuilder implements Serializable {
         this.customDockerFileName = customDockerFileName
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "DockerBuilder{" +

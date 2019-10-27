@@ -1,5 +1,6 @@
 package pro.javatar.pipeline.builder.model
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.util.Logger
 
 class Mesos implements Serializable {
@@ -27,6 +28,7 @@ class Mesos implements Serializable {
         this.vcsConfigRepos.put(env, repoName)
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "Mesos{" +

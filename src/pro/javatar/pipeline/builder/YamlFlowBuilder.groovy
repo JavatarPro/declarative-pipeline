@@ -1,5 +1,6 @@
 package pro.javatar.pipeline.builder
 
+import com.cloudbees.groovy.cps.NonCPS
 import groovy.text.GStringTemplateEngine
 import pro.javatar.pipeline.Flow
 import pro.javatar.pipeline.builder.converter.FlowBuilderConverter
@@ -41,7 +42,7 @@ class YamlFlowBuilder implements Serializable {
         YamlConfig model = getYamlModelUsingJenkinsReadYamlCommand(yamlConfiguration)
         Logger.debug("YamlConfig:build:model: ${model}")
         FlowBuilder flowBuilder = flowBuilderConverter.toFlowBuilder(model)
-        Logger.debug("flowBuilder: ${flowBuilder.toString()}")
+        Logger.debug("flowBuilder: " + flowBuilder.toString())
         return flowBuilder.build()
     }
 
@@ -64,10 +65,11 @@ class YamlFlowBuilder implements Serializable {
         def engine = new GStringTemplateEngine()
         def template = engine.createTemplate(yamlConfiguration).make(binding)
         String result = template.toString()
-        Logger.info("YamlFlowBuilder:replaceVariables:result: ${result}")
+        Logger.info("YamlFlowBuilder:replaceVariables:result: " + result)
         return result
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "YamlFlowBuilder{" +

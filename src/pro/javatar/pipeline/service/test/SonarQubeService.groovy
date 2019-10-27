@@ -15,6 +15,7 @@
 
 package pro.javatar.pipeline.service.test
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
@@ -92,6 +93,7 @@ class SonarQubeService implements Serializable {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "SonarQubeService{" +

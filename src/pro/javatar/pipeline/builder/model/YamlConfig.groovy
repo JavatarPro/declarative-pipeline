@@ -1,5 +1,6 @@
 package pro.javatar.pipeline.builder.model
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.util.LogLevel
 import pro.javatar.pipeline.util.Logger
@@ -241,7 +242,7 @@ class YamlConfig implements Serializable {
     }
 
     YamlConfig withNomad(Nomad nomad) {
-        Logger.info("YamlConfig:withNomad: ${nomad.toString()}")
+        Logger.info("YamlConfig:withNomad: " + nomad.toString())
         setNomad(nomad)
         return this
     }
@@ -298,6 +299,7 @@ class YamlConfig implements Serializable {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "YamlConfig{" +

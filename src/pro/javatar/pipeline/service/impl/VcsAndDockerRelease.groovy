@@ -25,7 +25,7 @@ class VcsAndDockerRelease implements ReleaseService {
 
     @Override
     def release(ReleaseInfo releaseInfo) {
-        Logger.info("VcsAndDockerRelease start release: ${releaseInfo.toString()}")
+        Logger.info("VcsAndDockerRelease start release: " + releaseInfo.toString())
         validateReleaseVersion(releaseInfo.releaseVersion)
         dsl.parallel 'release revision control': {
             Logger.info("VcsAndDockerRelease releaseRevisionControl() started")

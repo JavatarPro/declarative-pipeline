@@ -15,6 +15,7 @@
 
 package pro.javatar.pipeline.service.vcs
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.InvalidBranchException
 import pro.javatar.pipeline.exception.HgFlowReleaseFinishException
 import pro.javatar.pipeline.exception.ReleaseFinishException
@@ -254,6 +255,8 @@ class HgService extends RevisionControlService {
         Logger.debug("getDebugInfo finished")
     }
 
+    @NonCPS
+    @Override
     public String toString() {
         return "HgService{" +
                 "credentialsId='" + credentialsId + '\'' +

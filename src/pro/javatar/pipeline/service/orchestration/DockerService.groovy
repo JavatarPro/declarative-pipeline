@@ -14,6 +14,7 @@
  */
 package pro.javatar.pipeline.service.orchestration
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
@@ -245,6 +246,7 @@ class DockerService implements Serializable {
         Logger.debug("DockerService:populateReleaseInfo:finished")
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "DockerService{" +

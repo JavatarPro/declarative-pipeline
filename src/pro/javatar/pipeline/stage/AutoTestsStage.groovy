@@ -15,6 +15,7 @@
 
 package pro.javatar.pipeline.stage
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.test.AutoTestsService
@@ -40,7 +41,7 @@ class AutoTestsStage extends Stage {
 
     @Override
     void execute() throws PipelineException {
-        Logger.info("AutoTestsStage execute started: ${toString()}")
+        Logger.info("AutoTestsStage execute started: " + toString())
         dsl.timeout(time: 10, unit: 'MINUTES') {
             dsl.dir(revisionControl.folder) {
                 autoTestsService.runAutoTests(releaseInfo.getServiceName(), Env.DEV)
@@ -54,6 +55,7 @@ class AutoTestsStage extends Stage {
         return "auto tests"
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "AutoTestsStage{" +

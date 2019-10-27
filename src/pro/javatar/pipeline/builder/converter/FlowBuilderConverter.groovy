@@ -127,24 +127,24 @@ class FlowBuilderConverter {
         }
         Map<String, NomadBO> nomadConfig = new HashMap<>()
         Map<String, VcsRepo> repos = toVcsRepoMap(yamlFile.getVcs().getRepo())
-        Logger.info("FlowBuilderConverter:toNomadService: repos: ${repos.size()}")
+        Logger.info("FlowBuilderConverter:toNomadService: repos: " + repos.size())
         Logger.info("FlowBuilderConverter:toNomadService: nomad.getNomadConfig().size(): ${nomad.getNomadConfig().size()}")
         nomad.getNomadConfig().each { env, nomadItem ->
             Logger.trace("FlowBuilderConverter:toNomadService:nomad.nomadConfig.each: " +
-                    "env: ${env.toString()}, nomadItem: ${nomadItem.toString()}")
+                    "env: " + env.toString() + " nomadItem: " + nomadItem.toString())
             def vcsRepo = repos.get(nomadItem.getVcsConfig())
-            Logger.trace("FlowBuilderConverter:toNomadService:nomad.nomadConfig.each: vcsRepo: ${vcsRepo.toString()}")
+            Logger.trace("FlowBuilderConverter:toNomadService:nomad.nomadConfig.each: vcsRepo: " + vcsRepo.toString())
             NomadBO nomadBO = new NomadBO()
                     .withUrl(nomadItem.getUrl())
                     .withEnv(env)
                     .withVcsRepo(vcsRepo)
                     .withDeploymentTimeout(nomadItem.getDeploymentTimeout())
             Logger.trace("FlowBuilderConverter:toNomadService:nomad.nomadConfig.each: " +
-                    "env: ${env.toString()}, nomadBO: ${nomadBO.toString()}")
+                    "env: " + env.toString() + ", nomadBO: " + nomadBO.toString())
             nomadConfig.put(env, nomadBO)
         }
         NomadService nomadService = new NomadService(nomadConfig)
-        Logger.trace("FlowBuilderConverter:toNomadService: nomadService: ${nomadService.toString()}")
+        Logger.trace("FlowBuilderConverter:toNomadService: nomadService: " + nomadService.toString())
         Logger.info("FlowBuilderConverter:toNomadService: finished")
         return nomadService
     }
@@ -161,7 +161,7 @@ class FlowBuilderConverter {
         if (vcsRepoTO == null) {
             return null
         }
-        Logger.info("FlowBuilderConverter:toVcsRepo vcsRepoTO: ${vcsRepoTO.toString()}")
+        Logger.info("FlowBuilderConverter:toVcsRepo vcsRepoTO: " + vcsRepoTO.toString())
         return new VcsRepo()
                 .withCredentialsId(vcsRepoTO.getCredentialsId())
                 .withType(VcsRepositoryType.fromString(vcsRepoTO.getType()))

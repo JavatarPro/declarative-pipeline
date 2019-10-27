@@ -4,6 +4,7 @@
  */
 package pro.javatar.pipeline.service.orchestration.model
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.util.Logger
 
@@ -120,6 +121,7 @@ class DeploymentRequestBO implements Serializable {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "DeploymentRequestBO{" +

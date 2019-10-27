@@ -1,5 +1,6 @@
 package pro.javatar.pipeline.service.orchestration.model
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.service.vcs.model.VcsRepo
 
 import java.time.Period
@@ -90,6 +91,7 @@ class NomadBO {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "NomadBO{" +

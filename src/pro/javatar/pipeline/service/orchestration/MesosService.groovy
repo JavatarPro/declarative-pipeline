@@ -14,6 +14,7 @@
  */
 package pro.javatar.pipeline.service.orchestration
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.infra.model.Infra
 import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
@@ -104,6 +105,7 @@ class MesosService implements DockerOrchestrationService {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "MesosService{" +

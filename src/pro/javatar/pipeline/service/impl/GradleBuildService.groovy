@@ -14,6 +14,7 @@
  */
 package pro.javatar.pipeline.service.impl
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.MalformedReleaseVersionException
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
@@ -110,6 +111,7 @@ class GradleBuildService extends BuildService {
         return params
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "GradleBuildService{" +

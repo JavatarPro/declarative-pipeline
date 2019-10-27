@@ -14,6 +14,7 @@
  */
 package pro.javatar.pipeline.model
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.service.infra.model.InfraRequest
 import pro.javatar.pipeline.util.Logger
 
@@ -200,6 +201,7 @@ class ReleaseInfo implements Serializable {
         this.customDockerFileNames = customDockerFileNames
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "ReleaseInfo{" +

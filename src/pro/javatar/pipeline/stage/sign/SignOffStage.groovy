@@ -15,6 +15,7 @@
 
 package pro.javatar.pipeline.stage.sign
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.ReleaseApprovalStatus
 import pro.javatar.pipeline.service.SlackService
@@ -33,7 +34,7 @@ abstract class SignOffStage extends Stage {
 
     @Override
     void execute() throws PipelineException {
-        Logger.info("SignOffStage execute started: ${toString()}")
+        Logger.info("SignOffStage execute started: " + toString())
         def releaseApproval = getReleaseApprovedStatus()
         Logger.debug("releaseApproval: ${releaseApproval}")
 
@@ -76,6 +77,7 @@ abstract class SignOffStage extends Stage {
         return "${getApprovePersonType()} sign off"
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "DeveloperSignOffStage{" +
