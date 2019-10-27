@@ -14,7 +14,7 @@ class VcsRepo {
 
     String domain
 
-    private VcsRepositoryType type
+    VcsRepositoryType vcsRepositoryType
 
     RevisionControlType revisionControlType
 
@@ -75,11 +75,11 @@ class VcsRepo {
     }
 
     VcsRepositoryType getType() {
-        return type;
+        return vcsRepositoryType;
     }
 
     void setType(VcsRepositoryType type) {
-        this.type = type;
+        this.vcsRepositoryType = type;
     }
 
     void setType(String type) {
