@@ -171,6 +171,7 @@ class DockerService implements Serializable {
         }
     }
 
+    // TODO user object instead of many args
     // TODO move to deployment service
     def dockerDeployContainer(String imageName, String imageVersion, Env env) {
         Logger.debug("DockerService:dockerDeployContainer(${imageName}, ${imageVersion}, ${env.getValue()})")
@@ -180,7 +181,7 @@ class DockerService implements Serializable {
                 .withImageVersion(imageVersion)
                 .withDockerRegistry(dockerRegistry)
                 .withEnvironment(env)
-                .withBuildNumber("${dsl.currentBuild.number}")
+                .withBuildNumber(dsl.currentBuild.number) // TODO remove low level details from this level of abstraction
         Logger.debug("DockerService:dockerDeployContainer: orchestrationService.setup")
         orchestrationService.setup()
         Logger.debug("DockerService:dockerDeployContainer: orchestrationService.dockerDeployContainer")
