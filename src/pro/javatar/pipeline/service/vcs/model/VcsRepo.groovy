@@ -75,20 +75,20 @@ class VcsRepo {
     }
 
     VcsRepositoryType getType() {
-        return type
+        return type;
     }
 
     void setType(VcsRepositoryType type) {
-        this.type = type
+        this.type = type;
     }
 
     void setType(String type) {
-        this.type = VcsRepositoryType.fromString(type)
+        setType(VcsRepositoryType.fromString(type));
     }
 
     VcsRepo withType(VcsRepositoryType type) {
-        this.type = type
-        return this
+        setType(type);
+        return this;
     }
 
     boolean isSsh() {
