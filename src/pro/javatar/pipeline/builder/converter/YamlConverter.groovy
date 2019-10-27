@@ -87,7 +87,9 @@ class YamlConverter {
 
     AutoTest retrieveAutoTest(def yml) {
         def autoTest = yml["auto-test"]
-        if (autoTest == null) return null
+        if (autoTest == null) {
+            return new AutoTest()
+        }
         Logger.info("retrieveAutoTest: autoTest: ${autoTest}")
         return new AutoTest()
                 .withJobName(autoTest.jobName)

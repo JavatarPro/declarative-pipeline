@@ -50,6 +50,9 @@ class FlowBuilderConverter {
 
     BackEndAutoTestsServiceBuilder toBackEndAutoTestsServiceBuilder(YamlConfig yamlConfig) {
         def autoTests = yamlConfig.getAutoTest()
+        if (autoTests == null) {
+            return new BackEndAutoTestsServiceBuilder();
+        }
         return new BackEndAutoTestsServiceBuilder()
                 .withJobName(autoTests.jobName)
                 .withSkipCodeQualityVerification(autoTests.skipCodeQualityVerification)
