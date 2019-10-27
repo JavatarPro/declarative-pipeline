@@ -32,36 +32,36 @@ class YamlFlowBuilder implements Serializable {
     YamlFlowBuilder(def dsl, String configFile) {
         PipelineDslHolder.dsl = dsl
         this.configFile = configFile
-        Logger.debug("YamlFlowBuilder: dsl and configFile: ${configFile} constructor")
+        Logger.debug("YamlFlowBuilder: dsl and configFile: " + configFile.toString() + " constructor")
     }
 
     Flow build() {
-        Logger.info("YamlFlowBuilder used configFile: ${configFile}")
+        Logger.info("YamlFlowBuilder used configFile: " + configFile)
         String yamlConfiguration = dsl.readTrusted configFile
-        Logger.trace("yamlConfiguration: ${yamlConfiguration}")
+        Logger.trace("yamlConfiguration: " + yamlConfiguration)
         YamlConfig model = getYamlModelUsingJenkinsReadYamlCommand(yamlConfiguration)
-        Logger.debug("YamlConfig:build:model: ${model}")
+        Logger.debug("YamlConfig:build:model: " + model.toString())
         FlowBuilder flowBuilder = flowBuilderConverter.toFlowBuilder(model)
         Logger.debug("flowBuilder: " + flowBuilder.toString())
         return flowBuilder.build()
     }
 
     YamlConfig getYamlModelUsingJenkinsReadYamlCommand(String yamlConfiguration) {
-        Logger.debug("yamlConfiguration before replaceVariables: ${yamlConfiguration}")
+        Logger.debug("yamlConfiguration before replaceVariables: " + yamlConfiguration)
         String yamlConfig = replaceVariables(yamlConfiguration)
-        Logger.debug("yamlConfig after replaceVariables: ${yamlConfig}")
+        Logger.debug("yamlConfig after replaceVariables: " + yamlConfig)
         def properties = dsl.readYaml text: yamlConfig
         jenkinsBuildParamsConverter.populateWithJenkinsBuildParams(properties)
         Logger.info("YamlFlowBuilder:getYamlModelUsingJenkinsReadYamlCommand: before: yamlConverter.toYamlModel")
         YamlConfig result = yamlConverter.toYamlModel(properties)
-        Logger.info("YamlFlowBuilder:getYamlModelUsingJenkinsReadYamlCommand:result: ${result}")
+        Logger.info("YamlFlowBuilder:getYamlModelUsingJenkinsReadYamlCommand:result: " + result)
         return result
     }
 
     String replaceVariables(String yamlConfiguration) {
-        Logger.info("YamlFlowBuilder:replaceVariables:yamlConfiguration: ${yamlConfiguration}")
+        Logger.info("YamlFlowBuilder:replaceVariables:yamlConfiguration: " + yamlConfiguration)
         Map binding = dsl.params // variables map to be replaced
-        Logger.info("YamlFlowBuilder:replaceVariables: ${binding}")
+        Logger.info("YamlFlowBuilder:replaceVariables: " + binding)
         def engine = new GStringTemplateEngine()
         def template = engine.createTemplate(yamlConfiguration).make(binding)
         String result = template.toString()
