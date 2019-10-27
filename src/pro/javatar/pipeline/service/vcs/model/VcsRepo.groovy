@@ -16,7 +16,7 @@ class VcsRepo {
 
     VcsRepositoryType vcsRepositoryType
 
-    RevisionControlType revisionControlType
+    RevisionControlType revControlType
 
     boolean ssh = true
 
@@ -122,19 +122,19 @@ class VcsRepo {
     }
 
     RevisionControlType getRevisionControlType() {
-        return revisionControlType
+        return revControlType
     }
 
     void setRevisionControlType(RevisionControlType revisionControlType) {
-        this.revisionControlType = revisionControlType
+        this.revControlType = revisionControlType;
     }
 
     void setRevisionControlType(String revisionControlType) {
-        this.revisionControlType = RevisionControlType.fromString(revisionControlType)
+        setRevisionControlType(RevisionControlType.fromString(revisionControlType));
     }
 
     VcsRepo withRevisionControlType(RevisionControlType revisionControlType) {
-        this.revisionControlType = revisionControlType
+        setRevisionControlType(revisionControlType);
         return this
     }
 
@@ -146,8 +146,10 @@ class VcsRepo {
                 ", owner='" + owner + '\'' +
                 ", credentialsId='" + credentialsId + '\'' +
                 ", domain='" + domain + '\'' +
-                ", type=" + type +
+                ", vcsRepositoryType=" + vcsRepositoryType +
+                ", revControlType=" + revControlType +
                 ", ssh=" + ssh +
+                ", branch='" + branch + '\'' +
                 '}';
     }
 }
