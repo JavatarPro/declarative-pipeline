@@ -14,7 +14,7 @@ class VcsRepo {
 
     String domain
 
-    VcsRepositoryType type
+    private VcsRepositoryType type
 
     RevisionControlType revisionControlType
 
