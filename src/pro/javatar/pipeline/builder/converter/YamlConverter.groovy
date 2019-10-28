@@ -90,7 +90,7 @@ class YamlConverter {
         if (autoTest == null) {
             return new AutoTest()
         }
-        Logger.info("retrieveAutoTest: autoTest: ${autoTest}")
+        Logger.info("retrieveAutoTest: autoTest: " + autoTest)
         return new AutoTest()
                 .withJobName(autoTest.jobName)
                 .withSkipCodeQualityVerification(autoTest.skipCodeQualityVerification)
