@@ -112,9 +112,9 @@ class YamlConverter {
 
     LogLevel retrieveAndSetLogLevel(def yml) {
         def log = yml.log_level
-        Logger.info("YamlConverter:retrieveAndSetLogLevel: logLevel: ${log}")
+        Logger.info("YamlConverter:retrieveAndSetLogLevel: logLevel: " + log);
         if (log == null) {
-            return
+            return LogLevel.INFO
         }
         LogLevel logLevel = LogLevel.fromString(log)
         Logger.LEVEL = logLevel

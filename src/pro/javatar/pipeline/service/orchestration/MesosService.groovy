@@ -70,7 +70,7 @@ class MesosService implements DockerOrchestrationService {
             version = request.getImageVersionWithBuildNumber()
         }
         return dockerDeployContainer(request.getImageName(), version,
-                request.getDockerRepositoryUrl(), request.getEnvironment().getValue())
+                request.getDockerRegistry().registry, request.getEnvironment().getValue())
     }
 
     @Override
