@@ -61,7 +61,7 @@ class AutoTest implements Serializable {
         return this
     }
 
-    AutoTest withSkipCodeQualityVerification(String skipCodeQualityVerification) {
+    AutoTest withSkipCodeQualityVerificationFromString(String skipCodeQualityVerification) {
         setSkipCodeQualityVerification(Boolean.valueOf(skipCodeQualityVerification));
         return this
     }
