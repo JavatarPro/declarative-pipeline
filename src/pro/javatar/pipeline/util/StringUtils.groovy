@@ -64,8 +64,8 @@ class StringUtils {
     static String toString(Map map) {
         StringBuilder sb = new StringBuilder("{")
         map.each { key, value ->
-            sb.append("key: ${key}")
-                    .append(", value: ${value}")
+            sb.append("key: " + key)
+                    .append(", value: " + value)
         }
         sb.append("}")
         return sb.toString()
@@ -86,6 +86,7 @@ class StringUtils {
         return result.toString()
     }
 
+    @NonCPS
     static String toJsonString(def object) {
         if (object == null) {
             return null

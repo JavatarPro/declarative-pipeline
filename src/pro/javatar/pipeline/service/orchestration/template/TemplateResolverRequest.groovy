@@ -4,6 +4,8 @@
  */
 package pro.javatar.pipeline.service.orchestration.template
 
+import com.cloudbees.groovy.cps.NonCPS
+
 /**
  * @author Borys Zora
  * @version 2019-04-04
@@ -27,6 +29,7 @@ class TemplateResolverRequest {
         return mergedVariables
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "TemplateResolverRequest{" +

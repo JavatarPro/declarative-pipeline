@@ -43,7 +43,7 @@ class AwsS3DeploymentService implements DeploymentService {
             dsl.s3Delete bucket: bucket, path: s3LatestPath
             dsl.s3Upload bucket: bucket, file: "${releaseInfo.getUiDistributionFolder()}/",  path: s3LatestPath
             def files = dsl.s3FindFiles bucket: bucket, path: s3Path, glob: "**", onlyFiles: true
-            Logger.info("AwsS3DeploymentService:deployToS3Bucket:files: ${files.toString()}")
+            Logger.info("AwsS3DeploymentService:deployToS3Bucket:files: " + files.toString())
         }
         Logger.info("AwsS3DeploymentService:deployToS3Bucket:finished")
     }

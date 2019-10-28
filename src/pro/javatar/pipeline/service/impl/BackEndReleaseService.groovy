@@ -44,7 +44,7 @@ class BackEndReleaseService implements ReleaseService {
 
     @Override
     def release(ReleaseInfo releaseInfo) {
-        Logger.info("BackEndReleaseService start release: ${releaseInfo.toString()}")
+        Logger.info("BackEndReleaseService start release: " + releaseInfo.toString())
         validateReleaseVersion(releaseInfo.releaseVersion)
         buildService.deployMavenArtifactsToNexus()
         // TODO comment out promotion of docker, it should be after QA sign off
@@ -61,7 +61,7 @@ class BackEndReleaseService implements ReleaseService {
         revisionControlService.release(releaseInfo.releaseVersion)
         revisionControlService.switchToDevelopBranch()
         buildService.setupVersion(releaseInfo.developVersion)
-        revisionControlService.commitChanges("Update version to ${releaseInfo.developVersion}")
+        revisionControlService.commitChanges("Update version to " + releaseInfo.developVersion)
         revisionControlService.pushRelease()
         Logger.info("BackEndReleaseService: releaseRevisionControl() finished")
     }

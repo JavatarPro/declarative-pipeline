@@ -4,6 +4,7 @@
  */
 package pro.javatar.pipeline.service.orchestration.model
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
 
 /**
@@ -42,6 +43,7 @@ class DockerRegistryBO {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "DockerRegistryBO {" +

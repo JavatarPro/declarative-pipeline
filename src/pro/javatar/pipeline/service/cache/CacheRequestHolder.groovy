@@ -1,5 +1,7 @@
 package pro.javatar.pipeline.service.cache
 
+import com.cloudbees.groovy.cps.NonCPS
+
 class CacheRequestHolder {
 
     // Map<service, List<folder path>>
@@ -18,6 +20,7 @@ class CacheRequestHolder {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "CacheRequestHolder{" +

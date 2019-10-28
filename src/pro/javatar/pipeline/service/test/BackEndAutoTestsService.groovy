@@ -14,6 +14,7 @@
  */
 package pro.javatar.pipeline.service.test
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.BuildService
@@ -112,6 +113,7 @@ class BackEndAutoTestsService implements AutoTestsService {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "BackEndAutoTestsService{" +

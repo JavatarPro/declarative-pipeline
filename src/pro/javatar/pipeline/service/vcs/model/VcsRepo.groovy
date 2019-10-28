@@ -1,5 +1,6 @@
 package pro.javatar.pipeline.service.vcs.model
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.model.RevisionControlType
 import pro.javatar.pipeline.model.VcsRepositoryType
 
@@ -13,9 +14,9 @@ class VcsRepo {
 
     String domain
 
-    VcsRepositoryType type
+    VcsRepositoryType vcsRepositoryType
 
-    RevisionControlType revisionControlType
+    RevisionControlType revControlType
 
     boolean ssh = true
 
@@ -74,20 +75,20 @@ class VcsRepo {
     }
 
     VcsRepositoryType getType() {
-        return type
+        return vcsRepositoryType;
     }
 
     void setType(VcsRepositoryType type) {
-        this.type = type
+        this.vcsRepositoryType = type;
     }
 
     void setType(String type) {
-        this.type = VcsRepositoryType.fromString(type)
+        setType(VcsRepositoryType.fromString(type));
     }
 
     VcsRepo withType(VcsRepositoryType type) {
-        this.type = type
-        return this
+        setType(type);
+        return this;
     }
 
     boolean isSsh() {
@@ -121,22 +122,23 @@ class VcsRepo {
     }
 
     RevisionControlType getRevisionControlType() {
-        return revisionControlType
+        return revControlType
     }
 
     void setRevisionControlType(RevisionControlType revisionControlType) {
-        this.revisionControlType = revisionControlType
+        this.revControlType = revisionControlType;
     }
 
     void setRevisionControlType(String revisionControlType) {
-        this.revisionControlType = RevisionControlType.fromString(revisionControlType)
+        setRevisionControlType(RevisionControlType.fromString(revisionControlType));
     }
 
     VcsRepo withRevisionControlType(RevisionControlType revisionControlType) {
-        this.revisionControlType = revisionControlType
+        setRevisionControlType(revisionControlType);
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "VcsRepo{" +
@@ -144,8 +146,10 @@ class VcsRepo {
                 ", owner='" + owner + '\'' +
                 ", credentialsId='" + credentialsId + '\'' +
                 ", domain='" + domain + '\'' +
-                ", type=" + type +
+                ", vcsRepositoryType=" + vcsRepositoryType +
+                ", revControlType=" + revControlType +
                 ", ssh=" + ssh +
+                ", branch='" + branch + '\'' +
                 '}';
     }
 }

@@ -15,6 +15,7 @@
 
 package pro.javatar.pipeline.stage.deploy
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.DeploymentService
@@ -34,7 +35,7 @@ abstract class DeployToEnvStage extends Stage {
 
     @Override
     void execute() throws PipelineException {
-        Logger.info("DeployToEnvStage to ${getEnv().getValue()} execute started: ${toString()}")
+        Logger.info("DeployToEnvStage to " + getEnv().getValue() + " execute started: " + toString())
         dsl.timeout(time: 10, unit: 'MINUTES') {
             dsl.dir(releaseInfo.repoFolder) {
                 deploymentService.deployArtifact(getEnv(), releaseInfo)
@@ -55,6 +56,7 @@ abstract class DeployToEnvStage extends Stage {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "DeployToQAEnvStage{" +

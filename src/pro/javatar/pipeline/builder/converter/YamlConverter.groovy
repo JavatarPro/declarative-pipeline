@@ -87,8 +87,10 @@ class YamlConverter {
 
     AutoTest retrieveAutoTest(def yml) {
         def autoTest = yml["auto-test"]
-        if (autoTest == null) return null
-        Logger.info("retrieveAutoTest: autoTest: ${autoTest}")
+        if (autoTest == null) {
+            return new AutoTest()
+        }
+        Logger.info("retrieveAutoTest: autoTest: " + autoTest)
         return new AutoTest()
                 .withJobName(autoTest.jobName)
                 .withSkipCodeQualityVerification(autoTest.skipCodeQualityVerification)
@@ -110,9 +112,9 @@ class YamlConverter {
 
     LogLevel retrieveAndSetLogLevel(def yml) {
         def log = yml.log_level
-        Logger.info("YamlConverter:retrieveAndSetLogLevel: logLevel: ${log}")
+        Logger.info("YamlConverter:retrieveAndSetLogLevel: logLevel: " + log);
         if (log == null) {
-            return
+            return LogLevel.INFO
         }
         LogLevel logLevel = LogLevel.fromString(log)
         Logger.LEVEL = logLevel
@@ -152,8 +154,8 @@ class YamlConverter {
             Logger.trace("YamlConverter:retrieveVcsRepos: key: ${key}, value: ${value}")
             vcsRepos.put(key, retrieveVcsRepo(value))
         }
-        Logger.trace("YamlConverter:retrieveVcsRepos:vcsRepos: ${vcsRepos.toString()}")
-        Logger.debug("YamlConverter:retrieveVcsRepos:vcsRepos:size: ${vcsRepos.size()}")
+        Logger.trace("YamlConverter:retrieveVcsRepos:vcsRepos: " + vcsRepos.toString())
+        Logger.debug("YamlConverter:retrieveVcsRepos:vcsRepos:size: " + vcsRepos.size())
         return vcsRepos
     }
 
@@ -166,7 +168,7 @@ class YamlConverter {
                 .withType(vcsRepo.type)
                 .withBranch(vcsRepo.branch)
                 .withRevisionControl(vcsRepo.revisionControl)
-        Logger.trace("YamlConverter:retrieveVcsRepo:result: ${result.toString()}")
+        Logger.trace("YamlConverter:retrieveVcsRepo:result: " + result.toString())
         return result
     }
 
@@ -222,7 +224,7 @@ class YamlConverter {
 
         Docker result = new Docker().withDockerRegistries(resultMap)
                 .withCustomDockerFileName(docker.customDockerFileName)
-        Logger.debug("YamlConverter:retrieveDocker:finished with result: ${result.toString()}")
+        Logger.debug("YamlConverter:retrieveDocker:finished with result: " + result.toString())
         return result
     }
 
@@ -287,7 +289,7 @@ class YamlConverter {
                     .withVcsConfig(nomadItem.vcsConfig)
             result.addNomadItem(env, item)
         }
-        Logger.debug("YamlConverter:retrieveNomad: result: ${result.toString()}")
+        Logger.debug("YamlConverter:retrieveNomad: result: " + result.toString())
         return result
     }
 

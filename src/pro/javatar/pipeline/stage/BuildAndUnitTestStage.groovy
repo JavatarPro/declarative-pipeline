@@ -13,8 +13,9 @@
  * limitations under the License.
  */
 
-package pro.javatar.pipeline.stage;
+package pro.javatar.pipeline.stage
 
+import com.cloudbees.groovy.cps.NonCPS;
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
@@ -38,7 +39,7 @@ class BuildAndUnitTestStage extends Stage {
 
     @Override
     void execute() throws PipelineException {
-        Logger.info("BuildAndUnitTestStage execute started: ${toString()}")
+        Logger.info("BuildAndUnitTestStage execute started: " + toString())
         dsl.timeout(time: buildService.unitTestsTimeout, unit: 'MINUTES') {
             revisionControl.cleanUp()
             dsl.dir(revisionControl.folder) {
@@ -59,7 +60,7 @@ class BuildAndUnitTestStage extends Stage {
         }
         dsl.currentBuild.description =
                 "build of ${releaseInfo.serviceName}:${releaseInfo.getBuildReleaseVersion()} completed"
-        Logger.info("BuildAndUnitTestStage execute finished: ${toString()}")
+        Logger.info("BuildAndUnitTestStage execute finished: " + toString())
     }
 
     @Override
@@ -74,9 +75,10 @@ class BuildAndUnitTestStage extends Stage {
         releaseInfo.setDevelopVersion(buildService.getDevelopVersion(releaseVersion))
         releaseInfo.setFlowPrefix(revisionControl.getFlowPrefix())
         buildService.populateReleaseInfo(releaseInfo)
-        Logger.info("BuildAndUnitTestStage populateReleaseInfo finished: ${releaseInfo.toString()}")
+        Logger.info("BuildAndUnitTestStage populateReleaseInfo finished: " + releaseInfo.toString())
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "BuildAndUnitTestStage{" +

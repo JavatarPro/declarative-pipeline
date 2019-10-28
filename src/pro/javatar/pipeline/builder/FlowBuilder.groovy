@@ -15,6 +15,7 @@
 
 package pro.javatar.pipeline.builder
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.Flow
 import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.Gradle
@@ -98,7 +99,7 @@ class FlowBuilder implements Serializable {
         Flow flow = new Flow(releaseInfo)
         populateStages(flow, stageTypes)
 
-        Logger.info("build Flow finished: ${toString()}")
+        Logger.info("build Flow finished: " + toString())
         return flow
     }
 
@@ -158,7 +159,7 @@ class FlowBuilder implements Serializable {
             dockerBuildService = new DockerBuildService(gradleBuildService, dockerService)
         }
         setupBuildService()
-        Logger.info("FlowBuilder:prepareBuildService: created buildService: ${buildService.toString()}")
+        Logger.info("FlowBuilder:prepareBuildService: created buildService: " + buildService.toString())
     }
 
     GradleBuildService buildGradleBuildService(Gradle gradle) {
@@ -168,7 +169,7 @@ class FlowBuilder implements Serializable {
 
     def prepareSonarQube() {
         if (sonarQubeBuilder != null) {
-            Logger.debug("sonarQubeBuilder start build: ${sonarQubeBuilder.toString()}")
+            Logger.debug("sonarQubeBuilder start build: " + sonarQubeBuilder.toString())
             sonarQubeService = sonarQubeBuilder.build()
             Logger.debug("sonarQubeBuilder finish build")
         } else {
@@ -293,7 +294,7 @@ class FlowBuilder implements Serializable {
     }
 
     def setupBuildService() {
-        Logger.debug("setupBuildService started buildType: ${buildType}, maven: ${maven.toString()}")
+        Logger.debug("setupBuildService started buildType: " + buildType + ", maven: " + maven.toString())
 
         if (buildType == BuildServiceType.MAVEN && suit == PipelineStagesSuit.SERVICE) {
             // TODO refactor
@@ -323,7 +324,7 @@ class FlowBuilder implements Serializable {
         }
 
         buildService.useBuildNumberForVersion = useBuildNumberForVersion
-        Logger.debug("buildService: ${buildService.toString()}")
+        Logger.debug("buildService: " + buildService.toString())
         Logger.info("setupBuildService finished")
     }
 
@@ -516,6 +517,7 @@ class FlowBuilder implements Serializable {
         ServiceContextHolder.addService(dockerNpmBuildService)
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "FlowBuilder{" +

@@ -2,7 +2,9 @@
  * Copyright (c) 2019 Javatar LLC
  * All rights reserved.
  */
-package pro.javatar.pipeline.builder.model;
+package pro.javatar.pipeline.builder.model
+
+import com.cloudbees.groovy.cps.NonCPS;
 
 /**
  * TODO remove does not work
@@ -37,6 +39,7 @@ class Environment implements Serializable {
         return env != null ? env.hashCode() : 0;
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "Environment{" +

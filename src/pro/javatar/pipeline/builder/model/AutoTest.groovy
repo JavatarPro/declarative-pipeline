@@ -1,83 +1,89 @@
 package pro.javatar.pipeline.builder.model
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.util.Logger
 
 class AutoTest implements Serializable {
 
-    String jobName
+    String jenkinsJobName
 
-    boolean skipSystemTests
+    Boolean shouldSkipSystemTests
 
-    boolean skipCodeQualityVerification
+    Boolean shouldSkipCodeQualityVerification
 
-    int sleepInSeconds = -1
+    Integer sleepInSecondsAmount = -1
 
     AutoTest() {
         Logger.debug("AutoTest:default constructor")
     }
 
     String getJobName() {
-        return jobName
+        return jenkinsJobName
     }
 
     void setJobName(String jobName) {
-        this.jobName = jobName
+        this.jenkinsJobName = jobName
     }
 
     AutoTest withJobName(String jobName) {
-        this.jobName = jobName
+        setJobName(jobName)
         return this
     }
 
-    boolean getSkipSystemTests() {
-        return skipSystemTests
+    Boolean getSkipSystemTests() {
+        return shouldSkipSystemTests;
     }
 
-    void setSkipSystemTests(boolean skipSystemTests) {
-        this.skipSystemTests = skipSystemTests
+    void setSkipSystemTests(Boolean skipSystemTests) {
+        this.shouldSkipSystemTests = skipSystemTests
     }
 
-    AutoTest withSkipSystemTests(boolean skipSystemTests) {
-        this.skipSystemTests = skipSystemTests
+    AutoTest withSkipSystemTests(Boolean skipSystemTests) {
+        setSkipSystemTests(skipSystemTests)
         return this
     }
 
     AutoTest withSkipSystemTests(String skipSystemTests) {
-        this.skipSystemTests = Boolean.valueOf(skipSystemTests)
+        setSkipSystemTests(Boolean.valueOf(skipSystemTests))
         return this
     }
 
-    boolean getSkipCodeQualityVerification() {
-        return skipCodeQualityVerification
+    Boolean getSkipCodeQualityVerification() {
+        return shouldSkipCodeQualityVerification
     }
 
-    void setSkipCodeQualityVerification(boolean skipCodeQualityVerification) {
-        this.skipCodeQualityVerification = skipCodeQualityVerification
+    void setSkipCodeQualityVerification(Boolean skipCodeQualityVerification) {
+        this.shouldSkipCodeQualityVerification = skipCodeQualityVerification
     }
 
-    AutoTest withSkipCodeQualityVerification(boolean skipCodeQualityVerification) {
-        this.skipCodeQualityVerification = skipCodeQualityVerification
+    AutoTest withSkipCodeQualityVerification(Boolean skipCodeQualityVerification) {
+        if (skipCodeQualityVerification == null) {
+            setSkipCodeQualityVerification(Boolean.TRUE);
+        } else {
+            setSkipCodeQualityVerification(skipCodeQualityVerification);
+        }
         return this
     }
 
-    AutoTest withSkipCodeQualityVerification(String skipCodeQualityVerification) {
-        this.skipCodeQualityVerification = Boolean.valueOf(skipCodeQualityVerification)
+    AutoTest withSkipCodeQualityVerificationFromString(String skipCodeQualityVerification) {
+        setSkipCodeQualityVerification(Boolean.valueOf(skipCodeQualityVerification));
         return this
     }
 
-    int getSleepInSeconds() {
-        return sleepInSeconds
+    Integer getSleepInSeconds() {
+        return sleepInSecondsAmount
     }
 
-    void setSleepInSeconds(int sleepInSeconds) {
-        this.sleepInSeconds = sleepInSeconds
+    void setSleepInSeconds(Integer sleepInSeconds) {
+        this.sleepInSecondsAmount = sleepInSeconds
     }
 
-    AutoTest withSleepInSeconds(int sleepInSeconds) {
-        this.sleepInSeconds = sleepInSeconds
+    AutoTest withSleepInSeconds(Integer sleepInSeconds) {
+        setSleepInSeconds(sleepInSeconds);
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "AutoTest{" +

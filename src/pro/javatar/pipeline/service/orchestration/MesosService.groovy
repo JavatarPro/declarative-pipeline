@@ -14,6 +14,7 @@
  */
 package pro.javatar.pipeline.service.orchestration
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.infra.model.Infra
 import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
@@ -36,7 +37,7 @@ class MesosService implements DockerOrchestrationService {
 
     def setup() {
         // TODO prepare vcsRepos on builder stage
-        Logger.debug("MesosService: checkout configurations for vcsRepoMap: ${vcsRepoMap}")
+        Logger.debug("MesosService: checkout configurations for vcsRepoMap: " + vcsRepoMap)
         VcsRepo vcsRepo = vcsRepoMap.get(Env.DEV.getValue())
         VcsHelper.checkoutRepo(vcsRepo, getFolder(vcsRepo))
         // TODO checkout prod repo securely on different agent (e.g. pipeline-prod)
@@ -47,8 +48,8 @@ class MesosService implements DockerOrchestrationService {
     // TODO replace depcon with own rest implementation
     @Override
     def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment) {
-        Logger.info("MesosService:dockerDeployContainer(imageName: ${imageName}, imageVersion: ${imageVersion}, " +
-                "dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})")
+        Logger.info("MesosService:dockerDeployContainer(imageName: " + imageName + ", imageVersion: " + imageVersion +
+                "dockerRepositoryUrl: " + dockerRepositoryUrl + ", environment: " + environment)
 
         dsl.sh "pwd; ls -l; ls -l .. "
 
@@ -69,7 +70,7 @@ class MesosService implements DockerOrchestrationService {
             version = request.getImageVersionWithBuildNumber()
         }
         return dockerDeployContainer(request.getImageName(), version,
-                request.getDockerRepositoryUrl(), request.getEnvironment().getValue())
+                request.getDockerRegistry().registry, request.getEnvironment().getValue())
     }
 
     @Override
@@ -104,6 +105,7 @@ class MesosService implements DockerOrchestrationService {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "MesosService{" +

@@ -1,5 +1,7 @@
 package pro.javatar.pipeline.builder.model
 
+import com.cloudbees.groovy.cps.NonCPS
+
 import java.time.Period
 
 class NomadItem {
@@ -49,6 +51,7 @@ class NomadItem {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "NomadItem{" +

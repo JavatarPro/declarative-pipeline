@@ -1,5 +1,6 @@
 package pro.javatar.pipeline.builder.model
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.util.Logger
 
 class Docker implements Serializable {
@@ -43,7 +44,7 @@ class Docker implements Serializable {
         return this
     }
 
-
+    @NonCPS
     @Override
     public String toString() {
         return "Docker{" +

@@ -4,6 +4,8 @@
  */
 package pro.javatar.pipeline.service.s3.model
 
+import com.cloudbees.groovy.cps.NonCPS
+
 /**
  * @author Borys Zora
  * @version 2018-10-15
@@ -70,6 +72,7 @@ class S3Repo {
         return this
     }
 
+    @NonCPS
     @Override
     String toString() {
         return "S3Repo{" +

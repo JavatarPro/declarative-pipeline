@@ -13,8 +13,9 @@
  * limitations under the License.
  */
 
-package pro.javatar.pipeline.builder;
+package pro.javatar.pipeline.builder
 
+import com.cloudbees.groovy.cps.NonCPS;
 import pro.javatar.pipeline.service.test.SonarQubeService
 import pro.javatar.pipeline.util.Logger
 
@@ -85,6 +86,7 @@ class SonarQubeBuilder implements Serializable {
                 "-Dsonar.coverage.exclusions=**/model/**,**/exceptions/**,**/entity/**,**/*TO.*,**/dto/**"
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "SonarQubeBuilder{" +

@@ -4,6 +4,7 @@
  */
 package pro.javatar.pipeline.service.orchestration.model
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.util.Logger
 
@@ -19,7 +20,7 @@ class DeploymentRequestBO implements Serializable {
 
     DockerRegistryBO dockerRegistry
 
-    Env environment
+    Env env
 
     Integer buildNumber
 
@@ -73,15 +74,15 @@ class DeploymentRequestBO implements Serializable {
     }
 
     Env getEnvironment() {
-        return environment
+        return env
     }
 
     void setEnvironment(Env environment) {
-        this.environment = environment
+        this.env = environment
     }
 
     void setEnvironment(String environment) {
-        this.environment = Env.fromString(environment)
+        setEnvironment(Env.fromString(environment))
     }
 
     DeploymentRequestBO withEnvironment(String environment) {
@@ -120,6 +121,7 @@ class DeploymentRequestBO implements Serializable {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "DeploymentRequestBO{" +

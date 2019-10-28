@@ -39,7 +39,7 @@ class BackEndLibraryReleaseService implements ReleaseService {
 
     @Override
     def release(ReleaseInfo releaseInfo) {
-        Logger.info("BackEndLibraryReleaseService start release: ${releaseInfo.toString()}")
+        Logger.info("BackEndLibraryReleaseService start release: " + releaseInfo.toString())
 
         validateReleaseVersion(releaseInfo.releaseVersion)
         buildService.deployMavenArtifactsToNexus()

@@ -13,7 +13,9 @@
  * limitations under the License.
  */
 
-package pro.javatar.pipeline.service;
+package pro.javatar.pipeline.service
+
+import com.cloudbees.groovy.cps.NonCPS;
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
@@ -36,6 +38,7 @@ class SlackService implements Serializable {
         this.slackWebhookUrl = slackWebhookUrl
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "SlackService{" +

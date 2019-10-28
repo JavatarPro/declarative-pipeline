@@ -1,5 +1,6 @@
 package pro.javatar.pipeline.builder.model
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.util.Logger
 
 class S3Repository implements Serializable {
@@ -68,6 +69,7 @@ class S3Repository implements Serializable {
         return this
     }
 
+    @NonCPS
     @Override
     String toString() {
         return "S3Repository {" +

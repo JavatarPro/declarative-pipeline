@@ -15,6 +15,7 @@
 
 package pro.javatar.pipeline.stage
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.service.ReleaseService
 import pro.javatar.pipeline.util.Logger
@@ -35,7 +36,7 @@ class ReleaseArtifactsStage extends Stage {
 
     @Override
     void execute() throws PipelineException {
-        Logger.info("ReleaseArtifactsStage execute started: ${toString()}")
+        Logger.info("ReleaseArtifactsStage execute started: " + toString())
         dsl.dir(releaseInfo.repoFolder) {
             releaseService.release(releaseInfo)
             dsl.currentBuild.description = "${releaseInfo.serviceName}:${releaseInfo.releaseVersion}"
@@ -48,6 +49,7 @@ class ReleaseArtifactsStage extends Stage {
         return "release"
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "ReleaseArtifactsStage{" +

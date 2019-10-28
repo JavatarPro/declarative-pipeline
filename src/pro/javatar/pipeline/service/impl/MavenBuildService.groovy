@@ -15,6 +15,7 @@
 
 package pro.javatar.pipeline.service.impl
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.util.Logger
@@ -190,6 +191,7 @@ class MavenBuildService extends BuildService {
         this.layout = layout
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "MavenBuildService{" +

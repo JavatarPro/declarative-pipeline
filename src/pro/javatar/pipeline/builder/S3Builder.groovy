@@ -1,5 +1,6 @@
 package pro.javatar.pipeline.builder
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.service.s3.AwsS3DeploymentService
 import pro.javatar.pipeline.service.s3.model.S3Repo
 import pro.javatar.pipeline.util.Logger
@@ -36,6 +37,7 @@ class S3Builder implements Serializable {
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "S3Builder{" +

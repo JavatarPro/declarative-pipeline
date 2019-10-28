@@ -14,6 +14,7 @@
  */
 package pro.javatar.pipeline.builder.model
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.util.Logger
 
 import java.time.Period
@@ -47,13 +48,14 @@ class Nomad implements Serializable {
     }
 
     Nomad addNomadItem(String env, NomadItem nomadItem) {
-        Logger.trace("Nomad:addNomadItem: env: ${env.toString()}, nomadItem: ${nomadItem.toString()}")
+        Logger.trace("Nomad:addNomadItem: env: " + env.toString() + ", nomadItem: " + nomadItem.toString())
         // does not work if map Map<Environment, NomadItem>
         nomadConfig.put(env, nomadItem)
-        Logger.trace("Nomad:addNomadItem: this.toString(): ${toString()}")
+        Logger.trace("Nomad:addNomadItem: this.toString(): " + toString())
         return this
     }
 
+    @NonCPS
     @Override
     public String toString() {
         return "Nomad{" +
