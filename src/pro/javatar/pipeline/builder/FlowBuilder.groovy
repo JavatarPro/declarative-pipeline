@@ -442,6 +442,11 @@ class FlowBuilder implements Serializable {
         return this
     }
 
+    FlowBuilder addPython(Python python) {
+        this.python = python
+        return this
+    }
+
     FlowBuilder addJenkinsTool(JenkinsTool jenkinsTool) {
         this.jenkinsTool = jenkinsTool
         return this;
