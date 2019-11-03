@@ -77,4 +77,14 @@ class PythonBuildService extends BuildService {
         dsl.sh "cat ${versionFile}"
         Logger.info("PythonBuildService setupVersion: ${version} finished")
     }
+
+
+    @Override
+    public String toString() {
+        return "PythonBuildService{" +
+                ", versionFile='" + versionFile + '\'' +
+                ", versionParameter='" + versionParameter + '\'' +
+                ", projectDirectory='" + projectDirectory + '\'' +
+                '}';
+    }
 }
