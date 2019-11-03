@@ -21,6 +21,7 @@ import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.Gradle
 import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.exception.*
+import pro.javatar.pipeline.jenkins.JenkinsDslServiceImpl
 import pro.javatar.pipeline.model.*
 import pro.javatar.pipeline.service.*
 import pro.javatar.pipeline.service.cache.CacheRequestHolder
@@ -96,7 +97,8 @@ class FlowBuilder implements Serializable {
         createServices()
         createStages()
 
-        Flow flow = new Flow(releaseInfo)
+        JenkinsDslService jenkinsDslService = new JenkinsDslServiceImpl(dsl);
+        Flow flow = new Flow(releaseInfo, jenkinsDslService);
         populateStages(flow, stageTypes)
 
         Logger.info("build Flow finished: " + toString())

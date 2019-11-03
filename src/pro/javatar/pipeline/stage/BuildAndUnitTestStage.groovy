@@ -78,6 +78,25 @@ class BuildAndUnitTestStage extends Stage {
         Logger.info("BuildAndUnitTestStage populateReleaseInfo finished: " + releaseInfo.toString())
     }
 
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+
+        BuildAndUnitTestStage that = (BuildAndUnitTestStage) o
+
+        if (buildService != that.buildService) return false
+        if (revisionControl != that.revisionControl) return false
+
+        return true
+    }
+
+    int hashCode() {
+        int result
+        result = (buildService != null ? buildService.hashCode() : 0)
+        result = 31 * result + (revisionControl != null ? revisionControl.hashCode() : 0)
+        return result
+    }
+
     @NonCPS
     @Override
     public String toString() {

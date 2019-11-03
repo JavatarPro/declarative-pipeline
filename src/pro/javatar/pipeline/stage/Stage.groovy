@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.stage;
 
 import pro.javatar.pipeline.exception.PipelineException
@@ -22,23 +21,40 @@ import pro.javatar.pipeline.model.ReleaseInfo
  * @author Borys Zora
  * @since 2018-03-09
  */
-abstract class Stage implements Serializable {
+abstract class Stage implements StageAware, Serializable {
 
-    protected boolean skipStage = false
+    protected boolean skipStage = false;
 
-    protected boolean exitFromPipeline = false
+    protected boolean exitFromPipeline = false;
 
-    protected ReleaseInfo releaseInfo
+    protected ReleaseInfo releaseInfoObj;
 
+    @Override
     abstract void execute() throws PipelineException;
 
+    @Override
     abstract String getName();
 
+    @Override
     boolean shouldSkip() {
-        return skipStage
+        return skipStage;
+    }
+
+    @Override
+    ReleaseInfo releaseInfo() {
+        return releaseInfoObj;
+    }
+
+    @Override
+    void propagateReleaseInfo(ReleaseInfo releaseInfo) {
+        this.releaseInfoObj = releaseInfo;
     }
 
     void setReleaseInfo(ReleaseInfo releaseInfo) {
-        this.releaseInfo = releaseInfo
+        this.releaseInfo = releaseInfo;
+    }
+
+    boolean isFiredExitFromPipeline() {
+        return exitFromPipeline;
     }
 }
