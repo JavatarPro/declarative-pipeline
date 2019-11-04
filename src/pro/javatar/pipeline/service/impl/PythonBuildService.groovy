@@ -70,12 +70,13 @@ class PythonBuildService extends BuildService {
     def setupVersion(String version) {
         Logger.info("PythonBuildService setupVersion: ${version} started")
         String currentVersion = getCurrentVersion()
-        Logger.trace("PythonBuildService ${versionFile} before version setup")
-        dsl.sh "cat ${versionFile}"
+        String versionFilePath = "${projectDirectory}/${versionFile}"
+        Logger.trace("PythonBuildService ${versionFilePath} before version setup")
+        dsl.sh "cat ${versionFilePath}"
         //todo: replace with new version
-        FileUtils.replace(currentVersion, version, versionFile)
-        Logger.trace("PythonBuildService ${versionFile} after version setup")
-        dsl.sh "cat ${versionFile}"
+        FileUtils.replace(currentVersion, version, versionFilePath)
+        Logger.trace("PythonBuildService ${versionFilePath} after version setup")
+        dsl.sh "cat ${versionFilePath}"
         Logger.info("PythonBuildService setupVersion: ${version} finished")
     }
 
