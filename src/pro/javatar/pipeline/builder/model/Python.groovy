@@ -4,9 +4,9 @@ import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.util.Logger
 
 class Python implements Serializable {
-    private String versionFile = "_version.py"
-    private String versionParameter = "__version__"
-    private String projectDirectory = "."
+    String versionFile = "_version.py"
+    String versionParameter = "__version__"
+    String projectDirectory = "."
 
     Python() {
         Logger.debug("Python:default constructor")
@@ -25,12 +25,16 @@ class Python implements Serializable {
     }
 
     Python withVersionFile(String versionFile) {
-        this.versionFile = versionFile
+        if (versionFile != null && !versionFile.trim().isEmpty()) {
+            this.versionFile = versionFile
+        }
         return this
     }
 
     Python withVersionParameter(String versionParameter) {
-        this.versionParameter = versionParameter
+        if (versionParameter != null && !versionParameter.trim().isEmpty()) {
+            this.versionParameter = versionParameter
+        }
         return this
     }
 
