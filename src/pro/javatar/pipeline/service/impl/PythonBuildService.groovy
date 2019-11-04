@@ -11,7 +11,7 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 class PythonBuildService extends BuildService {
 
-    DockerService dockerService;
+    DockerService dockerService
 
     String versionFile
 
@@ -19,11 +19,8 @@ class PythonBuildService extends BuildService {
 
     String projectDirectory
 
-    PythonBuildService(DockerService dockerService) {
+    PythonBuildService(DockerService dockerService, String versionFile, String versionParameter, String projectDirectory) {
         this.dockerService = dockerService
-    }
-
-    PythonBuildService(String versionFile, String versionParameter, String projectDirectory) {
         this.versionFile = versionFile
         this.versionParameter = versionParameter
         this.projectDirectory = projectDirectory
@@ -33,6 +30,7 @@ class PythonBuildService extends BuildService {
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
         Logger.info("PythonBuildService buildAndUnitTests started")
         dsl.sh "python -m compileall -f ./"
+        dockerService.dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
         Logger.info("PythonBuildService buildAndUnitTests finished")
     }
 

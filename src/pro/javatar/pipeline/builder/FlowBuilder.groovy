@@ -323,7 +323,7 @@ class FlowBuilder implements Serializable {
         } else if (buildType == BuildServiceType.PHP) {
             buildService = new PhpBuildService(dockerService)
         } else if (buildType == BuildServiceType.PYTHON) {
-            buildService = new PythonBuildService(python.versionFile, python.versionParameter, python.projectDirectory)
+            buildService = new PythonBuildService(dockerService, python.versionFile, python.versionParameter, python.projectDirectory)
         }
 
         buildService.useBuildNumberForVersion = useBuildNumberForVersion
