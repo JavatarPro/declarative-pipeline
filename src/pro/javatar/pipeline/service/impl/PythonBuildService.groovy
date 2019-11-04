@@ -29,7 +29,7 @@ class PythonBuildService extends BuildService {
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
         Logger.info("PythonBuildService buildAndUnitTests started")
-        dsl.sh "python -m compileall -f ./"
+        dsl.sh "python -m unittest discover -s tests"
         dockerService.dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
         Logger.info("PythonBuildService buildAndUnitTests finished")
     }
