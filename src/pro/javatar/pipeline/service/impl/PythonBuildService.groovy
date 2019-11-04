@@ -47,7 +47,8 @@ class PythonBuildService extends BuildService {
     String getCurrentVersion() {
         Logger.debug("PythonBuildService getCurrentVersion started")
         Logger.info("expected that in properties project version has variable with name: version")
-        String version = dsl.sh returnStdout: true, script: "grep ^${versionParameter} ${versionFile} | sed -n 's/.*\"\\([^\"]*\\)\"/\\1/p' "
+        String versionFilePath = "${projectDirectory}/${versionFile}"
+        String version = dsl.sh returnStdout: true, script: "grep ^${versionParameter} ${versionFilePath} | sed -n 's/.*\"\\([^\"]*\\)\"/\\1/p' "
         Logger.info("PythonBuildService:getCurrentVersion:result: ${version}")
         Logger.debug("PythonBuildService getCurrentVersion finished")
         return version.trim()
