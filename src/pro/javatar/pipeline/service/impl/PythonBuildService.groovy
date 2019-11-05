@@ -39,7 +39,7 @@ class PythonBuildService extends BuildService {
         Logger.debug("PythonBuildService setUp started")
         dsl.sh "python --version"
         dsl.sh "apt-get -y install python-pip"
-        dsl.sh "pip install -r requirements.txt --no-index --find-links file:///tmp/packages"
+        dsl.sh "pip install -r requirements.txt"
         Logger.debug("PythonBuildService setUp finished")
     }
 
