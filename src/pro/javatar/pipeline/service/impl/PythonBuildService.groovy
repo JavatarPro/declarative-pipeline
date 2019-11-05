@@ -29,7 +29,6 @@ class PythonBuildService extends BuildService {
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
         Logger.info("PythonBuildService buildAndUnitTests started")
-        dsl.sh "pip install -r requirements.txt --no-index --find-links file:///tmp/packages"
         dsl.sh "python -m unittest discover -s tests"
         dockerService.dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
         Logger.info("PythonBuildService buildAndUnitTests finished")
@@ -39,6 +38,8 @@ class PythonBuildService extends BuildService {
     void setUp() {
         Logger.debug("PythonBuildService setUp started")
         dsl.sh "python --version"
+        dsl.sh "easy_install distribute"
+        dsl.sh "pip install -r requirements.txt --no-index --find-links file:///tmp/packages"
         Logger.debug("PythonBuildService setUp finished")
     }
 
