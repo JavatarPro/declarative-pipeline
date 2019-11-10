@@ -15,7 +15,7 @@
 package pro.javatar.pipeline;
 
 import pro.javatar.pipeline.model.ReleaseInfo
-import pro.javatar.pipeline.service.JenkinsDslService
+import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.stage.StageAware;
 import pro.javatar.pipeline.util.Logger;
 

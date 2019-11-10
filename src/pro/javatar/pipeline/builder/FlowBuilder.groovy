@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.builder
 
 import com.cloudbees.groovy.cps.NonCPS
@@ -20,8 +19,10 @@ import pro.javatar.pipeline.Flow
 import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.Gradle
 import pro.javatar.pipeline.builder.model.JenkinsTool
+import pro.javatar.pipeline.config.Config
 import pro.javatar.pipeline.exception.*
-import pro.javatar.pipeline.jenkins.JenkinsDslServiceImpl
+import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+import pro.javatar.pipeline.jenkins.dsl.JenkinsDslServiceImpl
 import pro.javatar.pipeline.model.*
 import pro.javatar.pipeline.service.*
 import pro.javatar.pipeline.service.cache.CacheRequestHolder
@@ -82,6 +83,7 @@ class FlowBuilder implements Serializable {
     SonarQubeService sonarQubeService
     SwaggerService swaggerService
     PipelineStagesSuit suit
+    Config config;
 
     FlowBuilder() {
         Logger.debug("FlowBuilder:default constructor")
@@ -200,7 +202,8 @@ class FlowBuilder implements Serializable {
         Logger.info("FlowBuilder:createStages: createStages started")
         availableStages.put(StageType.BUILD_AND_UNIT_TESTS,
                 new BuildAndUnitTestStage(buildService, revisionControlService))
-        availableStages.put(StageType.AUTO_TESTS, new AutoTestsStage(autoTestsService, revisionControlService))
+        availableStages.put(StageType.AUTO_TESTS,
+                new AutoTestsStage(autoTestsService, new JenkinsDslServiceImpl(dsl), config.autoTest()))
         availableStages.put(StageType.RELEASE, new ReleaseArtifactsStage(releaseService))
         createSignOffStages()
         createDeployStages()
@@ -251,6 +254,11 @@ class FlowBuilder implements Serializable {
     FlowBuilder addPipelineStage(StageType stageType) {
         stageTypes.add(stageType)
         return this
+    }
+
+    FlowBuilder setConfig(Config config) {
+        this.config = config;
+        return this;
     }
 
     def populate(Maven maven) { // TODO replace with more preferable

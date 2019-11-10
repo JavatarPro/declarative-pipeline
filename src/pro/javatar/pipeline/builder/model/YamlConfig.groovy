@@ -2,6 +2,7 @@ package pro.javatar.pipeline.builder.model
 
 import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.builder.Npm
+import pro.javatar.pipeline.config.AutoTestConfig
 import pro.javatar.pipeline.util.LogLevel
 import pro.javatar.pipeline.util.Logger
 import pro.javatar.pipeline.util.StringUtils
@@ -37,6 +38,8 @@ class YamlConfig implements Serializable {
     Nomad nomad = new Nomad()
 
     AutoTest autoTest = new AutoTest()
+
+    AutoTestConfig autoTestConfig;
 
     CacheRequest cacheRequest = new CacheRequest()
 

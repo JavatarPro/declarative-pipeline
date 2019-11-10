@@ -26,7 +26,6 @@ import pro.javatar.pipeline.util.Logger
 
 import java.time.Period
 
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 import static pro.javatar.pipeline.util.StringUtils.isNotBlank
 
 class YamlConverter {
@@ -100,7 +99,7 @@ class YamlConverter {
 
     CacheRequest retrieveCacheRequest(def yml) {
         def cache = yml.cache
-        Logger.info("retrieveCacheRequest: cache: ${cache}")
+        Logger.info("retrieveCacheRequest: cache: " + cache)
         Map<String, List<String>> cacheMap = new HashMap<>()
         cache.each {String service, List<String> folders ->
             List<String> folderList = new ArrayList<>()
@@ -123,7 +122,7 @@ class YamlConverter {
 
     Sonar retrieveSonar(def yml) {
         def sonar = yml.sonar
-        Logger.info("retrieveSonar: sonar: ${sonar}")
+        Logger.info("retrieveSonar: sonar: " + sonar)
         if (sonar == null) {
             Logger.info("empty sonar will be returned")
             return new Sonar()

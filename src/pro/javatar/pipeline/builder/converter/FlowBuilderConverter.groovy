@@ -1,6 +1,7 @@
 package pro.javatar.pipeline.builder.converter
 
 import pro.javatar.pipeline.builder.BackEndAutoTestsServiceBuilder
+import pro.javatar.pipeline.builder.ConfigImpl
 import pro.javatar.pipeline.builder.DockerBuilder
 import pro.javatar.pipeline.builder.FlowBuilder
 import pro.javatar.pipeline.builder.Maven
@@ -14,6 +15,7 @@ import pro.javatar.pipeline.builder.model.S3
 import pro.javatar.pipeline.builder.model.S3Repository
 import pro.javatar.pipeline.builder.model.VcsRepoTO
 import pro.javatar.pipeline.builder.model.YamlConfig
+import pro.javatar.pipeline.config.AutoTestConfig
 import pro.javatar.pipeline.model.DockerOrchestrationServiceType
 import pro.javatar.pipeline.model.RevisionControlType
 import pro.javatar.pipeline.model.VcsRepositoryType
@@ -46,6 +48,17 @@ class FlowBuilderConverter {
                 .withCacheRequest(yamlFile.getCacheRequest())
                 .withBackEndAutoTestsServiceBuilder(toBackEndAutoTestsServiceBuilder(yamlFile))
                 .withSonar(toSonar(yamlFile))
+                .setConfig(toConfig(yamlFile))
+    }
+
+    FlowBuilder toConfig(YamlConfig yamlConfig) {
+
+        return new ConfigImpl()
+                .setAutoTestConfig(toAutoTestConfig(yamlConfig.getAutoTest()))
+    }
+
+    AutoTestConfig toAutoTestConfig() {
+
     }
 
     BackEndAutoTestsServiceBuilder toBackEndAutoTestsServiceBuilder(YamlConfig yamlConfig) {
