@@ -1,7 +1,6 @@
 package pro.javatar.pipeline.builder
 
 import pro.javatar.pipeline.Flow
-import pro.javatar.pipeline.builder.FlowBuilder
 import pro.javatar.pipeline.builder.converter.FlowBuilderConverter
 import pro.javatar.pipeline.builder.converter.JenkinsBuildParamsConverter
 import pro.javatar.pipeline.builder.converter.YamlConverter
@@ -35,14 +34,19 @@ class YamlFlowBuilder implements Serializable {
     }
 
     public Flow build() {
-        Logger.info("YamlFlowBuilder used configFile: " + configFile);
-        String yamlConfiguration = dslService.readConfiguration(configFile);
-        Logger.trace("yamlConfiguration: " + yamlConfiguration);
-        YamlConfig model = getYamlModelUsingJenkinsReadYamlCommand(yamlConfiguration);
-        Logger.debug("YamlConfig:build:model: " + model.toString());
-        FlowBuilder flowBuilder = flowBuilderConverter.toFlowBuilder(model, dslService);
+        YamlConfig config = getEffectiveConfig(configFile)
+        FlowBuilder flowBuilder = flowBuilderConverter.toFlowBuilder(config, dslService);
         Logger.debug("flowBuilder: " + flowBuilder.toString());
         return flowBuilder.build();
+    }
+
+    YamlConfig getEffectiveConfig(String configFile) {
+        Logger.info("YamlFlowBuilder:getEffectiveConfig used configFile: " + configFile);
+        String yamlConfiguration = dslService.readConfiguration(configFile);
+        Logger.trace("yamlConfiguration: " + yamlConfiguration);
+        YamlConfig config = getYamlModelUsingJenkinsReadYamlCommand(yamlConfiguration);
+        Logger.debug("YamlFlowBuilder:getEffectiveConfig:config: " + config.toString());
+        return config;
     }
 
     YamlConfig getYamlModelUsingJenkinsReadYamlCommand(String yamlConfiguration) {

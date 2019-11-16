@@ -3,6 +3,7 @@ package pro.javatar.pipeline.builder.converter
 import pro.javatar.pipeline.builder.model.JenkinsBuildParams
 import pro.javatar.pipeline.util.Logger
 
+// TODO refactor
 class JenkinsBuildParamsConverter {
 
     void populateWithJenkinsBuildParams(def params, def properties) {

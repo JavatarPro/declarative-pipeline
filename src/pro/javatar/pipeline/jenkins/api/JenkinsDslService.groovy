@@ -15,7 +15,7 @@ import java.time.Duration
  * @author Borys Zora
  * @version 2019-11-03
  */
-interface JenkinsDslService {
+public interface JenkinsDslService {
 
     void executeStage(StageAware stage);
 

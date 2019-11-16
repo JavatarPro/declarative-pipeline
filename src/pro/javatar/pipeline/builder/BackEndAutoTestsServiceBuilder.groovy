@@ -15,6 +15,7 @@
 package pro.javatar.pipeline.builder
 
 import com.cloudbees.groovy.cps.NonCPS
+import pro.javatar.pipeline.config.AutoTestConfig
 import pro.javatar.pipeline.model.PipelineStagesSuit
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.test.BackEndAutoTestsLibrary
@@ -30,6 +31,8 @@ import static pro.javatar.pipeline.util.StringUtils.isBlank
  */
 class BackEndAutoTestsServiceBuilder implements Serializable {
 
+    private AutoTestConfig config;
+
     BuildService buildService
 
     SonarQubeService sonarQubeService
@@ -44,8 +47,9 @@ class BackEndAutoTestsServiceBuilder implements Serializable {
 
     PipelineStagesSuit suit
 
-    BackEndAutoTestsServiceBuilder() {
+    BackEndAutoTestsServiceBuilder(AutoTestConfig config) {
         Logger.debug("BackEndAutoTestsServiceBuilder:default constructor")
+        this.config = config;
     }
 
     BackEndAutoTestsService build() {
@@ -55,7 +59,7 @@ class BackEndAutoTestsServiceBuilder implements Serializable {
         } else if (suit == PipelineStagesSuit.LIBRARY) {
             autoTestsService = new BackEndAutoTestsLibrary(buildService)
         }
-        return autoTestsService.withSkipSystemTests(skipSystemTests)
+        return autoTestsService.withSkipSystemTests(!config.enabled())
                 .withSleepInSeconds(sleepInSeconds)
                 .withSonarQubeService(sonarQubeService)
                 .withJobName(jobName)

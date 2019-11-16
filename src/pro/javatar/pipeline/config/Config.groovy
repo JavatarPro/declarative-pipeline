@@ -10,7 +10,7 @@ package pro.javatar.pipeline.config;
  */
 public interface Config {
 
-    AutoTestConfig autoTest();
+    AutoTestConfig autoTestConfig();
 
     GradleConfig gradleConfig();
 

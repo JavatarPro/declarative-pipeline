@@ -22,8 +22,6 @@ import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.util.FileUtils
 import pro.javatar.pipeline.util.Logger
 
-import static pro.javatar.pipeline.util.StringUtils.isBlank
-
 class GradleBuildService extends BuildService {
 
     private JenkinsDslService dslService;
@@ -93,19 +91,6 @@ class GradleBuildService extends BuildService {
         Logger.info("GradleBuildService:publishArtifacts:started " + releaseInfo);
         dslService.executeShell("gradle publish");
         Logger.info("GradleBuildService:publishArtifacts:finished")
-    }
-
-    // TODO move
-    GradleBuildService withParams(String params) {
-        this.params = params
-        return this
-    }
-
-    String getParams() {
-        if (isBlank(params)) {
-            return ""
-        }
-        return params
     }
 
 }

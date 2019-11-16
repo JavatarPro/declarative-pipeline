@@ -54,7 +54,7 @@ class YamlConfig implements Config, Serializable {
     }
 
     @Override
-    AutoTestConfig autoTest() {
+    AutoTestConfig autoTestConfig() {
         return autoTestConfig;
     }
 
@@ -326,7 +326,7 @@ class YamlConfig implements Config, Serializable {
                 ", jenkinsTool=" + jenkinsTool +
                 ", orchestrationService='" + orchestrationService + '\'' +
                 ", mesos=" + mesos +
-                ", autoTest=" + autoTest +
+                ", autoTestConfig=" + autoTest +
                 ", cacheRequest=" + cacheRequest +
                 '}';
     }

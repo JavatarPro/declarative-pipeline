@@ -9,7 +9,7 @@ package pro.javatar.pipeline.jenkins.api
  * @version 2019-11-04
  */
 @FunctionalInterface
-interface JenkinsExecutor {
+public interface JenkinsExecutor {
 
     void execute();
 

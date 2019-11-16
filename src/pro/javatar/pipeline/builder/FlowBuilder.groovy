@@ -17,12 +17,10 @@ package pro.javatar.pipeline.builder
 import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.Flow
 import pro.javatar.pipeline.builder.model.CacheRequest
-import pro.javatar.pipeline.builder.model.Gradle
 import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.config.Config
 import pro.javatar.pipeline.exception.*
 import pro.javatar.pipeline.jenkins.api.JenkinsDslService
-import pro.javatar.pipeline.jenkins.dsl.JenkinsDslServiceImpl
 import pro.javatar.pipeline.model.*
 import pro.javatar.pipeline.service.*
 import pro.javatar.pipeline.service.cache.CacheRequestHolder
@@ -35,8 +33,6 @@ import pro.javatar.pipeline.stage.*
 import pro.javatar.pipeline.stage.deploy.*
 import pro.javatar.pipeline.stage.sign.*
 import pro.javatar.pipeline.util.Logger
-
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
  * TODO class too big, need some refactoring
@@ -57,12 +53,11 @@ class FlowBuilder implements Serializable {
     DockerBuilder dockerBuilder // TODO
     SonarQubeBuilder sonarQubeBuilder // TODO
     SwaggerBuilder swaggerBuilder // TODO
-    BackEndAutoTestsServiceBuilder backEndAutoTestsServiceBuilder = new BackEndAutoTestsServiceBuilder()
+    BackEndAutoTestsServiceBuilder backEndAutoTestsServiceBuilder;
 
     // services
     Maven maven
     MavenBuildService mavenBuildService
-    Gradle gradle
     GradleBuildService gradleBuildService
     JenkinsTool jenkinsTool
     DockerBuildService dockerBuildService
@@ -95,6 +90,10 @@ class FlowBuilder implements Serializable {
 
     Flow build() {
         Logger.info("build Flow started")
+
+        // tmp
+        backEndAutoTestsServiceBuilder = new BackEndAutoTestsServiceBuilder(config.autoTestConfig());
+
         createServices()
         createStages()
 
@@ -196,7 +195,7 @@ class FlowBuilder implements Serializable {
         availableStages.put(StageType.BUILD_AND_UNIT_TESTS,
                 new BuildAndUnitTestStage(buildService, revisionControlService))
         availableStages.put(StageType.AUTO_TESTS,
-                new AutoTestsStage(autoTestsService, jenkinsDslService, config.autoTest()))
+                new AutoTestsStage(autoTestsService, jenkinsDslService, config.autoTestConfig()))
         availableStages.put(StageType.RELEASE, new ReleaseArtifactsStage(releaseService))
         createSignOffStages()
         createDeployStages()
@@ -434,11 +433,6 @@ class FlowBuilder implements Serializable {
 
     FlowBuilder addMaven(Maven maven) {
         this.maven = maven
-        return this
-    }
-
-    FlowBuilder addGradle(Gradle gradle) {
-        this.gradle = gradle
         return this
     }
 

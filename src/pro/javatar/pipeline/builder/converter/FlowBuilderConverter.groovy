@@ -25,8 +25,11 @@ import pro.javatar.pipeline.service.orchestration.model.NomadBO
 import pro.javatar.pipeline.service.vcs.model.VcsRepo
 import pro.javatar.pipeline.util.Logger
 
+import java.time.temporal.ChronoUnit
+
 import static pro.javatar.pipeline.util.StringUtils.isBlank
 
+// TODO remove this class
 class FlowBuilderConverter {
 
     FlowBuilder toFlowBuilder(YamlConfig yamlFile, JenkinsDslService dslService) {
@@ -50,15 +53,15 @@ class FlowBuilderConverter {
     }
 
     BackEndAutoTestsServiceBuilder toBackEndAutoTestsServiceBuilder(YamlConfig yamlConfig) {
-        def autoTests = yamlConfig.getAutoTest()
-        if (autoTests == null) {
+        def autoTestConfig = yamlConfig.autoTestConfig()
+        if (autoTestConfig == null) {
             return new BackEndAutoTestsServiceBuilder();
         }
-        return new BackEndAutoTestsServiceBuilder()
-                .withJobName(autoTests.jobName)
-                .withSkipCodeQualityVerification(autoTests.skipCodeQualityVerification)
-                .withSkipSystemTests(autoTests.skipSystemTests)
-                .withSleepInSeconds(autoTests.sleepInSeconds)
+        return new BackEndAutoTestsServiceBuilder() // TODO refactor
+                .withJobName(autoTestConfig.jobName())
+                .withSkipCodeQualityVerification(autoTestConfig.staticCodeAnalysisEnabled())
+                .withSkipSystemTests(!autoTestConfig.enabled())
+                .withSleepInSeconds((Integer) autoTestConfig.initialDelay().get(ChronoUnit.SECONDS)) // TODO !
     }
 
     Maven toMaven(YamlConfig yamlFile) {

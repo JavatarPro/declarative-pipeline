@@ -1,7 +1,6 @@
 package pro.javatar.pipeline.builder.converter
 
 
-import pro.javatar.pipeline.builder.model.AutoTest
 import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.DockerRegistry
@@ -20,12 +19,14 @@ import pro.javatar.pipeline.builder.model.Ui
 import pro.javatar.pipeline.builder.model.Vcs
 import pro.javatar.pipeline.builder.model.VcsRepoTO
 import pro.javatar.pipeline.builder.model.YamlConfig
+import pro.javatar.pipeline.config.AutoTestConfig
 import pro.javatar.pipeline.config.GradleConfig
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.util.LogLevel
 import pro.javatar.pipeline.util.Logger
 import pro.javatar.pipeline.util.StringUtils
 
+import java.time.Duration
 import java.time.Period
 
 import static pro.javatar.pipeline.util.StringUtils.isBlank
@@ -42,6 +43,7 @@ class YamlConverter {
         }
         YamlConfig result = new YamlConfig()
                 .setGradleConfig(retrieveGradleConfig(yml))
+                .setAutoTestConfig(retrieveAutoTest(yml))
                 .withLogLevel(retrieveAndSetLogLevel(yml))
                 .withJenkinsTool(retrieveJenkinsTools(yml))
                 .withVcs(retrieveVcs(yml))
@@ -55,7 +57,6 @@ class YamlConverter {
                 .withMesos(retrieveMesos(yml))
                 .withNomad(retrieveNomad(yml))
                 .withSonar(retrieveSonar(yml))
-                .withAutoTest(retrieveAutoTest(yml))
                 .withCacheRequest(retrieveCacheRequest(yml))
                 .populateServiceRepo()
         Logger.info("YamlConverter:toYamlModel:finished")
@@ -107,18 +108,18 @@ class YamlConverter {
 
             @Override
             String repositoryUrl() {
-                if (isBlank(gradle.repositoryUrl)) {
+                if (gradle.repository == null || isBlank(gradle.repository.url)) {
                     return ""
                 }
-                return gradle.repositoryUrl;
+                return gradle.repository.url;
             }
 
             @Override
             String repositoryId() {
-                if (isBlank(gradle.repositoryId)) {
+                if (gradle.repository == null || isBlank(gradle.repository.id)) {
                     return ""
                 }
-                return gradle.repositoryId
+                return gradle.repository.id;
             }
         };
     }
@@ -152,17 +153,72 @@ class YamlConverter {
                 .withOrchestration(service.orchestration)
     }
 
-    AutoTest retrieveAutoTest(def yml) {
+    AutoTestConfig retrieveAutoTest(def yml) {
         def autoTest = yml["auto-test"]
         if (autoTest == null) {
-            return new AutoTest()
+            return null;
         }
-        Logger.info("retrieveAutoTest: autoTest: " + autoTest)
-        return new AutoTest()
-                .withJobName(autoTest.jobName)
-                .withSkipCodeQualityVerification(autoTest.skipCodeQualityVerification)
-                .withSkipSystemTests(autoTest.skipSystemTests)
-                .withSleepInSeconds(autoTest.sleepInSeconds)
+        Logger.info("retrieveAutoTest: autoTestConfig: " + autoTest)
+        return new AutoTestConfig() {
+
+            @Override
+            boolean enabled() {
+                if (autoTest.enabled == null) {
+                    return DEFAULT_AUTO_TESTS_ENABLED;
+                }
+                return autoTest.enabled
+            }
+
+            @Override
+            Duration timeout() {
+                if (autoTest.timeout == null) {
+                    return DEFAULT_TIMEOUT;
+                }
+                try {
+                    return Duration.parse(autoTest.timeout)
+                } catch (Exception e) {
+                    Logger.error("could not parse duration in field autoTest.timeout: "
+                            + autoTest.timeout + " " + e.getMessage());
+                    Logger.warn("default value will be used for AutoTestConfig.timeout(): " + DEFAULT_TIMEOUT.toString());
+                    return DEFAULT_TIMEOUT;
+                }
+            }
+
+            @Override
+            Duration initialDelay() {
+                if (autoTest.initialDelay == null) {
+                    return DEFAULT_INITIAL_DELAY;
+                }
+                try {
+                    return Duration.parse(autoTest.initialDelay)
+                } catch (Exception e) {
+                    Logger.error("could not parse duration in field yml.initialDelay: "
+                            + autoTest.initialDelay + " " + e.getMessage());
+                    Logger.warn("default value will be used for AutoTestConfig.initialDelay(): "
+                            + DEFAULT_TIMEOUT.toString());
+                    return DEFAULT_INITIAL_DELAY;
+                }
+            }
+
+            @Override
+            String jobName() {
+                if (isBlank(autoTest.jobName)) {
+                    return DEFAULT_JOB_NAME;
+                }
+                return autoTest.jobName
+            }
+
+            @Override
+            String command() {
+                return autoTest.command
+            }
+
+            @Override
+            boolean staticCodeAnalysisEnabled() {
+                return false; // TODO
+            }
+
+        }
     }
 
     CacheRequest retrieveCacheRequest(def yml) {
