@@ -24,17 +24,22 @@ import pro.javatar.pipeline.exception.*
 import pro.javatar.pipeline.model.*
 import pro.javatar.pipeline.service.*
 import pro.javatar.pipeline.service.cache.CacheRequestHolder
-import pro.javatar.pipeline.service.s3.AwsS3DeploymentService
-import pro.javatar.pipeline.service.test.*
-import pro.javatar.pipeline.service.orchestration.*
 import pro.javatar.pipeline.service.impl.*
+import pro.javatar.pipeline.service.orchestration.DockerService
+import pro.javatar.pipeline.service.s3.AwsS3DeploymentService
+import pro.javatar.pipeline.service.test.AutoTestsService
+import pro.javatar.pipeline.service.test.SonarQubeService
+import pro.javatar.pipeline.service.test.UiAutoTestsService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
 import pro.javatar.pipeline.stage.*
-import pro.javatar.pipeline.stage.deploy.*
-import pro.javatar.pipeline.stage.sign.*
+import pro.javatar.pipeline.stage.deploy.DeployToDevEnvStage
+import pro.javatar.pipeline.stage.deploy.DeployToProdEnvStage
+import pro.javatar.pipeline.stage.deploy.DeployToQAEnvStage
+import pro.javatar.pipeline.stage.deploy.DeployToStagingEnvStage
+import pro.javatar.pipeline.stage.sign.DevOpsSignOffStage
+import pro.javatar.pipeline.stage.sign.DeveloperSignOffStage
+import pro.javatar.pipeline.stage.sign.QaSignOffStage
 import pro.javatar.pipeline.util.Logger
-
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
  * TODO class too big, need some refactoring
@@ -104,7 +109,7 @@ class FlowBuilder implements Serializable {
     }
 
     def populateStages(Flow flow, List<StageType> stageTypes) {
-        for (StageType stageType: stageTypes) {
+        for (StageType stageType : stageTypes) {
             Logger.info("populateStages for stageType: ${stageType.name()}")
             Stage stage = availableStages.get(stageType)
             if (stageTypesToBeSkipped.contains(stageType)) {
@@ -200,6 +205,7 @@ class FlowBuilder implements Serializable {
                 new BuildAndUnitTestStage(buildService, revisionControlService))
         availableStages.put(StageType.AUTO_TESTS, new AutoTestsStage(autoTestsService, revisionControlService))
         availableStages.put(StageType.RELEASE, new ReleaseArtifactsStage(releaseService))
+        availableStages.put(StageType.BACKWARD_COMPATIBILITY_TEST, new DatabaseBackwardCompatibilityStage(dockerService, deploymentService))
         createSignOffStages()
         createDeployStages()
         Logger.info("FlowBuilder:createStages: createStages finished")
@@ -230,14 +236,14 @@ class FlowBuilder implements Serializable {
 
     FlowBuilder skipStages(String commaSeparatedStageTypes) {
         List<String> stageTypes = commaSeparatedStageTypes.split(",")
-        for(String stageType: stageTypes) {
+        for (String stageType : stageTypes) {
             stageTypesToBeSkipped.add(StageType.valueOf(stageType))
         }
         return this
     }
 
     FlowBuilder addPipelineStages(List<String> stageTypeList) {
-        stageTypeList.each {stageType -> stageTypes.add(StageType.valueOf(stageType))}
+        stageTypeList.each { stageType -> stageTypes.add(StageType.valueOf(stageType)) }
         return this
     }
 
@@ -344,12 +350,30 @@ class FlowBuilder implements Serializable {
         if (suit == PipelineStagesSuit.LIBRARY) {
             return addReleaseCommonLibsPipelineStages()
         }
+        if (suit == PipelineStagesSuit.SERVICE_WITH_DB) {
+            return addServiceWithDBStages()
+        }
         throw new UnrecognizedPipelineStagesSuitException("can not find suit: ${pipelineStagesSuit}")
     }
 
     FlowBuilder addDefaultPipelineStages() {
         addPipelineStage(StageType.BUILD_AND_UNIT_TESTS)
         addPipelineStage(StageType.DEPLOY_ON_DEV_ENV)
+        addPipelineStage(StageType.AUTO_TESTS)
+        addPipelineStage(StageType.DEV_SIGN_OFF)
+        addPipelineStage(StageType.RELEASE)
+        addPipelineStage(StageType.DEPLOY_ON_QA_ENV)
+        addPipelineStage(StageType.QA_SIGN_OFF)
+//        addPipelineStage(StageType.DEPLOY_ON_STAGING_ENV)
+        addPipelineStage(StageType.DEVOPS_SIGN_OFF)
+        addPipelineStage(StageType.DEPLOY_ON_PROD_ENV)
+        return this
+    }
+
+    FlowBuilder addServiceWithDBStages() {
+        addPipelineStage(StageType.BUILD_AND_UNIT_TESTS)
+        addPipelineStage(StageType.DEPLOY_ON_DEV_ENV)
+        addPipelineStage(StageType.BACKWARD_COMPATIBILITY_TEST)
         addPipelineStage(StageType.AUTO_TESTS)
         addPipelineStage(StageType.DEV_SIGN_OFF)
         addPipelineStage(StageType.RELEASE)
@@ -412,7 +436,7 @@ class FlowBuilder implements Serializable {
     }
 
     FlowBuilder withUseBuildNumberForVersion(Boolean useBuildNumberForVersion) {
-        if(useBuildNumberForVersion == null) {
+        if (useBuildNumberForVersion == null) {
             return
         }
         this.useBuildNumberForVersion = useBuildNumberForVersion

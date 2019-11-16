@@ -26,6 +26,7 @@ import static pro.javatar.pipeline.util.StringUtils.isBlank
 enum PipelineStagesSuit {
 
     SERVICE,
+    SERVICE_WITH_DB,
     LIBRARY,
     CUSTOM
 
@@ -44,6 +45,9 @@ enum PipelineStagesSuit {
         }
         if("custom".equalsIgnoreCase(suit) || isBlank(suit)) {
             return CUSTOM
+        }
+        if("service-with-db".equalsIgnoreCase(suit) || isBlank(suit)) {
+            return SERVICE_WITH_DB
         }
         throw new UnrecognizedPipelineStagesSuitException("suit ${suit} is not recognized")
     }
