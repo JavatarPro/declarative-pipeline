@@ -18,6 +18,7 @@ import com.cloudbees.groovy.cps.NonCPS
 import groovy.json.JsonBuilder
 import groovy.text.GStringTemplateEngine
 import org.apache.commons.io.IOUtils
+import pro.javatar.pipeline.exception.ReplaceBindingMapException
 
 /**
  * Author : Borys Zora
@@ -58,6 +59,23 @@ class StringUtils {
             return source
         }
         return "${prefix}-${source}"
+    }
+
+    public static String replaceVariables(String configuration, Map binding) throws ReplaceBindingMapException {
+        try {
+            Logger.debug("StringUtils:replaceVariables:configuration: " + configuration +
+                    "\nreplaceVariables: " + binding)
+            def engine = new GStringTemplateEngine()
+            def template = engine.createTemplate(configuration).make(binding)
+            String result = template.toString()
+            Logger.debug("StringUtils:replaceVariables:result: " + result)
+            return result
+        } catch (Exception e) {
+            Logger.warn("issue while replaceVariables" + e.getMessage() + "cause: " + e.getCause());
+            e.printStackTrace();
+            throw new ReplaceBindingMapException(e.getMessage());
+        }
+
     }
 
     @NonCPS

@@ -12,8 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pro.javatar.pipeline;
+package pro.javatar.pipeline
 
+import pro.javatar.pipeline.builder.YamlFlowBuilder
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.stage.StageAware;
@@ -25,6 +26,8 @@ import pro.javatar.pipeline.util.Logger;
  */
 class Flow implements Serializable {
 
+    public static final DEFAULT_CONFIG_FILE = "declarative-pipeline.yml"
+
     private List<StageAware> stages = new ArrayList<>();
     private ReleaseInfo releaseInfo = new ReleaseInfo();
     private JenkinsDslService jenkinsDslService;
@@ -32,6 +35,14 @@ class Flow implements Serializable {
     Flow(ReleaseInfo releaseInfo, JenkinsDslService jenkinsDslService) {
         this.releaseInfo = releaseInfo;
         this.jenkinsDslService = jenkinsDslService;
+    }
+
+    public static Flow of(def dsl) {
+        return of(dsl, DEFAULT_CONFIG_FILE)
+    }
+
+    public static Flow of(def dsl, String config) {
+        return new YamlFlowBuilder(dsl, config).build()
     }
 
     Flow addStage(StageAware stage) {

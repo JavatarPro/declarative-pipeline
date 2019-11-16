@@ -64,7 +64,7 @@ abstract class DeployToEnvStage extends Stage {
                 ", deploymentService=" + deploymentService +
                 ", skipStage=" + skipStage +
                 ", exitFromPipeline=" + exitFromPipeline +
-                ", releaseInfo=" + releaseInfo +
+                ", releaseInfo=" + releaseInfo() +
                 '}';
     }
 }

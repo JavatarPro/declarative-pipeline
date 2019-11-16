@@ -6,6 +6,7 @@ package pro.javatar.pipeline.builder
 
 import pro.javatar.pipeline.config.AutoTestConfig
 import pro.javatar.pipeline.config.Config
+import pro.javatar.pipeline.config.GradleConfig
 
 /**
  * @author Borys Zora
@@ -15,9 +16,16 @@ class ConfigImpl implements Config {
 
     AutoTestConfig autoTestConfig;
 
+    GradleConfig gradleConfig;
+
     @Override
     AutoTestConfig autoTest() {
-        return autoTestConfig
+        return autoTestConfig;
+    }
+
+    @Override
+    GradleConfig gradleConfig() {
+        return gradleConfig;
     }
 
     ConfigImpl setAutoTestConfig(AutoTestConfig autoTestConfig) {
@@ -25,4 +33,8 @@ class ConfigImpl implements Config {
         return this;
     }
 
+    ConfigImpl setGradleConfig(GradleConfig gradleConfig) {
+        this.gradleConfig = gradleConfig;
+        return this;
+    }
 }

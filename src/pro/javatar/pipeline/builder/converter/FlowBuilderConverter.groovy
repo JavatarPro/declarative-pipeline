@@ -1,7 +1,6 @@
 package pro.javatar.pipeline.builder.converter
 
 import pro.javatar.pipeline.builder.BackEndAutoTestsServiceBuilder
-import pro.javatar.pipeline.builder.ConfigImpl
 import pro.javatar.pipeline.builder.DockerBuilder
 import pro.javatar.pipeline.builder.FlowBuilder
 import pro.javatar.pipeline.builder.Maven
@@ -15,7 +14,7 @@ import pro.javatar.pipeline.builder.model.S3
 import pro.javatar.pipeline.builder.model.S3Repository
 import pro.javatar.pipeline.builder.model.VcsRepoTO
 import pro.javatar.pipeline.builder.model.YamlConfig
-import pro.javatar.pipeline.config.AutoTestConfig
+import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.model.DockerOrchestrationServiceType
 import pro.javatar.pipeline.model.RevisionControlType
 import pro.javatar.pipeline.model.VcsRepositoryType
@@ -30,15 +29,14 @@ import static pro.javatar.pipeline.util.StringUtils.isBlank
 
 class FlowBuilderConverter {
 
-    FlowBuilder toFlowBuilder(YamlConfig yamlFile) {
-        return new FlowBuilder()
+    FlowBuilder toFlowBuilder(YamlConfig yamlFile, JenkinsDslService dslService) {
+        return new FlowBuilder(dslService)
                 .withServiceName(yamlFile.getService().getName())
                 .withBuildType(yamlFile.getService().getBuildType())
                 .withUseBuildNumberForVersion(yamlFile.getService().getUseBuildNumberForVersion())
                 .addPipelineStages(yamlFile.getPipeline().getPipelineSuit())
                 .addPipelineStages(yamlFile.getPipeline().getStages())
                 .addMaven(toMaven(yamlFile))
-                .addGradle(yamlFile.getGradle())
                 .addJenkinsTool(yamlFile.getJenkinsTool())
                 .addNpm(yamlFile.getNpm())
                 .withUiDeploymentType(yamlFile.getUi().getDeploymentType())
@@ -48,17 +46,7 @@ class FlowBuilderConverter {
                 .withCacheRequest(yamlFile.getCacheRequest())
                 .withBackEndAutoTestsServiceBuilder(toBackEndAutoTestsServiceBuilder(yamlFile))
                 .withSonar(toSonar(yamlFile))
-                .setConfig(toConfig(yamlFile))
-    }
-
-    FlowBuilder toConfig(YamlConfig yamlConfig) {
-
-        return new ConfigImpl()
-                .setAutoTestConfig(toAutoTestConfig(yamlConfig.getAutoTest()))
-    }
-
-    AutoTestConfig toAutoTestConfig() {
-
+                .setConfig(yamlFile)
     }
 
     BackEndAutoTestsServiceBuilder toBackEndAutoTestsServiceBuilder(YamlConfig yamlConfig) {

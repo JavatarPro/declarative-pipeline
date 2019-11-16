@@ -14,47 +14,42 @@
  */
 package pro.javatar.pipeline.service.impl
 
-import com.cloudbees.groovy.cps.NonCPS
+import pro.javatar.pipeline.config.GradleConfig
 import pro.javatar.pipeline.exception.MalformedReleaseVersionException
+import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.util.FileUtils
 import pro.javatar.pipeline.util.Logger
 
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 import static pro.javatar.pipeline.util.StringUtils.isBlank
 
 class GradleBuildService extends BuildService {
 
-    String gradle
+    private JenkinsDslService dslService;
 
-    String java
+    private GradleConfig config;
 
-    String params
-
-    String versionFile = "gradle.properties"
-
-    GradleBuildService(String gradleTool, String javaTool) {
-        Logger.debug("GradleBuildService: gradleTool: ${gradleTool} javaTool: ${javaTool}")
-        this.gradle = gradleTool
-        this.java = javaTool
+    GradleBuildService(JenkinsDslService dslService, GradleConfig config) {
+        Logger.debug(String.format("GradleBuildService: gradleConfig: " + config.toString()));
+        this.dslService = dslService;
+        this.config = config;
     }
 
     @Override
     void setUp() {
         Logger.debug("GradleBuildService setUp started")
-        dsl.env.GRADLE_HOME="${dsl.tool gradle}"
-        dsl.env.JAVA_HOME="${dsl.tool java}"
-        dsl.env.PATH="${dsl.env.JAVA_HOME}/bin:${dsl.env.GRADLE_HOME}/bin:${dsl.env.PATH}"
-        dsl.sh 'gradle -v'
-        dsl.sh 'java -version'
+        dslService.addToPath(config.gradleTool(), 'GRADLE_HOME')
+        dslService.addToPath(config.javaTool(), 'JAVA_HOME')
+        dslService.executeShell('gradle -v');
+        dslService.executeShell('java -version')
         Logger.debug("GradleBuildService setUp finished")
     }
 
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
         Logger.info("GradleBuildService buildAndUnitTests started")
-        dsl.sh "gradle clean build ${getParams()}"
+        dslService.executeShell("gradle clean build " + config.additionalBuildParameters());
         Logger.info("GradleBuildService buildAndUnitTests finished")
     }
 
@@ -62,43 +57,45 @@ class GradleBuildService extends BuildService {
     String getCurrentVersion() {
         Logger.debug("GradleBuildService getCurrentVersion started")
         Logger.info("expected that in properties project version has variable with name: version")
-        String version = dsl.sh returnStdout: true, script: "gradle  properties --no-daemon --console=plain -q | grep ^version: | awk '{printf \$2}'"
-        Logger.info("GradleBuildService:getCurrentVersion:result: ${version}")
+        String command = "gradle  properties --no-daemon --console=plain -q | grep ^version: | awk '{printf \$2}'";
+        String version = dslService.getShellExecutionResponse(command);
+        Logger.info("GradleBuildService:getCurrentVersion:result: " + version)
         Logger.debug("GradleBuildService getCurrentVersion finished")
         return version.trim()
     }
 
     @Override
     def setupReleaseVersion(String releaseVersion) {
-        Logger.debug("GradleBuildService setupReleaseVersion: ${releaseVersion} started")
+        Logger.debug(String.format("GradleBuildService setupReleaseVersion: %s started", releaseVersion));
         if (releaseVersion.contains("SNAPSHOT")) {
-            String msg = "Release version must not contain SNAPSHOT, but was: ${releaseVersion}"
+            String msg = "Release version must not contain SNAPSHOT, but was: " + releaseVersion;
             Logger.error(msg)
             throw new MalformedReleaseVersionException(msg)
         }
         setupVersion(releaseVersion)
-        Logger.debug("GradleBuildService setupReleaseVersion: ${releaseVersion} finished")
+        Logger.debug(String.format("GradleBuildService setupReleaseVersion: %s finished", releaseVersion));
     }
 
     @Override
     def setupVersion(String version) {
-        Logger.info("GradleBuildService setupVersion: ${version} started")
+        Logger.info(String.format("GradleBuildService setupVersion: %s started", version));
         String currentVersion = getCurrentVersion()
-        Logger.trace("GradleBuildService ${versionFile} before version setup")
-        dsl.sh "cat ${versionFile}"
-        FileUtils.replace(currentVersion, version, versionFile)
-        Logger.trace("GradleBuildService ${versionFile} after version setup")
-        dsl.sh "cat ${versionFile}"
-        Logger.info("GradleBuildService setupVersion: ${version} finished")
+        Logger.trace(String.format("GradleBuildService %s before version setup", config.versionFile()));
+        dslService.executeShell("cat " + config.versionFile());
+        FileUtils.replace(currentVersion, version, config.versionFile())
+        Logger.trace(String.format("GradleBuildService %s after version setup", config.versionFile()));
+        dslService.executeShell("cat " + config.versionFile());
+        Logger.info(String.format("GradleBuildService setupVersion: %s finished", version));
     }
 
     @Override
     def publishArtifacts(ReleaseInfo releaseInfo) {
-        Logger.info("GradleBuildService:publishArtifacts:started ${releaseInfo}")
-        dsl.sh "gradle publish"
+        Logger.info("GradleBuildService:publishArtifacts:started " + releaseInfo);
+        dslService.executeShell("gradle publish");
         Logger.info("GradleBuildService:publishArtifacts:finished")
     }
 
+    // TODO move
     GradleBuildService withParams(String params) {
         this.params = params
         return this
@@ -111,14 +108,4 @@ class GradleBuildService extends BuildService {
         return params
     }
 
-    @NonCPS
-    @Override
-    public String toString() {
-        return "GradleBuildService{" +
-                "gradle='" + gradle + '\'' +
-                ", java='" + java + '\'' +
-                ", params='" + params + '\'' +
-                ", versionFile='" + versionFile + '\'' +
-                '}';
-    }
 }

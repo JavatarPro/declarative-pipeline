@@ -40,6 +40,7 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
  * TODO class too big, need some refactoring
+ * TODO move stage creation to stage builder inside stage package
  * @author Borys Zora
  * @since 2018-03-09
  */
@@ -83,15 +84,13 @@ class FlowBuilder implements Serializable {
     SonarQubeService sonarQubeService
     SwaggerService swaggerService
     PipelineStagesSuit suit
+
+    JenkinsDslService jenkinsDslService;
     Config config;
 
-    FlowBuilder() {
-        Logger.debug("FlowBuilder:default constructor")
-    }
-
-    FlowBuilder(def dsl) {
-        Logger.debug("FlowBuilder:dsl constructor")
-        PipelineDslHolder.dsl = dsl
+    FlowBuilder(JenkinsDslService jenkinsDslService) {
+        Logger.debug("FlowBuilder: constructor")
+        this.jenkinsDslService = jenkinsDslService;
     }
 
     Flow build() {
@@ -99,7 +98,6 @@ class FlowBuilder implements Serializable {
         createServices()
         createStages()
 
-        JenkinsDslService jenkinsDslService = new JenkinsDslServiceImpl(dsl);
         Flow flow = new Flow(releaseInfo, jenkinsDslService);
         populateStages(flow, stageTypes)
 
@@ -158,17 +156,12 @@ class FlowBuilder implements Serializable {
             mavenBuildService.setUp()
             dockerBuildService = new DockerBuildService(mavenBuildService, dockerService)
         } else if (buildType == BuildServiceType.GRADLE) {
-            gradleBuildService = buildGradleBuildService(gradle)
+            gradleBuildService = new GradleBuildService(jenkinsDslService, config.gradleConfig())
             gradleBuildService.setUp()
             dockerBuildService = new DockerBuildService(gradleBuildService, dockerService)
         }
         setupBuildService()
         Logger.info("FlowBuilder:prepareBuildService: created buildService: " + buildService.toString())
-    }
-
-    GradleBuildService buildGradleBuildService(Gradle gradle) {
-        return new GradleBuildService(jenkinsTool.gradle, jenkinsTool.java)
-                .withParams(gradle.params)
     }
 
     def prepareSonarQube() {
@@ -203,7 +196,7 @@ class FlowBuilder implements Serializable {
         availableStages.put(StageType.BUILD_AND_UNIT_TESTS,
                 new BuildAndUnitTestStage(buildService, revisionControlService))
         availableStages.put(StageType.AUTO_TESTS,
-                new AutoTestsStage(autoTestsService, new JenkinsDslServiceImpl(dsl), config.autoTest()))
+                new AutoTestsStage(autoTestsService, jenkinsDslService, config.autoTest()))
         availableStages.put(StageType.RELEASE, new ReleaseArtifactsStage(releaseService))
         createSignOffStages()
         createDeployStages()
