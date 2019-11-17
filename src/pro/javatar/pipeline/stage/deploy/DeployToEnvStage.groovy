@@ -36,6 +36,7 @@ abstract class DeployToEnvStage extends Stage {
     @Override
     void execute() throws PipelineException {
         Logger.info("DeployToEnvStage to " + getEnv().getValue() + " execute started: " + toString())
+        // TODO replace hardcode with configuration
         dsl.timeout(time: 10, unit: 'MINUTES') {
             dsl.dir(releaseInfo().getRepoFolder()) {
                 deploymentService.deployArtifact(getEnv(), releaseInfo())
