@@ -4,6 +4,7 @@ package pro.javatar.pipeline.builder.converter
 import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.DockerRegistry
+import pro.javatar.pipeline.builder.model.GradleConfigTO
 import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.builder.model.Maven
 import pro.javatar.pipeline.builder.Npm
@@ -24,7 +25,6 @@ import pro.javatar.pipeline.config.GradleConfig
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.util.LogLevel
 import pro.javatar.pipeline.util.Logger
-import pro.javatar.pipeline.util.StringUtils
 
 import java.time.Duration
 import java.time.Period
@@ -76,52 +76,7 @@ class YamlConverter {
         def gradle = yml.gradle
         JenkinsTool tool = retrieveJenkinsTools(yml);
         Logger.debug("YamlConverter:retrieveGradleConfig: gradle: " + gradle + ", tools: " + tool.toString());
-        return new GradleConfig() {
-
-            @Override
-            String gradleTool() {
-                return tool.getGradle();
-            }
-
-            @Override
-            String javaTool() {
-                return tool.getJava();
-            }
-
-            @Override
-            String additionalBuildParameters() {
-                String gradleParams = gradle.params;
-                if (StringUtils.isBlank(gradleParams)) {
-                    return "";
-                }
-                return gradleParams.trim();
-            }
-
-            @Override
-            String versionFile() {
-                String versionFile = gradle.versionFile;
-                if (isBlank(versionFile)) {
-                    return DEFAULT_VERSION_FILE;
-                }
-                return versionFile;
-            }
-
-            @Override
-            String repositoryUrl() {
-                if (gradle.repository == null || isBlank(gradle.repository.url)) {
-                    return ""
-                }
-                return gradle.repository.url;
-            }
-
-            @Override
-            String repositoryId() {
-                if (gradle.repository == null || isBlank(gradle.repository.id)) {
-                    return ""
-                }
-                return gradle.repository.id;
-            }
-        };
+        return GradleConfigTO.ofGradleYmlConfigAndJenkinsTool(gradle, tool);
     }
 
     JenkinsTool retrieveJenkinsTools(def yml) {
