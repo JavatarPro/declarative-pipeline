@@ -104,7 +104,7 @@ public class GradleConfigTO implements GradleConfig {
         return this;
     }
 
-    private String retrieveAdditionalBuildParameters(def gradle) {
+    private static String retrieveAdditionalBuildParameters(def gradle) {
         String gradleParams = gradle.params;
         if (isBlank(gradleParams)) {
             return "";
@@ -112,7 +112,7 @@ public class GradleConfigTO implements GradleConfig {
         return gradleParams.trim();
     }
 
-    private String retrieveVersionFile(def gradle) {
+    private static String retrieveVersionFile(def gradle) {
         String versionFile = gradle.versionFile;
         if (isBlank(versionFile)) {
             return DEFAULT_VERSION_FILE;
@@ -120,14 +120,14 @@ public class GradleConfigTO implements GradleConfig {
         return versionFile;
     }
 
-    private String retrieveRepositoryUrl(def gradle) {
+    private static String retrieveRepositoryUrl(def gradle) {
         if (gradle.repository == null || isBlank(gradle.repository.url)) {
             return ""
         }
         return gradle.repository.url;
     }
 
-    private String retrieveRepositoryId(def gradle) {
+    private static String retrieveRepositoryId(def gradle) {
         if (gradle.repository == null || isBlank(gradle.repository.id)) {
             return ""
         }
