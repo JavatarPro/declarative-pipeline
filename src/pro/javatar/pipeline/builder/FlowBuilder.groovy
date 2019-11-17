@@ -398,7 +398,7 @@ class FlowBuilder implements Serializable {
             return new VcsAndDockerRelease(buildService, revisionControlService, dockerService)
         }
         // TODO not obvious, why should not we throw exception at the end if no one matches
-        return new BackEndReleaseService(mavenBuildService, uploadAware, revisionControlService, dockerService)
+        return new BackEndReleaseService(buildService, uploadAware, revisionControlService, dockerService)
     }
 
     FlowBuilder withRevisionControl(RevisionControlBuilder revisionControlBuilder) {
