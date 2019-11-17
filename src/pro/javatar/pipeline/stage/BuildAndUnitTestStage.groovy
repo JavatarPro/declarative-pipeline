@@ -51,7 +51,7 @@ class BuildAndUnitTestStage extends Stage {
                 def releaseVersion = buildService.getReleaseVersion()
                 populateReleaseInfo(releaseVersion)
                 dsl.currentBuild.description =
-                        "try to build " + releaseInfo().getServiceName() + ":" + releaseInfo.getBuildReleaseVersion();
+                        "try to build " + releaseInfo().getServiceName() + ":" + releaseInfo().getBuildReleaseVersion();
                 revisionControl.createReleaseBranchLocally(releaseInfo().getPrefixedReleaseVersion())
                 buildService.setupReleaseVersion(releaseInfo().getBuildReleaseVersion())
                 revisionControl.commitChanges("Starting release " + releaseInfo().getPrefixedReleaseVersion())
