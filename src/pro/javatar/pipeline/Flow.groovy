@@ -18,7 +18,9 @@ import pro.javatar.pipeline.builder.YamlFlowBuilder
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.stage.StageAware;
-import pro.javatar.pipeline.util.Logger;
+import pro.javatar.pipeline.util.Logger
+
+import static java.lang.String.format;
 
 /**
  * @author Borys Zora
@@ -63,7 +65,7 @@ class Flow implements Serializable {
     void executeStage(StageAware stage) {
         stage.propagateReleaseInfo(releaseInfo)
         if (stage.shouldSkip()) {
-            Logger.warn("stage will be skipped due to configuration settings");
+            Logger.warn(format("Stage: %s will be skipped due to configuration settings", stage.getName()));
             return;
         }
         jenkinsDslService.executeStage(stage);
