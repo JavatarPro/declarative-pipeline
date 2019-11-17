@@ -207,7 +207,7 @@ class DockerService implements Serializable {
 
     // TODO simplify
     def populateReleaseInfo(ReleaseInfo releaseInfo) {
-        Logger.debug("DockerService:populateReleaseInfo:started with releaseInfo: ${releaseInfo}")
+        Logger.debug("DockerService:populateReleaseInfo:started with releaseInfo: " + releaseInfo.toString());
         String output = dsl.sh returnStdout: true, script: 'ls -d */*'
         List<String> dockerFiles = output.split().findAll {it -> it.contains(DEFAULT_DOCKER_FILE)}
         if (dockerFiles == null) {

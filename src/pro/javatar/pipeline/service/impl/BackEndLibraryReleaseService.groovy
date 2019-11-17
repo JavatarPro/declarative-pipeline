@@ -48,7 +48,7 @@ class BackEndLibraryReleaseService implements ReleaseService {
         revisionControlService.release(releaseInfo.releaseVersion)
         revisionControlService.switchToDevelopBranch()
         buildService.setupVersion(releaseInfo.developVersion)
-        revisionControlService.commitChanges("Update version to ${releaseInfo.developVersion}")
+        revisionControlService.commitChanges("Update version to " + releaseInfo.developVersion)
         revisionControlService.pushRelease()
         Logger.debug("BackEndLibraryReleaseService releaseRevisionControl() finished")
 

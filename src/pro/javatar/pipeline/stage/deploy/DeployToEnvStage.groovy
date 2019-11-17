@@ -37,8 +37,8 @@ abstract class DeployToEnvStage extends Stage {
     void execute() throws PipelineException {
         Logger.info("DeployToEnvStage to " + getEnv().getValue() + " execute started: " + toString())
         dsl.timeout(time: 10, unit: 'MINUTES') {
-            dsl.dir(releaseInfo.repoFolder) {
-                deploymentService.deployArtifact(getEnv(), releaseInfo)
+            dsl.dir(releaseInfo().getRepoFolder()) {
+                deploymentService.deployArtifact(getEnv(), releaseInfo())
             }
         }
         Logger.info("DeployToEnvStage to ${getEnv().getValue()} execute finished")

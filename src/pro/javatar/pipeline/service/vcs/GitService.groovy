@@ -125,7 +125,7 @@ class GitService extends RevisionControlService {
 
     @Override
     def switchToReleaseBranch(ReleaseInfo releaseInfo) {
-        throw UnsupportedOperationException("switchToReleaseBranch not yet implemented")
+        throw new UnsupportedOperationException("switchToReleaseBranch not yet implemented");
     }
 
     @Override

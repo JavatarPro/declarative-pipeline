@@ -58,7 +58,7 @@ class MavenBuildService extends BuildService {
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
         Logger.info("MavenBuildService buildAndUnitTests started")
-        dsl.sh "mvn clean package ${mavenParams}"
+        dsl.sh "mvn clean package " + mavenParams
         Logger.info("MavenBuildService buildAndUnitTests finished")
     }
 
