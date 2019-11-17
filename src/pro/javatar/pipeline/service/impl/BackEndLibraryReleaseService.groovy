@@ -12,11 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package pro.javatar.pipeline.service.impl
+package pro.javatar.pipeline.service.impl;
 
 import pro.javatar.pipeline.exception.InvalidReleaseNumberException
 import pro.javatar.pipeline.model.ReleaseInfo
+import pro.javatar.pipeline.service.BuildService
+import pro.javatar.pipeline.service.NexusUploadAware
 import pro.javatar.pipeline.service.ReleaseService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
 import pro.javatar.pipeline.util.Logger
@@ -29,20 +30,24 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class BackEndLibraryReleaseService implements ReleaseService {
 
-    MavenBuildService buildService
-    RevisionControlService revisionControlService
+    BuildService buildService;
+    NexusUploadAware uploadService;
+    RevisionControlService revisionControlService;
 
-    BackEndLibraryReleaseService(MavenBuildService buildService, RevisionControlService revisionControlService) {
-        this.buildService = buildService
-        this.revisionControlService = revisionControlService
+    BackEndLibraryReleaseService(BuildService buildService,
+                                 NexusUploadAware uploadService,
+                                 RevisionControlService revisionControlService) {
+        this.buildService = buildService;
+        this.uploadService = uploadService;
+        this.revisionControlService = revisionControlService;
     }
 
     @Override
     def release(ReleaseInfo releaseInfo) {
-        Logger.info("BackEndLibraryReleaseService start release: " + releaseInfo.toString())
+        Logger.info("BackEndLibraryReleaseService start release: " + releaseInfo.toString());
 
         validateReleaseVersion(releaseInfo.releaseVersion)
-        buildService.deployMavenArtifactsToNexus()
+        uploadService.uploadMaven2Artifacts();
 
         Logger.debug("BackEndLibraryReleaseService releaseRevisionControl() started")
         revisionControlService.release(releaseInfo.releaseVersion)

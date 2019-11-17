@@ -80,6 +80,7 @@ class FlowBuilder implements Serializable {
     SwaggerService swaggerService
     PipelineStagesSuit suit
 
+    NexusUploadAware uploadAware;
     JenkinsDslService jenkinsDslService;
     Config config;
 
@@ -153,10 +154,12 @@ class FlowBuilder implements Serializable {
             populate(maven)
             mavenBuildService = buildMavenBuildService(maven)
             mavenBuildService.setUp()
+            uploadAware = mavenBuildService;
             dockerBuildService = new DockerBuildService(mavenBuildService, dockerService)
         } else if (buildType == BuildServiceType.GRADLE) {
             gradleBuildService = new GradleBuildService(jenkinsDslService, config.gradleConfig())
             gradleBuildService.setUp()
+            uploadAware = gradleBuildService;
             dockerBuildService = new DockerBuildService(gradleBuildService, dockerService)
         }
         setupBuildService()
@@ -384,7 +387,7 @@ class FlowBuilder implements Serializable {
     ReleaseService getReleaseService() {
         if (suit == PipelineStagesSuit.LIBRARY
                 && (buildType == BuildServiceType.MAVEN || buildType == BuildServiceType.GRADLE)) {
-            return new BackEndLibraryReleaseService(mavenBuildService, revisionControlService)
+            return new BackEndLibraryReleaseService(buildService, uploadAware, revisionControlService)
         }
         if (buildType == BuildServiceType.NPM || buildType == BuildServiceType.NPM_DOCKER
                 || buildType == BuildServiceType.SENCHA) {
@@ -395,7 +398,7 @@ class FlowBuilder implements Serializable {
             return new VcsAndDockerRelease(buildService, revisionControlService, dockerService)
         }
         // TODO not obvious, why should not we throw exception at the end if no one matches
-        return new BackEndReleaseService(mavenBuildService, revisionControlService, dockerService)
+        return new BackEndReleaseService(mavenBuildService, uploadAware, revisionControlService, dockerService)
     }
 
     FlowBuilder withRevisionControl(RevisionControlBuilder revisionControlBuilder) {

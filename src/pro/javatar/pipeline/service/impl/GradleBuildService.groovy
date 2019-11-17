@@ -19,10 +19,11 @@ import pro.javatar.pipeline.exception.MalformedReleaseVersionException
 import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
+import pro.javatar.pipeline.service.NexusUploadAware
 import pro.javatar.pipeline.util.FileUtils
 import pro.javatar.pipeline.util.Logger
 
-class GradleBuildService extends BuildService {
+class GradleBuildService extends BuildService implements NexusUploadAware {
 
     private JenkinsDslService dslService;
 
@@ -91,6 +92,11 @@ class GradleBuildService extends BuildService {
         Logger.info("GradleBuildService:publishArtifacts:started " + releaseInfo);
         dslService.executeShell("gradle publish");
         Logger.info("GradleBuildService:publishArtifacts:finished")
+    }
+
+    @Override
+    void uploadMaven2Artifacts(ReleaseInfo releaseInfo) {
+        publishArtifacts(releaseInfo);
     }
 
 }

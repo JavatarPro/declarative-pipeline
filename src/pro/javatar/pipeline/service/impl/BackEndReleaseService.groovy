@@ -12,16 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.service.impl
 
 import pro.javatar.pipeline.exception.InvalidReleaseNumberException
 import pro.javatar.pipeline.model.ReleaseInfo
+import pro.javatar.pipeline.service.BuildService
+import pro.javatar.pipeline.service.NexusUploadAware
 import pro.javatar.pipeline.service.orchestration.DockerService
 import pro.javatar.pipeline.service.ReleaseService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
 import pro.javatar.pipeline.util.Logger
 
+import static java.lang.String.format
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
@@ -30,23 +32,27 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class BackEndReleaseService implements ReleaseService {
 
-    MavenBuildService buildService
-    RevisionControlService revisionControlService
-    DockerService dockerService
+    private BuildService buildService
+    private NexusUploadAware uploadService;
+    private RevisionControlService revisionControlService
+    private DockerService dockerService
 
 
-    BackEndReleaseService(MavenBuildService buildService, RevisionControlService revisionControlService,
+    BackEndReleaseService(BuildService buildService,
+                          NexusUploadAware uploadAware,
+                          RevisionControlService revisionControlService,
                           DockerService dockerService) {
-        this.buildService = buildService
-        this.revisionControlService = revisionControlService
-        this.dockerService = dockerService
+        this.buildService = buildService;
+        this.uploadService = uploadAware;
+        this.revisionControlService = revisionControlService;
+        this.dockerService = dockerService;
     }
 
     @Override
     def release(ReleaseInfo releaseInfo) {
         Logger.info("BackEndReleaseService start release: " + releaseInfo.toString())
         validateReleaseVersion(releaseInfo.releaseVersion)
-        buildService.deployMavenArtifactsToNexus()
+        uploadService.uploadMaven2Artifacts();
         // TODO comment out promotion of docker, it should be after QA sign off
         dsl.parallel 'release revision control': {
             releaseRevisionControl(releaseInfo)
@@ -67,13 +73,14 @@ class BackEndReleaseService implements ReleaseService {
     }
 
     def validateReleaseVersion(String releaseVersion) {
-        Logger.debug("BackEndReleaseService validateReleaseVersion: ${releaseVersion}")
+        Logger.debug("BackEndReleaseService validateReleaseVersion: " + releaseVersion)
         String currentVersion = buildService.getCurrentVersion()
         if (currentVersion.equalsIgnoreCase(releaseVersion)) {
-            Logger.debug("release version: ${releaseVersion} successfully validated")
+            Logger.debug(format("release version: %s successfully validated", releaseVersion));
         } else {
-            String errorMsg = "release version: ${releaseVersion} is not valid, current version is ${currentVersion}"
-            Logger.error("${errorMsg}")
+            String errorMsg = format("release version: %s is not valid, current version is %s",
+                    releaseVersion, currentVersion);
+            Logger.error(errorMsg);
             throw new InvalidReleaseNumberException(errorMsg)
         }
     }

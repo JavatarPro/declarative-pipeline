@@ -12,14 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.service.impl
 
 import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
+import pro.javatar.pipeline.service.NexusUploadAware
 import pro.javatar.pipeline.util.Logger
 
+import static java.lang.String.format
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 import static pro.javatar.pipeline.util.StringUtils.isBlank
 import static pro.javatar.pipeline.util.StringUtils.isNotBlank
@@ -28,7 +29,7 @@ import static pro.javatar.pipeline.util.StringUtils.isNotBlank
  * @author Borys Zora
  * @since 2018-03-09
  */
-class MavenBuildService extends BuildService {
+class MavenBuildService extends BuildService implements NexusUploadAware {
 
     protected String java
     protected String maven
@@ -122,7 +123,7 @@ class MavenBuildService extends BuildService {
     }
 
     String artifactName(String artifactId, String version, String packaging) {
-        return "${artifactId}-${version}.${packaging}"
+        return format("%s-%s.%s", artifactId, version, packaging);
     }
 
     String groupIdToUrl(String groupId) {
@@ -130,7 +131,14 @@ class MavenBuildService extends BuildService {
     }
 
     def deployMavenArtifactsToNexus(mavenParams) {
-        dsl.sh "mvn deploy -DdeployOnly -DskipTests=true ${mavenParams} ${getAltDeploymentRepository()}"
+        String command = format("mvn deploy -DdeployOnly -DskipTests=true %s %s",
+                mavenParams, getAltDeploymentRepository())
+        dsl.sh command
+    }
+
+    @Override
+    void uploadMaven2Artifacts(ReleaseInfo releaseInfo) {
+        deployMavenArtifactsToNexus();
     }
 
     def deployMavenArtifactsToNexus() {
