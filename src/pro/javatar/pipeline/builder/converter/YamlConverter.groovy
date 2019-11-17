@@ -1,6 +1,6 @@
 package pro.javatar.pipeline.builder.converter
 
-
+import pro.javatar.pipeline.builder.model.AutoTestConfigTO
 import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.DockerRegistry
@@ -114,66 +114,7 @@ class YamlConverter {
             return null;
         }
         Logger.info("retrieveAutoTest: autoTestConfig: " + autoTest)
-        return new AutoTestConfig() {
-
-            @Override
-            boolean enabled() {
-                if (autoTest.enabled == null) {
-                    return DEFAULT_AUTO_TESTS_ENABLED;
-                }
-                return autoTest.enabled
-            }
-
-            @Override
-            Duration timeout() {
-                if (autoTest.timeout == null) {
-                    return DEFAULT_TIMEOUT;
-                }
-                try {
-                    return Duration.parse(autoTest.timeout)
-                } catch (Exception e) {
-                    Logger.error("could not parse duration in field autoTest.timeout: "
-                            + autoTest.timeout + " " + e.getMessage());
-                    Logger.warn("default value will be used for AutoTestConfig.timeout(): " + DEFAULT_TIMEOUT.toString());
-                    return DEFAULT_TIMEOUT;
-                }
-            }
-
-            @Override
-            Duration initialDelay() {
-                if (autoTest.initialDelay == null) {
-                    return DEFAULT_INITIAL_DELAY;
-                }
-                try {
-                    return Duration.parse(autoTest.initialDelay)
-                } catch (Exception e) {
-                    Logger.error("could not parse duration in field yml.initialDelay: "
-                            + autoTest.initialDelay + " " + e.getMessage());
-                    Logger.warn("default value will be used for AutoTestConfig.initialDelay(): "
-                            + DEFAULT_TIMEOUT.toString());
-                    return DEFAULT_INITIAL_DELAY;
-                }
-            }
-
-            @Override
-            String jobName() {
-                if (isBlank(autoTest.jobName)) {
-                    return DEFAULT_JOB_NAME;
-                }
-                return autoTest.jobName
-            }
-
-            @Override
-            String command() {
-                return autoTest.command
-            }
-
-            @Override
-            boolean staticCodeAnalysisEnabled() {
-                return false; // TODO
-            }
-
-        }
+        return AutoTestConfigTO.ofAutoTestYmlConfig(autoTest);
     }
 
     CacheRequest retrieveCacheRequest(def yml) {

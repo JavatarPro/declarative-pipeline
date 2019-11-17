@@ -104,6 +104,8 @@ public class GradleConfigTO implements GradleConfig {
         return this;
     }
 
+    // helper retrieval methods
+
     private static String retrieveAdditionalBuildParameters(def gradle) {
         String gradleParams = gradle.params;
         if (isBlank(gradleParams)) {
