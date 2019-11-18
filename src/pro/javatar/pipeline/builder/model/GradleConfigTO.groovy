@@ -55,7 +55,7 @@ public class GradleConfigTO implements GradleConfig {
 
     @Override
     public String additionalBuildParameters() {
-        return additionalBuildParameters;
+        return additionalBuildParameters + " " + publishParams();
     }
 
     @Override
