@@ -6,6 +6,7 @@ package pro.javatar.pipeline.builder.model;
 
 import pro.javatar.pipeline.config.GradleConfig
 
+import static java.lang.String.format
 import static pro.javatar.pipeline.util.StringUtils.isBlank;
 
 /**
@@ -26,6 +27,8 @@ public class GradleConfigTO implements GradleConfig {
 
     private String repositoryId;
 
+    private String repositoryCredentialsId;
+
     private GradleConfigTO() {}
 
     static GradleConfigTO ofGradleYmlConfigAndJenkinsTool(def gradle, JenkinsTool tool) {
@@ -36,6 +39,7 @@ public class GradleConfigTO implements GradleConfig {
                 .setAdditionalBuildParameters(retrieveAdditionalBuildParameters(gradle))
                 .setRepositoryId(retrieveRepositoryId(gradle))
                 .setRepositoryUrl(retrieveRepositoryUrl(gradle))
+                .setRepositoryCredentialsId(retrieveRepositoryCredentialsId(gradle))
                 .validate()
     }
 
@@ -69,6 +73,21 @@ public class GradleConfigTO implements GradleConfig {
         return repositoryId;
     }
 
+    @Override
+    String repositoryCredentialsId() {
+        return repositoryCredentialsId
+    }
+
+    @Override
+    String publishParams() {
+        String params = repositoryUrl != null ? format("-P%s=%s ", REPO_VARIABLE_BUILD_GRADLE, repositoryUrl) : "";
+         if (repositoryCredentialsId != null) {
+             params += format("-P%s=%s -P%s=%s", USER_VARIABLE_BUILD_GRADLE, USER_VARIABLE_TO_BE_REPLACED,
+                     PASSWORD_VARIABLE_BUILD_GRADLE, PASSWORD_VARIABLE_TO_BE_REPLACED)
+         }
+        return params;
+    }
+
     GradleConfigTO setGradleTool(String gradleTool) {
         this.gradleTool = gradleTool;
         return this;
@@ -91,6 +110,11 @@ public class GradleConfigTO implements GradleConfig {
 
     GradleConfigTO setRepositoryUrl(String repositoryUrl) {
         this.repositoryUrl = repositoryUrl;
+        return this;
+    }
+
+    GradleConfigTO setRepositoryCredentialsId(String repositoryCredentialsId) {
+        this.repositoryCredentialsId = repositoryCredentialsId
         return this;
     }
 
@@ -127,6 +151,13 @@ public class GradleConfigTO implements GradleConfig {
             return ""
         }
         return gradle.repository.url;
+    }
+
+    private static String retrieveRepositoryCredentialsId(def gradle) {
+        if (gradle.repository == null || isBlank(gradle.repository.credentialsId)) {
+            return ""
+        }
+        return gradle.repository.credentialsId;
     }
 
     private static String retrieveRepositoryId(def gradle) {

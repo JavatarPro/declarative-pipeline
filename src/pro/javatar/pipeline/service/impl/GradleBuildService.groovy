@@ -90,7 +90,7 @@ class GradleBuildService extends BuildService implements NexusUploadAware {
     @Override
     def publishArtifacts(ReleaseInfo releaseInfo) {
         Logger.info("GradleBuildService:publishArtifacts:started " + releaseInfo);
-        dslService.executeShell("gradle publish");
+        dslService.executeSecureShell("gradle publish " + config.publishParams());
         Logger.info("GradleBuildService:publishArtifacts:finished")
     }
 

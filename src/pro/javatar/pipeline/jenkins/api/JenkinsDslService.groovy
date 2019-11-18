@@ -35,6 +35,8 @@ public interface JenkinsDslService {
 
     void executeShell(String command);
 
+    void executeSecureShell(String command, String credentialsId, String userVariable, String passwordVariable);
+
     void addToPath(String toolName, String variable);
 
     /**

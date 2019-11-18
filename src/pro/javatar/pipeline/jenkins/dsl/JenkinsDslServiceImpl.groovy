@@ -8,6 +8,7 @@ import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.jenkins.api.JenkinsExecutor
 import pro.javatar.pipeline.service.PipelineDslHolder
 import pro.javatar.pipeline.stage.StageAware
+import pro.javatar.pipeline.util.StringUtils
 
 import java.time.Duration
 
@@ -59,6 +60,21 @@ class JenkinsDslServiceImpl implements JenkinsDslService {
     @Override
     void executeShell(String command) {
         dsl.sh command;
+    }
+
+    @Override
+    void executeSecureShell(String command, String credentialsId, String userVariable, String passwordVariable) {
+        dsl.withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentialsId,
+                              usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            String effectiveCommand = command;
+            if (StringUtils.isNotBlank(userVariable)) {
+                effectiveCommand = effectiveCommand.replace(userVariable, (String) dsl.env.USERNAME)
+            }
+            if (StringUtils.isNotBlank(passwordVariable)) {
+                effectiveCommand = effectiveCommand.replace(passwordVariable, (String) dsl.env.PASSWORD)
+            }
+            dsl.sh effectiveCommand
+        }
     }
 
     @Override
