@@ -37,9 +37,9 @@ class ReleaseArtifactsStage extends Stage {
     @Override
     void execute() throws PipelineException {
         Logger.info("ReleaseArtifactsStage execute started: " + toString())
-        dsl.dir(releaseInfo.repoFolder) {
-            releaseService.release(releaseInfo)
-            dsl.currentBuild.description = "${releaseInfo.serviceName}:${releaseInfo.releaseVersion}"
+        dsl.dir(releaseInfo().getRepoFolder()) {
+            releaseService.release(releaseInfo())
+            dsl.currentBuild.description = releaseInfo().getServiceName() + ":" + releaseInfo().getReleaseVersion();
         }
         Logger.info("ReleaseArtifactsStage execute finished")
     }

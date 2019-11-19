@@ -1,11 +1,10 @@
 package pro.javatar.pipeline.builder.converter
 
-import groovy.json.JsonBuilder
-import pro.javatar.pipeline.builder.model.AutoTest
+import pro.javatar.pipeline.builder.model.AutoTestConfigTO
 import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.Docker
 import pro.javatar.pipeline.builder.model.DockerRegistry
-import pro.javatar.pipeline.builder.model.Gradle
+import pro.javatar.pipeline.builder.model.GradleConfigTO
 import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.builder.model.Maven
 import pro.javatar.pipeline.builder.Npm
@@ -22,19 +21,30 @@ import pro.javatar.pipeline.builder.model.Ui
 import pro.javatar.pipeline.builder.model.Vcs
 import pro.javatar.pipeline.builder.model.VcsRepoTO
 import pro.javatar.pipeline.builder.model.YamlConfig
+import pro.javatar.pipeline.config.AutoTestConfig
+import pro.javatar.pipeline.config.GradleConfig
+import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.util.LogLevel
 import pro.javatar.pipeline.util.Logger
 
+import java.time.Duration
 import java.time.Period
 
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
+import static pro.javatar.pipeline.util.StringUtils.isBlank
 import static pro.javatar.pipeline.util.StringUtils.isNotBlank
 
 class YamlConverter {
 
     YamlConfig toYamlModel(def yml) {
         Logger.info("YamlConverter:toYamlModel:started")
+        if (isEmpty(yml)) {
+            String errorMsg = "YamlConverter:toYamlModel: yml object validation failed. It is null or empty: " + yml;
+            Logger.error(errorMsg);
+            throw new PipelineException(errorMsg);
+        }
         YamlConfig result = new YamlConfig()
+                .setGradleConfig(retrieveGradleConfig(yml))
+                .setAutoTestConfig(retrieveAutoTest(yml))
                 .withLogLevel(retrieveAndSetLogLevel(yml))
                 .withJenkinsTool(retrieveJenkinsTools(yml))
                 .withVcs(retrieveVcs(yml))
@@ -44,21 +54,34 @@ class YamlConverter {
                 .withUi(retrieveUi(yml))
                 .withS3(retrieveS3(yml))
                 .withMaven(retrieveMaven(yml))
-                .withGradle(retrieveGradle(yml))
                 .withPython(retrievePython(yml))
                 .withDocker(retrieveDocker(yml))
                 .withMesos(retrieveMesos(yml))
                 .withNomad(retrieveNomad(yml))
                 .withSonar(retrieveSonar(yml))
-                .withAutoTest(retrieveAutoTest(yml))
                 .withCacheRequest(retrieveCacheRequest(yml))
                 .populateServiceRepo()
         Logger.info("YamlConverter:toYamlModel:finished")
-        Logger.debug("YamlConverter:toYamlModel:result: ${result}")
+        Logger.debug("YamlConverter:toYamlModel:result: " + result)
         return result
     }
 
-    JenkinsTool retrieveJenkinsTools(yml) {
+    boolean isEmpty(yml) {
+        return (yml == null || yml.isEmpty());
+    }
+
+    GradleConfig retrieveGradleConfig(def yml) {
+        if (isEmpty(yml) || isEmpty(yml.gradle)) {
+            Logger.debug("YamlConverter:retrieveGradleConfig: gradle settings not provided");
+            return null;
+        }
+        def gradle = yml.gradle
+        JenkinsTool tool = retrieveJenkinsTools(yml);
+        Logger.debug("YamlConverter:retrieveGradleConfig: gradle: " + gradle + ", tools: " + tool.toString());
+        return GradleConfigTO.ofGradleYmlConfigAndJenkinsTool(gradle, tool);
+    }
+
+    JenkinsTool retrieveJenkinsTools(def yml) {
         def tool = yml.jenkins_tool
         Logger.info("retrieveJenkinsTools: jenkins_tool: ${tool}")
         if (tool == null) {
@@ -87,22 +110,18 @@ class YamlConverter {
                 .withOrchestration(service.orchestration)
     }
 
-    AutoTest retrieveAutoTest(def yml) {
+    AutoTestConfig retrieveAutoTest(def yml) {
         def autoTest = yml["auto-test"]
         if (autoTest == null) {
-            return new AutoTest()
+            return null;
         }
-        Logger.info("retrieveAutoTest: autoTest: " + autoTest)
-        return new AutoTest()
-                .withJobName(autoTest.jobName)
-                .withSkipCodeQualityVerification(autoTest.skipCodeQualityVerification)
-                .withSkipSystemTests(autoTest.skipSystemTests)
-                .withSleepInSeconds(autoTest.sleepInSeconds)
+        Logger.info("retrieveAutoTest: autoTestConfig: " + autoTest)
+        return AutoTestConfigTO.ofAutoTestYmlConfig(autoTest);
     }
 
     CacheRequest retrieveCacheRequest(def yml) {
         def cache = yml.cache
-        Logger.info("retrieveCacheRequest: cache: ${cache}")
+        Logger.info("retrieveCacheRequest: cache: " + cache)
         Map<String, List<String>> cacheMap = new HashMap<>()
         cache.each {String service, List<String> folders ->
             List<String> folderList = new ArrayList<>()
@@ -114,18 +133,19 @@ class YamlConverter {
 
     LogLevel retrieveAndSetLogLevel(def yml) {
         def log = yml.log_level
-        Logger.info("YamlConverter:retrieveAndSetLogLevel: logLevel: " + log);
         if (log == null) {
+            Logger.info("YamlConverter:retrieveAndSetLogLevel: logLevel was not specified, default INFO will be used");
             return LogLevel.INFO
         }
         LogLevel logLevel = LogLevel.fromString(log)
         Logger.LEVEL = logLevel
+        Logger.info("YamlConverter:retrieveAndSetLogLevel: logLevel: " + logLevel.name());
         return logLevel
     }
 
     Sonar retrieveSonar(def yml) {
         def sonar = yml.sonar
-        Logger.info("retrieveSonar: sonar: ${sonar}")
+        Logger.info("retrieveSonar: sonar: " + sonar)
         if (sonar == null) {
             Logger.info("empty sonar will be returned")
             return new Sonar()
@@ -179,7 +199,7 @@ class YamlConverter {
         if (pipeline == null) {
             return new Pipeline()
         }
-        Logger.info("retrievePipeline: pipeline: ${pipeline}")
+        Logger.info("retrievePipeline: pipeline: " + pipeline)
         List<String> stages = new ArrayList<>()
         pipeline.stages.each{stage -> stages.add(stage)}
         return new Pipeline()
@@ -194,7 +214,7 @@ class YamlConverter {
             Logger.debug("YamlConverter:retrieveDocker: docker is null stub will be returned")
             return new Docker()
         }
-        Logger.debug("YamlConverter:retrieveDocker: docker: ${docker}")
+        Logger.debug("YamlConverter:retrieveDocker: docker: " + docker)
         def dockerRegistries = yml["docker-registries"]
         Logger.debug("YamlConverter:retrieveDocker: dockerRegistries: ${dockerRegistries}")
         Map<String, DockerRegistry> dockerRegistryMap = new HashMap<>()
@@ -245,18 +265,6 @@ class YamlConverter {
                 .withRepositoryId(maven.repository.id)
                 .withRepositoryUrl(maven.repository.url)
                 .withParams(maven.params)
-    }
-
-    Gradle retrieveGradle(def yml) {
-        def gradle = yml.gradle
-        if (gradle == null) {
-            return null
-        }
-        Logger.debug("retrieveGradle: gradle: ${gradle}")
-        return new Gradle()
-                .withRepositoryId(gradle.repository.id)
-                .withRepositoryUrl(gradle.repository.url)
-                .withParams(gradle.params)
     }
 
     Python retrievePython(def yml) {

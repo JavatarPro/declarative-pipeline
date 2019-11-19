@@ -14,47 +14,65 @@
  */
 package pro.javatar.pipeline
 
-import pro.javatar.pipeline.model.ReleaseInfo;
-import pro.javatar.pipeline.stage.Stage
-import pro.javatar.pipeline.util.Logger;
+import pro.javatar.pipeline.builder.YamlFlowBuilder
+import pro.javatar.pipeline.model.ReleaseInfo
+import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+import pro.javatar.pipeline.stage.StageAware;
+import pro.javatar.pipeline.util.Logger
 
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
+import static java.lang.String.format;
+
 /**
  * @author Borys Zora
  * @since 2018-03-09
  */
 class Flow implements Serializable {
 
-    private List<Stage> stages = new ArrayList<>()
-    ReleaseInfo releaseInfo = new ReleaseInfo()
+    public static final DEFAULT_CONFIG_FILE = "declarative-pipeline.yml"
 
-    Flow(ReleaseInfo releaseInfo) {
-        this.releaseInfo = releaseInfo
+    private List<StageAware> stages = new ArrayList<>();
+    private ReleaseInfo releaseInfo = new ReleaseInfo();
+    private JenkinsDslService jenkinsDslService;
+
+    Flow(ReleaseInfo releaseInfo, JenkinsDslService jenkinsDslService) {
+        this.releaseInfo = releaseInfo;
+        this.jenkinsDslService = jenkinsDslService;
     }
 
-    void addStage(Stage stage) {
+    public static Flow of(def dsl) {
+        return of(dsl, DEFAULT_CONFIG_FILE)
+    }
+
+    public static Flow of(def dsl, String config) {
+        return new YamlFlowBuilder(dsl, config).build()
+    }
+
+    Flow addStage(StageAware stage) {
         stages.add(stage);
+        return this;
     }
 
     void execute() {
-        for (Stage stage: stages) {
-            stage.setReleaseInfo(releaseInfo)
-            execute(stage)
-            if (stage.exitFromPipeline) {
-                Logger.info("pipeline will be stopped due to exitFromPipeline is ${stage.exitFromPipeline}")
+        for (StageAware stage: stages) {
+            executeStage(stage)
+            if (stage.isFiredExitFromPipeline()) {
+                Logger.warn("pipeline will be stopped due to exitFromPipeline is triggered")
                 return
             }
         }
     }
 
-    void execute(Stage stage) {
-        dsl.stage(stage.getName()) {
-            if (stage.shouldSkip()) {
-                Logger.warn("stage will be skipped")
-                return
-            }
-            stage.execute();
+    void executeStage(StageAware stage) {
+        stage.propagateReleaseInfo(releaseInfo)
+        if (stage.shouldSkip()) {
+            Logger.warn(format("Stage: %s will be skipped due to configuration settings", stage.getName()));
+            return;
         }
+        jenkinsDslService.executeStage(stage);
+    }
+
+    List<StageAware> getStages() {
+        return new ArrayList<StageAware>(this.stages);
     }
 
 }

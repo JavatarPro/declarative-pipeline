@@ -12,42 +12,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.stage
 
 import com.cloudbees.groovy.cps.NonCPS
+import pro.javatar.pipeline.config.AutoTestConfig
 import pro.javatar.pipeline.exception.PipelineException
+import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+import pro.javatar.pipeline.jenkins.api.JenkinsExecutor
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.test.AutoTestsService
-import pro.javatar.pipeline.service.vcs.RevisionControlService
 import pro.javatar.pipeline.util.Logger
 
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 /**
  * @author Borys Zora
  * @since 2018-03-09
  */
 class AutoTestsStage extends Stage {
 
-    AutoTestsService autoTestsService
+    AutoTestsService autoTestsService;
 
-    RevisionControlService revisionControl
+    JenkinsDslService jenkinsDslService;
+
+    AutoTestConfig autoTestConfig;
 
     AutoTestsStage(AutoTestsService autoTestsService,
-                   RevisionControlService revisionControlService) {
+                   JenkinsDslService jenkinsDslService,
+                   AutoTestConfig autoTestConfig) {
         this.autoTestsService = autoTestsService
-        this.revisionControl = revisionControlService
+        this.jenkinsDslService = jenkinsDslService
+        this.autoTestConfig = autoTestConfig
     }
 
     @Override
     void execute() throws PipelineException {
         Logger.info("AutoTestsStage execute started: " + toString())
-        dsl.timeout(time: 10, unit: 'MINUTES') {
-            dsl.dir(revisionControl.folder) {
-                autoTestsService.runAutoTests(releaseInfo.getServiceName(), Env.DEV)
+        // TODO read timeout from config
+        jenkinsDslService.executeWithinTimeoutInSpecifiedDirectory(autoTestConfig.timeout(),
+                releaseInfo().getRepoFolder(), getJenkinsExecutor());
+        Logger.info("AutoTestsStage execute finished")
+    }
+
+    private JenkinsExecutor getJenkinsExecutor() {
+        new JenkinsExecutor() {
+            @Override
+            void execute() {
+                autoTestsService.runAutoTests(releaseInfo().getServiceName(), Env.DEV)
             }
         }
-        Logger.info("AutoTestsStage execute finished")
+    }
+
+    @Override
+    boolean shouldSkip() {
+        return !autoTestConfig.enabled();
     }
 
     @Override

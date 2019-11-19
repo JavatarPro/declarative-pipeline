@@ -14,6 +14,7 @@ import pro.javatar.pipeline.builder.model.S3
 import pro.javatar.pipeline.builder.model.S3Repository
 import pro.javatar.pipeline.builder.model.VcsRepoTO
 import pro.javatar.pipeline.builder.model.YamlConfig
+import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.model.DockerOrchestrationServiceType
 import pro.javatar.pipeline.model.RevisionControlType
 import pro.javatar.pipeline.model.VcsRepositoryType
@@ -24,19 +25,21 @@ import pro.javatar.pipeline.service.orchestration.model.NomadBO
 import pro.javatar.pipeline.service.vcs.model.VcsRepo
 import pro.javatar.pipeline.util.Logger
 
+import java.time.temporal.ChronoUnit
+
 import static pro.javatar.pipeline.util.StringUtils.isBlank
 
+// TODO remove this class
 class FlowBuilderConverter {
 
-    FlowBuilder toFlowBuilder(YamlConfig yamlFile) {
-        return new FlowBuilder()
+    FlowBuilder toFlowBuilder(YamlConfig yamlFile, JenkinsDslService dslService) {
+        return new FlowBuilder(dslService)
                 .withServiceName(yamlFile.getService().getName())
                 .withBuildType(yamlFile.getService().getBuildType())
                 .withUseBuildNumberForVersion(yamlFile.getService().getUseBuildNumberForVersion())
                 .addPipelineStages(yamlFile.getPipeline().getPipelineSuit())
                 .addPipelineStages(yamlFile.getPipeline().getStages())
                 .addMaven(toMaven(yamlFile))
-                .addGradle(yamlFile.getGradle())
                 .addPython(yamlFile.getPython())
                 .addJenkinsTool(yamlFile.getJenkinsTool())
                 .addNpm(yamlFile.getNpm())
@@ -47,18 +50,19 @@ class FlowBuilderConverter {
                 .withCacheRequest(yamlFile.getCacheRequest())
                 .withBackEndAutoTestsServiceBuilder(toBackEndAutoTestsServiceBuilder(yamlFile))
                 .withSonar(toSonar(yamlFile))
+                .setConfig(yamlFile)
     }
 
     BackEndAutoTestsServiceBuilder toBackEndAutoTestsServiceBuilder(YamlConfig yamlConfig) {
-        def autoTests = yamlConfig.getAutoTest()
-        if (autoTests == null) {
+        def autoTestConfig = yamlConfig.autoTestConfig()
+        if (autoTestConfig == null) {
             return new BackEndAutoTestsServiceBuilder();
         }
-        return new BackEndAutoTestsServiceBuilder()
-                .withJobName(autoTests.jobName)
-                .withSkipCodeQualityVerification(autoTests.skipCodeQualityVerification)
-                .withSkipSystemTests(autoTests.skipSystemTests)
-                .withSleepInSeconds(autoTests.sleepInSeconds)
+        return new BackEndAutoTestsServiceBuilder() // TODO refactor
+                .withJobName(autoTestConfig.jobName())
+                .withSkipCodeQualityVerification(autoTestConfig.staticCodeAnalysisEnabled())
+                .withSkipSystemTests(!autoTestConfig.enabled())
+                .withSleepInSeconds((Integer) autoTestConfig.initialDelay().get(ChronoUnit.SECONDS)) // TODO !
     }
 
     Maven toMaven(YamlConfig yamlFile) {
