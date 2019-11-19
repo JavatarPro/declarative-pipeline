@@ -33,6 +33,8 @@ class DatabaseBackwardCompatibilityStage extends Stage {
                 deploymentService.deployArtifact(Env.DEV, previousReleaseInfo)
             }
         }
+
+        // todo: undeploy from mesos
         Logger.info("Database backward compatibility execute finished")
     }
 
@@ -49,6 +51,7 @@ class DatabaseBackwardCompatibilityStage extends Stage {
     private ReleaseInfo buildPreviousReleaseInfo(ReleaseInfo info) {
         def previousBuildVersion = lastSuccessfulBuild(dsl.currentBuild)
         if (previousBuildVersion != null) {
+            Logger.info("Last successful build is $previousBuildVersion")
             String[] ver = previousBuildVersion.split(":")
             if (ver.length == 2) {
                 ReleaseInfo previous = new ReleaseInfo()

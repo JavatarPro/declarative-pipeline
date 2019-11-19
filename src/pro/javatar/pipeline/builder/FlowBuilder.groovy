@@ -373,8 +373,10 @@ class FlowBuilder implements Serializable {
     FlowBuilder addServiceWithDBStages() {
         addPipelineStage(StageType.BUILD_AND_UNIT_TESTS)
         addPipelineStage(StageType.DEPLOY_ON_DEV_ENV)
+        addPipelineStage(StageType.AUTO_TESTS)
         addPipelineStage(StageType.BACKWARD_COMPATIBILITY_TEST)
         addPipelineStage(StageType.AUTO_TESTS)
+        addPipelineStage(StageType.DEPLOY_ON_DEV_ENV) //revert to current version
         addPipelineStage(StageType.DEV_SIGN_OFF)
         addPipelineStage(StageType.RELEASE)
         addPipelineStage(StageType.DEPLOY_ON_QA_ENV)
