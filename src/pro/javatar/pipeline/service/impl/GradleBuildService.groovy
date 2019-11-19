@@ -23,6 +23,9 @@ import pro.javatar.pipeline.service.NexusUploadAware
 import pro.javatar.pipeline.util.FileUtils
 import pro.javatar.pipeline.util.Logger
 
+import static pro.javatar.pipeline.config.GradleConfig.PASSWORD_VARIABLE_BUILD_GRADLE
+import static pro.javatar.pipeline.config.GradleConfig.USER_VARIABLE_TO_BE_REPLACED
+
 class GradleBuildService extends BuildService implements NexusUploadAware {
 
     private JenkinsDslService dslService;
@@ -90,7 +93,8 @@ class GradleBuildService extends BuildService implements NexusUploadAware {
     @Override
     def publishArtifacts(ReleaseInfo releaseInfo) {
         Logger.info("GradleBuildService:publishArtifacts:started " + releaseInfo);
-        dslService.executeSecureShell("gradle publish " + config.publishParams());
+        dslService.executeSecureShell("gradle publish " + config.publishParams(), config.repositoryCredentialsId(),
+                USER_VARIABLE_TO_BE_REPLACED, PASSWORD_VARIABLE_BUILD_GRADLE);
         Logger.info("GradleBuildService:publishArtifacts:finished")
     }
 
