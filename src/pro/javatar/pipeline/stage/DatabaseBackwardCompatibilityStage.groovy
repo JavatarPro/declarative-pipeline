@@ -22,7 +22,7 @@ class DatabaseBackwardCompatibilityStage extends Stage {
         this.deploymentService = deploymentService
     }
 
-    def execute() throws PipelineException {
+    void execute() throws PipelineException {
         Logger.info("Database backward compatibility execute started:" + toString())
         dsl.timeout(time: 10, unit: 'MINUTES') {
             // deploy current docker image
