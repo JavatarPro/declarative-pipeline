@@ -33,7 +33,7 @@ class SonarQubeService implements Serializable {
     String sonarQubeParams
     String sonarQubeJenkinsSettingsName
 
-    SonarQubeService(boolean sonarQubeEnabled,  String sonarQubeServerUrl, String sonarQubeParams,
+    SonarQubeService(boolean sonarQubeEnabled, String sonarQubeServerUrl, String sonarQubeParams,
                      String sonarQubeJenkinsSettingsName) {
         this.sonarQubeEnabled = sonarQubeEnabled
         this.sonarQubeServerUrl = sonarQubeServerUrl
@@ -44,10 +44,11 @@ class SonarQubeService implements Serializable {
     def sonar() {
         if (!sonarQubeEnabled) {
             Logger.debug("sonar is disabled")
-        }
-        dsl.timeout(time: 5, unit: 'MINUTES') {
-            verifyQuality()
-            checkStatusOfQualityGateVerifier()
+        } else {
+            dsl.timeout(time: 5, unit: 'MINUTES') {
+                verifyQuality()
+                checkStatusOfQualityGateVerifier()
+            }
         }
     }
 

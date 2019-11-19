@@ -18,6 +18,7 @@ import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.Flow
 import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.JenkinsTool
+import pro.javatar.pipeline.builder.model.Python
 import pro.javatar.pipeline.config.Config
 import pro.javatar.pipeline.exception.*
 import pro.javatar.pipeline.jenkins.api.JenkinsDslService
@@ -59,6 +60,8 @@ class FlowBuilder implements Serializable {
     Maven maven
     MavenBuildService mavenBuildService
     GradleBuildService gradleBuildService
+    Python python
+    PythonBuildService pythonBuildService
     JenkinsTool jenkinsTool
     DockerBuildService dockerBuildService
     Npm npm = new Npm()
@@ -325,7 +328,7 @@ class FlowBuilder implements Serializable {
         } else if (buildType == BuildServiceType.PHP) {
             buildService = new PhpBuildService(dockerService)
         } else if (buildType == BuildServiceType.PYTHON) {
-            buildService = new PythonBuildService(dockerService)
+            buildService = new PythonBuildService(dockerService, python.versionFile, python.versionParameter, python.projectDirectory)
         }
 
         buildService.useBuildNumberForVersion = useBuildNumberForVersion
@@ -436,6 +439,11 @@ class FlowBuilder implements Serializable {
 
     FlowBuilder addMaven(Maven maven) {
         this.maven = maven
+        return this
+    }
+
+    FlowBuilder addPython(Python python) {
+        this.python = python
         return this
     }
 

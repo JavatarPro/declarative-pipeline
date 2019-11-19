@@ -19,6 +19,8 @@ class YamlConfig implements Config, Serializable {
 
     Maven maven = new Maven()
 
+    Python python = new Python()
+
     Npm npm = new Npm()
 
     Ui ui = new Ui()
@@ -111,6 +113,20 @@ class YamlConfig implements Config, Serializable {
 
     void setMaven(Maven maven) {
         this.maven = maven
+    }
+
+    Python getPython() {
+        return python
+    }
+
+    void setPython(Python python) {
+        this.python = python
+    }
+
+    YamlConfig withPython(Python python) {
+        Logger.info("YamlConfig:withPython: ${python}")
+        setPython(python)
+        return this
     }
 
     YamlConfig withMaven(Maven maven) {
@@ -318,6 +334,7 @@ class YamlConfig implements Config, Serializable {
                 ", service=" + service +
                 ", pipeline=" + pipeline +
                 ", maven=" + maven +
+                ", python=" + python +
                 ", npm=" + npm +
                 ", ui=" + ui +
                 ", docker=" + docker +
