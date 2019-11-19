@@ -206,6 +206,7 @@ class FlowBuilder implements Serializable {
         availableStages.put(StageType.AUTO_TESTS, new AutoTestsStage(autoTestsService, revisionControlService))
         availableStages.put(StageType.RELEASE, new ReleaseArtifactsStage(releaseService))
         availableStages.put(StageType.BACKWARD_COMPATIBILITY_TEST, new DatabaseBackwardCompatibilityStage(dockerService, deploymentService))
+        availableStages.put(StageType.BACKWARD_COMPATIBILITY_AUTO_TESTS, new AutoTestsStage(autoTestsService, revisionControlService))
         createSignOffStages()
         createDeployStages()
         Logger.info("FlowBuilder:createStages: createStages finished")
@@ -305,6 +306,8 @@ class FlowBuilder implements Serializable {
         if (buildType == BuildServiceType.MAVEN && suit == PipelineStagesSuit.SERVICE) {
             // TODO refactor
             buildService = dockerBuildService
+        } else if (buildType == BuildServiceType.MAVEN && suit == PipelineStagesSuit.SERVICE_WITH_DB) {
+            buildService = dockerBuildService
         } else if (buildType == BuildServiceType.MAVEN && suit == PipelineStagesSuit.LIBRARY) {
             // TODO refactor
             buildService = mavenBuildService
@@ -375,7 +378,7 @@ class FlowBuilder implements Serializable {
         addPipelineStage(StageType.DEPLOY_ON_DEV_ENV)
         addPipelineStage(StageType.AUTO_TESTS)
         addPipelineStage(StageType.BACKWARD_COMPATIBILITY_TEST)
-        addPipelineStage(StageType.AUTO_TESTS)
+        addPipelineStage(StageType.BACKWARD_COMPATIBILITY_AUTO_TESTS)
         addPipelineStage(StageType.DEPLOY_ON_DEV_ENV) //revert to current version
         addPipelineStage(StageType.DEV_SIGN_OFF)
         addPipelineStage(StageType.RELEASE)
