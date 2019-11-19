@@ -13,6 +13,7 @@ import pro.javatar.pipeline.builder.model.Mesos
 import pro.javatar.pipeline.builder.model.Nomad
 import pro.javatar.pipeline.builder.model.NomadItem
 import pro.javatar.pipeline.builder.model.Pipeline
+import pro.javatar.pipeline.builder.model.Python
 import pro.javatar.pipeline.builder.model.S3
 import pro.javatar.pipeline.builder.model.S3Repository
 import pro.javatar.pipeline.builder.model.Service
@@ -44,6 +45,7 @@ class YamlConverter {
                 .withS3(retrieveS3(yml))
                 .withMaven(retrieveMaven(yml))
                 .withGradle(retrieveGradle(yml))
+                .withPython(retrievePython(yml))
                 .withDocker(retrieveDocker(yml))
                 .withMesos(retrieveMesos(yml))
                 .withNomad(retrieveNomad(yml))
@@ -255,6 +257,18 @@ class YamlConverter {
                 .withRepositoryId(gradle.repository.id)
                 .withRepositoryUrl(gradle.repository.url)
                 .withParams(gradle.params)
+    }
+
+    Python retrievePython(def yml) {
+        def python = yml.python
+        if (python == null) {
+            return null
+        }
+        Logger.debug("retrievePython: python: ${python}")
+        return new Python()
+                .withVersionFile(python.versionFile)
+                .withVersionParameter(python.versionParameter)
+                .withProjectDirectory(python.projectDirectory)
     }
 
     Mesos retrieveMesos(def yml) {

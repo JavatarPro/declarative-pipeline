@@ -18,6 +18,8 @@ class YamlConfig implements Serializable {
 
     Gradle gradle = new Gradle()
 
+    Python python = new Python()
+
     Npm npm = new Npm()
 
     Ui ui = new Ui()
@@ -99,6 +101,20 @@ class YamlConfig implements Serializable {
     YamlConfig withGradle(Gradle gradle) {
         Logger.info("YamlConfig:withGradle: ${gradle}")
         setGradle(gradle)
+        return this
+    }
+
+    Python getPython() {
+        return python
+    }
+
+    void setPython(Python python) {
+        this.python = python
+    }
+
+    YamlConfig withPython(Python python) {
+        Logger.info("YamlConfig:withPython: ${python}")
+        setPython(python)
         return this
     }
 
@@ -307,6 +323,7 @@ class YamlConfig implements Serializable {
                 ", service=" + service +
                 ", pipeline=" + pipeline +
                 ", maven=" + maven +
+                ", python=" + python +
                 ", npm=" + npm +
                 ", ui=" + ui +
                 ", docker=" + docker +
