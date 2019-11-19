@@ -29,8 +29,11 @@ class DatabaseBackwardCompatibilityStage extends Stage {
 //            deploymentService.deployArtifact(Env.DEV, releaseInfo)
             // define previous version
             ReleaseInfo previousReleaseInfo = buildPreviousReleaseInfo(releaseInfo)
+            Logger.info("Previous release version: $previousReleaseInfo")
             if (previousReleaseInfo != null) {
                 deploymentService.deployArtifact(Env.DEV, previousReleaseInfo)
+            } else {
+                Logger.info("Previous successful build not found")
             }
         }
 
