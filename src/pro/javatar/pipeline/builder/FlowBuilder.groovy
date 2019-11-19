@@ -360,6 +360,7 @@ class FlowBuilder implements Serializable {
     }
 
     FlowBuilder addDefaultPipelineStages() {
+        Logger.info("Load default stages")
         addPipelineStage(StageType.BUILD_AND_UNIT_TESTS)
         addPipelineStage(StageType.DEPLOY_ON_DEV_ENV)
         addPipelineStage(StageType.AUTO_TESTS)
@@ -374,6 +375,7 @@ class FlowBuilder implements Serializable {
     }
 
     FlowBuilder addServiceWithDBStages() {
+        Logger.info("Load stages for service-with-db")
         addPipelineStage(StageType.BUILD_AND_UNIT_TESTS)
         addPipelineStage(StageType.DEPLOY_ON_DEV_ENV)
         addPipelineStage(StageType.AUTO_TESTS)
@@ -391,6 +393,7 @@ class FlowBuilder implements Serializable {
     }
 
     FlowBuilder addReleaseCommonLibsPipelineStages() {
+        Logger.info("Load stages for libraries")
         addPipelineStage(StageType.BUILD_AND_UNIT_TESTS)
         addPipelineStage(StageType.AUTO_TESTS)
         addPipelineStage(StageType.DEV_SIGN_OFF)
