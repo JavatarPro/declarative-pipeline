@@ -7,7 +7,7 @@ import pro.javatar.pipeline.util.StringUtils
 class Pipeline implements Serializable {
 
     // TODO validate enum PipelineStagesSuit
-    String pipelineSuit = "service"
+    String suit = "service"
 
     // TODO validate all String exists in enum if suit custom
     List<String> stages = new ArrayList<>()
@@ -16,25 +16,25 @@ class Pipeline implements Serializable {
         Logger.debug("Pipeline:default constructor")
     }
 
-    String getPipelineSuit() {
-        return pipelineSuit
+    String getSuit() {
+        return suit
     }
 
     Pipeline withPipelineSuit(String pipelineSuit) {
         Logger.info("Pipeline:withPipelineSuit: ${pipelineSuit}")
-        setPipelineSuit(pipelineSuit)
+        setSuit(pipelineSuit)
         return this
     }
 
-    void setPipelineSuit(String pipelineSuit) {
+    void setSuit(String pipelineSuit) {
         Logger.info("Pipeline:setPipelineSuit: ${pipelineSuit}")
         if (StringUtils.isBlank(pipelineSuit)) {
-            this.pipelineSuit = pipelineSuit
+            this.suit = pipelineSuit
         }
     }
 
     List<String> getStages() {
-        if ("custom".equalsIgnoreCase(pipelineSuit)) {
+        if ("custom".equalsIgnoreCase(suit)) {
             return stages
         }
         return new ArrayList<>()
@@ -60,7 +60,7 @@ class Pipeline implements Serializable {
     @Override
     public String toString() {
         return "Pipeline{" +
-                "pipelineSuit='" + pipelineSuit + '\'' +
+                "suit='" + suit + '\'' +
                 ", stages=" + stages +
                 '}';
     }
