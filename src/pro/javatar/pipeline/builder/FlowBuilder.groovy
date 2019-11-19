@@ -346,6 +346,7 @@ class FlowBuilder implements Serializable {
     }
 
     FlowBuilder addPipelineStages(String pipelineStagesSuit) {
+        Logger.info("Current suit is $pipelineStagesSuit")
         suit = PipelineStagesSuit.fromString(pipelineStagesSuit)
         if (suit == PipelineStagesSuit.SERVICE) {
             return addDefaultPipelineStages()
