@@ -28,7 +28,7 @@ class Pipeline implements Serializable {
 
     void setSuit(String pipelineSuit) {
         Logger.info("Pipeline:setPipelineSuit: ${pipelineSuit}")
-        if (StringUtils.isBlank(pipelineSuit)) {
+        if (!StringUtils.isBlank(pipelineSuit)) {
             this.suit = pipelineSuit
         }
     }
