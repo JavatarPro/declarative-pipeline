@@ -115,8 +115,10 @@ class FlowBuilder implements Serializable {
             if (stageTypesToBeSkipped.contains(stageType)) {
                 stage.skipStage = true
             }
+            Logger.info("$stage is present: $stageType")
             flow.addStage(stage)
         }
+        Logger.info("Flow with stagres: $flow")
     }
 
     void createServices() {
