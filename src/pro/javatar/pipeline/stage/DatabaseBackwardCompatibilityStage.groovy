@@ -30,11 +30,19 @@ class DatabaseBackwardCompatibilityStage extends Stage {
             // define previous version
             ReleaseInfo previousReleaseInfo = buildPreviousReleaseInfo(releaseInfo)
             Logger.info("Previous release version: $previousReleaseInfo")
-            if (previousReleaseInfo != null) {
-                deploymentService.deployArtifact(Env.DEV, previousReleaseInfo)
-            } else {
+            if (previousReleaseInfo == null) {
+                // todo: retrieve this info from Web Hook receiver
                 Logger.info("Previous successful build not found")
+                def hardcodedVersion = "0.7"
+                Logger.info("$hardcodedVersion will be tested")
+                ReleaseInfo previous = new ReleaseInfo()
+                previous.setReleaseVersion(hardcodedVersion)
+                previous.setDockerImageName("simple-db-application")
+                previous.setDockerImageVersion("simple-db-application")
+                return previous
+
             }
+            deploymentService.deployArtifact(Env.DEV, previousReleaseInfo)
         }
 
         // todo: undeploy from mesos
