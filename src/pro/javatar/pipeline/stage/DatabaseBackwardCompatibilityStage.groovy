@@ -35,10 +35,10 @@ class DatabaseBackwardCompatibilityStage extends Stage {
                 Logger.info("Previous successful build not found")
                 def hardcodedVersion = "0.7"
                 Logger.info("$hardcodedVersion will be tested")
-                ReleaseInfo previous = new ReleaseInfo()
-                previous.setReleaseVersion(hardcodedVersion)
-                previous.setServiceName("simple-db-application")
-                previous.setDockerImageVersion(hardcodedVersion)
+                previousReleaseInfo = new ReleaseInfo()
+                previousReleaseInfo.setReleaseVersion(hardcodedVersion)
+                previousReleaseInfo.setServiceName("simple-db-application")
+                previousReleaseInfo.setDockerImageVersion(hardcodedVersion)
             }
             deploymentService.deployArtifact(Env.DEV, previousReleaseInfo)
         }
