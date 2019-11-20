@@ -37,8 +37,8 @@ class DatabaseBackwardCompatibilityStage extends Stage {
                 Logger.info("$hardcodedVersion will be tested")
                 ReleaseInfo previous = new ReleaseInfo()
                 previous.setReleaseVersion(hardcodedVersion)
-                previous.setDockerImageName("simple-db-application")
-                previous.setDockerImageVersion("simple-db-application")
+                previous.setServiceName("simple-db-application")
+                previous.setDockerImageVersion(hardcodedVersion)
                 return previous
 
             }
