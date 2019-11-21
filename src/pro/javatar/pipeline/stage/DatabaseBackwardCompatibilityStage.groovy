@@ -35,7 +35,7 @@ class DatabaseBackwardCompatibilityStage extends Stage {
                 previousReleaseInfo = new ReleaseInfo()
                 previousReleaseInfo.setReleaseVersion(hardcodedVersion)
                 previousReleaseInfo.setServiceName("simple-db-application")
-                previousReleaseIn9fo.setDockerImageVersion(hardcodedVersion)
+                previousReleaseInfo.setDockerImageVersion(hardcodedVersion)
             }
             deploymentService.deployArtifact(Env.DEV, previousReleaseInfo)
         }
