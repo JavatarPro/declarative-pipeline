@@ -30,12 +30,12 @@ class DatabaseBackwardCompatibilityStage extends Stage {
             if (previousReleaseInfo == null) {
                 // todo: retrieve this info from Web Hook receiver
                 Logger.info("Previous successful build not found")
-                def hardcodedVersion = "0.7"
+                def hardcodedVersion = "0.13"
                 Logger.info("$hardcodedVersion will be tested")
                 previousReleaseInfo = new ReleaseInfo()
                 previousReleaseInfo.setReleaseVersion(hardcodedVersion)
                 previousReleaseInfo.setServiceName("simple-db-application")
-                previousReleaseInfo.setDockerImageVersion(hardcodedVersion)
+                previousReleaseIn9fo.setDockerImageVersion(hardcodedVersion)
             }
             deploymentService.deployArtifact(Env.DEV, previousReleaseInfo)
         }
