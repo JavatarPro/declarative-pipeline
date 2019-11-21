@@ -25,9 +25,6 @@ class DatabaseBackwardCompatibilityStage extends Stage {
     void execute() throws PipelineException {
         Logger.info("Database backward compatibility execute started:" + toString())
         dsl.timeout(time: 3, unit: 'MINUTES') {
-            // deploy current docker image
-//            deploymentService.deployArtifact(Env.DEV, releaseInfo)
-            // define previous version
             ReleaseInfo previousReleaseInfo = buildPreviousReleaseInfo(releaseInfo)
             Logger.info("Previous release version: $previousReleaseInfo")
             if (previousReleaseInfo == null) {
@@ -75,6 +72,6 @@ class DatabaseBackwardCompatibilityStage extends Stage {
     @NonCPS
     @Override
     public String getName() {
-        return "Database backward compatibility"
+        return "Service rollback"
     }
 }
