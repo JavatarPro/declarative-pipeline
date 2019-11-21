@@ -24,7 +24,7 @@ class DatabaseBackwardCompatibilityStage extends Stage {
 
     void execute() throws PipelineException {
         Logger.info("Database backward compatibility execute started:" + toString())
-        dsl.timeout(time: 10, unit: 'MINUTES') {
+        dsl.timeout(time: 3, unit: 'MINUTES') {
             // deploy current docker image
 //            deploymentService.deployArtifact(Env.DEV, releaseInfo)
             // define previous version
@@ -43,7 +43,6 @@ class DatabaseBackwardCompatibilityStage extends Stage {
             deploymentService.deployArtifact(Env.DEV, previousReleaseInfo)
         }
 
-        // todo: undeploy from mesos
         Logger.info("Database backward compatibility execute finished")
     }
 
