@@ -53,8 +53,11 @@ class BackEndAutoTestsServiceBuilder implements Serializable {
     }
 
     BackEndAutoTestsService build() {
+        Logger.info("Current suit is $suit")
         BackEndAutoTestsService autoTestsService
         if (suit == PipelineStagesSuit.SERVICE) {
+            autoTestsService = new BackEndAutoTestsService(buildService)
+        } else if (suit == PipelineStagesSuit.SERVICE_WITH_DB) {
             autoTestsService = new BackEndAutoTestsService(buildService)
         } else if (suit == PipelineStagesSuit.LIBRARY) {
             autoTestsService = new BackEndAutoTestsLibrary(buildService)

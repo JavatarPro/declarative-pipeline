@@ -37,7 +37,7 @@ class FlowBuilderConverter {
                 .withServiceName(yamlFile.getService().getName())
                 .withBuildType(yamlFile.getService().getBuildType())
                 .withUseBuildNumberForVersion(yamlFile.getService().getUseBuildNumberForVersion())
-                .addPipelineStages(yamlFile.getPipeline().getPipelineSuit())
+                .addPipelineStages(yamlFile.getPipeline().getSuit())
                 .addPipelineStages(yamlFile.getPipeline().getStages())
                 .addMaven(toMaven(yamlFile))
                 .addPython(yamlFile.getPython())
