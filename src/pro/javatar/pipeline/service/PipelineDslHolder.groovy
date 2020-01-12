@@ -12,16 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.service
 
 import pro.javatar.pipeline.util.Logger
 
 /**
+ * TODO move to pro.javatar.pipeline.jenkins package
+ * This is jenkins dsl holder passing from jenkins to this library for integration purposes
  * @author Borys Zora
  * @since 2018-03-09
  */
-class PipelineDslHolder {
+public class PipelineDslHolder {
 
     public static def dsl
 

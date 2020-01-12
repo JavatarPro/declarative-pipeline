@@ -12,15 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.builder
 
 import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.Flow
 import pro.javatar.pipeline.builder.model.CacheRequest
-import pro.javatar.pipeline.builder.model.Gradle
 import pro.javatar.pipeline.builder.model.JenkinsTool
+import pro.javatar.pipeline.builder.model.Python
+import pro.javatar.pipeline.config.Config
 import pro.javatar.pipeline.exception.*
+import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.model.*
 import pro.javatar.pipeline.service.*
 import pro.javatar.pipeline.service.cache.CacheRequestHolder
@@ -43,6 +44,7 @@ import pro.javatar.pipeline.util.Logger
 
 /**
  * TODO class too big, need some refactoring
+ * TODO move stage creation to stage builder inside stage package
  * @author Borys Zora
  * @since 2018-03-09
  */
@@ -59,13 +61,14 @@ class FlowBuilder implements Serializable {
     DockerBuilder dockerBuilder // TODO
     SonarQubeBuilder sonarQubeBuilder // TODO
     SwaggerBuilder swaggerBuilder // TODO
-    BackEndAutoTestsServiceBuilder backEndAutoTestsServiceBuilder = new BackEndAutoTestsServiceBuilder()
+    BackEndAutoTestsServiceBuilder backEndAutoTestsServiceBuilder;
 
     // services
     Maven maven
     MavenBuildService mavenBuildService
-    Gradle gradle
     GradleBuildService gradleBuildService
+    Python python
+    PythonBuildService pythonBuildService
     JenkinsTool jenkinsTool
     DockerBuildService dockerBuildService
     Npm npm = new Npm()
@@ -87,21 +90,25 @@ class FlowBuilder implements Serializable {
     SwaggerService swaggerService
     PipelineStagesSuit suit
 
-    FlowBuilder() {
-        Logger.debug("FlowBuilder:default constructor")
-    }
+    NexusUploadAware uploadAware;
+    JenkinsDslService jenkinsDslService;
+    Config config;
 
-    FlowBuilder(def dsl) {
-        Logger.debug("FlowBuilder:dsl constructor")
-        PipelineDslHolder.dsl = dsl
+    FlowBuilder(JenkinsDslService jenkinsDslService) {
+        Logger.debug("FlowBuilder: constructor")
+        this.jenkinsDslService = jenkinsDslService;
     }
 
     Flow build() {
         Logger.info("build Flow started")
+
+        // tmp
+        backEndAutoTestsServiceBuilder = new BackEndAutoTestsServiceBuilder(config.autoTestConfig());
+
         createServices()
         createStages()
 
-        Flow flow = new Flow(releaseInfo)
+        Flow flow = new Flow(releaseInfo, jenkinsDslService);
         populateStages(flow, stageTypes)
 
         Logger.info("build Flow finished: " + toString())
@@ -159,19 +166,16 @@ class FlowBuilder implements Serializable {
             populate(maven)
             mavenBuildService = buildMavenBuildService(maven)
             mavenBuildService.setUp()
+            uploadAware = mavenBuildService;
             dockerBuildService = new DockerBuildService(mavenBuildService, dockerService)
         } else if (buildType == BuildServiceType.GRADLE) {
-            gradleBuildService = buildGradleBuildService(gradle)
+            gradleBuildService = new GradleBuildService(jenkinsDslService, config.gradleConfig())
             gradleBuildService.setUp()
+            uploadAware = gradleBuildService;
             dockerBuildService = new DockerBuildService(gradleBuildService, dockerService)
         }
         setupBuildService()
         Logger.info("FlowBuilder:prepareBuildService: created buildService: " + buildService.toString())
-    }
-
-    GradleBuildService buildGradleBuildService(Gradle gradle) {
-        return new GradleBuildService(jenkinsTool.gradle, jenkinsTool.java)
-                .withParams(gradle.params)
     }
 
     def prepareSonarQube() {
@@ -205,7 +209,8 @@ class FlowBuilder implements Serializable {
         Logger.info("FlowBuilder:createStages: createStages started")
         availableStages.put(StageType.BUILD_AND_UNIT_TESTS,
                 new BuildAndUnitTestStage(buildService, revisionControlService))
-        availableStages.put(StageType.AUTO_TESTS, new AutoTestsStage(autoTestsService, revisionControlService))
+        availableStages.put(StageType.AUTO_TESTS,
+                new AutoTestsStage(autoTestsService, jenkinsDslService, config.autoTestConfig()))
         availableStages.put(StageType.RELEASE, new ReleaseArtifactsStage(releaseService))
         availableStages.put(StageType.BACKWARD_COMPATIBILITY_TEST, new DatabaseBackwardCompatibilityStage(dockerService, deploymentService))
         availableStages.put(StageType.BACKWARD_COMPATIBILITY_AUTO_TESTS, new AutoTestsStage(autoTestsService, revisionControlService))
@@ -258,6 +263,11 @@ class FlowBuilder implements Serializable {
     FlowBuilder addPipelineStage(StageType stageType) {
         stageTypes.add(stageType)
         return this
+    }
+
+    FlowBuilder setConfig(Config config) {
+        this.config = config;
+        return this;
     }
 
     def populate(Maven maven) { // TODO replace with more preferable
@@ -331,7 +341,7 @@ class FlowBuilder implements Serializable {
         } else if (buildType == BuildServiceType.PHP) {
             buildService = new PhpBuildService(dockerService)
         } else if (buildType == BuildServiceType.PYTHON) {
-            buildService = new PythonBuildService(dockerService)
+            buildService = new PythonBuildService(dockerService, python.versionFile, python.versionParameter, python.projectDirectory)
         }
 
         buildService.useBuildNumberForVersion = useBuildNumberForVersion
@@ -417,7 +427,7 @@ class FlowBuilder implements Serializable {
     ReleaseService getReleaseService() {
         if (suit == PipelineStagesSuit.LIBRARY
                 && (buildType == BuildServiceType.MAVEN || buildType == BuildServiceType.GRADLE)) {
-            return new BackEndLibraryReleaseService(mavenBuildService, revisionControlService)
+            return new BackEndLibraryReleaseService(buildService, uploadAware, revisionControlService)
         }
         if (buildType == BuildServiceType.NPM || buildType == BuildServiceType.NPM_DOCKER
                 || buildType == BuildServiceType.SENCHA) {
@@ -428,7 +438,7 @@ class FlowBuilder implements Serializable {
             return new VcsAndDockerRelease(buildService, revisionControlService, dockerService)
         }
         // TODO not obvious, why should not we throw exception at the end if no one matches
-        return new BackEndReleaseService(mavenBuildService, revisionControlService, dockerService)
+        return new BackEndReleaseService(buildService, uploadAware, revisionControlService, dockerService)
     }
 
     FlowBuilder withRevisionControl(RevisionControlBuilder revisionControlBuilder) {
@@ -469,8 +479,8 @@ class FlowBuilder implements Serializable {
         return this
     }
 
-    FlowBuilder addGradle(Gradle gradle) {
-        this.gradle = gradle
+    FlowBuilder addPython(Python python) {
+        this.python = python
         return this
     }
 

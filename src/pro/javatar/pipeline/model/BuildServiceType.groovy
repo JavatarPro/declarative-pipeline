@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.model
 
 import pro.javatar.pipeline.exception.UnrecognizedBuildServiceTypeException
@@ -66,7 +65,7 @@ enum BuildServiceType implements Serializable {
         if ("python".equalsIgnoreCase(type)) {
             return PYTHON
         }
-        throw new UnrecognizedBuildServiceTypeException("type ${type} is not recognized")
+        throw new UnrecognizedBuildServiceTypeException("type " + type + " is not recognized")
     }
 
 }

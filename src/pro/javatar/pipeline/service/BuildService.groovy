@@ -44,12 +44,12 @@ abstract class BuildService implements Serializable {
     }
 
     String getDevelopVersion(String version) {
-        Logger.info("getDevelopVersion for version: ${version}")
+        Logger.info("getDevelopVersion for version: " + version)
         if (version.contains("-SNAPSHOT")) {
-            Logger.error("it seams this artifact: ${version} has not been released, no need increment version")
+            Logger.error("it seams this artifact: " + version + " has not been released, no need increment version")
             throw new IllegalStateException("artifact should not contain SNAPSHOT");
         }
-        Logger.debug("current version: ${version}")
+        Logger.debug("current version: " + version)
         int idx = version.lastIndexOf(".") + 1;
         String result = version.substring(0, idx);
         int smallerVersion = Integer.parseInt(version.substring(idx, version.length()));
@@ -78,7 +78,7 @@ abstract class BuildService implements Serializable {
     // helper methods
 
     String getReleaseNumber(String currentVersion) {
-        Logger.debug("BuildService:getReleaseNumber: with currentVersion: ${currentVersion}")
+        Logger.debug("BuildService:getReleaseNumber: with currentVersion: " + currentVersion)
         validateCurrentVersion(currentVersion)
         String releaseVersion = currentVersion.replace("-SNAPSHOT", "")
         if (releaseVersion.isEmpty()) {
@@ -89,17 +89,17 @@ abstract class BuildService implements Serializable {
     }
 
     String getReleaseNumber(String currentVersion, def buildNumber) throws InvalidReleaseNumberException {
-        Logger.debug("BuildService:getReleaseNumber with currentVersion: ${currentVersion} " +
-                "using buildNumber: ${buildNumber}")
+        Logger.debug("BuildService:getReleaseNumber with currentVersion: " + currentVersion +
+                "using buildNumber: " + buildNumber)
         validateBuildNumber(buildNumber)
-        return "${getReleaseNumber()}.${buildNumber}"
+        return String.format("%s.%s", getReleaseNumber(), buildNumber);
     }
 
     protected void validateCurrentVersion(String currentVersion) throws InvalidReleaseNumberException {
         if (!currentVersion.contains("-SNAPSHOT")) {
             Logger.error("BuildService:validateCurrentVersion:" +
-                    " it seems this artifact: ${currentVersion} has been released already")
-            throw new InvalidReleaseNumberException("currentVersion: ${currentVersion} does not contain -SNAPSHOT")
+                    " it seems this artifact: " + currentVersion + " has been released already")
+            throw new InvalidReleaseNumberException("currentVersion: " + currentVersion + " does not contain -SNAPSHOT")
         }
     }
 

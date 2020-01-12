@@ -2,11 +2,14 @@ package pro.javatar.pipeline.builder.model
 
 import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.builder.Npm
+import pro.javatar.pipeline.config.AutoTestConfig
+import pro.javatar.pipeline.config.Config
+import pro.javatar.pipeline.config.GradleConfig
 import pro.javatar.pipeline.util.LogLevel
 import pro.javatar.pipeline.util.Logger
 import pro.javatar.pipeline.util.StringUtils
 
-class YamlConfig implements Serializable {
+class YamlConfig implements Config, Serializable {
 
     String version
 
@@ -16,7 +19,7 @@ class YamlConfig implements Serializable {
 
     Maven maven = new Maven()
 
-    Gradle gradle = new Gradle()
+    Python python = new Python()
 
     Npm npm = new Npm()
 
@@ -38,6 +41,10 @@ class YamlConfig implements Serializable {
 
     AutoTest autoTest = new AutoTest()
 
+    AutoTestConfig autoTestConfig;
+
+    GradleConfig gradleConfig;
+
     CacheRequest cacheRequest = new CacheRequest()
 
     Sonar sonar = new Sonar()
@@ -46,6 +53,26 @@ class YamlConfig implements Serializable {
 
     YamlConfig() {
         Logger.debug("YamlConfig:default constructor")
+    }
+
+    @Override
+    AutoTestConfig autoTestConfig() {
+        return autoTestConfig;
+    }
+
+    @Override
+    GradleConfig gradleConfig() {
+        return gradleConfig;
+    }
+
+    YamlConfig setAutoTestConfig(AutoTestConfig autoTestConfig) {
+        this.autoTestConfig = autoTestConfig
+        return this;
+    }
+
+    YamlConfig setGradleConfig(GradleConfig gradleConfig) {
+        this.gradleConfig = gradleConfig
+        return this;
     }
 
     YamlConfig populateServiceRepo() {
@@ -88,17 +115,17 @@ class YamlConfig implements Serializable {
         this.maven = maven
     }
 
-    Gradle getGradle() {
-        return gradle
+    Python getPython() {
+        return python
     }
 
-    void setGradle(Gradle gradle) {
-        this.gradle = gradle
+    void setPython(Python python) {
+        this.python = python
     }
 
-    YamlConfig withGradle(Gradle gradle) {
-        Logger.info("YamlConfig:withGradle: ${gradle}")
-        setGradle(gradle)
+    YamlConfig withPython(Python python) {
+        Logger.info("YamlConfig:withPython: ${python}")
+        setPython(python)
         return this
     }
 
@@ -307,6 +334,7 @@ class YamlConfig implements Serializable {
                 ", service=" + service +
                 ", pipeline=" + pipeline +
                 ", maven=" + maven +
+                ", python=" + python +
                 ", npm=" + npm +
                 ", ui=" + ui +
                 ", docker=" + docker +
@@ -315,7 +343,7 @@ class YamlConfig implements Serializable {
                 ", jenkinsTool=" + jenkinsTool +
                 ", orchestrationService='" + orchestrationService + '\'' +
                 ", mesos=" + mesos +
-                ", autoTest=" + autoTest +
+                ", autoTestConfig=" + autoTest +
                 ", cacheRequest=" + cacheRequest +
                 '}';
     }
