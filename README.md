@@ -1,7 +1,11 @@
-# pipeline-utils #
+# declarative-pipeline #
 
 This is shared library for jenkins CD declarative pipeline created by [Javatar LLC](https://javatar.pro/)
 
+### Documentation
+
+Out documentation is in confluence follow this [link](https://javatar.atlassian.net/wiki/spaces/JDP/overview)
+    
 ### What is this repository for? ###
 
 * This is shared library for jenkins CD pipeline
@@ -9,14 +13,14 @@ This is shared library for jenkins CD declarative pipeline created by [Javatar L
 
 ### How do I get set up? ###
 
-* You can use import @Library('pipeline-utils') into Jenkinsfile
+* You can use import @Library('declarative-pipeline') into Jenkinsfile
 * All configuration should be in Jenkinsfile
 * All code files must be groovy, Jenkinsfile's restriction
 * All jobs (except development/experimental) should use tag version
 
 ### Contribution guidelines ###
 
-* All experiments you can do in feature branch, import @Library('pipeline-utils@branchName')
+* All experiments you can do in feature branch, import @Library('declarative-pipeline@branchName')
 * After library works property merge into master and create tag version for it
 
 ### Who do I talk to? ###
