@@ -212,8 +212,10 @@ class FlowBuilder implements Serializable {
         availableStages.put(StageType.AUTO_TESTS,
                 new AutoTestsStage(autoTestsService, jenkinsDslService, config.autoTestConfig()))
         availableStages.put(StageType.RELEASE, new ReleaseArtifactsStage(releaseService))
-        availableStages.put(StageType.BACKWARD_COMPATIBILITY_TEST, new DatabaseBackwardCompatibilityStage(dockerService, deploymentService))
-        availableStages.put(StageType.BACKWARD_COMPATIBILITY_AUTO_TESTS, new AutoTestsStage(autoTestsService, revisionControlService))
+        availableStages.put(StageType.BACKWARD_COMPATIBILITY_TEST,
+                new DatabaseBackwardCompatibilityStage(dockerService, deploymentService))
+        availableStages.put(StageType.BACKWARD_COMPATIBILITY_AUTO_TESTS,
+                new AutoTestsStage(autoTestsService, jenkinsDslService, config.autoTestConfig()))
         createSignOffStages()
         createDeployStages()
         Logger.info("FlowBuilder:createStages: createStages finished")
