@@ -65,7 +65,7 @@ class VcsRepositoryUrlResolver {
 
         if (vcsRepositoryType == VcsRepositoryType.GITLAB) {
             if (useSsh) {
-                return "git@${vcsRepo.getDomain()}:${vcsRepo.getOwner()}/${vcsRepo.getName()}.git"
+                return "ssh://git@${vcsRepo.getDomain()}:${vcsRepo.getOwner()}/${vcsRepo.getName()}.git"
             }
             throw new UnsupportedOperationException("gitlab https is not yet implemented")
         }
