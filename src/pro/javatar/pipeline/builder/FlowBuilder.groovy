@@ -164,7 +164,7 @@ class FlowBuilder implements Serializable {
             Logger.debug("FlowBuilder:prepareBuildService: current build type ${buildType}")
             // TODO refactor, previously it does not work because of CPS jenkins issue
             populate(maven)
-            mavenBuildService = buildMavenBuildService(maven)
+            mavenBuildService = buildMavenBuildService(maven, jenkinsTool)
             mavenBuildService.setUp()
             uploadAware = mavenBuildService;
             dockerBuildService = new DockerBuildService(mavenBuildService, dockerService)
@@ -549,18 +549,20 @@ class FlowBuilder implements Serializable {
         return this
     }
 
-    MavenBuildService buildMavenBuildService(Maven maven) {
-        MavenBuildService mavenBuildService = new MavenBuildService()
-        mavenBuildService.setJava(maven.getJava())
-        mavenBuildService.setMaven(maven.getMaven())
-        mavenBuildService.setMavenParams(maven.getMavenParams())
-        mavenBuildService.setGroupId(maven.getGroupId())
-        mavenBuildService.setArtifactId(maven.getArtifactId())
-        mavenBuildService.setPackaging(maven.getPackaging())
-        mavenBuildService.setRepositoryId(maven.getRepositoryId())
-        mavenBuildService.setLayout(maven.getLayout())
-        mavenBuildService.setRepoUrl(maven.getRepoUrl())
-        return mavenBuildService
+    MavenBuildService buildMavenBuildService(Maven maven, JenkinsTool tool) {
+        MavenBuildService service = new MavenBuildService()
+        service.setJava(maven.getJava())
+        service.setMaven(maven.getMaven())
+        service.setJavaTool(tool.java)
+        service.setMavenTool(tool.maven)
+        service.setMavenParams(maven.getMavenParams())
+        service.setGroupId(maven.getGroupId())
+        service.setArtifactId(maven.getArtifactId())
+        service.setPackaging(maven.getPackaging())
+        service.setRepositoryId(maven.getRepositoryId())
+        service.setLayout(maven.getLayout())
+        service.setRepoUrl(maven.getRepoUrl())
+        return service
     }
 
     void populateServiceContextHolder() {

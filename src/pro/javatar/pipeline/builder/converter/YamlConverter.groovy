@@ -83,7 +83,7 @@ class YamlConverter {
 
     JenkinsTool retrieveJenkinsTools(def yml) {
         def tool = yml.jenkins_tool
-        Logger.info("retrieveJenkinsTools: jenkins_tool: ${tool}")
+        Logger.info("YamlConverter:retrieveJenkinsTools: jenkins_tool: ${tool}")
         if (tool == null) {
             Logger.warn("jenkins_tool is not provided in configuration")
             return null
@@ -98,7 +98,7 @@ class YamlConverter {
 
     Service retrieveService(def yml) {
         def service = yml.service
-        Logger.info("retrieveService: service: ${service}")
+        Logger.info("YamlConverter:retrieveService: service: ${service}")
         if (service == null) {
             return new Service()
         }
@@ -115,13 +115,13 @@ class YamlConverter {
         if (autoTest == null) {
             return null;
         }
-        Logger.info("retrieveAutoTest: autoTestConfig: " + autoTest)
+        Logger.info("YamlConverter:retrieveAutoTest: autoTestConfig: " + autoTest)
         return AutoTestConfigTO.ofAutoTestYmlConfig(autoTest);
     }
 
     CacheRequest retrieveCacheRequest(def yml) {
         def cache = yml.cache
-        Logger.info("retrieveCacheRequest: cache: " + cache)
+        Logger.info("YamlConverter:retrieveCacheRequest: cache: " + cache)
         Map<String, List<String>> cacheMap = new HashMap<>()
         cache.each {String service, List<String> folders ->
             List<String> folderList = new ArrayList<>()
@@ -145,9 +145,9 @@ class YamlConverter {
 
     Sonar retrieveSonar(def yml) {
         def sonar = yml.sonar
-        Logger.info("retrieveSonar: sonar: " + sonar)
+        Logger.info("YamlConverter:retrieveSonar: sonar: " + sonar)
         if (sonar == null) {
-            Logger.info("empty sonar will be returned")
+            Logger.info("YamlConverter:empty sonar will be returned")
             return new Sonar()
         }
         return new Sonar()
@@ -162,7 +162,7 @@ class YamlConverter {
     Vcs retrieveVcs(def yml) {
         def vcs = yml.vcs
         if (vcs == null) return new Vcs()
-        Logger.debug("retrieveVcsRepo: vcs: ${vcs}")
+        Logger.debug("YamlConverter:retrieveVcsRepo: vcs: ${vcs}")
         return new Vcs()
                 .withRevisionControl(yml.vcs.revisionControl)
                 .withRepo(retrieveVcsRepos(vcs))
@@ -199,7 +199,7 @@ class YamlConverter {
         if (pipeline == null) {
             return new Pipeline()
         }
-        Logger.info("retrievePipeline: pipeline: " + pipeline)
+        Logger.info("YamlConverter:retrievePipeline: pipeline: " + pipeline)
         List<String> stages = new ArrayList<>()
         pipeline.stages.each{stage -> stages.add(stage)}
         return new Pipeline()
@@ -251,7 +251,7 @@ class YamlConverter {
     }
 
     List<String> retrieveEnvList(def env) {
-        Logger.debug("retrieveEnvList: env: ${env}")
+        Logger.debug("YamlConverter:retrieveEnvList: env: ${env}")
         List<String> envList = new ArrayList<>()
         env.each{envItem -> envList.add(envItem)}
         return envList
@@ -260,7 +260,7 @@ class YamlConverter {
     Maven retrieveMaven(def yml) {
         def maven = yml.maven
         if (maven == null) return null
-        Logger.debug("retrieveMaven: maven: ${maven}")
+        Logger.debug("YamlConverter:retrieveMaven: maven: ${maven}")
         return new Maven()
                 .withRepositoryId(maven.repository.id)
                 .withRepositoryUrl(maven.repository.url)
@@ -272,7 +272,7 @@ class YamlConverter {
         if (python == null) {
             return null
         }
-        Logger.debug("retrievePython: python: ${python}")
+        Logger.debug("YamlConverter:retrievePython: python: ${python}")
         return new Python()
                 .withVersionFile(python.versionFile)
                 .withVersionParameter(python.versionParameter)
