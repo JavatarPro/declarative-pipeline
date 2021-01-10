@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit
 class KubernetesService implements DockerOrchestrationService {
 
     JenkinsDslService dslService
-    def json = new JsonSlurper()
 
     KubernetesService(JenkinsDslService dslService) {
         this.dslService = dslService
@@ -47,7 +46,7 @@ class KubernetesService implements DockerOrchestrationService {
     boolean isDeploymentReady(String deployment) {
         String cmd = "get deployment ${deployment} -o json"
         String resp = dslService.getShellExecutionResponse(cmd)
-        def depStatus = json.parseText(resp)
+        def depStatus = new JsonSlurper().parseText(resp)
         return (depStatus.status.availableReplicas == 1
                 && depStatus.status.replicas == 1
                 && depStatus.status.updatedReplicas == 1)
