@@ -27,6 +27,7 @@ enum PipelineStagesSuit {
 
     SERVICE,
     SERVICE_WITH_DB,
+    SERVICE_SIMPLE,
     LIBRARY,
     CUSTOM
 
@@ -48,6 +49,9 @@ enum PipelineStagesSuit {
         }
         if("service-with-db".equalsIgnoreCase(suit) || isBlank(suit)) {
             return SERVICE_WITH_DB
+        }
+        if("service-simple".equalsIgnoreCase(suit) || isBlank(suit)) {
+            return SERVICE_SIMPLE
         }
         throw new UnrecognizedPipelineStagesSuitException("suit ${suit} is not recognized")
     }

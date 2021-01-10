@@ -14,12 +14,9 @@
  */
 package pro.javatar.pipeline.service.orchestration
 
-import pro.javatar.pipeline.service.infra.model.Infra
 import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
 import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
 import pro.javatar.pipeline.util.Logger
-
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
  * Author : Borys Zora
@@ -33,22 +30,14 @@ class SshDockerOrchestrationService implements DockerOrchestrationService {
     }
 
     @Override
-    def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment) {
-        Logger.info("SshDockerOrchestrationService started dockerDeployContainer(imageName: ${imageName}, " +
-                "imageVersion: ${imageVersion}, dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})")
+    DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO req) {
+        Logger.info("SshDockerOrchestrationService started dockerDeployContainer(imageName: ${req.imageName}, " +
+                "imageVersion: ${req.imageVersion}, dockerRepositoryUrl: ${req.dockerRegistry.getRegistry()}, environment: ${req.env.value})")
 
-        Logger.info("SshDockerOrchestrationService finished dockerDeployContainer(imageName: ${imageName}, " +
-                "imageVersion: ${imageVersion}, dockerRepositoryUrl: ${dockerRepositoryUrl}, environment: ${environment})")
+        Logger.info("SshDockerOrchestrationService finished dockerDeployContainer(imageName: ${req.imageName}, " +
+                "imageVersion: ${req.imageVersion}, dockerRepositoryUrl: ${req.dockerRegistry.getRegistry()}, environment: ${req.env.value})")
+
         throw new UnsupportedOperationException("SshDockerOrchestrationService does not supported yet")
     }
 
-    @Override
-    DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO deploymentRequest) {
-        throw new UnsupportedOperationException("SshDockerOrchestrationService does not supported yet")
-    }
-
-    @Override
-    def deployInfraContainer(Infra infra) {
-        throw new UnsupportedOperationException("SshDockerOrchestrationService does not supported yet")
-    }
 }

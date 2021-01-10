@@ -17,6 +17,7 @@ package pro.javatar.pipeline.util
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl;
 import static pro.javatar.pipeline.util.LogLevel.*
 import com.cloudbees.groovy.cps.NonCPS
+import groovy.json.JsonOutput
 
 /**
  * TODO append all logs to file and in console only that specified
@@ -67,7 +68,8 @@ class Logger {
     private static print(def message, LogLevel loggerLevel) {
         try {
             if (LEVEL.ordinal() >= loggerLevel.ordinal()) {
-                dsl.echo loggerLevel.name() + ": " + message
+                String msg = JsonOutput.toJson(message)
+                dsl.echo loggerLevel.name() + ": " + msg
             }
         } catch (Exception e) {
             dsl.echo "Logger:print:Exception " + e.getClass();

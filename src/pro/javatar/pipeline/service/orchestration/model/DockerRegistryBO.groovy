@@ -5,7 +5,6 @@
 package pro.javatar.pipeline.service.orchestration.model
 
 import com.cloudbees.groovy.cps.NonCPS
-import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
 
 /**
  * @author Borys Zora

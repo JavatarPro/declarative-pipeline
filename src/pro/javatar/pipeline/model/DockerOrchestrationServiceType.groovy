@@ -25,7 +25,7 @@ enum DockerOrchestrationServiceType implements Serializable {
 
     MESOS,
     NOMAD,
-    KUBERNETES,
+    K8S,
     SSH
 
     static DockerOrchestrationServiceType fromString(String type) {
@@ -39,8 +39,8 @@ enum DockerOrchestrationServiceType implements Serializable {
         if("nomad".equalsIgnoreCase(type) || "HashiCorp".equalsIgnoreCase(type)) {
             return NOMAD
         }
-        if ("kub".equalsIgnoreCase(type) || "kubernetes".equalsIgnoreCase(type)) {
-            return KUBERNETES
+        if ("k8s".equalsIgnoreCase(type) || "kubernetes".equalsIgnoreCase(type)) {
+            return K8S
         }
         if ("ssh".equalsIgnoreCase(type) || "bash".equalsIgnoreCase(type) || "sh".equalsIgnoreCase(type)) {
             return SSH

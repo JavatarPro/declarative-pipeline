@@ -1,0 +1,5 @@
+# buildType will be discovered
+# - pom.xml -> maven
+# - build.gradle -> gradle
+# - default -> command: bash command provided (e.g. mvn clean install -Dmaven.test.skip)
+

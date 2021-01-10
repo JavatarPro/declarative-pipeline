@@ -124,6 +124,7 @@ class DeploymentRequestBO implements Serializable {
     @NonCPS
     @Override
     public String toString() {
+        // TODO replace all toString toJson
         return "DeploymentRequestBO{" +
                 "imageName='" + imageName + '\'' +
                 ", imageVersion='" + imageVersion + '\'' +

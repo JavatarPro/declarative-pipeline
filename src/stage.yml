@@ -1,0 +1,25 @@
+pipeline:
+  stage:
+    - name: build-and-unit-test
+      # TODO
+      commands:
+        - cmd-checkout-code-from-vcs
+        - cmd-build-artifact-with-unit-tests
+        - cmd-build-docker
+        - cmd-push-docker-to-dev-registry
+      fallback:
+        - todo
+    - name: deploy-to-dev-env
+      commands:
+        - cmd-get-current-deployed-version
+        - cmd-get-current-deployed-version
+      fallback:
+        - todo
+    - name: auto-test
+    - name: rollback-dev-env
+    - name: dev-sign-off
+    - name: release
+    - name: deploy-to-qa-env
+    - name: qa-sign-off
+    - name: ops-sign-off
+    - name: deploy-to-prod-env

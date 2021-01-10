@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pro.javatar.pipeline.service.orchestration
+package pro.javatar.pipeline.integration.marathon
 
 import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.model.Env
-import pro.javatar.pipeline.service.infra.model.Infra
+import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
 import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
 import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
 import pro.javatar.pipeline.service.vcs.VcsHelper
@@ -46,7 +46,6 @@ class MesosService implements DockerOrchestrationService {
     }
 
     // TODO replace depcon with own rest implementation
-    @Override
     def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment) {
         Logger.info("MesosService:dockerDeployContainer(imageName: " + imageName + ", imageVersion: " + imageVersion +
                 "dockerRepositoryUrl: " + dockerRepositoryUrl + ", environment: " + environment)
@@ -71,11 +70,6 @@ class MesosService implements DockerOrchestrationService {
         }
         return dockerDeployContainer(request.getImageName(), version,
                 request.getDockerRegistry().registry, request.getEnvironment().getValue())
-    }
-
-    @Override
-    def deployInfraContainer(Infra infra) {
-        return null
     }
 
     String getFolder(String env) {
