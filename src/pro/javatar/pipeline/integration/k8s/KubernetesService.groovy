@@ -32,7 +32,7 @@ class KubernetesService implements DockerOrchestrationService {
 
     @Override
     DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO req) {
-        String image = "${req.getImageName()}:${req.getImageVersion()}"
+        String image = "${req.getDockerRegistry().registry}/${req.getImageName()}:${req.getImageVersion()}"
         String deployment = req.service
         String kubectlCommand = getDeploymentCommand(deployment, image)
         String resp = dslService.getShellExecutionResponse(kubectlCommand)
