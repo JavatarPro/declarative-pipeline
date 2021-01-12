@@ -15,15 +15,10 @@ import pro.javatar.pipeline.util.Logger
 class DeploymentRequestBO implements Serializable {
 
     String imageName
-
     String imageVersion
-
     DockerRegistryBO dockerRegistry
-
     Env env
-
     Integer buildNumber
-
     String service
 
     DeploymentRequestBO() {
