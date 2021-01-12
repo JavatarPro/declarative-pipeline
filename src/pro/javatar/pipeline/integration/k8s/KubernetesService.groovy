@@ -62,8 +62,7 @@ class KubernetesService implements DockerOrchestrationService {
         def depStatus = new JsonSlurper().parseText(resp)
         return (depStatus.status.availableReplicas == 1
                 && depStatus.status.replicas == 1
-                && depStatus.status.updatedReplicas == 1
-                && unavailableReplicas == 0)
+                && depStatus.status.updatedReplicas == 1)
     }
 
     String getDeploymentCommand(String deployment, String image) {
@@ -72,6 +71,6 @@ class KubernetesService implements DockerOrchestrationService {
         }
         //  kubectl set image deployments,rc nginx=nginx:1.9.1 --all
         // kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1 --record
-        return kubectlCommand = "kubectl set image deployments ${deployment}=${image} --all"
+        return "kubectl set image deployments ${deployment}=${image} --all"
     }
 }
