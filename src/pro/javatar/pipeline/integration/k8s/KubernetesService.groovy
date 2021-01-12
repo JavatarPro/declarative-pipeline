@@ -34,22 +34,44 @@ class KubernetesService implements DockerOrchestrationService {
     DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO req) {
         String image = "${req.getImageName()}:${req.getImageVersion()}"
         String deployment = req.service
-        String kubectlCommand = "kubectl create deployment ${deployment} --image=${image}"
+        String kubectlCommand = getDeploymentCommand(deployment, image)
         String resp = dslService.getShellExecutionResponse(kubectlCommand)
-        Logger.info("execute command: ${kubectlCommand}\nresp: ${resp}\nrequest: ${req.toString()}")
+        Logger.info("KubernetesService:dockerDeployContainer: execute command: ${kubectlCommand}\nresp: ${resp}\nrequest: ${req.toString()}")
         while (! isDeploymentReady(deployment)) {
+            Logger.info("KubernetesService:dockerDeployContainer: await for 5 seconds");
             TimeUnit.SECONDS.sleep(5);
         }
         return null
     }
 
+    boolean isDeploymentAlreadyExists(String deployment) {
+        String defaultMessage = "K8sDeploymentNotFound"
+        String resp = dslService.getShellExecutionResponse(deployment, defaultMessage)
+        if (resp.contains(defaultMessage)) {
+            return false
+        }
+        return true
+    }
+
+    // TODO use status:conditions:
     boolean isDeploymentReady(String deployment) {
+        Logger.info("KubernetesService:isDeploymentReady:deployment: ${deployment}")
         String cmd = "kubectl get deployment ${deployment} -o json"
         String resp = dslService.getShellExecutionResponse(cmd)
+        Logger.debug("KubernetesService:isDeploymentReady:resp: ${resp}")
         def depStatus = new JsonSlurper().parseText(resp)
         return (depStatus.status.availableReplicas == 1
                 && depStatus.status.replicas == 1
-                && depStatus.status.updatedReplicas == 1)
+                && depStatus.status.updatedReplicas == 1
+                && unavailableReplicas == 0)
     }
 
+    String getDeploymentCommand(String deployment, String image) {
+        if (isDeploymentAlreadyExists(deployment)) {
+            return "kubectl create deployment ${deployment} --image=${image}"
+        }
+        //  kubectl set image deployments,rc nginx=nginx:1.9.1 --all
+        // kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1 --record
+        return kubectlCommand = "kubectl set image deployments ${deployment}=${image} --all"
+    }
 }

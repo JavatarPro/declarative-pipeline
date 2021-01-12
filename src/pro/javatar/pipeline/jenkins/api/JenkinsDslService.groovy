@@ -33,6 +33,8 @@ public interface JenkinsDslService extends Serializable {
 
     String getShellExecutionResponse(String command);
 
+    String getShellExecutionResponse(String command, String defaultMessage);
+
     void executeShell(String command);
 
     void executeSecureShell(String command, String credentialsId, String userVariable, String passwordVariable);
