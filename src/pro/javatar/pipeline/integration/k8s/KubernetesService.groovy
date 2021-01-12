@@ -44,7 +44,7 @@ class KubernetesService implements DockerOrchestrationService {
     }
 
     boolean isDeploymentReady(String deployment) {
-        String cmd = "get deployment ${deployment} -o json"
+        String cmd = "kubectl get deployment ${deployment} -o json"
         String resp = dslService.getShellExecutionResponse(cmd)
         def depStatus = new JsonSlurper().parseText(resp)
         return (depStatus.status.availableReplicas == 1
