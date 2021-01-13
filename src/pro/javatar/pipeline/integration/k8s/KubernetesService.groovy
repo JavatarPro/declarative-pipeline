@@ -70,7 +70,7 @@ class KubernetesService implements DockerOrchestrationService {
         if (isDeploymentAlreadyExists(deployment)) {
             //  kubectl set image deployments,rc nginx=nginx:1.9.1 --all
             // kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1 --record
-            return "kubectl set image deployments ${deployment}=${image} --all"
+            return "kubectl set image deployments ${deployment}=${image} -l 'app=${deployment} --record"
         }
         return "kubectl create deployment ${deployment} --image=${image}"
     }
