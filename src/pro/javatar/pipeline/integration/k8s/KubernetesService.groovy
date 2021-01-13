@@ -46,7 +46,8 @@ class KubernetesService implements DockerOrchestrationService {
 
     boolean isDeploymentAlreadyExists(String deployment) {
         String defaultMessage = "K8sDeploymentNotFound"
-        String resp = dslService.getShellExecutionResponse(deployment, defaultMessage)
+        String cmd = "kubectl get deployment ${deployment} -o json"
+        String resp = dslService.getShellExecutionResponse(cmd, defaultMessage)
         if (resp.contains(defaultMessage)) {
             return false
         }
@@ -58,7 +59,7 @@ class KubernetesService implements DockerOrchestrationService {
         Logger.info("KubernetesService:isDeploymentReady:deployment: ${deployment}")
         String cmd = "kubectl get deployment ${deployment} -o json"
         String resp = dslService.getShellExecutionResponse(cmd)
-        Logger.debug("KubernetesService:isDeploymentReady:resp: ${resp}")
+        Logger.trace("KubernetesService:isDeploymentReady:resp: ${resp}")
         def depStatus = new JsonSlurper().parseText(resp)
         return (depStatus.status.availableReplicas == 1
                 && depStatus.status.replicas == 1
