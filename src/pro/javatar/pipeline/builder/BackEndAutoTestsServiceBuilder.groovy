@@ -59,6 +59,9 @@ class BackEndAutoTestsServiceBuilder implements Serializable {
             autoTestsService = new BackEndAutoTestsService(buildService)
         } else if (suit == PipelineStagesSuit.SERVICE_WITH_DB) {
             autoTestsService = new BackEndAutoTestsService(buildService)
+        } else if (suit == PipelineStagesSuit.SERVICE_SIMPLE) {
+            // TODO refactor to command execution not service
+            autoTestsService = new BackEndAutoTestsService(buildService)
         } else if (suit == PipelineStagesSuit.LIBRARY) {
             autoTestsService = new BackEndAutoTestsLibrary(buildService)
         }

@@ -1,0 +1,40 @@
+pipeline:
+  suit:
+    - name: service
+      stages:
+        - build-and-unit-test
+        - deploy-to-dev-env
+        - auto-test
+        - dev-sign-off
+        - release
+        - deploy-to-qa-env
+        - qa-sign-off
+        - ops-sign-off
+        - deploy-to-prod-env
+    - name: library
+      stages:
+        - build-and-unit-test
+        - auto-test
+        - release
+    - name: service-with-db
+      stages:
+        - build-and-unit-test
+        - deploy-to-dev-env
+        - auto-test
+        - rollback-dev-env
+        - auto-test
+        - deploy-to-dev-env
+        - dev-sign-off
+        - release
+        - deploy-to-qa-env
+        - qa-sign-off
+        - ops-sign-off
+        - deploy-to-prod-env
+    - name: service-simple
+      stages:
+        - build-and-unit-test
+        - deploy-to-dev-env
+        - auto-test
+        - release
+        - ops-sign-off
+        - deploy-to-prod-env

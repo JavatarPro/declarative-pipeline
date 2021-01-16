@@ -164,7 +164,7 @@ class FlowBuilder implements Serializable {
             Logger.debug("FlowBuilder:prepareBuildService: current build type ${buildType}")
             // TODO refactor, previously it does not work because of CPS jenkins issue
             populate(maven)
-            mavenBuildService = buildMavenBuildService(maven)
+            mavenBuildService = buildMavenBuildService(maven, jenkinsTool)
             mavenBuildService.setUp()
             uploadAware = mavenBuildService;
             dockerBuildService = new DockerBuildService(mavenBuildService, dockerService)
@@ -371,6 +371,9 @@ class FlowBuilder implements Serializable {
         if (suit == PipelineStagesSuit.SERVICE_WITH_DB) {
             return addServiceWithDBStages()
         }
+        if (suit == PipelineStagesSuit.SERVICE_SIMPLE) {
+            return addServiceSimpleStages()
+        }
         throw new UnrecognizedPipelineStagesSuitException("can not find suit: ${pipelineStagesSuit}")
     }
 
@@ -402,6 +405,18 @@ class FlowBuilder implements Serializable {
         addPipelineStage(StageType.DEPLOY_ON_QA_ENV)
         addPipelineStage(StageType.QA_SIGN_OFF)
 //        addPipelineStage(StageType.DEPLOY_ON_STAGING_ENV)
+        addPipelineStage(StageType.DEVOPS_SIGN_OFF)
+        addPipelineStage(StageType.DEPLOY_ON_PROD_ENV)
+        return this
+    }
+
+    FlowBuilder addServiceSimpleStages() {
+        Logger.info("Load stages for service-simple")
+        // TODO load from suit.yml & stage.yml
+        addPipelineStage(StageType.BUILD_AND_UNIT_TESTS)
+        addPipelineStage(StageType.DEPLOY_ON_DEV_ENV)
+        addPipelineStage(StageType.AUTO_TESTS)
+        addPipelineStage(StageType.RELEASE)
         addPipelineStage(StageType.DEVOPS_SIGN_OFF)
         addPipelineStage(StageType.DEPLOY_ON_PROD_ENV)
         return this
@@ -440,7 +455,9 @@ class FlowBuilder implements Serializable {
             return new VcsAndDockerRelease(buildService, revisionControlService, dockerService)
         }
         // TODO not obvious, why should not we throw exception at the end if no one matches
+        boolean skipUploadService = suit == PipelineStagesSuit.SERVICE_SIMPLE
         return new BackEndReleaseService(buildService, uploadAware, revisionControlService, dockerService)
+                .setSkipUploadService(skipUploadService)
     }
 
     FlowBuilder withRevisionControl(RevisionControlBuilder revisionControlBuilder) {
@@ -532,18 +549,20 @@ class FlowBuilder implements Serializable {
         return this
     }
 
-    MavenBuildService buildMavenBuildService(Maven maven) {
-        MavenBuildService mavenBuildService = new MavenBuildService()
-        mavenBuildService.setJava(maven.getJava())
-        mavenBuildService.setMaven(maven.getMaven())
-        mavenBuildService.setMavenParams(maven.getMavenParams())
-        mavenBuildService.setGroupId(maven.getGroupId())
-        mavenBuildService.setArtifactId(maven.getArtifactId())
-        mavenBuildService.setPackaging(maven.getPackaging())
-        mavenBuildService.setRepositoryId(maven.getRepositoryId())
-        mavenBuildService.setLayout(maven.getLayout())
-        mavenBuildService.setRepoUrl(maven.getRepoUrl())
-        return mavenBuildService
+    MavenBuildService buildMavenBuildService(Maven maven, JenkinsTool tool) {
+        MavenBuildService service = new MavenBuildService()
+        service.setJava(maven.getJava())
+        service.setMaven(maven.getMaven())
+        service.setJavaTool(tool.java)
+        service.setMavenTool(tool.maven)
+        service.setMavenParams(maven.getMavenParams())
+        service.setGroupId(maven.getGroupId())
+        service.setArtifactId(maven.getArtifactId())
+        service.setPackaging(maven.getPackaging())
+        service.setRepositoryId(maven.getRepositoryId())
+        service.setLayout(maven.getLayout())
+        service.setRepoUrl(maven.getRepoUrl())
+        return service
     }
 
     void populateServiceContextHolder() {

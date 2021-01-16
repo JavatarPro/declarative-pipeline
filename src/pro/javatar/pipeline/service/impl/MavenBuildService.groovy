@@ -40,6 +40,8 @@ class MavenBuildService extends BuildService implements NexusUploadAware {
     protected String repositoryId
     protected String layout
     protected String repoUrl
+    protected String mavenTool;
+    protected String javaTool;
 
     MavenBuildService() {
         Logger.info("MavenBuildService default constructor")
@@ -48,8 +50,8 @@ class MavenBuildService extends BuildService implements NexusUploadAware {
     @Override
     void setUp() {
         Logger.info("MavenBuildService: setUp started")
-        dsl.env.M2_HOME="${dsl.tool maven}"
-        dsl.env.JAVA_HOME="${dsl.tool java}"
+        dsl.env.M2_HOME="${dsl.tool mavenTool}"
+        dsl.env.JAVA_HOME="${dsl.tool javaTool}"
         dsl.env.PATH="${dsl.env.JAVA_HOME}/bin:${dsl.env.M2_HOME}/bin:${dsl.env.PATH}"
         dsl.sh 'java -version'
         dsl.sh 'mvn -version'
@@ -197,6 +199,14 @@ class MavenBuildService extends BuildService implements NexusUploadAware {
 
     void setLayout(String layout) {
         this.layout = layout
+    }
+
+    void setMavenTool(String mavenTool) {
+        this.mavenTool = mavenTool
+    }
+
+    void setJavaTool(String javaTool) {
+        this.javaTool = javaTool
     }
 
     @NonCPS

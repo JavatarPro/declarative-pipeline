@@ -15,7 +15,7 @@ import java.time.Duration
  * @author Borys Zora
  * @version 2019-11-03
  */
-public interface JenkinsDslService {
+public interface JenkinsDslService extends Serializable {
 
     void executeStage(StageAware stage);
 
@@ -32,6 +32,8 @@ public interface JenkinsDslService {
     def readYaml(String yamlConfig);
 
     String getShellExecutionResponse(String command);
+
+    String getShellExecutionResponse(String command, String defaultMessage);
 
     void executeShell(String command);
 

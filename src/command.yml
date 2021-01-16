@@ -1,0 +1,4 @@
+pipeline:
+  command:
+    - name: cmd-shell
+      class: pro.javatar.pipeline.command.ShellCommand

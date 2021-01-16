@@ -12,11 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pro.javatar.pipeline.service.orchestration
+package pro.javatar.pipeline.integration.nomad
 
 import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.service.infra.model.Infra
+import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
+import pro.javatar.pipeline.service.orchestration.OrchestrationRequestProvider
 import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
 import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
 import pro.javatar.pipeline.service.orchestration.model.NomadBO
@@ -56,16 +58,6 @@ class NomadService implements DockerOrchestrationService {
     }
 
     @Override
-    def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment) {
-        return dockerDeployContainer(new DeploymentRequestBO()
-                .withImageName(imageName)
-                .withService(imageName)
-                .withImageVersion(imageVersion)
-                .withDockerRepositoryUrl(dockerRepositoryUrl)
-                .withEnvironment(environment))
-    }
-
-    @Override
     DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO deploymentRequest) {
         Logger.info("NomadService:dockerDeployContainer:deploymentRequest ${deploymentRequest}")
         def request = toOrchestrationRequest(deploymentRequest)
@@ -97,11 +89,6 @@ class NomadService implements DockerOrchestrationService {
 
     String getCurrentVersion(String nomadUrl) {
         null // TODO
-    }
-
-    @Override
-    def deployInfraContainer(Infra infra) {
-        return null
     }
 
     OrchestrationRequest toOrchestrationRequest(DeploymentRequestBO req) {

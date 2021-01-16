@@ -101,6 +101,7 @@ class DockerService implements Serializable {
         if (env == Env.DEV) { // TODO docker push could be done in build & unit test stage
             dockerPushImageWithBuildNumberToRegistryWithoutLogin(imageName, imageVersion, registry)
         }
+        Logger.info("DockerService:dockerPublish: completed")
     }
 
     def dockerPushImageToProdRegistry(String imageName, String imageVersion) {
@@ -123,6 +124,7 @@ class DockerService implements Serializable {
         dsl.sh "docker tag ${imageName}:${imageVersion} ${dockerRegistryUrl}/${imageName}:${imageVersion}"
         dsl.sh "docker push ${dockerRegistryUrl}/${imageName}:${imageVersion}"
         DockerHolder.addToAlreadyPublished(imageName, imageVersion, dockerRegistryUrl)
+        Logger.info("DockerService:dockerPushImageToRegistryWithoutLogin completed")
     }
 
     def dockerPushImageWithBuildNumberToRegistryWithoutLogin(String imageName, String imageVersion,
@@ -134,6 +136,7 @@ class DockerService implements Serializable {
         dsl.sh "docker tag ${imageName}:${imageVersion} ${dockerRegistryUrl}/${imageName}:${versionWithBuildNumber}"
         dsl.sh "docker push ${dockerRegistryUrl}/${imageName}:${versionWithBuildNumber}"
         DockerHolder.addToAlreadyPublished(imageName, versionWithBuildNumber, dockerRegistryUrl)
+        Logger.info("DockerService:dockerPushImageWithBuildNumberToRegistryWithoutLogin completed")
     }
 
     def dockerPushLatestImageToRegistryWithoutLogin(String imageName, String imageVersion, String dockerRegistryUrl) {
@@ -181,6 +184,7 @@ class DockerService implements Serializable {
                 .withImageVersion(imageVersion)
                 .withDockerRegistry(dockerRegistry)
                 .withEnvironment(env)
+                .withService(imageName)
                 .withBuildNumber(dsl.currentBuild.number) // TODO remove low level details from this level of abstraction
         Logger.debug("DockerService:dockerDeployContainer: orchestrationService.setup")
         orchestrationService.setup()

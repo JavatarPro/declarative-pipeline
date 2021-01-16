@@ -57,6 +57,14 @@ class JenkinsDslServiceImpl implements JenkinsDslService {
         return result
     }
 
+    // https://stackoverflow.com/questions/22009364/is-there-a-try-catch-command-in-bash
+    @Override
+    String getShellExecutionResponse(String command, String defaultMessage) {
+        String fallbackCommand = "${command} || echo ${defaultMessage}"
+        String result = dsl.sh returnStdout: true, script: fallbackCommand
+        return result
+    }
+
     @Override
     void executeShell(String command) {
         dsl.sh command;

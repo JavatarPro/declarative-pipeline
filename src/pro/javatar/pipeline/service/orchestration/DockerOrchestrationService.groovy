@@ -26,11 +26,6 @@ interface DockerOrchestrationService extends Serializable {
 
     def setup()
 
-    @Deprecated // @see dockerDeployContainer(DeploymentRequestBO deploymentRequest)
-    def dockerDeployContainer(String imageName, String imageVersion, String dockerRepositoryUrl, String environment)
-
     DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO deploymentRequest)
-
-    def deployInfraContainer(Infra infra)
 
 }

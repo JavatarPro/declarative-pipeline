@@ -36,7 +36,7 @@ class BackEndReleaseService implements ReleaseService {
     private NexusUploadAware uploadService;
     private RevisionControlService revisionControlService
     private DockerService dockerService
-
+    private boolean skipUploadService = false
 
     BackEndReleaseService(BuildService buildService,
                           NexusUploadAware uploadAware,
@@ -52,7 +52,9 @@ class BackEndReleaseService implements ReleaseService {
     def release(ReleaseInfo releaseInfo) {
         Logger.info("BackEndReleaseService start release: " + releaseInfo.toString())
         validateReleaseVersion(releaseInfo.releaseVersion)
-        uploadService.uploadMaven2Artifacts();
+        if (! skipUploadService) {
+            uploadService.uploadMaven2Artifacts()
+        }
         // TODO comment out promotion of docker, it should be after QA sign off
         dsl.parallel 'release revision control': {
             releaseRevisionControl(releaseInfo)
@@ -85,4 +87,8 @@ class BackEndReleaseService implements ReleaseService {
         }
     }
 
+    BackEndReleaseService setSkipUploadService(boolean skipUploadService) {
+        this.skipUploadService = skipUploadService
+        return this;
+    }
 }
