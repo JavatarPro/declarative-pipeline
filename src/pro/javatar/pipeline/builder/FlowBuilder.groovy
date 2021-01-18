@@ -21,8 +21,14 @@ import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.builder.model.Python
 import pro.javatar.pipeline.config.Config
 import pro.javatar.pipeline.exception.*
+import pro.javatar.pipeline.integration.docker.DockerOnlyBuildService
 import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.model.*
+import pro.javatar.pipeline.release.CurrentVersionAware
+import pro.javatar.pipeline.release.ReleaseType
+import pro.javatar.pipeline.release.ReleaseUploadArtifactType
+import pro.javatar.pipeline.release.ReleaseVersionAware
+import pro.javatar.pipeline.release.SetupVersionAware
 import pro.javatar.pipeline.service.*
 import pro.javatar.pipeline.service.cache.CacheRequestHolder
 import pro.javatar.pipeline.service.impl.*
@@ -89,6 +95,12 @@ class FlowBuilder implements Serializable {
     SonarQubeService sonarQubeService
     SwaggerService swaggerService
     PipelineStagesSuit suit
+
+    SetupVersionAware setupVersionAware
+    CurrentVersionAware currentVersionAware
+    ReleaseVersionAware releaseVersionAware
+    List<ReleaseType> releaseTypes
+    List<ReleaseUploadArtifactType> releaseUploadArtifactTypes
 
     NexusUploadAware uploadAware;
     JenkinsDslService jenkinsDslService;
@@ -190,9 +202,11 @@ class FlowBuilder implements Serializable {
 
     DeploymentService getAppropriateDeploymentService(BuildServiceType buildServiceType) {
         if (buildType == BuildServiceType.MAVEN
+                || buildType == BuildServiceType.DOCKER
                 || buildType == BuildServiceType.GRADLE
                 || buildType == BuildServiceType.PHP
-                || buildType == BuildServiceType.PYTHON) {
+                || buildType == BuildServiceType.PYTHON
+                || uiDeploymentType == UiDeploymentType.DOCKER) {
             return new DockerDeploymentService(releaseInfo, dockerService)
         }
         if (uiDeploymentType == UiDeploymentType.AWS_S3) {
@@ -200,7 +214,7 @@ class FlowBuilder implements Serializable {
         }
         if (buildType == BuildServiceType.NPM || buildType == BuildServiceType.SENCHA) {
             // TODO choose deployment type
-            return new CdnDeploymentService(releaseInfo.getServiceName(), mavenBuildService, buildService)
+            return new CdnDeploymentService(releaseInfo.getServiceName(), mavenBuildService, null)
         }
         throw new DeploymentServiceCreationException("Could not find this buildServiceType: ${buildServiceType}")
     }
@@ -346,6 +360,14 @@ class FlowBuilder implements Serializable {
             buildService = new PythonBuildService(dockerService, python.versionFile, python.versionParameter, python.projectDirectory)
         }
 
+        // TODO
+        setupVersionAware = buildService
+        currentVersionAware = buildService
+        releaseVersionAware = buildService
+
+        if (buildType == BuildServiceType.DOCKER) {
+            new DockerOnlyBuildService(dockerService, setupVersionAware, currentVersionAware)
+        }
         buildService.useBuildNumberForVersion = useBuildNumberForVersion
         Logger.debug("buildService: " + buildService.toString())
         Logger.info("setupBuildService finished")
@@ -546,6 +568,16 @@ class FlowBuilder implements Serializable {
 
     FlowBuilder withUiDeploymentType(String uiDeploymentTypeRowValue) {
         uiDeploymentType = UiDeploymentType.fromString(uiDeploymentTypeRowValue)
+        return this
+    }
+
+    FlowBuilder setReleaseTypes(List<ReleaseType> releaseTypes) {
+        this.releaseTypes = releaseTypes
+        return this
+    }
+
+    FlowBuilder setReleaseUploadArtifactTypes(List<ReleaseUploadArtifactType> releaseUploadArtifactTypes) {
+        this.releaseUploadArtifactTypes = releaseUploadArtifactTypes
         return this
     }
 

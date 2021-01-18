@@ -60,7 +60,7 @@ class Npm implements Serializable {
         npmBuildService.setType(npmType)
         npmBuildService.setNpmVersion(npmVersion)
         npmBuildService.setModuleRepository(moduleRepository)
-        npmBuildService.setDistributionFolder(distributionFolder)
+        npmBuildService.withDistributionFolder(distributionFolder)
         npmBuildService.withUnitTestsTimeout(buildTimeoutInMinutes)
         return npmBuildService
     }

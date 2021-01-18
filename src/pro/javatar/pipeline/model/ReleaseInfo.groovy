@@ -28,24 +28,16 @@ import static pro.javatar.pipeline.util.StringUtils.isNotBlank
 class ReleaseInfo implements Serializable {
 
     String releaseVersion
-
     String developVersion
-
     String repoFolder
-
     String serviceName
-
     String flowPrefix
-
     // we use list for multi docker deployments support
     List<String> dockerImageNames = new ArrayList<>()
-
     Map<String, String> customDockerFileNames = new HashMap<>()
-
     String dockerImageVersion
-
+    String buildNumber
     String buildReleaseVersion
-
     String uiDistributionFolder = "dist"
 
     InfraRequest infraRequest = new InfraRequest()
@@ -199,6 +191,14 @@ class ReleaseInfo implements Serializable {
 
     void setCustomDockerFileNames(Map<String, String> customDockerFileNames) {
         this.customDockerFileNames = customDockerFileNames
+    }
+
+    String getBuildNumber() {
+        return buildNumber
+    }
+
+    void setBuildNumber(String buildNumber) {
+        this.buildNumber = buildNumber
     }
 
     @NonCPS

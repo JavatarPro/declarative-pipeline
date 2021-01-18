@@ -21,8 +21,11 @@ import pro.javatar.pipeline.exception.UnrecognizedRevisionControlTypeException
  * @author Borys Zora
  * @since 2018-03-09
  */
+// will be @Deprecated soon in 2.x release
+// @see VersioningType, ReleaseType, ReleaseUploadArtifactType as it could be few builds (like maven & docker)
 enum BuildServiceType implements Serializable {
 
+    DOCKER,
     MAVEN,
     GRADLE,
     NPM, // e.g. angular + AWS S3
@@ -38,6 +41,9 @@ enum BuildServiceType implements Serializable {
         }
         if("maven".equalsIgnoreCase(type) || "mvn".equalsIgnoreCase(type)) {
             return MAVEN
+        }
+        if("docker".equalsIgnoreCase(type)) {
+            return DOCKER
         }
         if("gradle".equalsIgnoreCase(type) || "gradlew".equalsIgnoreCase(type)) {
             return GRADLE

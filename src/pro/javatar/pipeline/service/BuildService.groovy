@@ -15,7 +15,11 @@
 package pro.javatar.pipeline.service
 
 import pro.javatar.pipeline.exception.InvalidReleaseNumberException
+import pro.javatar.pipeline.model.BuildServiceType
 import pro.javatar.pipeline.model.ReleaseInfo
+import pro.javatar.pipeline.release.CurrentVersionAware
+import pro.javatar.pipeline.release.ReleaseVersionAware
+import pro.javatar.pipeline.release.SetupVersionAware
 import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
@@ -23,13 +27,12 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  * @author Borys Zora
  * @since 2018-03-09
  */
-abstract class BuildService implements Serializable {
+abstract class BuildService implements CurrentVersionAware, SetupVersionAware, ReleaseVersionAware, Serializable {
 
     protected int unitTestsTimeout = 25
-
     boolean useBuildNumberForVersion = true
-
     boolean skipUnitTests = true
+    String distributionFolder
 
     abstract void buildAndUnitTests(ReleaseInfo releaseInfo)
 
@@ -57,11 +60,7 @@ abstract class BuildService implements Serializable {
         return result;
     }
 
-    abstract String getCurrentVersion()
-
     abstract def setupReleaseVersion(String releaseVersion)
-
-    abstract def setupVersion(String version)
 
     def runIntegrationTests() {
         Logger.info("BuildService:runIntegrationTests")
@@ -88,6 +87,11 @@ abstract class BuildService implements Serializable {
         return releaseVersion
     }
 
+    @Override
+    String getReleaseVersion(ReleaseInfo releaseInfo) {
+        return getReleaseNumber(releaseInfo.getDevelopVersion(), releaseInfo.getBuildNumber())
+    }
+
     String getReleaseNumber(String currentVersion, def buildNumber) throws InvalidReleaseNumberException {
         Logger.debug("BuildService:getReleaseNumber with currentVersion: " + currentVersion +
                 "using buildNumber: " + buildNumber)
@@ -110,8 +114,9 @@ abstract class BuildService implements Serializable {
         }
     }
 
-    void setDistributionFolder(String distributionFolder) {
+    protected BuildService withDistributionFolder(String distributionFolder) {
         this.distributionFolder = distributionFolder
+        return this
     }
 
     protected BuildService withUnitTestsTimeout(int unitTestsTimeout) {

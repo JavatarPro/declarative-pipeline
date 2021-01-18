@@ -11,18 +11,24 @@ enum UiDeploymentType {
 
     CDN_FOLDER,
     AWS_S3,
+    DOCKER,
     NONE
 
     static UiDeploymentType fromString(String type) {
         if (StringUtils.isBlank(type)) {
             return NONE
         }
-        if("cdn-folder".equalsIgnoreCase(type) || "folder".equalsIgnoreCase(type)) {
+        if("cdn".equalsIgnoreCase(type)
+                || "cdn-folder".equalsIgnoreCase(type)
+                || "folder".equalsIgnoreCase(type)) {
             return CDN_FOLDER
         }
         if ("s3".equalsIgnoreCase(type) || "aws_s3".equalsIgnoreCase(type) || "aws".equalsIgnoreCase(type)
                 || "aws-s3".equalsIgnoreCase(type)) {
             return AWS_S3
+        }
+        if ("docker".equalsIgnoreCase(type)) {
+            return DOCKER
         }
         if ("none".equalsIgnoreCase(type) || "null".equalsIgnoreCase(type) || "no".equalsIgnoreCase(type)) {
             return NONE

@@ -108,6 +108,7 @@ class YamlConverter {
                 .withUseBuildNumberForVersion(service.useBuildNumberForVersion)
                 .withVcsRepoId(service.vcs_repo)
                 .withOrchestration(service.orchestration)
+                .setReleases(service.release)
     }
 
     AutoTestConfig retrieveAutoTest(def yml) {
