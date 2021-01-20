@@ -350,7 +350,10 @@ class FlowBuilder implements Serializable {
             buildService = npmBuildService
         } else if (buildType == BuildServiceType.NPM_DOCKER) {
             dockerNpmBuildService = new DockerNpmBuildService(dockerService, npm)
-            buildService = npmBuildService
+            buildService = npm.build()
+        } else if (buildType == BuildServiceType.NPM_JUST_DOCKER) {
+            npmBuildService = npm.build()
+            buildService = new DockerOnlyBuildService(dockerService, npmBuildService, npmBuildService)
         } else if (buildType == BuildServiceType.SENCHA) {
             senchaService = new SenchaService()
             buildService = senchaService
