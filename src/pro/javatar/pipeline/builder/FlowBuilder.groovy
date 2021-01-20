@@ -206,6 +206,7 @@ class FlowBuilder implements Serializable {
                 || buildType == BuildServiceType.GRADLE
                 || buildType == BuildServiceType.PHP
                 || buildType == BuildServiceType.PYTHON
+                || buildType == BuildServiceType.NPM_JUST_DOCKER
                 || uiDeploymentType == UiDeploymentType.DOCKER) {
             return new DockerDeploymentService(releaseInfo, dockerService)
         }
