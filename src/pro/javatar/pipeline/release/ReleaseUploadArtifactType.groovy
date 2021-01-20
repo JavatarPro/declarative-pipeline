@@ -35,6 +35,6 @@ enum ReleaseUploadArtifactType {
         if("vcs".equalsIgnoreCase(type)) {
             return NO_UPLOAD
         }
-        throw new RuntimeException("ReleaseType: type " + type + " is not recognized")
+        return NO_UPLOAD
     }
 }

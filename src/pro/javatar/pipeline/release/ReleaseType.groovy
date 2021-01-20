@@ -11,7 +11,8 @@ package pro.javatar.pipeline.release
 enum ReleaseType {
 
     ARTIFACT_UPLOAD, // could be ARTIFACT_PROMOTION
-    VCS_TAG
+    VCS_TAG,
+    NO_ACTION
 
     // TODO add exception
     static ReleaseType fromString(String type) {
@@ -24,6 +25,6 @@ enum ReleaseType {
         if("vcs".equalsIgnoreCase(type)) {
             return VCS_TAG
         }
-        throw new RuntimeException("ReleaseType: type " + type + " is not recognized")
+        return NO_ACTION
     }
 }

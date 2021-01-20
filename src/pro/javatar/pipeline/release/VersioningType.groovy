@@ -14,13 +14,15 @@ enum VersioningType {
     MAVEN,
     // TODO
     GRADLE,
-    //
+    // package.json { "version": "0.0.7-SNAPSHOT" } --> { "version": "0.0.7" }
     NPM,
     // { "version": "0.0.1" }
     JSON_FILE,
     // version: 0.0.1
     YAML_FILE,
     // version=0.0.1
-    PROPERTY_FILE
+    PROPERTY_FILE,
+    // do not need any versioning, could be applied when we use commit hash instead of version numbers
+    NO_VERSIONING
 
 }

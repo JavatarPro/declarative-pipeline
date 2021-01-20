@@ -234,12 +234,19 @@ class FlowBuilderConverter {
     }
 
     List<ReleaseType> toReleaseTypes(List<String> releases) {
-        return releases.stream()
-                .map({ s -> ReleaseType.fromString(s) })
-                .collect(Collectors.toList())
+        List<ReleaseType> result = new ArrayList<>()
+        for(String release: releases) {
+            result.add(ReleaseType.fromString(release))
+        }
+        return result
     }
 
     List<ReleaseUploadArtifactType> toReleaseUploadArtifactTypes(List<String> releases) {
+        List<ReleaseUploadArtifactType> result = new ArrayList<>()
+        for(String release: releases) {
+            result.add(ReleaseType.fromString(release))
+        }
+        return result
         return releases.stream()
                 .map({ s -> ReleaseUploadArtifactType.fromString(s) })
                 .collect(Collectors.toList())
