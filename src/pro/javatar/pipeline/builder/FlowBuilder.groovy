@@ -602,21 +602,21 @@ class FlowBuilder implements Serializable {
     }
 
     void populateServiceContextHolder() {
-        ServiceContextHolder.addService(mavenBuildService)
-        ServiceContextHolder.addService(dockerBuildService)
-        ServiceContextHolder.addService(npmBuildService)
-        ServiceContextHolder.addService(senchaService)
-        ServiceContextHolder.addService(buildService)
-        ServiceContextHolder.addService(deploymentService)
-        ServiceContextHolder.addService(autoTestsService)
-        ServiceContextHolder.addService(revisionControlService)
-        ServiceContextHolder.addService(RevisionControlService.class, revisionControlService)
-        ServiceContextHolder.addService(releaseService)
-        ServiceContextHolder.addService(dockerService)
-        ServiceContextHolder.addService(slackService)
-        ServiceContextHolder.addService(sonarQubeService)
-        ServiceContextHolder.addService(swaggerService)
-        ServiceContextHolder.addService(dockerNpmBuildService)
+        ContextHolder.add(mavenBuildService)
+        ContextHolder.add(dockerBuildService)
+        ContextHolder.add(npmBuildService)
+        ContextHolder.add(senchaService)
+        ContextHolder.add(buildService)
+        ContextHolder.add(deploymentService)
+        ContextHolder.add(autoTestsService)
+        ContextHolder.add(revisionControlService)
+        ContextHolder.add(RevisionControlService.class, revisionControlService)
+        ContextHolder.add(releaseService)
+        ContextHolder.add(dockerService)
+        ContextHolder.add(slackService)
+        ContextHolder.add(sonarQubeService)
+        ContextHolder.add(swaggerService)
+        ContextHolder.add(dockerNpmBuildService)
     }
 
     @NonCPS

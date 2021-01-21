@@ -38,7 +38,7 @@ class DockerOnlyBuildService extends BuildService {
 
     @Override
     void setUp() {
-        dockerService.dockerLogin()
+        Logger.debug("DockerOnlyBuildService: setUp()")
     }
 
     // TODO remove later from BuildService
