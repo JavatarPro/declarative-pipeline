@@ -129,15 +129,15 @@ class FlowBuilder implements Serializable {
 
     def populateStages(Flow flow, List<StageType> stageTypes) {
         for (StageType stageType : stageTypes) {
-            Logger.info("populateStages for stageType: ${stageType.name()}")
+            Logger.info("populateStages for stageType: " + stageType.name())
             Stage stage = availableStages.get(stageType)
             if (stageTypesToBeSkipped.contains(stageType)) {
                 stage.skipStage = true
             }
-            Logger.info("$stage is present: $stageType")
+            Logger.info(stage.getName() + " is present: " + stageType.name())
             flow.addStage(stage)
         }
-        Logger.info("Flow with stages: " + flow.getStages().collect {it.getName()})
+        Logger.info("Flow with stages: " + flow.getStageNames())
     }
 
     void createServices() {

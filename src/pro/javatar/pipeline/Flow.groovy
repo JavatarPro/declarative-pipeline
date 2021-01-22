@@ -71,8 +71,7 @@ class Flow implements Serializable {
         jenkinsDslService.executeStage(stage);
     }
 
-    List<StageAware> getStages() {
-        return new ArrayList<StageAware>(this.stages);
+    List<String> getStageNames() {
+        stages.collect {it.getName()}
     }
-
 }
