@@ -16,7 +16,7 @@ package pro.javatar.pipeline.service.orchestration.template
 
 import groovy.json.JsonSlurper
 
-import static pro.javatar.pipeline.util.StringUtils.toJsonString
+import static pro.javatar.pipeline.util.StringUtils.toJson
 
 /**
  * @author Borys Zora
@@ -40,7 +40,7 @@ class JsonConfigMerger {
             def json = new JsonSlurper().parseText(jsonFiles.get(i))
             merge(mainJson, json)
         }
-        return toJsonString(mainJson)
+        return toJson(mainJson)
     }
 
     protected void merge(def mainJson, def jsonToMerge) {

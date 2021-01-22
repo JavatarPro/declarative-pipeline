@@ -20,7 +20,7 @@ import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.stage.StageAware;
 import pro.javatar.pipeline.util.Logger
 
-import static java.lang.String.format;
+import static java.lang.String.format
 
 /**
  * @author Borys Zora

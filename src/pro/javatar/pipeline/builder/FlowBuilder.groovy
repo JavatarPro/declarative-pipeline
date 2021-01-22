@@ -137,7 +137,7 @@ class FlowBuilder implements Serializable {
             Logger.info("$stage is present: $stageType")
             flow.addStage(stage)
         }
-        Logger.info("Flow with stagres: $flow")
+        Logger.info("Flow with stages: " + flow.getStages().collect {it.getName()})
     }
 
     void createServices() {
@@ -619,35 +619,5 @@ class FlowBuilder implements Serializable {
         ContextHolder.add(dockerNpmBuildService)
     }
 
-    @NonCPS
-    @Override
-    public String toString() {
-        return "FlowBuilder{" +
-                "releaseInfo=" + releaseInfo +
-                ", buildType=" + buildType +
-                ", useBuildNumberForVersion=" + useBuildNumberForVersion +
-                ", revisionControlBuilder=" + revisionControlBuilder +
-                ", stageTypes=" + stageTypes +
-                ", availableStages=" + availableStages +
-                ", stageTypesToBeSkipped=" + stageTypesToBeSkipped +
-                ", slackBuilder=" + slackBuilder +
-                ", dockerBuilder=" + dockerBuilder +
-                ", sonarQubeBuilder=" + sonarQubeBuilder +
-                ", swaggerBuilder=" + swaggerBuilder +
-                ", maven=" + maven +
-                ", mavenBuildService=" + mavenBuildService +
-                ", npmBuildService=" + npmBuildService +
-                ", buildService=" + buildService +
-                ", cdnDeploymentService=" + cdnDeploymentService +
-                ", deploymentService=" + deploymentService +
-                ", autoTestsService=" + autoTestsService +
-                ", revisionControlService=" + revisionControlService +
-                ", releaseService=" + releaseService +
-                ", dockerService=" + dockerService +
-                ", slackService=" + slackService +
-                ", sonarQubeService=" + sonarQubeService +
-                ", swaggerService=" + swaggerService +
-                '}';
-    }
 }
 

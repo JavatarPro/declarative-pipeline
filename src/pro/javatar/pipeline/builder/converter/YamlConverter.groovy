@@ -26,11 +26,8 @@ import pro.javatar.pipeline.config.GradleConfig
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.util.LogLevel
 import pro.javatar.pipeline.util.Logger
-
-import java.time.Duration
 import java.time.Period
 
-import static pro.javatar.pipeline.util.StringUtils.isBlank
 import static pro.javatar.pipeline.util.StringUtils.isNotBlank
 
 class YamlConverter {
@@ -62,7 +59,7 @@ class YamlConverter {
                 .withCacheRequest(retrieveCacheRequest(yml))
                 .populateServiceRepo()
         Logger.info("YamlConverter:toYamlModel:finished")
-        Logger.debug("YamlConverter:toYamlModel:result: " + result)
+//        Logger.debug("YamlConverter:toYamlModel:result:\n" + toJson(result))
         return result
     }
 

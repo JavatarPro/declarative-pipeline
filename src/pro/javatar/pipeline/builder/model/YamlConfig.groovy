@@ -306,26 +306,4 @@ class YamlConfig implements Config, Serializable {
         this.logLevel = logLevel
         return this
     }
-
-    @NonCPS
-    @Override
-    public String toString() {
-        return "YamlConfig{" +
-                "version='" + version + '\'' +
-                ", service=" + service +
-                ", pipeline=" + pipeline +
-                ", maven=" + maven +
-                ", python=" + python +
-                ", npm=" + npm +
-                ", ui=" + ui +
-                ", docker=" + docker +
-                ", s3=" + s3 +
-                ", vcs=" + vcs +
-                ", jenkinsTool=" + jenkinsTool +
-                ", orchestrationService='" + orchestrationService + '\'' +
-                ", mesos=" + mesos +
-                ", autoTestConfig=" + autoTest +
-                ", cacheRequest=" + cacheRequest +
-                '}';
-    }
 }

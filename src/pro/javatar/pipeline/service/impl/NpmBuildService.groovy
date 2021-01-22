@@ -26,7 +26,8 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  * @author Borys Zora
  * @since 2018-03-09
  */
-class NpmBuildService extends UiBuildService {
+class NpmBuildService extends UiBuildService implements Serializable {
+
     String moduleRepository
     protected String npmVersion
     protected String type

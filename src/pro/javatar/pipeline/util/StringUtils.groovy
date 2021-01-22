@@ -17,7 +17,6 @@ package pro.javatar.pipeline.util
 import com.cloudbees.groovy.cps.NonCPS
 import groovy.json.JsonBuilder
 import groovy.text.GStringTemplateEngine
-import org.apache.commons.io.IOUtils
 import pro.javatar.pipeline.exception.ReplaceBindingMapException
 
 /**
@@ -105,7 +104,7 @@ class StringUtils {
     }
 
     @NonCPS
-    static String toJsonString(def object) {
+    static String toJson(def object) {
         if (object == null) {
             return null
         }

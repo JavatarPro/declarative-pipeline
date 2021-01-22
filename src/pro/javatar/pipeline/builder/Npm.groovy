@@ -68,7 +68,12 @@ class Npm implements Serializable {
         return this
     }
 
-    String getNpmType() {
+    // issues with cps
+//    String getNpmType() {
+//        return npmType
+//    }
+
+    String getType() {
         return npmType
     }
 
