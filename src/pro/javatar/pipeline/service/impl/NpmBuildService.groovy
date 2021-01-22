@@ -115,6 +115,7 @@ class NpmBuildService extends UiBuildService implements Serializable {
         return npmVersion
     }
 
+    @NonCPS
     void setNpmVersion(String npmVersion) {
         this.npmVersion = npmVersion
     }
