@@ -37,10 +37,7 @@ class NpmBuildService extends UiBuildService implements Serializable {
     void setUp() {
         Logger.debug("NpmBuildService setUp")
         Logger.debug("dsl.tool([name: ${npmVersion}, type: ${type}])")
-//        def node = dsl.tool([name: npmVersion, type: type])
-//        Logger.debug("node setup successfully")
-//        dsl.env.PATH="${node}/bin:${dsl.env.PATH}"
-        def node = dslService.addToPath(type, npmVersion)
+        def node = dslService.addToPath(npmVersion, type)
         // dsl.sh "npm config set registry ${moduleRepository}"
         dslService.executeShell("node --version")
         dslService.executeShell("npm -version")
