@@ -25,7 +25,7 @@ import groovy.json.JsonOutput
  * @author Borys Zora
  * @version 2019-03-29
  */
-class Logger {
+class Logger implements Serializable {
 
     static LogLevel LEVEL = INFO
     static JenkinsDslService dslService

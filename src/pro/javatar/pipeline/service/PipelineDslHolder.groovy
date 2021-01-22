@@ -24,7 +24,7 @@ import pro.javatar.pipeline.util.Logger
  * @author Borys Zora
  * @since 2018-03-09
  */
-public class PipelineDslHolder {
+public class PipelineDslHolder implements Serializable {
 
     public static def dsl
 
