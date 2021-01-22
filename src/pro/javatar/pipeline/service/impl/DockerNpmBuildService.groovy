@@ -4,7 +4,6 @@
  */
 package pro.javatar.pipeline.service.impl
 
-import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.orchestration.DockerService
@@ -21,8 +20,6 @@ class DockerNpmBuildService extends NpmBuildService {
     DockerNpmBuildService(DockerService dockerService, JenkinsDslService dsl) {
         this.dockerService = dockerService
         dslService = dsl
-//        type = npmType
-//        npmVersion = version
     }
 
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
