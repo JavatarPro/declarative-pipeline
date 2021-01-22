@@ -295,8 +295,7 @@ class GitService extends RevisionControlService {
                 "credentialsId='" + credentialsId + '\'' +
                 ", repo='" + repo + '\'' +
                 ", repoOwner='" + repoOwner + '\'' +
-                ", userName='" + userName + '\'' +
                 ", flowPrefix='" + flowPrefix + '\'' +
-                "} " + super.toString();
+                "} "
     }
 }
