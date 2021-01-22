@@ -15,6 +15,7 @@
 package pro.javatar.pipeline.service
 
 import pro.javatar.pipeline.exception.InvalidReleaseNumberException
+import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.model.BuildServiceType
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.release.CurrentVersionAware
@@ -29,6 +30,7 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 abstract class BuildService implements CurrentVersionAware, SetupVersionAware, ReleaseVersionAware, Serializable {
 
+    protected JenkinsDslService dslService
     protected int unitTestsTimeout = 25
     boolean useBuildNumberForVersion = true
     boolean skipUnitTests = true
@@ -114,17 +116,17 @@ abstract class BuildService implements CurrentVersionAware, SetupVersionAware, R
         }
     }
 
-    protected BuildService withDistributionFolder(String distributionFolder) {
+    BuildService withDistributionFolder(String distributionFolder) {
         this.distributionFolder = distributionFolder
         return this
     }
 
-    protected BuildService withUnitTestsTimeout(int unitTestsTimeout) {
+    BuildService withUnitTestsTimeout(int unitTestsTimeout) {
         this.unitTestsTimeout = unitTestsTimeout
         return this
     }
 
-    protected String getServiceName() {
+    String getServiceName() {
         return "buildService"
     }
 

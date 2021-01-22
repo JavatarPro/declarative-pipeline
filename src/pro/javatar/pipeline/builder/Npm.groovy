@@ -19,8 +19,6 @@ import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.service.impl.NpmBuildService
 import pro.javatar.pipeline.util.Logger
 
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-
 /**
  * @author Borys Zora
  * @since 2018-03-09

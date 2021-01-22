@@ -6,10 +6,10 @@ import pro.javatar.pipeline.builder.converter.JenkinsBuildParamsConverter
 import pro.javatar.pipeline.builder.converter.YamlConverter
 import pro.javatar.pipeline.builder.model.YamlConfig
 import pro.javatar.pipeline.jenkins.api.JenkinsDslService
-import pro.javatar.pipeline.jenkins.dsl.JenkinsDslServiceImpl
 import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.util.StringUtils.replaceVariables
+import pro.javatar.pipeline.service.PipelineDslHolder
 
 class YamlFlowBuilder implements Serializable {
 
@@ -24,7 +24,7 @@ class YamlFlowBuilder implements Serializable {
     private JenkinsBuildParamsConverter jenkinsBuildParamsConverter = new JenkinsBuildParamsConverter()
 
     public YamlFlowBuilder(def dsl, String configFile) {
-        this(configFile, new JenkinsDslServiceImpl(dsl))
+        this(configFile, PipelineDslHolder.createDsl(dsl))
     }
 
     public YamlFlowBuilder(String configFile, JenkinsDslService jenkinsDslService) {

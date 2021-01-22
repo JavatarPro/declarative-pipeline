@@ -24,7 +24,6 @@ class JenkinsDslServiceImpl implements JenkinsDslService {
 
     JenkinsDslServiceImpl(def dsl) {
         this.dsl = dsl
-        PipelineDslHolder.dsl = dsl
     }
 
     @Override
@@ -106,4 +105,18 @@ class JenkinsDslServiceImpl implements JenkinsDslService {
         return dsl
     }
 
+    @Override
+    def getEnv(String variable) {
+        return dsl.env[env]
+    }
+
+    @Override
+    boolean fileExists(String file) {
+        return dsl.fileExists(file)
+    }
+
+    @Override
+    void echo(String message) {
+        dsl.echo message
+    }
 }

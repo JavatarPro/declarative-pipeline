@@ -17,8 +17,6 @@ package pro.javatar.pipeline.service
 
 import com.cloudbees.groovy.cps.NonCPS;
 
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-
 /**
  * @author Borys Zora
  * @since 2018-03-09

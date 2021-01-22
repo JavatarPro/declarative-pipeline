@@ -14,6 +14,8 @@
  */
 package pro.javatar.pipeline.service
 
+import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+import pro.javatar.pipeline.jenkins.dsl.JenkinsDslServiceImpl
 import pro.javatar.pipeline.util.Logger
 
 /**
@@ -25,6 +27,13 @@ import pro.javatar.pipeline.util.Logger
 public class PipelineDslHolder {
 
     public static def dsl
+
+    static JenkinsDslService createDsl(def dslContext) {
+        dsl = dslContext
+        JenkinsDslService jenkinsDslService = new JenkinsDslServiceImpl(dsl)
+        Logger.dslService = jenkinsDslService
+        return jenkinsDslService
+    }
 
     static def getProperty(String propertyName, def defaultValue) {
         try {
