@@ -123,6 +123,7 @@ class NpmBuildService extends UiBuildService implements Serializable {
         return type
     }
 
+    @NonCPS
     void setType(String type) {
         this.type = type
     }

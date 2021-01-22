@@ -18,13 +18,11 @@ class DockerNpmBuildService extends NpmBuildService {
 
     DockerService dockerService
 
-    DockerNpmBuildService(DockerService dockerService,
-                          Npm npm,
-                          JenkinsDslService dsl) {
+    DockerNpmBuildService(DockerService dockerService, String npmType, String version, JenkinsDslService dsl) {
         this.dockerService = dockerService
         dslService = dsl
-        setType(npm.getType())
-        setNpmVersion(npm.npmVersion)
+        type = npmType
+        npmVersion = version
     }
 
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
