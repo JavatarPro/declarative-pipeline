@@ -1,6 +1,5 @@
 package pro.javatar.pipeline.builder.model
 
-import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.config.AutoTestConfig
 import pro.javatar.pipeline.config.Config

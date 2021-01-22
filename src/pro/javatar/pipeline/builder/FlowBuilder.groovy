@@ -48,6 +48,8 @@ import pro.javatar.pipeline.stage.sign.DeveloperSignOffStage
 import pro.javatar.pipeline.stage.sign.QaSignOffStage
 import pro.javatar.pipeline.util.Logger
 
+import static pro.javatar.pipeline.util.StringUtils.toJson
+
 /**
  * TODO class too big, need some refactoring
  * TODO move stage creation to stage builder inside stage package

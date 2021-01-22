@@ -324,8 +324,8 @@ class YamlConverter {
                 return new Npm()
             }
             return new Npm()
-                    .withNpmVersion(tool["npm.version"])
-                    .withNpmType(tool["npm.type"])
+                    .withNpmVersion(tool.npm.version)
+                    .withNpmType(tool.npm.type)
         }
         return new Npm()
                 .withNpmType(npm.type)
