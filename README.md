@@ -1,15 +1,21 @@
-# declarative-pipeline #
+# javatar declarative pipeline
 
-This is shared library for jenkins CD declarative pipeline created by [Javatar LLC](https://javatar.pro/)
+This is [jenkins shared library](https://jenkins.io/doc/book/pipeline/shared-libraries/) created by [Javatar](https://javatar.pro/)
 
 ### Documentation
 
-Out documentation is in confluence follow this [link](https://javatar.atlassian.net/wiki/spaces/JDP/overview)
+Our [documentation is in confluence](https://javatar.atlassian.net/wiki/spaces/JDP/overview)
     
 ### What is this repository for? ###
 
-* This is shared library for jenkins CD pipeline
-* Jenkinsfile example [continuous-delivery repo](https://github.com/JavatarPro/declarative-pipeline)
+* Setup CI/CD for micro-sevices with a help of jenkins & this library
+  * java
+  * golang
+  * nodejs
+* Setup CI/CD for UI repos based on docker or S3 artifacts
+  * angular
+  * react 
+  * viewjs
 
 ### How do I get set up? ###
 
@@ -17,6 +23,7 @@ Out documentation is in confluence follow this [link](https://javatar.atlassian.
 * All configuration should be in Jenkinsfile
 * All code files must be groovy, Jenkinsfile's restriction
 * All jobs (except development/experimental) should use tag version
+* Jenkinsfile example [continuous-delivery repo](https://github.com/JavatarPro/declarative-pipeline)
 
 ### Contribution guidelines ###
 
@@ -26,13 +33,6 @@ Out documentation is in confluence follow this [link](https://javatar.atlassian.
 ### Who do I talk to? ###
 
 * [borys-zora](mailto:borys.zora@javatar.pro), [spetrychenko](mailto:serhii.petrychenko@javatar.pro)
-
-### Useful links ###
-
-* [pipeline shared library](https://jenkins.io/doc/book/pipeline/shared-libraries/)
-
-### Job examples ###
-
 
 ### RELEASE NOTES ###
 
