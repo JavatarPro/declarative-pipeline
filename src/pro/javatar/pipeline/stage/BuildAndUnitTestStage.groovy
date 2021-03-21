@@ -14,14 +14,12 @@
  */
 package pro.javatar.pipeline.stage
 
-import com.cloudbees.groovy.cps.NonCPS;
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
 import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-import static pro.javatar.pipeline.util.StringUtils.toJson
 
 /**
  * TODO remove dsl
@@ -41,7 +39,7 @@ class BuildAndUnitTestStage extends Stage {
 
     @Override
     void execute() throws PipelineException {
-        Logger.info("BuildAndUnitTestStage execute started: " + toJson(this))
+        Logger.info("BuildAndUnitTestStage execute started")
         dsl.timeout(time: buildService.unitTestsTimeout, unit: 'MINUTES') {
             revisionControl.cleanUp()
             dsl.dir(revisionControl.folder) {
@@ -62,7 +60,7 @@ class BuildAndUnitTestStage extends Stage {
         }
         dsl.currentBuild.description = "build of " + releaseInfo().getServiceName() + ":" +
                 releaseInfo().getBuildReleaseVersion() + " completed"
-        Logger.info("BuildAndUnitTestStage execute finished: " + toJson(this))
+        Logger.info("BuildAndUnitTestStage execute finished")
     }
 
     @Override
@@ -77,7 +75,7 @@ class BuildAndUnitTestStage extends Stage {
         releaseInfo().setDevelopVersion(buildService.getDevelopVersion(releaseVersion))
         releaseInfo().setFlowPrefix(revisionControl.getFlowPrefix())
         buildService.populateReleaseInfo(releaseInfo())
-        Logger.info("BuildAndUnitTestStage populateReleaseInfo finished: " + toJson(releaseInfo()))
+        Logger.info("BuildAndUnitTestStage populateReleaseInfo finished")
     }
 
     boolean equals(o) {
