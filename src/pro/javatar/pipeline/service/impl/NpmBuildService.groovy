@@ -59,7 +59,7 @@ class NpmBuildService extends UiBuildService implements Serializable {
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
         Logger.info('npm buildAndUnitTests start')
-        ddslService.executeShell("pwd; ls -la")
+        dslService.executeShell("pwd; ls -la")
         if (!skipUnitTests) dslService.executeShell('npm run test')
         dslService.executeShell('npm run build')
         dslService.executeShell("zip -r ${getArtifact()} ${distributionFolder}")

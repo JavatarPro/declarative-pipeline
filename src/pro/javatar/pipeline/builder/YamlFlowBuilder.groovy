@@ -13,7 +13,15 @@ import pro.javatar.pipeline.service.PipelineDslHolder
 
 class YamlFlowBuilder implements Serializable {
 
-    private String configFile
+    private static final List<String> DEFAULT_CLASSPATH_CONFIGS = [
+            "suit.yml",
+            "stage.yml",
+            "pipeline.yml",
+            "integration.yml",
+            "command.yml",
+    ]
+
+    private List<String> configFiles
 
     private JenkinsDslService dslService;
 
@@ -23,21 +31,48 @@ class YamlFlowBuilder implements Serializable {
 
     private JenkinsBuildParamsConverter jenkinsBuildParamsConverter = new JenkinsBuildParamsConverter()
 
-    public YamlFlowBuilder(def dsl, String configFile) {
-        this(configFile, PipelineDslHolder.createDsl(dsl))
+    public YamlFlowBuilder(def dsl, String... configFiles) {
+        this(PipelineDslHolder.createDsl(dsl), configFiles.toList())
     }
 
-    public YamlFlowBuilder(String configFile, JenkinsDslService jenkinsDslService) {
+    public YamlFlowBuilder(def dsl, List<String> configFiles) {
+        this(PipelineDslHolder.createDsl(dsl), configFiles)
+    }
+
+    protected YamlFlowBuilder(JenkinsDslService jenkinsDslService, List<String> configFiles) {
         dslService = jenkinsDslService;
-        this.configFile = configFile;
-        Logger.debug("YamlFlowBuilder#constructor: configFile: " + configFile)
+        this.configFiles = configFiles;
+        Logger.debug("YamlFlowBuilder#constructor: configFiles: " + configFiles)
     }
 
     public Flow build() {
-        YamlConfig config = getEffectiveConfig(configFile)
+        YamlConfig config = getEffectiveConfig(configFiles.get(0))
         FlowBuilder flowBuilder = flowBuilderConverter.toFlowBuilder(config, dslService);
         Logger.debug("flowBuilder: " + flowBuilder.toString());
         return flowBuilder.build();
+    }
+
+    protected Flow build2() {
+        YamlConfig config = getEffectiveConfig2(configFiles)
+        return null
+    }
+
+    protected YamlConfig getEffectiveConfig2(List<String> configFiles) {
+        List<String> configs = new ArrayList<>()
+        Logger.info("configs count: " + configFiles.size())
+        for(String config: configFiles) {
+            Logger.info("read configs: " + config)
+            String configString = dslService.readConfiguration(config)
+            Logger.info("read config: ${config} configString: ${configString}")
+            configs.add(configString)
+        }
+        for(String config: DEFAULT_CLASSPATH_CONFIGS) {
+            Logger.info("read classpath configs: " + config)
+            String configString = readConfiguration(config)
+            Logger.info("read config: ${config} configString: ${configString}")
+            configs.add(configString)
+        }
+        return new YamlConfig()
     }
 
     YamlConfig getEffectiveConfig(String configFile) {
@@ -62,4 +97,7 @@ class YamlFlowBuilder implements Serializable {
         return result;
     }
 
+    String readConfiguration(String file) {
+        return new String(getClass().getClassLoader().getResourceAsStream(file).bytes);
+    }
 }

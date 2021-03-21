@@ -21,6 +21,8 @@ import pro.javatar.pipeline.service.vcs.RevisionControlService
 import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
+import static pro.javatar.pipeline.util.StringUtils.toJson
+
 /**
  * TODO remove dsl
  * @author Borys Zora
@@ -39,7 +41,7 @@ class BuildAndUnitTestStage extends Stage {
 
     @Override
     void execute() throws PipelineException {
-        Logger.info("BuildAndUnitTestStage execute started: " + toString())
+        Logger.info("BuildAndUnitTestStage execute started: " + toJson(this))
         dsl.timeout(time: buildService.unitTestsTimeout, unit: 'MINUTES') {
             revisionControl.cleanUp()
             dsl.dir(revisionControl.folder) {
@@ -60,7 +62,7 @@ class BuildAndUnitTestStage extends Stage {
         }
         dsl.currentBuild.description = "build of " + releaseInfo().getServiceName() + ":" +
                 releaseInfo().getBuildReleaseVersion() + " completed"
-        Logger.info("BuildAndUnitTestStage execute finished: " + toString())
+        Logger.info("BuildAndUnitTestStage execute finished: " + toJson(this))
     }
 
     @Override
@@ -75,7 +77,7 @@ class BuildAndUnitTestStage extends Stage {
         releaseInfo().setDevelopVersion(buildService.getDevelopVersion(releaseVersion))
         releaseInfo().setFlowPrefix(revisionControl.getFlowPrefix())
         buildService.populateReleaseInfo(releaseInfo())
-        Logger.info("BuildAndUnitTestStage populateReleaseInfo finished: " + releaseInfo().toString())
+        Logger.info("BuildAndUnitTestStage populateReleaseInfo finished: " + toJson(releaseInfo()))
     }
 
     boolean equals(o) {
@@ -95,17 +97,5 @@ class BuildAndUnitTestStage extends Stage {
         result = (buildService != null ? buildService.hashCode() : 0)
         result = 31 * result + (revisionControl != null ? revisionControl.hashCode() : 0)
         return result
-    }
-
-    @NonCPS
-    @Override
-    public String toString() {
-        return "BuildAndUnitTestStage{" +
-                "buildService=" + buildService +
-                ", revisionControl=" + revisionControl +
-                ", skipStage=" + skipStage +
-                ", exitFromPipeline=" + exitFromPipeline +
-                ", releaseInfo=" + releaseInfo() +
-                '}';
     }
 }

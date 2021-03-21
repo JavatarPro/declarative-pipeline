@@ -1,5 +1,5 @@
 pipeline:
-  suit:
+  suits:
     - name: service
       stages:
         - build-and-unit-test
@@ -14,7 +14,7 @@ pipeline:
     - name: library
       stages:
         - build-and-unit-test
-        - auto-test
+        - integration-test
         - release
     - name: service-with-db
       stages:

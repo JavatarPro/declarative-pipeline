@@ -319,7 +319,7 @@ class YamlConverter {
         if (npm == null) {
             def tool = yml.jenkins_tool
             Logger.info("YamlConverter:retrieveNpm: jenkins_tool: ${tool}")
-            if (tool == null) {
+            if (tool == null || tool.npm == null) {
                 Logger.info("npm is null new Npm() will be returned")
                 return new Npm()
             }

@@ -10,6 +10,10 @@ package pro.javatar.pipeline.command
  */
 interface Command extends Serializable {
 
-    String execute(String command)
+    List<String> execute() throws Exception
+
+    boolean failOnError()
+
+    String name()
 
 }

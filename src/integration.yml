@@ -1,0 +1,65 @@
+integrations:
+  - name: vcs-target-repo
+    repoName: ${vcsRepo}
+    owner: ${vcsOwner}
+    domain: ${vcsDomain}:${vcsPort}
+    # ssh, https
+    protocol: ${vscProtocol}
+    # gitlab, github, bitbucket
+    type: ${vcsType}
+    # TODO could be used in this way, just to specify all in ${vcsUrl}
+    url: ${vscProtocol}://git@${vcsDomain}:${vcsPort}/${vcsOwner}/${vcsRepo}.git
+    credentialsId: javatar-jenkins-gitlab-ssh
+    revisionControl: git
+    enabled: false
+  - name: docker-registry-dev
+    description: docker registry for temporary artifacts (small retantion policy)
+    url: docker-dev.your-domain.com
+    credentialsId: docker-registry-dev-cred
+    enabled: false
+    labels:
+      - docker-registry
+  - name: docker-registry-prod
+    description: docker registry for verified artifacts to be used in production
+    url: docker-prod.your-domain.com
+    credentialsId: docker-registry-prod-cred
+    enabled: false
+    labels:
+      - docker-registry
+  - name: sonar
+    description: tool for static code analysis
+  - name: java
+    version: JDK16
+    description: JDK16 - toold named in jenkins to compile with javac, supported java versions 8, 11, 13 .. 16+
+    # use path in case tool not available, path to binary should help
+    path: /path/to/java/home
+    labels:
+      - jenkinsTool
+      - jenkinsNodePath
+    enabled: false
+  - name: maven
+    version: maven_354
+    description: build tool for java
+    enabled: false
+    labels:
+      - jenkinsTool
+  - name: npm
+    description: todo
+    version: 7.6.3
+    enabled: false
+  - name: nodejs
+    version: v15.6.0
+    enabled: false
+    labels:
+      - jenkinsTool
+  - name: marathon
+    description: apache mesos framework - service orchestration
+  - name: k8s
+    description: kubernetes - service orchestration
+    enabled: false
+  - name: aws-s3-dev
+    description: S3 bucket to store dev artifacts
+    enabled: false
+  - name: aws-s3-prod
+    description: S3 bucket to store prod artifacts
+    enabled: false
