@@ -209,6 +209,7 @@ class FlowBuilder implements Serializable {
                 || buildType == BuildServiceType.PHP
                 || buildType == BuildServiceType.PYTHON
                 || buildType == BuildServiceType.NPM_DOCKER
+                || buildType == BuildServiceType.NPM_YARN_DOCKER
                 || buildType == BuildServiceType.NPM_JUST_DOCKER
                 || uiDeploymentType == UiDeploymentType.DOCKER) {
             return new DockerDeploymentService(releaseInfo, dockerService)
@@ -358,6 +359,12 @@ class FlowBuilder implements Serializable {
             service.setNpmVersion(npm.npmVersion)
             dockerNpmBuildService = service
             buildService = dockerNpmBuildService
+        } else if (buildType == BuildServiceType.NPM_YARN_DOCKER) {
+            DockerNpmBuildService service = new DockerNpmYarnBuildService(dockerService, jenkinsDslService)
+            service.setType(npm.getType())
+            service.setNpmVersion(npm.npmVersion)
+            dockerNpmBuildService = service
+            buildService = dockerNpmBuildService
         } else if (buildType == BuildServiceType.NPM_JUST_DOCKER) {
             npmBuildService = npm.build()
             buildService = new DockerOnlyBuildService(dockerService, npmBuildService, npmBuildService)
@@ -478,7 +485,9 @@ class FlowBuilder implements Serializable {
                 && (buildType == BuildServiceType.MAVEN || buildType == BuildServiceType.GRADLE)) {
             return new BackEndLibraryReleaseService(buildService, uploadAware, revisionControlService)
         }
-        if (buildType == BuildServiceType.NPM || buildType == BuildServiceType.NPM_DOCKER
+        if (buildType == BuildServiceType.NPM
+                || buildType == BuildServiceType.NPM_DOCKER
+                || buildType == BuildServiceType.NPM_YARN_DOCKER
                 || buildType == BuildServiceType.SENCHA) {
             return new UiReleaseService(buildService, revisionControlService)
         }

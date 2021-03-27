@@ -30,6 +30,7 @@ enum BuildServiceType implements Serializable {
     GRADLE,
     NPM, // e.g. angular + AWS S3
     NPM_DOCKER, // e.g. react + docker
+    NPM_YARN_DOCKER, // e.g. angular + yarn install + docker as deployment
     NPM_JUST_DOCKER, // npm will be used for version update, but only docker will be build
     SENCHA,
     PHP,
@@ -58,6 +59,9 @@ enum BuildServiceType implements Serializable {
                 || "docker_npm".equalsIgnoreCase(type) || "react_docker".equalsIgnoreCase(type)
                 || "angular_docker".equalsIgnoreCase(type)) {
             return NPM_DOCKER
+        }
+        if ("npm_yarn_docker".equalsIgnoreCase(type)) {
+            return NPM_YARN_DOCKER
         }
         if ("npm_just_docker".equalsIgnoreCase(type)) {
             return NPM_JUST_DOCKER
