@@ -53,7 +53,7 @@ class DockerService implements Serializable {
             }
             return
         }
-        if (releaseInfo.isUi() && releaseInfo.optimizeDockerContext()) {
+        if (releaseInfo.getIsUi() && releaseInfo.getOptimizeDockerContext()) {
             dockerBuildImageWithContextOptimizationForUI(releaseInfo)
         } else {
             dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
@@ -94,7 +94,7 @@ class DockerService implements Serializable {
         Logger.debug("dockerBuildImageWithContextOptimizationForUI started")
         dsl.sh "cd ${releaseInfo.getBuildDockerFromFolder()}"
         dsl.sh "mv ${releaseInfo.getUiDistributionFolder()} ."
-        dockerBuildImage(imageName, imageVersion)
+        dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
         dsl.sh "cd .."
         Logger.debug("dockerBuildImageWithContextOptimizationForUI finished")
     }
