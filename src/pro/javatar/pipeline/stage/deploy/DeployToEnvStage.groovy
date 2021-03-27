@@ -59,12 +59,12 @@ abstract class DeployToEnvStage extends Stage {
     @NonCPS
     @Override
     public String toString() {
-        return "DeployToQAEnvStage{" +
-                "env=" + getEnv().getValue() +
+        return "DeployToEnvStage{" +
+//                "env=" + getEnv().getValue() +
                 ", deploymentService=" + deploymentService +
                 ", skipStage=" + skipStage +
                 ", exitFromPipeline=" + exitFromPipeline +
-                ", releaseInfo=" + releaseInfo() +
+//                ", releaseInfo=" + releaseInfo() +
                 '}';
     }
 }

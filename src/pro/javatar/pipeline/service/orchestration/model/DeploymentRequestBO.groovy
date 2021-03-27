@@ -124,7 +124,7 @@ class DeploymentRequestBO implements Serializable {
                 "imageName='" + imageName + '\'' +
                 ", imageVersion='" + imageVersion + '\'' +
                 ", dockerRegistry=" + dockerRegistry +
-                ", environment=" + environment +
+//                ", environment=" + environment +
                 ", buildNumber=" + buildNumber +
                 ", service='" + service + '\'' +
                 '}';
