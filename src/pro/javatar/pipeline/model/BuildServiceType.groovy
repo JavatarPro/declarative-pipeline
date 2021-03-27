@@ -26,6 +26,7 @@ import pro.javatar.pipeline.exception.UnrecognizedRevisionControlTypeException
 enum BuildServiceType implements Serializable {
 
     DOCKER,
+    TEST_DOCKER, // for testing purposes
     MAVEN,
     GRADLE,
     NPM, // e.g. angular + AWS S3
@@ -62,6 +63,9 @@ enum BuildServiceType implements Serializable {
         }
         if ("npm_yarn_docker".equalsIgnoreCase(type)) {
             return NPM_YARN_DOCKER
+        }
+        if ("test_docker".equalsIgnoreCase(type)) {
+            return TEST_DOCKER
         }
         if ("npm_just_docker".equalsIgnoreCase(type)) {
             return NPM_JUST_DOCKER

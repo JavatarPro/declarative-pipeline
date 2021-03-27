@@ -213,7 +213,8 @@ class FlowBuilder implements Serializable {
                 || uiDeploymentType == UiDeploymentType.DOCKER) {
             return new DockerDeploymentService(releaseInfo, dockerService)
         }
-        if (buildType == BuildServiceType.NPM_YARN_DOCKER) {
+        if (buildType == BuildServiceType.NPM_YARN_DOCKER
+                || buildType == BuildServiceType.TEST_DOCKER) {
             releaseInfo.setIsUi(true)
             releaseInfo.setOptimizeDockerContext(true)
             def deploymentService = new DockerDeploymentService(releaseInfo, dockerService)
@@ -370,7 +371,7 @@ class FlowBuilder implements Serializable {
             service.setNpmVersion(npm.npmVersion)
             dockerNpmBuildService = service
             buildService = dockerNpmBuildService
-        } else if (buildType == BuildServiceType.NPM_JUST_DOCKER) {
+        } else if (buildType == BuildServiceType.NPM_JUST_DOCKER || buildType == BuildServiceType.TEST_DOCKER) {
             npmBuildService = npm.build()
             buildService = new DockerOnlyBuildService(dockerService, npmBuildService, npmBuildService)
         } else if (buildType == BuildServiceType.SENCHA) {
@@ -496,7 +497,9 @@ class FlowBuilder implements Serializable {
                 || buildType == BuildServiceType.SENCHA) {
             return new UiReleaseService(buildService, revisionControlService)
         }
-        if (buildType == BuildServiceType.PYTHON || buildType == BuildServiceType.PHP
+        if (buildType == BuildServiceType.PYTHON
+                || buildType == BuildServiceType.PHP
+                || buildType == BuildServiceType.TEST_DOCKER
                 || buildType == BuildServiceType.PHP_PYTHON) {
             return new VcsAndDockerRelease(buildService, revisionControlService, dockerService)
         }
