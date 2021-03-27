@@ -14,7 +14,7 @@ import pro.javatar.pipeline.util.Logger
  */
 class DockerNpmYarnBuildService extends DockerNpmBuildService {
 
-    DockerNpmYarnBuildService(DockerService dockerService, JenkinsDslService dsl) {
+    DockerNpmYarnBuildService(DockerService dockerService, JenkinsDslService dslService) {
         super(dockerService, dslService)
     }
 
