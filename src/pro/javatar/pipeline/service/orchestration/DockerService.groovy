@@ -93,7 +93,7 @@ class DockerService implements Serializable {
     def dockerBuildImageWithContextOptimizationForUI(ReleaseInfo releaseInfo) {
         Logger.debug("dockerBuildImageWithContextOptimizationForUI started")
         dsl.sh "cd ${releaseInfo.getBuildDockerFromFolder()}"
-        dsl.sh "mv ${releaseInfo.getUiDistributionFolder()} ."
+        dsl.sh "mv ../${releaseInfo.getUiDistributionFolder()} ."
         dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
         dsl.sh "cd .."
         Logger.debug("dockerBuildImageWithContextOptimizationForUI finished")
