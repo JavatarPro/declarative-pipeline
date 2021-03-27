@@ -209,10 +209,15 @@ class FlowBuilder implements Serializable {
                 || buildType == BuildServiceType.PHP
                 || buildType == BuildServiceType.PYTHON
                 || buildType == BuildServiceType.NPM_DOCKER
-                || buildType == BuildServiceType.NPM_YARN_DOCKER
                 || buildType == BuildServiceType.NPM_JUST_DOCKER
                 || uiDeploymentType == UiDeploymentType.DOCKER) {
             return new DockerDeploymentService(releaseInfo, dockerService)
+        }
+        if (buildType == BuildServiceType.NPM_YARN_DOCKER) {
+            releaseInfo.setIsUi(true)
+            releaseInfo.setOptimizeDockerContext(true)
+            def deploymentService = new DockerDeploymentService(releaseInfo, dockerService)
+            return deploymentService
         }
         if (uiDeploymentType == UiDeploymentType.AWS_S3) {
             return awsS3DeploymentService

@@ -39,6 +39,9 @@ class ReleaseInfo implements Serializable {
     String buildNumber
     String buildReleaseVersion
     String uiDistributionFolder = "dist"
+    boolean isUi = false
+    boolean optimizeDockerContext = false
+    String buildDockerFromFolder = ".jenkins"
 
     InfraRequest infraRequest = new InfraRequest()
 
@@ -199,6 +202,30 @@ class ReleaseInfo implements Serializable {
 
     void setBuildNumber(String buildNumber) {
         this.buildNumber = buildNumber
+    }
+
+    void setIsUi(boolean isUi) {
+        this.isUi = isUi
+    }
+
+    void setOptimizeDockerContext(boolean optimizeDockerContext) {
+        this.optimizeDockerContext = optimizeDockerContext
+    }
+
+    void setBuildDockerFromFolder(String buildDockerFromFolder) {
+        this.buildDockerFromFolder = buildDockerFromFolder
+    }
+
+    boolean getIsUi() {
+        return isUi
+    }
+
+    boolean getOptimizeDockerContext() {
+        return optimizeDockerContext
+    }
+
+    String getBuildDockerFromFolder() {
+        return buildDockerFromFolder
     }
 
     @NonCPS

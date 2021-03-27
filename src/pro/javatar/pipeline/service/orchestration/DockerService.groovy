@@ -53,7 +53,11 @@ class DockerService implements Serializable {
             }
             return
         }
-        dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
+        if (releaseInfo.isUi() && releaseInfo.optimizeDockerContext()) {
+            dockerBuildImageWithContextOptimizationForUI(releaseInfo)
+        } else {
+            dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
+        }
     }
 
     // FIXME concurrency issue should be resolved, build failed
@@ -84,6 +88,15 @@ class DockerService implements Serializable {
         dsl.sh 'docker -v'
         dsl.sh "docker build -t ${imageName}:${imageVersion} ${getCustomDockerFileInstruction()} ."
         Logger.debug("dockerBuildImage for service: ${imageName} with releaseVersion: ${imageVersion} finished")
+    }
+    
+    def dockerBuildImageWithContextOptimizationForUI(ReleaseInfo releaseInfo) {
+        Logger.debug("dockerBuildImageWithContextOptimizationForUI started")
+        dsl.sh "cd ${releaseInfo.getBuildDockerFromFolder()}"
+        dsl.sh "mv ${releaseInfo.getUiDistributionFolder()} ."
+        dockerBuildImage(imageName, imageVersion)
+        dsl.sh "cd .."
+        Logger.debug("dockerBuildImageWithContextOptimizationForUI finished")
     }
 
     def dockerPublish(String imageName, String imageVersion, Env env) {
