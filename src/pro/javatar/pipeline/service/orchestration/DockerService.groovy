@@ -95,8 +95,10 @@ class DockerService implements Serializable {
         dsl.sh "pwd && ls -la && ls -la ${releaseInfo.getBuildDockerFromFolder()}"
         dsl.sh "mv ${releaseInfo.getUiDistributionFolder()} ${releaseInfo.getBuildDockerFromFolder()}"
         dsl.sh "pwd && ls -la && ls -la ${releaseInfo.getBuildDockerFromFolder()}"
-        String dockerFile = "${releaseInfo.getBuildDockerFromFolder()}/Dockerfile"
-        dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion(), dockerFile)
+        dsl.dir (releaseInfo.getBuildDockerFromFolder()) {
+            dsl.sh "pwd && ls -la"
+            dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
+        }
         dsl.sh "pwd && ls -la && ls -la ${releaseInfo.getBuildDockerFromFolder()}"
         Logger.debug("dockerBuildImageWithContextOptimizationForUI finished")
     }
