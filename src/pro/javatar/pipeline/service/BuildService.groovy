@@ -130,7 +130,7 @@ abstract class BuildService implements CurrentVersionAware, SetupVersionAware, R
         return "buildService"
     }
 
-    void setDslService(JenkinsDslService dslService) {
+    void withDslService(JenkinsDslService dslService) {
         this.dslService = dslService
     }
 }

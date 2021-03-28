@@ -14,7 +14,7 @@
  */
 package pro.javatar.pipeline.builder
 
-import com.cloudbees.groovy.cps.NonCPS
+
 import pro.javatar.pipeline.Flow
 import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.JenkinsTool
@@ -47,8 +47,6 @@ import pro.javatar.pipeline.stage.sign.DevOpsSignOffStage
 import pro.javatar.pipeline.stage.sign.DeveloperSignOffStage
 import pro.javatar.pipeline.stage.sign.QaSignOffStage
 import pro.javatar.pipeline.util.Logger
-
-import static pro.javatar.pipeline.util.StringUtils.toJson
 
 /**
  * TODO class too big, need some refactoring
@@ -373,7 +371,7 @@ class FlowBuilder implements Serializable {
             buildService = dockerNpmBuildService
         } else if (buildType == BuildServiceType.NPM_JUST_DOCKER || buildType == BuildServiceType.TEST_DOCKER) {
             npmBuildService = npm.build()
-            npmBuildService.setDslService(jenkinsDslService)
+            npmBuildService.withDslService(jenkinsDslService)
             buildService = new DockerOnlyBuildService(dockerService, npmBuildService, npmBuildService)
         } else if (buildType == BuildServiceType.SENCHA) {
             senchaService = new SenchaService()
