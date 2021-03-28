@@ -28,7 +28,7 @@ class DockerNpmBuildService extends NpmBuildService {
         if (!skipUnitTests) dslService.executeShell("npm run test")
         dslService.executeShell("npm run build")
         dslService.executeShell("pwd; ls -la")
-        dockerService.dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
+        dockerService.dockerBuildImage(releaseInfo)
         Logger.info('DockerNpmBuildService buildAndUnitTests end')
     }
 }
