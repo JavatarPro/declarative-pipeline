@@ -38,7 +38,7 @@ class KubernetesService implements DockerOrchestrationService {
         String version = req.getImageVersion()
         Logger.debug("KubernetesService:dockerDeployContainer: deploy:${deploy}, image:${image}, version:${version}")
 
-        var oldDeploy = new K8sGetJsonDeployCommand(deploy, dsl)
+        def oldDeploy = new K8sGetJsonDeployCommand(deploy, dsl)
         if (oldDeploy.isDeploymentAlreadyExists()) {
             incrementVersion(version, oldDeploy.getConfig(), deploy)
         } else {
@@ -53,7 +53,7 @@ class KubernetesService implements DockerOrchestrationService {
     def incrementVersion(String version, String config, String deploy) {
         Logger.info("KubernetesService:incrementVersion: version:${version}, deploy:${deploy}")
         Logger.debug("KubernetesService:incrementVersion: config:${config}")
-        var newDeploy = new K8sJsonSetupVersion(config, deploy)
+        String newDeploy = new K8sJsonSetupVersion(config, deploy)
                 .setupVersion(version)
         new K8sDeployApplyCommand(newDeploy, dsl).apply()
     }

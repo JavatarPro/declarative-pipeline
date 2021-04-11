@@ -29,7 +29,7 @@ class K8sDeployApplyCommand implements Serializable {
 
     def apply() {
         Logger.info("K8sDeployApplyCommand:apply started")
-        var tmpConfigFile = new File(APPLY_FILE)
+        File tmpConfigFile = new File(APPLY_FILE)
         Logger.info("K8sDeployApplyCommand:apply:tmpConfigFile:${tmpConfigFile.getAbsolutePath()}")
         tmpConfigFile.write(config)
         Logger.debug("K8sDeployApplyCommand:apply:config:${config}")
