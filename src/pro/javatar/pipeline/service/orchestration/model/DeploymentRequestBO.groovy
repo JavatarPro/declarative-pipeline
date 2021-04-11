@@ -25,6 +25,14 @@ class DeploymentRequestBO implements Serializable {
         Logger.info("DeploymentRequestBO:default constructor")
     }
 
+    String getImage() {
+        return "${getDockerRegistry().registry}/${getImageName()}:${getImageVersion()}"
+    }
+
+    String getDeploy() {
+        return service
+    }
+
     String getImageVersionWithBuildNumber() {
         return "${imageVersion}.${buildNumber}"
     }
