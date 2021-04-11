@@ -4,6 +4,7 @@
  */
 package pro.javatar.pipeline.integration.k8s
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.util.Logger
 
@@ -29,15 +30,10 @@ class K8sDeployApplyCommand implements Serializable {
 
     def apply() {
         Logger.info("K8sDeployApplyCommand:apply started")
-        String currentDirectory = dsl.getShellExecutionResponse("pwd").trim()
-        File tmpConfigFile = new File(currentDirectory, APPLY_FILE)
-        Logger.info("K8sDeployApplyCommand:apply:tmpConfigFile:${tmpConfigFile.getAbsolutePath()}")
-        tmpConfigFile.write(config)
-        Logger.debug("K8sDeployApplyCommand:apply:config:${config}")
+        File tmpConfigFile = createJsonConfigFile()
         applyResponse = dsl.getShellExecutionResponse(APPLY_COMMAND, DEFAULT_MESSAGE)
         Logger.debug("K8sDeployApplyCommand:apply:applyResponse:${applyResponse}")
-        tmpConfigFile.delete()
-        Logger.debug("K8sDeployApplyCommand:apply:tmpConfigFile:deleted")
+        deleteJsonConfigFile(tmpConfigFile)
         if (isApplyCommandFailed(applyResponse)) {
             Logger.error("K8sDeployApplyCommand:apply: failed to apply config: ${config}")
             // TODO throw exception
@@ -51,4 +47,21 @@ class K8sDeployApplyCommand implements Serializable {
         }
         return false
     }
+
+    @NonCPS
+    File createJsonConfigFile() {
+        String currentDirectory = dsl.getShellExecutionResponse("pwd").trim()
+        File tmpConfigFile = new File(currentDirectory, APPLY_FILE)
+        Logger.info("K8sDeployApplyCommand:apply:tmpConfigFile:${tmpConfigFile.getAbsolutePath()}")
+        tmpConfigFile.write(config)
+        Logger.debug("K8sDeployApplyCommand:apply:config:${config}")
+        return tmpConfigFile
+    }
+
+    @NonCPS
+    void deleteJsonConfigFile(File tmpConfigFile) {
+        tmpConfigFile.delete()
+        Logger.debug("K8sDeployApplyCommand:apply:tmpConfigFile:deleted")
+    }
+
 }
