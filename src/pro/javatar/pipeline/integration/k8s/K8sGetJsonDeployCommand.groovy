@@ -16,7 +16,7 @@ class K8sGetJsonDeployCommand implements Serializable {
     public static String DEFAULT_MESSAGE = "K8sGetJsonDeployCommand.K8sDeploymentNotFound"
     String deploy
     JenkinsDslService dsl
-    String config
+    String config = null
 
     K8sGetJsonDeployCommand(String deploy, JenkinsDslService dsl) {
         this.deploy = deploy
@@ -24,7 +24,9 @@ class K8sGetJsonDeployCommand implements Serializable {
     }
 
     boolean isDeploymentAlreadyExists() {
-        config = getK8sConfigResponse(deploy)
+        if (config == null) {
+            config = getK8sConfigResponse(deploy)
+        }
         if (config.contains(DEFAULT_MESSAGE)) {
             return false
         }
