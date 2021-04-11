@@ -27,7 +27,6 @@ class JenkinsDslServiceImpl implements JenkinsDslService {
         this.dsl = dsl
     }
 
-    @NonCPS
     @Override
     void executeStage(StageAware stage) {
         dsl.stage(stage.getName()) {
@@ -35,27 +34,23 @@ class JenkinsDslServiceImpl implements JenkinsDslService {
         }
     }
 
-    @NonCPS
     @Override
     String readConfiguration(String configFile) {
         String config = dsl.readTrusted configFile;
         return config;
     }
 
-    @NonCPS
     @Override
     Map getJenkinsJobParameters() {
         return dsl.params
     }
 
-    @NonCPS
     @Override
     def readYaml(String yamlConfig) {
         def config = dsl.readYaml text: yamlConfig
         return config
     }
 
-    @NonCPS
     @Override
     String getShellExecutionResponse(String command) {
         String result = dsl.sh returnStdout: true, script: command
@@ -63,7 +58,6 @@ class JenkinsDslServiceImpl implements JenkinsDslService {
     }
 
     // https://stackoverflow.com/questions/22009364/is-there-a-try-catch-command-in-bash
-    @NonCPS
     @Override
     String getShellExecutionResponse(String command, String defaultMessage) {
         String fallbackCommand = "${command} || echo ${defaultMessage}"
@@ -71,13 +65,11 @@ class JenkinsDslServiceImpl implements JenkinsDslService {
         return result
     }
 
-    @NonCPS
     @Override
     void executeShell(String command) {
         dsl.sh command;
     }
 
-    @NonCPS
     @Override
     void executeSecureShell(String command, String credentialsId, String userVariable, String passwordVariable) {
         dsl.withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentialsId,
@@ -93,7 +85,6 @@ class JenkinsDslServiceImpl implements JenkinsDslService {
         }
     }
 
-    @NonCPS
     @Override
     void addToPath(String toolName, String variable) {
         def tool="${dsl.tool toolName}";
@@ -101,7 +92,6 @@ class JenkinsDslServiceImpl implements JenkinsDslService {
         dsl.env.PATH=String.format("%s/bin:%s", tool, dsl.env.PATH);
     }
 
-    @NonCPS
     @Override
     void executeWithinTimeoutInSpecifiedDirectory(Duration timeout, String directory, JenkinsExecutor executor) {
         dsl.timeout(time: timeout.toMinutes(), unit: 'MINUTES') { // TODO refactor
@@ -111,19 +101,16 @@ class JenkinsDslServiceImpl implements JenkinsDslService {
         }
     }
 
-    @NonCPS
     @Override
     def directDsl() {
         return dsl
     }
 
-    @NonCPS
     @Override
     def getEnv(String variable) {
         return dsl.env[env]
     }
 
-    @NonCPS
     @Override
     boolean fileExists(String file) {
         return dsl.fileExists(file)
