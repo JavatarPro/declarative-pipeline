@@ -11,7 +11,7 @@ import pro.javatar.pipeline.util.Logger
  * @author Borys Zora
  * @version 2021-04-11
  */
-class K8sCreateDeployCommand {
+class K8sCreateDeployCommand implements Serializable {
 
     public static String DEFAULT_MESSAGE = "K8sCreateDeployCommand.K8sCreateDeployCommandFailure"
 

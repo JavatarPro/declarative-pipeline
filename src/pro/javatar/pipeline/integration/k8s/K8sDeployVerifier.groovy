@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
  * @author Borys Zora
  * @version 2021-04-11
  */
-class K8sDeployVerifier {
+class K8sDeployVerifier implements Serializable {
 
     String deploy
     String version

@@ -13,7 +13,7 @@ import pro.javatar.pipeline.util.Logger
  * @author Borys Zora
  * @version 2021-04-11
  */
-class K8sJsonSetupVersion implements SetupVersionAware {
+class K8sJsonSetupVersion implements SetupVersionAware, Serializable {
 
     String deployJsonConfig
     String containerName
