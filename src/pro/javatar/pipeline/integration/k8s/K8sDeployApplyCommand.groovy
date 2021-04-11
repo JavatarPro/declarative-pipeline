@@ -29,7 +29,7 @@ class K8sDeployApplyCommand implements Serializable {
 
     def apply() {
         Logger.info("K8sDeployApplyCommand:apply started")
-        String currentDirectory = dsl.getShellExecutionResponse("pwd")
+        String currentDirectory = dsl.getShellExecutionResponse("pwd").trim()
         File tmpConfigFile = new File(currentDirectory, APPLY_FILE)
         Logger.info("K8sDeployApplyCommand:apply:tmpConfigFile:${tmpConfigFile.getAbsolutePath()}")
         tmpConfigFile.write(config)
