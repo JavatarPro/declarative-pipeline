@@ -21,10 +21,10 @@ class K8sGetJsonDeployCommand implements Serializable {
     K8sGetJsonDeployCommand(String deploy, JenkinsDslService dsl) {
         this.deploy = deploy
         this.dsl = dsl
-        config = getK8sConfigResponse(deploy)
     }
 
     boolean isDeploymentAlreadyExists() {
+        config = getK8sConfigResponse(deploy)
         if (config.contains(DEFAULT_MESSAGE)) {
             return false
         }
