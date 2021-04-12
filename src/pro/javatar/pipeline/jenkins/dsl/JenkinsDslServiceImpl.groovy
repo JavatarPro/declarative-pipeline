@@ -21,6 +21,7 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class JenkinsDslServiceImpl implements JenkinsDslService {
 
+    public static final String ENCODING_UTF_8 = "UTF-8"
     private def dsl;
 
     JenkinsDslServiceImpl(def dsl) {
@@ -122,5 +123,10 @@ class JenkinsDslServiceImpl implements JenkinsDslService {
     @Override
     void echo(String message) {
         dsl.echo message
+    }
+
+    @Override
+    void writeFile(String path, String content) {
+        dsl.writeFile encoding: ENCODING_UTF_8, file: path, text: content
     }
 }

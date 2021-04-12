@@ -51,4 +51,6 @@ public interface JenkinsDslService extends Serializable {
     boolean fileExists(String file)
 
     void echo(String message)
+
+    void writeFile(String path, String content)
 }

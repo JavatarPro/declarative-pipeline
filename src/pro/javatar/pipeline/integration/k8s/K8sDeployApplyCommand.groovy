@@ -29,11 +29,15 @@ class K8sDeployApplyCommand implements Serializable {
 
     def apply() {
         Logger.info("K8sDeployApplyCommand:apply started")
-        File tmpConfigFile = createJsonConfigFile()
-        String cmd = "kubectl apply -f " + tmpConfigFile.getAbsolutePath()
+        // File tmpConfigFile = createJsonConfigFile()
+        // String cmd = "kubectl apply -f " + tmpConfigFile.getAbsolutePath()
+        dsl.writeFile(APPLY_FILE, config)
+        dsl.executeShell("pwd && ls -lh && cat ${APPLY_FILE}")
+        String cmd = "kubectl apply -f " + APPLY_FILE
         applyResponse = dsl.getShellExecutionResponse(cmd, DEFAULT_MESSAGE)
         Logger.debug("K8sDeployApplyCommand:apply:applyResponse:${applyResponse}")
-        deleteJsonConfigFile(tmpConfigFile)
+        // deleteJsonConfigFile(tmpConfigFile)
+        dsl.executeShell("rm ${APPLY_FILE}")
         if (isApplyCommandFailed(applyResponse)) {
             Logger.error("K8sDeployApplyCommand:apply: failed to apply config: ${config}")
             // TODO throw exception
