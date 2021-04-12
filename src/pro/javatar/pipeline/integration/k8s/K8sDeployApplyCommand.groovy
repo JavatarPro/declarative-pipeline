@@ -17,7 +17,6 @@ class K8sDeployApplyCommand implements Serializable {
     public static String DEFAULT_MESSAGE = "K8sDeployApplyCommand.K8sApplyCommandFailure"
 
     private static String APPLY_FILE = "K8S-apply-deployment-file.json"
-    private static String APPLY_COMMAND = "kubectl apply -f " + APPLY_FILE
 
     String config
     JenkinsDslService dsl
@@ -31,7 +30,8 @@ class K8sDeployApplyCommand implements Serializable {
     def apply() {
         Logger.info("K8sDeployApplyCommand:apply started")
         File tmpConfigFile = createJsonConfigFile()
-        applyResponse = dsl.getShellExecutionResponse(APPLY_COMMAND, DEFAULT_MESSAGE)
+        String cmd = "kubectl apply -f " + tmpConfigFile.getAbsolutePath()
+        applyResponse = dsl.getShellExecutionResponse(cmd, DEFAULT_MESSAGE)
         Logger.debug("K8sDeployApplyCommand:apply:applyResponse:${applyResponse}")
         deleteJsonConfigFile(tmpConfigFile)
         if (isApplyCommandFailed(applyResponse)) {

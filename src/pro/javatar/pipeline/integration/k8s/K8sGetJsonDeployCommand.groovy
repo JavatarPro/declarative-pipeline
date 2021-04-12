@@ -6,6 +6,7 @@ package pro.javatar.pipeline.integration.k8s
 
 import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+import pro.javatar.pipeline.util.Logger
 
 /**
  * @author Borys Zora
@@ -43,6 +44,7 @@ class K8sGetJsonDeployCommand implements Serializable {
     @NonCPS
     protected String getK8sConfigResponse(String deploy) {
         String cmd = "kubectl get deployment ${deploy} -o json"
+        Logger.info("K8sGetJsonDeployCommand:getK8sConfigResponse:cmd: ${cmd}")
         return dsl.getShellExecutionResponse(cmd, DEFAULT_MESSAGE)
     }
 }
