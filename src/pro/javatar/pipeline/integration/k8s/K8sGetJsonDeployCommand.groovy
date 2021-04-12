@@ -41,7 +41,6 @@ class K8sGetJsonDeployCommand implements Serializable {
         return null
     }
 
-    @NonCPS
     protected String getK8sConfigResponse(String deploy) {
         String cmd = "kubectl get deployment ${deploy} -o json"
         Logger.info("K8sGetJsonDeployCommand:getK8sConfigResponse:cmd: ${cmd}")

@@ -52,7 +52,6 @@ class JenkinsDslServiceImpl implements JenkinsDslService {
         return config
     }
 
-    @NonCPS
     @Override
     String getShellExecutionResponse(String command) {
         String result = dsl.sh returnStdout: true, script: command
@@ -60,7 +59,6 @@ class JenkinsDslServiceImpl implements JenkinsDslService {
     }
 
     // https://stackoverflow.com/questions/22009364/is-there-a-try-catch-command-in-bash
-    @NonCPS
     @Override
     String getShellExecutionResponse(String command, String defaultMessage) {
         String fallbackCommand = "${command} || echo ${defaultMessage}"
