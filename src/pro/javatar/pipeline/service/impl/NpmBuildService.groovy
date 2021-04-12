@@ -26,7 +26,8 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  * @author Borys Zora
  * @since 2018-03-09
  */
-class NpmBuildService extends UiBuildService {
+class NpmBuildService extends UiBuildService implements Serializable {
+
     String moduleRepository
     protected String npmVersion
     protected String type
@@ -36,34 +37,33 @@ class NpmBuildService extends UiBuildService {
     void setUp() {
         Logger.debug("NpmBuildService setUp")
         Logger.debug("dsl.tool([name: ${npmVersion}, type: ${type}])")
-        def node = dsl.tool([name: npmVersion, type: type])
-        Logger.debug("node setup successfully")
-        dsl.env.PATH="${node}/bin:${dsl.env.PATH}"
+        def node = dslService.addToPath(npmVersion, type)
         // dsl.sh "npm config set registry ${moduleRepository}"
-        dsl.sh 'node --version'
-        dsl.sh 'npm -version'
+        dslService.executeShell("node --version")
+        dslService.executeShell("npm -version")
         // cacheLibraryFolder()
-        dsl.sh "npm install --no-save"
+        dslService.executeShell("npm install --no-save")
     }
 
+    // CacheUtils.cacheLibraryFolder()
     def cacheLibraryFolder() {
-        String buildFolder = dsl.env.WORKSPACE
+        String buildFolder = dslService.getEnv("WORKSPACE")
         String libraryCacheFolder = "${buildFolder}/${libraryFolder}"
-        if (! dsl.fileExists(libraryCacheFolder)) {
-            dsl.sh "mkdir ${libraryCacheFolder}"
+        if (! dslService.fileExists(libraryCacheFolder)) {
+            dslService.executeShell("mkdir ${libraryCacheFolder}")
         }
         Logger.debug("ln -s ${libraryCacheFolder} ${libraryFolder}")
-        dsl.sh "ln -s ${libraryCacheFolder} ${libraryFolder}"
+        dslService.executeShell("ln -s ${libraryCacheFolder} ${libraryFolder}")
     }
 
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
         Logger.info('npm buildAndUnitTests start')
-        dsl.sh "pwd; ls -la"
-        if (!skipUnitTests) dsl.sh 'npm run test'
-        dsl.sh 'npm run build'
-        dsl.sh "zip -r ${getArtifact()} ${distributionFolder}"
-        dsl.sh "pwd; ls -la"
+        dslService.executeShell("pwd; ls -la")
+        if (!skipUnitTests) dslService.executeShell('npm run test')
+        dslService.executeShell('npm run build')
+        dslService.executeShell("zip -r ${getArtifact()} ${distributionFolder}")
+        dslService.executeShell("pwd; ls -la")
         Logger.info('npm buildAndUnitTests end')
     }
 
@@ -77,10 +77,10 @@ class NpmBuildService extends UiBuildService {
     def setupReleaseVersion(String releaseVersion) { // TODO delete, switch to setupVersion method
         Logger.info("setupReleaseVersion: ${releaseVersion} started")
         Logger.debug("package.json before change version")
-        dsl.sh "cat package.json | grep version | grep -v flow"
-        dsl.sh "npm --no-git-tag-version version ${releaseVersion}"
+        dslService.executeShell("cat package.json | grep version | grep -v flow")
+        dslService.executeShell("npm --no-git-tag-version version ${releaseVersion}")
         Logger.debug("package.json after change version")
-        dsl.sh "cat package.json | grep version | grep -v flow"
+        dslService.executeShell("cat package.json | grep version | grep -v flow")
         Logger.info("setupReleaseVersion: ${releaseVersion} finished")
     }
 
@@ -88,15 +88,15 @@ class NpmBuildService extends UiBuildService {
     def setupVersion(String version) {
         Logger.info("setupVersion: ${version} started")
         Logger.debug("package.json before change version")
-        dsl.sh "cat package.json | grep version | grep -v flow"
-        dsl.sh "npm --no-git-tag-version version ${version}"
+        dslService.executeShell("cat package.json | grep version | grep -v flow")
+        dslService.executeShell("npm --no-git-tag-version version ${version}")
         Logger.debug("package.json after change version")
-        dsl.sh "cat package.json | grep version | grep -v flow"
+        dslService.executeShell("cat package.json | grep version | grep -v flow")
         Logger.info("setupVersion: ${version} finished")
     }
 
     String archiveContent() {
-        dsl.sh "zip -r dist.zip dist"
+        dslService.executeShell("zip -r dist.zip dist")
         return "dist.zip"
     }
 

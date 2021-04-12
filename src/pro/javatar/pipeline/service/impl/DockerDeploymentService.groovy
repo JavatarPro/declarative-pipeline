@@ -39,13 +39,13 @@ class DockerDeploymentService implements DeploymentService {
 
     @Override
     void deployArtifact(Env environment, ReleaseInfo releaseInfo) {
-        Logger.info("DockerDeploymentService deployArtifact started")
+        Logger.info("DockerDeploymentService: deployArtifact started")
         if (releaseInfo.isMultiDockerBuild()) {
             deployMultipleArtifacts(environment, releaseInfo)
         } else {
             deploySingleArtifact(environment, releaseInfo)
         }
-        Logger.info("DockerDeploymentService deployArtifact finished")
+        Logger.info("DockerDeploymentService: deployArtifact finished")
     }
 
     void deploySingleArtifact(Env environment, ReleaseInfo releaseInfo) {

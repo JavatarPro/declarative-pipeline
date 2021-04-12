@@ -5,8 +5,6 @@ import pro.javatar.pipeline.service.s3.AwsS3DeploymentService
 import pro.javatar.pipeline.service.s3.model.S3Repo
 import pro.javatar.pipeline.util.Logger
 
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-
 /**
  * Author : Borys Zora
  * Date Created: 4/13/18 12:14

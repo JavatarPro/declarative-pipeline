@@ -2,8 +2,9 @@
  * Copyright (c) 2019 Javatar LLC
  * All rights reserved.
  */
-package pro.javatar.pipeline.jenkins.dsl;
+package pro.javatar.pipeline.jenkins.dsl
 
+import com.cloudbees.groovy.cps.NonCPS;
 import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.jenkins.api.JenkinsExecutor
 import pro.javatar.pipeline.service.PipelineDslHolder
@@ -20,11 +21,11 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class JenkinsDslServiceImpl implements JenkinsDslService {
 
+    public static final String ENCODING_UTF_8 = "UTF-8"
     private def dsl;
 
     JenkinsDslServiceImpl(def dsl) {
         this.dsl = dsl
-        PipelineDslHolder.dsl = dsl
     }
 
     @Override
@@ -106,4 +107,24 @@ class JenkinsDslServiceImpl implements JenkinsDslService {
         return dsl
     }
 
+    @Override
+    def getEnv(String variable) {
+        return dsl.env[env]
+    }
+
+    @Override
+    boolean fileExists(String file) {
+        return dsl.fileExists(file)
+    }
+
+    @NonCPS
+    @Override
+    void echo(String message) {
+        dsl.echo message
+    }
+
+    @Override
+    void writeFile(String path, String content) {
+        dsl.writeFile encoding: ENCODING_UTF_8, file: path, text: content
+    }
 }

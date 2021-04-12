@@ -45,4 +45,12 @@ public interface JenkinsDslService extends Serializable {
      * return direct/raw jenkins dsl
      */
     def directDsl();
+
+    def getEnv(String variable)
+
+    boolean fileExists(String file)
+
+    void echo(String message)
+
+    void writeFile(String path, String content)
 }

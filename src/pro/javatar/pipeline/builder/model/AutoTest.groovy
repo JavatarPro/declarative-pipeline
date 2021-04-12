@@ -88,10 +88,10 @@ class AutoTest implements Serializable {
     @Override
     public String toString() {
         return "AutoTest{" +
-                "jobName='" + jobName + '\'' +
-                ", skipSystemTests=" + skipSystemTests +
-                ", skipCodeQualityVerification=" + skipCodeQualityVerification +
-                ", sleepInSeconds=" + sleepInSeconds +
+                "jobName='" + jenkinsJobName + '\'' +
+                ", skipSystemTests=" + shouldSkipSystemTests +
+                ", skipCodeQualityVerification=" + shouldSkipCodeQualityVerification +
+                ", sleepInSeconds=" + sleepInSecondsAmount +
                 '}';
     }
 }

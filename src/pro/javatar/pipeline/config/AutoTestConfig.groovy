@@ -7,6 +7,7 @@ package pro.javatar.pipeline.config
 import java.time.Duration
 
 /**
+ * TODO verify where model still good
  * @author Borys Zora
  * @version 2019-11-04
  */

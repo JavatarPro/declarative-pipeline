@@ -21,12 +21,18 @@ import pro.javatar.pipeline.exception.UnrecognizedRevisionControlTypeException
  * @author Borys Zora
  * @since 2018-03-09
  */
+// will be @Deprecated soon in 2.x release
+// @see VersioningType, ReleaseType, ReleaseUploadArtifactType as it could be few builds (like maven & docker)
 enum BuildServiceType implements Serializable {
 
+    DOCKER,
+    TEST_DOCKER, // for testing purposes
     MAVEN,
     GRADLE,
     NPM, // e.g. angular + AWS S3
     NPM_DOCKER, // e.g. react + docker
+    NPM_YARN_DOCKER, // e.g. angular + yarn install + docker as deployment
+    NPM_JUST_DOCKER, // npm will be used for version update, but only docker will be build
     SENCHA,
     PHP,
     PHP_PYTHON, // python code with composer.json for versioning from php
@@ -38,6 +44,9 @@ enum BuildServiceType implements Serializable {
         }
         if("maven".equalsIgnoreCase(type) || "mvn".equalsIgnoreCase(type)) {
             return MAVEN
+        }
+        if("docker".equalsIgnoreCase(type)) {
+            return DOCKER
         }
         if("gradle".equalsIgnoreCase(type) || "gradlew".equalsIgnoreCase(type)) {
             return GRADLE
@@ -51,6 +60,15 @@ enum BuildServiceType implements Serializable {
                 || "docker_npm".equalsIgnoreCase(type) || "react_docker".equalsIgnoreCase(type)
                 || "angular_docker".equalsIgnoreCase(type)) {
             return NPM_DOCKER
+        }
+        if ("npm_yarn_docker".equalsIgnoreCase(type)) {
+            return NPM_YARN_DOCKER
+        }
+        if ("test_docker".equalsIgnoreCase(type)) {
+            return TEST_DOCKER
+        }
+        if ("npm_just_docker".equalsIgnoreCase(type)) {
+            return NPM_JUST_DOCKER
         }
         if ("sencha".equalsIgnoreCase(type) || "extjs".equalsIgnoreCase(type) || "ext".equalsIgnoreCase(type)) {
             return SENCHA

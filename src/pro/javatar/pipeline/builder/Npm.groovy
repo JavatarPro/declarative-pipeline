@@ -19,8 +19,6 @@ import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.service.impl.NpmBuildService
 import pro.javatar.pipeline.util.Logger
 
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-
 /**
  * @author Borys Zora
  * @since 2018-03-09
@@ -60,7 +58,7 @@ class Npm implements Serializable {
         npmBuildService.setType(npmType)
         npmBuildService.setNpmVersion(npmVersion)
         npmBuildService.setModuleRepository(moduleRepository)
-        npmBuildService.setDistributionFolder(distributionFolder)
+        npmBuildService.withDistributionFolder(distributionFolder)
         npmBuildService.withUnitTestsTimeout(buildTimeoutInMinutes)
         return npmBuildService
     }
@@ -70,7 +68,12 @@ class Npm implements Serializable {
         return this
     }
 
-    String getNpmType() {
+    // issues with cps
+//    String getNpmType() {
+//        return npmType
+//    }
+
+    String getType() {
         return npmType
     }
 

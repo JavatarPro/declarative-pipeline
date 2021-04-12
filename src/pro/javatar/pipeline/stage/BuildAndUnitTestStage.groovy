@@ -14,13 +14,13 @@
  */
 package pro.javatar.pipeline.stage
 
-import com.cloudbees.groovy.cps.NonCPS;
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
 import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
+
 /**
  * TODO remove dsl
  * @author Borys Zora
@@ -39,7 +39,7 @@ class BuildAndUnitTestStage extends Stage {
 
     @Override
     void execute() throws PipelineException {
-        Logger.info("BuildAndUnitTestStage execute started: " + toString())
+        Logger.info("BuildAndUnitTestStage execute started")
         dsl.timeout(time: buildService.unitTestsTimeout, unit: 'MINUTES') {
             revisionControl.cleanUp()
             dsl.dir(revisionControl.folder) {
@@ -60,7 +60,7 @@ class BuildAndUnitTestStage extends Stage {
         }
         dsl.currentBuild.description = "build of " + releaseInfo().getServiceName() + ":" +
                 releaseInfo().getBuildReleaseVersion() + " completed"
-        Logger.info("BuildAndUnitTestStage execute finished: " + toString())
+        Logger.info("BuildAndUnitTestStage execute finished")
     }
 
     @Override
@@ -75,7 +75,7 @@ class BuildAndUnitTestStage extends Stage {
         releaseInfo().setDevelopVersion(buildService.getDevelopVersion(releaseVersion))
         releaseInfo().setFlowPrefix(revisionControl.getFlowPrefix())
         buildService.populateReleaseInfo(releaseInfo())
-        Logger.info("BuildAndUnitTestStage populateReleaseInfo finished: " + releaseInfo().toString())
+        Logger.info("BuildAndUnitTestStage populateReleaseInfo finished")
     }
 
     boolean equals(o) {
@@ -95,17 +95,5 @@ class BuildAndUnitTestStage extends Stage {
         result = (buildService != null ? buildService.hashCode() : 0)
         result = 31 * result + (revisionControl != null ? revisionControl.hashCode() : 0)
         return result
-    }
-
-    @NonCPS
-    @Override
-    public String toString() {
-        return "BuildAndUnitTestStage{" +
-                "buildService=" + buildService +
-                ", revisionControl=" + revisionControl +
-                ", skipStage=" + skipStage +
-                ", exitFromPipeline=" + exitFromPipeline +
-                ", releaseInfo=" + releaseInfo() +
-                '}';
     }
 }

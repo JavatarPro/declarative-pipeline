@@ -19,7 +19,6 @@ import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.DeploymentService
-import pro.javatar.pipeline.service.ServiceContextHolder
 import pro.javatar.pipeline.stage.Stage
 import pro.javatar.pipeline.util.Logger
 
@@ -60,12 +59,12 @@ abstract class DeployToEnvStage extends Stage {
     @NonCPS
     @Override
     public String toString() {
-        return "DeployToQAEnvStage{" +
-                "env=" + getEnv().getValue() +
+        return "DeployToEnvStage{" +
+//                "env=" + getEnv().getValue() +
                 ", deploymentService=" + deploymentService +
                 ", skipStage=" + skipStage +
                 ", exitFromPipeline=" + exitFromPipeline +
-                ", releaseInfo=" + releaseInfo() +
+//                ", releaseInfo=" + releaseInfo() +
                 '}';
     }
 }

@@ -15,7 +15,6 @@
 
 package pro.javatar.pipeline.builder
 
-import pro.javatar.pipeline.exception.UnrecognizedRevisionControlTypeException
 import pro.javatar.pipeline.model.RevisionControlType
 import pro.javatar.pipeline.model.VcsRepositoryType
 import pro.javatar.pipeline.service.vcs.HgService
@@ -23,8 +22,6 @@ import pro.javatar.pipeline.service.vcs.GitService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
 import pro.javatar.pipeline.service.vcs.VcsRepositoryUrlResolver
 import pro.javatar.pipeline.util.Logger
-
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
  * @author Borys Zora

@@ -1,6 +1,5 @@
 package pro.javatar.pipeline.builder.model
 
-import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.builder.Npm
 import pro.javatar.pipeline.config.AutoTestConfig
 import pro.javatar.pipeline.config.Config
@@ -12,43 +11,24 @@ import pro.javatar.pipeline.util.StringUtils
 class YamlConfig implements Config, Serializable {
 
     String version
-
     Service service = new Service()
-
     Pipeline pipeline = new Pipeline()
-
     Maven maven = new Maven()
-
     Python python = new Python()
-
     Npm npm = new Npm()
-
     Ui ui = new Ui()
-
     Docker docker = new Docker()
-
     S3 s3 = new S3()
-
     Vcs vcs = new Vcs()
-
     JenkinsTool jenkinsTool = new JenkinsTool()
-
     String orchestrationService = null
-
     Mesos mesos = new Mesos()
-
     Nomad nomad = new Nomad()
-
     AutoTest autoTest = new AutoTest()
-
     AutoTestConfig autoTestConfig;
-
     GradleConfig gradleConfig;
-
     CacheRequest cacheRequest = new CacheRequest()
-
     Sonar sonar = new Sonar()
-
     LogLevel logLevel = LogLevel.INFO
 
     YamlConfig() {
@@ -324,27 +304,5 @@ class YamlConfig implements Config, Serializable {
     YamlConfig withLogLevel(LogLevel logLevel) {
         this.logLevel = logLevel
         return this
-    }
-
-    @NonCPS
-    @Override
-    public String toString() {
-        return "YamlConfig{" +
-                "version='" + version + '\'' +
-                ", service=" + service +
-                ", pipeline=" + pipeline +
-                ", maven=" + maven +
-                ", python=" + python +
-                ", npm=" + npm +
-                ", ui=" + ui +
-                ", docker=" + docker +
-                ", s3=" + s3 +
-                ", vcs=" + vcs +
-                ", jenkinsTool=" + jenkinsTool +
-                ", orchestrationService='" + orchestrationService + '\'' +
-                ", mesos=" + mesos +
-                ", autoTestConfig=" + autoTest +
-                ", cacheRequest=" + cacheRequest +
-                '}';
     }
 }

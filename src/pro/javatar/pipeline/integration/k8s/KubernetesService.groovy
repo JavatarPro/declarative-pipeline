@@ -18,60 +18,54 @@ import java.util.concurrent.TimeUnit
  */
 class KubernetesService implements DockerOrchestrationService {
 
-    JenkinsDslService dslService
+    JenkinsDslService dsl
 
-    KubernetesService(JenkinsDslService dslService) {
-        this.dslService = dslService
+    KubernetesService(JenkinsDslService dsl) {
+        this.dsl = dsl
     }
 
     @Override
     def setup() {
-        dslService.executeShell("kubectl get pods")
+        dsl.executeShell("kubectl get pods")
         return null
     }
 
     @Override
     DeploymentResponseBO dockerDeployContainer(DeploymentRequestBO req) {
-        String image = "${req.getDockerRegistry().registry}/${req.getImageName()}:${req.getImageVersion()}"
-        String deployment = req.service
-        String kubectlCommand = getDeploymentCommand(deployment, image)
-        String resp = dslService.getShellExecutionResponse(kubectlCommand)
-        Logger.info("KubernetesService:dockerDeployContainer: execute command: ${kubectlCommand}\nresp: ${resp}\nrequest: ${req.toString()}")
-        while (! isDeploymentReady(deployment)) {
-            Logger.info("KubernetesService:dockerDeployContainer: await for 5 seconds");
-            TimeUnit.SECONDS.sleep(5);
+        Logger.info("KubernetesService:dockerDeployContainer: started")
+        String deploy = req.service
+        String image = req.getImage()
+        String version = req.getImageVersion()
+        Logger.debug("KubernetesService:dockerDeployContainer: deploy:${deploy}, image:${image}, version:${version}")
+
+        def oldDeploy = new K8sGetJsonDeployCommand(deploy, dsl)
+        if (oldDeploy.isDeploymentAlreadyExists()) {
+            incrementVersion(version, oldDeploy.getConfig(), deploy)
+        } else {
+            createDeployment(deploy, image)
         }
+
+        validateDeployment(deploy, version)
+        Logger.info("KubernetesService:dockerDeployContainer: completed")
         return null
     }
 
-    boolean isDeploymentAlreadyExists(String deployment) {
-        String defaultMessage = "K8sDeploymentNotFound"
-        String cmd = "kubectl get deployment ${deployment} -o json"
-        String resp = dslService.getShellExecutionResponse(cmd, defaultMessage)
-        if (resp.contains(defaultMessage)) {
-            return false
-        }
-        return true
+    def incrementVersion(String version, String config, String deploy) {
+        Logger.info("KubernetesService:incrementVersion: version:${version}, deploy:${deploy}")
+        Logger.debug("KubernetesService:incrementVersion: config:${config}")
+        String newDeploy = new K8sJsonSetupVersion(config, deploy)
+                .setupVersion(version)
+        new K8sDeployApplyCommand(newDeploy, dsl).apply()
     }
 
-    // TODO use status:conditions:
-    boolean isDeploymentReady(String deployment) {
-        Logger.info("KubernetesService:isDeploymentReady:deployment: ${deployment}")
-        String cmd = "kubectl get deployment ${deployment} -o json"
-        String resp = dslService.getShellExecutionResponse(cmd)
-        Logger.trace("KubernetesService:isDeploymentReady:resp: ${resp}")
-        def depStatus = new JsonSlurper().parseText(resp)
-        return (depStatus.status.availableReplicas == 1
-                && depStatus.status.replicas == 1
-                && depStatus.status.updatedReplicas == 1)
+    void createDeployment(String deploy, String image) {
+        Logger.info("KubernetesService:createDeployment: deploy:${deploy}, image:${image}")
+        new K8sCreateDeployCommand(deploy, image, dsl).apply()
     }
 
-    String getDeploymentCommand(String deployment, String image) {
-        if (isDeploymentAlreadyExists(deployment)) {
-            //  kubectl set image deployments,rc nginx=nginx:1.9.1 --all
-            // kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1 --record
-            return "kubectl set image deployments ${deployment}=${image} -l 'app=${deployment}' --record"
-        }
-        return "kubectl create deployment ${deployment} --image=${image}"
+    def validateDeployment(String deploy, String version) {
+        Logger.info("KubernetesService:validateDeployment: deploy:${deploy}, image:${version}")
+        new K8sDeployVerifier(deploy, version, dsl).validate()
     }
+
 }

@@ -26,11 +26,8 @@ import pro.javatar.pipeline.config.GradleConfig
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.util.LogLevel
 import pro.javatar.pipeline.util.Logger
-
-import java.time.Duration
 import java.time.Period
 
-import static pro.javatar.pipeline.util.StringUtils.isBlank
 import static pro.javatar.pipeline.util.StringUtils.isNotBlank
 
 class YamlConverter {
@@ -62,7 +59,7 @@ class YamlConverter {
                 .withCacheRequest(retrieveCacheRequest(yml))
                 .populateServiceRepo()
         Logger.info("YamlConverter:toYamlModel:finished")
-        Logger.debug("YamlConverter:toYamlModel:result: " + result)
+//        Logger.debug("YamlConverter:toYamlModel:result:\n" + toJson(result))
         return result
     }
 
@@ -108,6 +105,7 @@ class YamlConverter {
                 .withUseBuildNumberForVersion(service.useBuildNumberForVersion)
                 .withVcsRepoId(service.vcs_repo)
                 .withOrchestration(service.orchestration)
+                .setReleases(service.release)
     }
 
     AutoTestConfig retrieveAutoTest(def yml) {
@@ -319,8 +317,15 @@ class YamlConverter {
         def npm = yml.npm
         Logger.debug("retrieveNpm: npm: ${npm}")
         if (npm == null) {
-            Logger.info("npm is null new Npm() will be returned")
+            def tool = yml.jenkins_tool
+            Logger.info("YamlConverter:retrieveNpm: jenkins_tool: ${tool}")
+            if (tool == null || tool.npm == null) {
+                Logger.info("npm is null new Npm() will be returned")
+                return new Npm()
+            }
             return new Npm()
+                    .withNpmVersion(tool.npm.version)
+                    .withNpmType(tool.npm.type)
         }
         return new Npm()
                 .withNpmType(npm.type)

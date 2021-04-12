@@ -14,7 +14,8 @@
  */
 package pro.javatar.pipeline.util
 
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl;
+import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+
 import static pro.javatar.pipeline.util.LogLevel.*
 import com.cloudbees.groovy.cps.NonCPS
 import groovy.json.JsonOutput
@@ -24,9 +25,10 @@ import groovy.json.JsonOutput
  * @author Borys Zora
  * @version 2019-03-29
  */
-class Logger {
+class Logger implements Serializable {
 
     static LogLevel LEVEL = INFO
+    static JenkinsDslService dslService
 
     @NonCPS
     static void fatal(def message) {
@@ -69,12 +71,12 @@ class Logger {
         try {
             if (LEVEL.ordinal() >= loggerLevel.ordinal()) {
                 String msg = JsonOutput.toJson(message)
-                dsl.echo loggerLevel.name() + ": " + msg
+                dslService.echo(loggerLevel.name() + ": " + msg)
             }
         } catch (Exception e) {
-            dsl.echo "Logger:print:Exception " + e.getClass();
-            dsl.echo e.getMessage();
-            dsl.echo e.printStackTrace();
+            dslService.echo("Logger:print:Exception " + e.getClass())
+            dslService.echo(e.getMessage())
+            dslService.echo(e.printStackTrace())
         }
     }
 }

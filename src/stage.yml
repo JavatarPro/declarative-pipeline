@@ -1,20 +1,22 @@
 pipeline:
-  stage:
+  stages:
     - name: build-and-unit-test
       # TODO
       commands:
         - cmd-checkout-code-from-vcs
         - cmd-build-artifact-with-unit-tests
+        - cmd-publish-dev-artifacts
         - cmd-build-docker
         - cmd-push-docker-to-dev-registry
-      fallback:
+      fallbacks:
         - todo
     - name: deploy-to-dev-env
       commands:
         - cmd-get-current-deployed-version
         - cmd-get-current-deployed-version
-      fallback:
+      fallbacks:
         - todo
+    - name: integration-test
     - name: auto-test
     - name: rollback-dev-env
     - name: dev-sign-off

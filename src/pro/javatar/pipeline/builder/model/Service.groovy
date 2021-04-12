@@ -7,16 +7,13 @@ import pro.javatar.pipeline.util.StringUtils
 class Service implements Serializable {
 
     String name
-
     String buildType
-
     Boolean useBuildNumberForVersion
-
     VcsRepoTO repo
-
     String vcsRepoId
-
     String orchestration
+    // TODO tmp solution will be separate DTO of Service
+    List<String> releases = new ArrayList<>()
 
     Service() {
         Logger.debug("Service:default constructor")
@@ -104,6 +101,18 @@ class Service implements Serializable {
     Service withOrchestration(String orchestration) {
         setOrchestration(orchestration)
         return this;
+    }
+
+    List<String> getReleases() {
+        return releases
+    }
+
+    Service setReleases(List<String> releases) {
+        if (releases == null) {
+            return this
+        }
+        this.releases = releases
+        return this
     }
 
     @NonCPS

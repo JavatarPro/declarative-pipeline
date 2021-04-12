@@ -5,6 +5,7 @@
 package pro.javatar.pipeline.config
 
 /**
+ * TODO verify where model still good
  * @author Borys Zora
  * @version 2019-11-13
  */

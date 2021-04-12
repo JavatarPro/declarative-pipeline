@@ -19,6 +19,8 @@ import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.model.DockerOrchestrationServiceType
 import pro.javatar.pipeline.model.RevisionControlType
 import pro.javatar.pipeline.model.VcsRepositoryType
+import pro.javatar.pipeline.release.ReleaseType
+import pro.javatar.pipeline.release.ReleaseUploadArtifactType
 import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
 import pro.javatar.pipeline.integration.marathon.MesosService
 import pro.javatar.pipeline.integration.nomad.NomadService
@@ -27,6 +29,7 @@ import pro.javatar.pipeline.service.vcs.model.VcsRepo
 import pro.javatar.pipeline.util.Logger
 
 import java.time.temporal.ChronoUnit
+import java.util.stream.Collectors
 
 import static pro.javatar.pipeline.util.StringUtils.isBlank
 
@@ -38,6 +41,8 @@ class FlowBuilderConverter {
                 .withServiceName(yamlFile.getService().getName())
                 .withBuildType(yamlFile.getService().getBuildType())
                 .withUseBuildNumberForVersion(yamlFile.getService().getUseBuildNumberForVersion())
+                .setReleaseTypes(toReleaseTypes(yamlFile.getService().getReleases()))
+                .setReleaseUploadArtifactTypes(toReleaseUploadArtifactTypes(yamlFile.getService().getReleases()))
                 .addPipelineStages(yamlFile.getPipeline().getSuit())
                 .addPipelineStages(yamlFile.getPipeline().getStages())
                 .addMaven(toMaven(yamlFile))
@@ -228,4 +233,22 @@ class FlowBuilderConverter {
                 .withParams(sonar.getParams())
     }
 
+    List<ReleaseType> toReleaseTypes(List<String> releases) {
+        List<ReleaseType> result = new ArrayList<>()
+        for(String release: releases) {
+            result.add(ReleaseType.fromString(release))
+        }
+        return result
+    }
+
+    List<ReleaseUploadArtifactType> toReleaseUploadArtifactTypes(List<String> releases) {
+        List<ReleaseUploadArtifactType> result = new ArrayList<>()
+        for(String release: releases) {
+            result.add(ReleaseType.fromString(release))
+        }
+        return result
+        return releases.stream()
+                .map({ s -> ReleaseUploadArtifactType.fromString(s) })
+                .collect(Collectors.toList())
+    }
 }

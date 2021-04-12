@@ -107,7 +107,8 @@ class GitService extends RevisionControlService {
         dsl.sh "git status"
         dsl.sh "git add ."
         dsl.sh "git status"
-        dsl.sh "git commit -m \'${message}\'"
+        // jenkins does not change the code, nothing to verify by lints rules
+        dsl.sh "git commit --no-verify -m \'${message}\'"
         Logger.info("successfully committed")
     }
 
@@ -295,8 +296,7 @@ class GitService extends RevisionControlService {
                 "credentialsId='" + credentialsId + '\'' +
                 ", repo='" + repo + '\'' +
                 ", repoOwner='" + repoOwner + '\'' +
-                ", userName='" + userName + '\'' +
                 ", flowPrefix='" + flowPrefix + '\'' +
-                "} " + super.toString();
+                "} "
     }
 }

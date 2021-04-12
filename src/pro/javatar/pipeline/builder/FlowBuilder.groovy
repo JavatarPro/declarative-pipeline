@@ -14,15 +14,21 @@
  */
 package pro.javatar.pipeline.builder
 
-import com.cloudbees.groovy.cps.NonCPS
+
 import pro.javatar.pipeline.Flow
 import pro.javatar.pipeline.builder.model.CacheRequest
 import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.builder.model.Python
 import pro.javatar.pipeline.config.Config
 import pro.javatar.pipeline.exception.*
+import pro.javatar.pipeline.integration.docker.DockerOnlyBuildService
 import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.model.*
+import pro.javatar.pipeline.release.CurrentVersionAware
+import pro.javatar.pipeline.release.ReleaseType
+import pro.javatar.pipeline.release.ReleaseUploadArtifactType
+import pro.javatar.pipeline.release.ReleaseVersionAware
+import pro.javatar.pipeline.release.SetupVersionAware
 import pro.javatar.pipeline.service.*
 import pro.javatar.pipeline.service.cache.CacheRequestHolder
 import pro.javatar.pipeline.service.impl.*
@@ -90,6 +96,12 @@ class FlowBuilder implements Serializable {
     SwaggerService swaggerService
     PipelineStagesSuit suit
 
+    SetupVersionAware setupVersionAware
+    CurrentVersionAware currentVersionAware
+    ReleaseVersionAware releaseVersionAware
+    List<ReleaseType> releaseTypes
+    List<ReleaseUploadArtifactType> releaseUploadArtifactTypes
+
     NexusUploadAware uploadAware;
     JenkinsDslService jenkinsDslService;
     Config config;
@@ -117,15 +129,15 @@ class FlowBuilder implements Serializable {
 
     def populateStages(Flow flow, List<StageType> stageTypes) {
         for (StageType stageType : stageTypes) {
-            Logger.info("populateStages for stageType: ${stageType.name()}")
+            Logger.info("populateStages for stageType: " + stageType.name())
             Stage stage = availableStages.get(stageType)
             if (stageTypesToBeSkipped.contains(stageType)) {
                 stage.skipStage = true
             }
-            Logger.info("$stage is present: $stageType")
+            Logger.info(stage.getName() + " is present: " + stageType.name())
             flow.addStage(stage)
         }
-        Logger.info("Flow with stagres: $flow")
+        Logger.info("Flow with stages: " + flow.getStageNames())
     }
 
     void createServices() {
@@ -190,17 +202,28 @@ class FlowBuilder implements Serializable {
 
     DeploymentService getAppropriateDeploymentService(BuildServiceType buildServiceType) {
         if (buildType == BuildServiceType.MAVEN
+                || buildType == BuildServiceType.DOCKER
                 || buildType == BuildServiceType.GRADLE
                 || buildType == BuildServiceType.PHP
-                || buildType == BuildServiceType.PYTHON) {
+                || buildType == BuildServiceType.PYTHON
+                || buildType == BuildServiceType.NPM_DOCKER
+                || buildType == BuildServiceType.NPM_JUST_DOCKER
+                || uiDeploymentType == UiDeploymentType.DOCKER) {
             return new DockerDeploymentService(releaseInfo, dockerService)
+        }
+        if (buildType == BuildServiceType.NPM_YARN_DOCKER
+                || buildType == BuildServiceType.TEST_DOCKER) {
+            releaseInfo.setIsUi(true)
+            releaseInfo.setOptimizeDockerContext(true)
+            def deploymentService = new DockerDeploymentService(releaseInfo, dockerService)
+            return deploymentService
         }
         if (uiDeploymentType == UiDeploymentType.AWS_S3) {
             return awsS3DeploymentService
         }
         if (buildType == BuildServiceType.NPM || buildType == BuildServiceType.SENCHA) {
             // TODO choose deployment type
-            return new CdnDeploymentService(releaseInfo.getServiceName(), mavenBuildService, buildService)
+            return new CdnDeploymentService(releaseInfo.getServiceName(), mavenBuildService, null)
         }
         throw new DeploymentServiceCreationException("Could not find this buildServiceType: ${buildServiceType}")
     }
@@ -335,8 +358,21 @@ class FlowBuilder implements Serializable {
             npmBuildService = npm.build()
             buildService = npmBuildService
         } else if (buildType == BuildServiceType.NPM_DOCKER) {
-            dockerNpmBuildService = new DockerNpmBuildService(dockerService, npm)
-            buildService = npmBuildService
+            DockerNpmBuildService service = new DockerNpmBuildService(dockerService, jenkinsDslService)
+            service.setType(npm.getType())
+            service.setNpmVersion(npm.npmVersion)
+            dockerNpmBuildService = service
+            buildService = dockerNpmBuildService
+        } else if (buildType == BuildServiceType.NPM_YARN_DOCKER) {
+            DockerNpmBuildService service = new DockerNpmYarnBuildService(dockerService, jenkinsDslService)
+            service.setType(npm.getType())
+            service.setNpmVersion(npm.npmVersion)
+            dockerNpmBuildService = service
+            buildService = dockerNpmBuildService
+        } else if (buildType == BuildServiceType.NPM_JUST_DOCKER || buildType == BuildServiceType.TEST_DOCKER) {
+            npmBuildService = npm.build()
+            npmBuildService.withDslService(jenkinsDslService)
+            buildService = new DockerOnlyBuildService(dockerService, npmBuildService, npmBuildService)
         } else if (buildType == BuildServiceType.SENCHA) {
             senchaService = new SenchaService()
             buildService = senchaService
@@ -346,6 +382,14 @@ class FlowBuilder implements Serializable {
             buildService = new PythonBuildService(dockerService, python.versionFile, python.versionParameter, python.projectDirectory)
         }
 
+        // TODO
+        setupVersionAware = buildService
+        currentVersionAware = buildService
+        releaseVersionAware = buildService
+
+        if (buildType == BuildServiceType.DOCKER) {
+            new DockerOnlyBuildService(dockerService, setupVersionAware, currentVersionAware)
+        }
         buildService.useBuildNumberForVersion = useBuildNumberForVersion
         Logger.debug("buildService: " + buildService.toString())
         Logger.info("setupBuildService finished")
@@ -446,11 +490,15 @@ class FlowBuilder implements Serializable {
                 && (buildType == BuildServiceType.MAVEN || buildType == BuildServiceType.GRADLE)) {
             return new BackEndLibraryReleaseService(buildService, uploadAware, revisionControlService)
         }
-        if (buildType == BuildServiceType.NPM || buildType == BuildServiceType.NPM_DOCKER
+        if (buildType == BuildServiceType.NPM
+                || buildType == BuildServiceType.NPM_DOCKER
+                || buildType == BuildServiceType.NPM_YARN_DOCKER
                 || buildType == BuildServiceType.SENCHA) {
             return new UiReleaseService(buildService, revisionControlService)
         }
-        if (buildType == BuildServiceType.PYTHON || buildType == BuildServiceType.PHP
+        if (buildType == BuildServiceType.PYTHON
+                || buildType == BuildServiceType.PHP
+                || buildType == BuildServiceType.TEST_DOCKER
                 || buildType == BuildServiceType.PHP_PYTHON) {
             return new VcsAndDockerRelease(buildService, revisionControlService, dockerService)
         }
@@ -549,6 +597,16 @@ class FlowBuilder implements Serializable {
         return this
     }
 
+    FlowBuilder setReleaseTypes(List<ReleaseType> releaseTypes) {
+        this.releaseTypes = releaseTypes
+        return this
+    }
+
+    FlowBuilder setReleaseUploadArtifactTypes(List<ReleaseUploadArtifactType> releaseUploadArtifactTypes) {
+        this.releaseUploadArtifactTypes = releaseUploadArtifactTypes
+        return this
+    }
+
     MavenBuildService buildMavenBuildService(Maven maven, JenkinsTool tool) {
         MavenBuildService service = new MavenBuildService()
         service.setJava(maven.getJava())
@@ -566,52 +624,22 @@ class FlowBuilder implements Serializable {
     }
 
     void populateServiceContextHolder() {
-        ServiceContextHolder.addService(mavenBuildService)
-        ServiceContextHolder.addService(dockerBuildService)
-        ServiceContextHolder.addService(npmBuildService)
-        ServiceContextHolder.addService(senchaService)
-        ServiceContextHolder.addService(buildService)
-        ServiceContextHolder.addService(deploymentService)
-        ServiceContextHolder.addService(autoTestsService)
-        ServiceContextHolder.addService(revisionControlService)
-        ServiceContextHolder.addService(RevisionControlService.class, revisionControlService)
-        ServiceContextHolder.addService(releaseService)
-        ServiceContextHolder.addService(dockerService)
-        ServiceContextHolder.addService(slackService)
-        ServiceContextHolder.addService(sonarQubeService)
-        ServiceContextHolder.addService(swaggerService)
-        ServiceContextHolder.addService(dockerNpmBuildService)
+        ContextHolder.add(mavenBuildService)
+        ContextHolder.add(dockerBuildService)
+        ContextHolder.add(npmBuildService)
+        ContextHolder.add(senchaService)
+        ContextHolder.add(buildService)
+        ContextHolder.add(deploymentService)
+        ContextHolder.add(autoTestsService)
+        ContextHolder.add(revisionControlService)
+        ContextHolder.add(RevisionControlService.class, revisionControlService)
+        ContextHolder.add(releaseService)
+        ContextHolder.add(dockerService)
+        ContextHolder.add(slackService)
+        ContextHolder.add(sonarQubeService)
+        ContextHolder.add(swaggerService)
+        ContextHolder.add(dockerNpmBuildService)
     }
 
-    @NonCPS
-    @Override
-    public String toString() {
-        return "FlowBuilder{" +
-                "releaseInfo=" + releaseInfo +
-                ", buildType=" + buildType +
-                ", useBuildNumberForVersion=" + useBuildNumberForVersion +
-                ", revisionControlBuilder=" + revisionControlBuilder +
-                ", stageTypes=" + stageTypes +
-                ", availableStages=" + availableStages +
-                ", stageTypesToBeSkipped=" + stageTypesToBeSkipped +
-                ", slackBuilder=" + slackBuilder +
-                ", dockerBuilder=" + dockerBuilder +
-                ", sonarQubeBuilder=" + sonarQubeBuilder +
-                ", swaggerBuilder=" + swaggerBuilder +
-                ", maven=" + maven +
-                ", mavenBuildService=" + mavenBuildService +
-                ", npmBuildService=" + npmBuildService +
-                ", buildService=" + buildService +
-                ", cdnDeploymentService=" + cdnDeploymentService +
-                ", deploymentService=" + deploymentService +
-                ", autoTestsService=" + autoTestsService +
-                ", revisionControlService=" + revisionControlService +
-                ", releaseService=" + releaseService +
-                ", dockerService=" + dockerService +
-                ", slackService=" + slackService +
-                ", sonarQubeService=" + sonarQubeService +
-                ", swaggerService=" + swaggerService +
-                '}';
-    }
 }
 

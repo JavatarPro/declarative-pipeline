@@ -20,7 +20,7 @@ import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.stage.StageAware;
 import pro.javatar.pipeline.util.Logger
 
-import static java.lang.String.format;
+import static java.lang.String.format
 
 /**
  * @author Borys Zora
@@ -71,8 +71,7 @@ class Flow implements Serializable {
         jenkinsDslService.executeStage(stage);
     }
 
-    List<StageAware> getStages() {
-        return new ArrayList<StageAware>(this.stages);
+    List<String> getStageNames() {
+        stages.collect {it.getName()}
     }
-
 }

@@ -18,31 +18,30 @@ package pro.javatar.pipeline.service
 import pro.javatar.pipeline.util.Logger
 
 import java.util.concurrent.ConcurrentHashMap
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
  * Author : Borys Zora
  * Date Created: 5/27/18 23:26
  */
-class ServiceContextHolder {
+class ContextHolder {
 
-    final static Map<Class, Object> serviceHolder = new ConcurrentHashMap<>()
+    final static Map<String, Object> serviceHolder = new ConcurrentHashMap<>()
 
-    static def addService(Object service) {
+    static def add(Object service) {
         if (service == null) {
             return
         }
-        return serviceHolder.put(service.getClass(), service)
+        return serviceHolder.put(service.getClass().getCanonicalName(), service)
     }
 
-    static def addService(Class key, Object service) {
+    static def add(Class key, Object service) {
         if (service == null) {
             return
         }
-        return serviceHolder.put(key, service)
+        return serviceHolder.put(key.getCanonicalName(), service)
     }
 
-    static def getService(Class service) {
+    static def get(Class service) {
         Logger.trace("ServiceContextHolder: getService: ${service}")
         if (service == null) {
             return
@@ -52,11 +51,15 @@ class ServiceContextHolder {
         return result
     }
 
-    static def removeService(Class service) {
-        if (service == null) {
+    static def remove(String key) {
+        if (key == null) {
             return
         }
-        return serviceHolder.remove(service)
+        return serviceHolder.remove(key)
+    }
+
+    static def remove(Class service) {
+        remove(service.getCanonicalName())
     }
 
 }
