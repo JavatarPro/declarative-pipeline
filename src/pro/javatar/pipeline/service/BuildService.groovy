@@ -97,7 +97,7 @@ abstract class BuildService implements CurrentVersionAware, SetupVersionAware, R
         Logger.debug("BuildService:getReleaseNumber with currentVersion: " + currentVersion +
                 "using buildNumber: " + buildNumber)
         validateBuildNumber(buildNumber)
-        return String.format("%s.%s", getReleaseNumber(), buildNumber);
+        return String.format("%s.%s", getReleaseNumber(currentVersion), buildNumber);
     }
 
     protected void validateCurrentVersion(String currentVersion) throws InvalidReleaseNumberException {
