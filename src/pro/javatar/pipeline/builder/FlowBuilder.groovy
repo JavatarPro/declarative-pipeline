@@ -205,13 +205,13 @@ class FlowBuilder implements Serializable {
                 || buildType == BuildServiceType.DOCKER
                 || buildType == BuildServiceType.GRADLE
                 || buildType == BuildServiceType.PHP
-                || buildType == BuildServiceType.PYTHON
-                || buildType == BuildServiceType.NPM_DOCKER
-                || buildType == BuildServiceType.NPM_JUST_DOCKER
-                || uiDeploymentType == UiDeploymentType.DOCKER) {
+                || buildType == BuildServiceType.PYTHON) {
             return new DockerDeploymentService(releaseInfo, dockerService)
         }
         if (buildType == BuildServiceType.NPM_YARN_DOCKER
+                || buildType == BuildServiceType.NPM_DOCKER
+                || buildType == BuildServiceType.NPM_JUST_DOCKER
+                || uiDeploymentType == UiDeploymentType.DOCKER
                 || buildType == BuildServiceType.TEST_DOCKER) {
             releaseInfo.setIsUi(true)
             releaseInfo.setOptimizeDockerContext(true)

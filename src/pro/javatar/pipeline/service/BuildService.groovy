@@ -16,7 +16,6 @@ package pro.javatar.pipeline.service
 
 import pro.javatar.pipeline.exception.InvalidReleaseNumberException
 import pro.javatar.pipeline.jenkins.api.JenkinsDslService
-import pro.javatar.pipeline.model.BuildServiceType
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.release.CurrentVersionAware
 import pro.javatar.pipeline.release.ReleaseVersionAware
@@ -43,7 +42,7 @@ abstract class BuildService implements CurrentVersionAware, SetupVersionAware, R
     String getReleaseVersion() throws InvalidReleaseNumberException {
         String currentVersion = getCurrentVersion()
         if (useBuildNumberForVersion) {
-            return getReleaseNumber(currentVersion, dsl.currentBuild.number)
+            return getReleaseNumber(currentVersion, "${dsl.currentBuild.number}")
         }
         return getReleaseNumber(currentVersion)
     }
@@ -94,7 +93,7 @@ abstract class BuildService implements CurrentVersionAware, SetupVersionAware, R
         return getReleaseNumber(releaseInfo.getDevelopVersion(), releaseInfo.getBuildNumber())
     }
 
-    String getReleaseNumber(String currentVersion, def buildNumber) throws InvalidReleaseNumberException {
+    String getReleaseNumber(String currentVersion, String buildNumber) throws InvalidReleaseNumberException {
         Logger.debug("BuildService:getReleaseNumber with currentVersion: " + currentVersion +
                 "using buildNumber: " + buildNumber)
         validateBuildNumber(buildNumber)
@@ -109,7 +108,7 @@ abstract class BuildService implements CurrentVersionAware, SetupVersionAware, R
         }
     }
 
-    protected void validateBuildNumber(def buildNumber) throws InvalidReleaseNumberException {
+    protected void validateBuildNumber(String buildNumber) throws InvalidReleaseNumberException {
         if (buildNumber == null || buildNumber.isEmpty()) {
             Logger.error("BuildService:validateBuildNumber: buildNumber must be specified")
             throw new InvalidReleaseNumberException("buildNumber is not specified")
