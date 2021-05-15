@@ -18,7 +18,6 @@ import pro.javatar.pipeline.exception.InvalidReleaseNumberException
 import pro.javatar.pipeline.jenkins.api.JenkinsDslService
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.release.CurrentVersionAware
-import pro.javatar.pipeline.release.ReleaseVersionAware
 import pro.javatar.pipeline.release.SetupVersionAware
 import pro.javatar.pipeline.util.Logger
 
@@ -27,7 +26,7 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  * @author Borys Zora
  * @since 2018-03-09
  */
-abstract class BuildService implements CurrentVersionAware, SetupVersionAware, ReleaseVersionAware, Serializable {
+abstract class BuildService implements CurrentVersionAware, SetupVersionAware, Serializable {
 
     protected JenkinsDslService dslService
     protected int unitTestsTimeout = 25
@@ -38,28 +37,6 @@ abstract class BuildService implements CurrentVersionAware, SetupVersionAware, R
     abstract void buildAndUnitTests(ReleaseInfo releaseInfo)
 
     abstract void setUp()
-
-    String getReleaseVersion() throws InvalidReleaseNumberException {
-        String currentVersion = getCurrentVersion()
-        if (useBuildNumberForVersion) {
-            return getReleaseNumber(currentVersion, "${dsl.currentBuild.number}")
-        }
-        return getReleaseNumber(currentVersion)
-    }
-
-    String getDevelopVersion(String version) {
-        Logger.info("getDevelopVersion for version: " + version)
-        if (version.contains("-SNAPSHOT")) {
-            Logger.error("it seams this artifact: " + version + " has not been released, no need increment version")
-            throw new IllegalStateException("artifact should not contain SNAPSHOT");
-        }
-        Logger.debug("current version: " + version)
-        int idx = version.lastIndexOf(".") + 1;
-        String result = version.substring(0, idx);
-        int smallerVersion = Integer.parseInt(version.substring(idx, version.length()));
-        result += ++smallerVersion + "-SNAPSHOT";
-        return result;
-    }
 
     abstract def setupReleaseVersion(String releaseVersion)
 
@@ -76,44 +53,6 @@ abstract class BuildService implements CurrentVersionAware, SetupVersionAware, R
     }
 
     // helper methods
-
-    String getReleaseNumber(String currentVersion) {
-        Logger.debug("BuildService:getReleaseNumber: with currentVersion: " + currentVersion)
-        validateCurrentVersion(currentVersion)
-        String releaseVersion = currentVersion.replace("-SNAPSHOT", "")
-        if (releaseVersion.isEmpty()) {
-            Logger.error("BuildService:getReleaseNumber: releaseVersion must be defined")
-            throw new InvalidReleaseNumberException("releaseVersion must be defined")
-        }
-        return releaseVersion
-    }
-
-    @Override
-    String getReleaseVersion(ReleaseInfo releaseInfo) {
-        return getReleaseNumber(releaseInfo.getDevelopVersion(), releaseInfo.getBuildNumber())
-    }
-
-    String getReleaseNumber(String currentVersion, String buildNumber) throws InvalidReleaseNumberException {
-        Logger.debug("BuildService:getReleaseNumber with currentVersion: " + currentVersion +
-                "using buildNumber: " + buildNumber)
-        validateBuildNumber(buildNumber)
-        return String.format("%s.%s", getReleaseNumber(currentVersion), buildNumber);
-    }
-
-    protected void validateCurrentVersion(String currentVersion) throws InvalidReleaseNumberException {
-        if (!currentVersion.contains("-SNAPSHOT")) {
-            Logger.error("BuildService:validateCurrentVersion:" +
-                    " it seems this artifact: " + currentVersion + " has been released already")
-            throw new InvalidReleaseNumberException("currentVersion: " + currentVersion + " does not contain -SNAPSHOT")
-        }
-    }
-
-    protected void validateBuildNumber(String buildNumber) throws InvalidReleaseNumberException {
-        if (buildNumber == null || buildNumber.isEmpty()) {
-            Logger.error("BuildService:validateBuildNumber: buildNumber must be specified")
-            throw new InvalidReleaseNumberException("buildNumber is not specified")
-        }
-    }
 
     BuildService withDistributionFolder(String distributionFolder) {
         this.distributionFolder = distributionFolder

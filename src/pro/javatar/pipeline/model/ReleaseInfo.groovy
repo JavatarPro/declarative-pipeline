@@ -15,18 +15,25 @@
 package pro.javatar.pipeline.model
 
 import com.cloudbees.groovy.cps.NonCPS
+import pro.javatar.pipeline.exception.InvalidReleaseNumberException
+import pro.javatar.pipeline.release.ArtifactReleaseInfo
 import pro.javatar.pipeline.service.infra.model.InfraRequest
 import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.util.StringUtils.addPrefixIfNotExists
+import static pro.javatar.pipeline.util.StringUtils.isBlank
 import static pro.javatar.pipeline.util.StringUtils.isNotBlank
 
 /**
  * @author Borys Zora
  * @since 2018-03-09
  */
-class ReleaseInfo implements Serializable {
+class ReleaseInfo implements ArtifactReleaseInfo, Serializable {
 
+    private static final NOT_RELEASED_ARTIFACT_SUFFIX = "-SNAPSHOT"
+
+    String currentVersion
+    String nextVersion
     String releaseVersion
     String developVersion
     String repoFolder
@@ -45,8 +52,88 @@ class ReleaseInfo implements Serializable {
 
     InfraRequest infraRequest = new InfraRequest()
 
-    String getReleaseVersion() {
-        return releaseVersion
+    @Override
+    String nextVersion() {
+        if (isNotBlank(nextVersion)) {
+            return nextVersion
+        }
+        return toNextVersion(releaseVersion())
+    }
+
+    @Override
+    String currentVersion() {
+        return currentVersion
+    }
+
+    @Override
+    String releaseVersion() {
+        if (isNotBlank(releaseVersion)) {
+            return releaseVersion
+        }
+        return toReleaseVersion(currentVersion())
+    }
+
+    @Override
+    String releaseVersionWithBuildSuffix() {
+        if (isNotBlank(buildNumber)) {
+            return String.format("%s.%s", releaseVersion(), buildNumber)
+        }
+        return releaseVersion()
+    }
+
+// helper methods
+
+    String toCurrentVersion(String currentVersion) {
+        validateCurrentVersion(currentVersion)
+        return currentVersion
+    }
+
+    private String toReleaseVersion(String currentVersion) {
+        Logger.debug("BuildService:getReleaseNumber: with currentVersion: " + currentVersion)
+        return currentVersion.replace(NOT_RELEASED_ARTIFACT_SUFFIX, "")
+    }
+
+    private String toNextVersion(String releaseVersion) {
+        if (releaseVersion.contains(NOT_RELEASED_ARTIFACT_SUFFIX)) {
+            Logger.error("it seams this artifact: " + releaseVersion + " has not been released, no need increment version")
+            throw new IllegalStateException("artifact should not contain ${NOT_RELEASED_ARTIFACT_SUFFIX}")
+        }
+        Logger.debug("current released version: " + releaseVersion)
+        int idx = releaseVersion.lastIndexOf(".") + 1
+        String result = releaseVersion.substring(0, idx)
+        int smallerVersion = Integer.parseInt(releaseVersion.substring(idx, releaseVersion.length()))
+        result += ++smallerVersion + NOT_RELEASED_ARTIFACT_SUFFIX
+        return result
+    }
+
+    private void validateCurrentVersion(String currentVersion) throws InvalidReleaseNumberException {
+        if (!currentVersion.contains("-SNAPSHOT")) {
+            Logger.error("ReleaseInfo:validateCurrentVersion:" +
+                    " it seems this artifact: " + currentVersion + " has been released already")
+            throw new InvalidReleaseNumberException("currentVersion: " + currentVersion +
+                    " does not contain $NOT_RELEASED_ARTIFACT_SUFFIX")
+        }
+        if (currentVersion.length() <= NOT_RELEASED_ARTIFACT_SUFFIX.length()) {
+            String msg = "ReleaseInfo:validateCurrentVersion: version must be defined. " +
+                    "currentVersion: ${currentVersion} is too small"
+            Logger.error(msg)
+            throw new InvalidReleaseNumberException(msg)
+        }
+    }
+
+    private void validateBuildNumber(String buildNumber) throws InvalidReleaseNumberException {
+        if (isBlank(buildNumber)) {
+            String errorMsg = "ReleaseInfo:validateBuildNumber: validation failed buildNumber must be specified"
+            Logger.error(errorMsg)
+            throw new InvalidReleaseNumberException(errorMsg)
+        }
+    }
+
+    // getters & setters
+
+    ReleaseInfo setCurrentVersion(String currentVersion) {
+        this.currentVersion = toCurrentVersion(currentVersion)
+        return this
     }
 
     void setReleaseVersion(String releaseVersion) {
@@ -73,12 +160,9 @@ class ReleaseInfo implements Serializable {
         return serviceName
     }
 
-    void setServiceName(String serviceName) {
+    ReleaseInfo setServiceName(String serviceName) {
         this.serviceName = serviceName
-    }
-
-    String getFlowPrefix() {
-        return flowPrefix
+        return this
     }
 
     void setFlowPrefix(String flowPrefix) {
@@ -98,7 +182,6 @@ class ReleaseInfo implements Serializable {
     }
 
     void addDockerImageName(String dockerImageName) {
-
         this.dockerImageNames.add(dockerImageName)
     }
 
@@ -200,8 +283,10 @@ class ReleaseInfo implements Serializable {
         return buildNumber
     }
 
-    void setBuildNumber(String buildNumber) {
+    ReleaseInfo setBuildNumber(String buildNumber) {
+        validateBuildNumber(buildNumber)
         this.buildNumber = buildNumber
+        return this
     }
 
     void setIsUi(boolean isUi) {
@@ -230,7 +315,7 @@ class ReleaseInfo implements Serializable {
 
     @NonCPS
     @Override
-    public String toString() {
+    String toString() {
         return "ReleaseInfo{" +
                 "releaseVersion='" + releaseVersion + '\'' +
                 ", developVersion='" + developVersion + '\'' +
@@ -238,10 +323,6 @@ class ReleaseInfo implements Serializable {
                 ", serviceName='" + serviceName + '\'' +
                 ", flowPrefix='" + flowPrefix + '\'' +
                 ", uiDistributionFolder='" + uiDistributionFolder + '\'' +
-//                ", dockerImageNames='" + getDockerImageNames().size() + '\'' +
-//                ", customDockerFileNames='" + getCustomDockerFileNames().size() + '\'' +
-//                ", dockerImageVersion='" + getDockerImageVersion() + '\'' +
-//                ", buildReleaseVersion='" + getBuildReleaseVersion() + '\'' +
-                '}';
+                '}'
     }
 }

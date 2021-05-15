@@ -48,8 +48,7 @@ class BuildAndUnitTestStage extends Stage {
                 revisionControl.setUpVcsFlowPreparations()
                 revisionControl.switchToDevelopBranch()
                 buildService.setUp()
-                def releaseVersion = buildService.getReleaseVersion()
-                populateReleaseInfo(releaseVersion)
+                populateReleaseInfo()
                 dsl.currentBuild.description =
                         "try to build " + releaseInfo().getServiceName() + ":" + releaseInfo().getBuildReleaseVersion();
                 revisionControl.createReleaseBranchLocally(releaseInfo().getPrefixedReleaseVersion())
@@ -68,11 +67,11 @@ class BuildAndUnitTestStage extends Stage {
         return "build and unit test";
     }
 
-    def populateReleaseInfo(String releaseVersion) {
+    def populateReleaseInfo() {
         Logger.info("BuildAndUnitTestStage populateReleaseInfo started with releaseVersion: " + releaseVersion)
         releaseInfo().setRepoFolder(revisionControl.folder)
-        releaseInfo().setReleaseVersion(releaseVersion)
-        releaseInfo().setDevelopVersion(buildService.getDevelopVersion(releaseVersion))
+        def currentVersion = buildService.getCurrentVersion()
+        releaseInfo().setCurrentVersion(currentVersion)
         releaseInfo().setFlowPrefix(revisionControl.getFlowPrefix())
         buildService.populateReleaseInfo(releaseInfo())
         Logger.info("BuildAndUnitTestStage populateReleaseInfo finished")

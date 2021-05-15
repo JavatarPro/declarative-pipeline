@@ -27,7 +27,6 @@ import pro.javatar.pipeline.model.*
 import pro.javatar.pipeline.release.CurrentVersionAware
 import pro.javatar.pipeline.release.ReleaseType
 import pro.javatar.pipeline.release.ReleaseUploadArtifactType
-import pro.javatar.pipeline.release.ReleaseVersionAware
 import pro.javatar.pipeline.release.SetupVersionAware
 import pro.javatar.pipeline.service.*
 import pro.javatar.pipeline.service.cache.CacheRequestHolder
@@ -98,7 +97,6 @@ class FlowBuilder implements Serializable {
 
     SetupVersionAware setupVersionAware
     CurrentVersionAware currentVersionAware
-    ReleaseVersionAware releaseVersionAware
     List<ReleaseType> releaseTypes
     List<ReleaseUploadArtifactType> releaseUploadArtifactTypes
 
@@ -385,7 +383,6 @@ class FlowBuilder implements Serializable {
         // TODO
         setupVersionAware = buildService
         currentVersionAware = buildService
-        releaseVersionAware = buildService
 
         if (buildType == BuildServiceType.DOCKER) {
             new DockerOnlyBuildService(dockerService, setupVersionAware, currentVersionAware)

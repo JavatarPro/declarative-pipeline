@@ -39,7 +39,7 @@ class ReleaseArtifactsStage extends Stage {
         Logger.info("ReleaseArtifactsStage execute started: " + toString())
         dsl.dir(releaseInfo().getRepoFolder()) {
             releaseService.release(releaseInfo())
-            dsl.currentBuild.description = releaseInfo().getServiceName() + ":" + releaseInfo().getReleaseVersion();
+            dsl.currentBuild.description = releaseInfo().getServiceName() + ":" + releaseInfo().releaseVersion();
         }
         Logger.info("ReleaseArtifactsStage execute finished")
     }
