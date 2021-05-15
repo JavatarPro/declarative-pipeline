@@ -53,8 +53,9 @@ class DockerDeploymentService implements DeploymentService {
         if (environment == Env.DEV) {
             // TODO improve lost prefix in this case
             version = releaseInfo.releaseVersionWithBuildSuffix()
+            Logger.debug("customizing version for dev env: ${version}")
             // TODO move & split this method to do it on build and release stage
-            dockerService.dockerPublish(releaseInfo.getDockerImageName(), version, environment)
+            dockerService.dockerPublish(releaseInfo.getDockerImageName(), releaseInfo.releaseVersion(), environment)
         }
         Logger.debug("DockerDeploymentService deploySingleArtifact to ${environment.getValue()} " +
                 "env and version: ${version} started")
