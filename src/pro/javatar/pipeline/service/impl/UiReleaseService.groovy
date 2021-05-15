@@ -21,8 +21,6 @@ import pro.javatar.pipeline.service.ReleaseService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
 import pro.javatar.pipeline.util.Logger
 
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-
 /**
  * @author Borys Zora
  * @since 2018-03-09
@@ -42,7 +40,7 @@ class UiReleaseService implements ReleaseService {
         Logger.info("UiReleaseService releaseRevisionControl() started")
         // String releaseVersion = buildService.getCurrentVersion()
         // String developVersion = buildService.getDevelopVersion(releaseVersion)
-        revisionControlService.release(releaseInfo.releaseVersion)
+        revisionControlService.release(releaseInfo.releaseVersion())
         revisionControlService.switchToDevelopBranch()
         buildService.setupVersion(releaseInfo.developVersion)
         revisionControlService.commitChanges("Update develop version to :${releaseInfo.developVersion}")

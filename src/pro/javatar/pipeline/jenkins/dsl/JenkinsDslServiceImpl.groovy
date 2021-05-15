@@ -127,4 +127,9 @@ class JenkinsDslServiceImpl implements JenkinsDslService {
     void writeFile(String path, String content) {
         dsl.writeFile encoding: ENCODING_UTF_8, file: path, text: content
     }
+
+    @Override
+    String buildNumber() {
+        return "${dsl.currentBuild.number}"
+    }
 }

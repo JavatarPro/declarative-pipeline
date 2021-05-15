@@ -42,7 +42,7 @@ class CdnDeploymentService implements DeploymentService {
 
     @Override
     void deployArtifact(Env environment, ReleaseInfo releaseInfo) {
-        String version = releaseInfo.getReleaseVersion()
+        String version = releaseInfo.releaseVersion()
         Logger.info("CdnDeploymentService:deployArtifact to ${environment.getValue()} env " +
                 "and version: ${version} started")
         // TODO amend if not available qa nexus repo or other, only in this case do no use promotion

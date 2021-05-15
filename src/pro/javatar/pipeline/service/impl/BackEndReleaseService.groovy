@@ -51,7 +51,7 @@ class BackEndReleaseService implements ReleaseService {
     @Override
     def release(ReleaseInfo releaseInfo) {
         Logger.info("BackEndReleaseService start release: " + releaseInfo.toString())
-        validateReleaseVersion(releaseInfo.releaseVersion)
+        validateReleaseVersion(releaseInfo.releaseVersion())
         if (! skipUploadService) {
             uploadService.uploadMaven2Artifacts()
         }
@@ -59,14 +59,14 @@ class BackEndReleaseService implements ReleaseService {
         dsl.parallel 'release revision control': {
             releaseRevisionControl(releaseInfo)
         }, 'release docker artifacts': {
-            dockerService.dockerPushImageToProdRegistry(releaseInfo.serviceName, releaseInfo.releaseVersion)
+            dockerService.dockerPushImageToProdRegistry(releaseInfo.serviceName, releaseInfo.releaseVersion())
         }
         Logger.info("BackEndReleaseService end release")
     }
 
     def releaseRevisionControl(ReleaseInfo releaseInfo) {
         Logger.info("BackEndReleaseService: releaseRevisionControl() started")
-        revisionControlService.release(releaseInfo.releaseVersion)
+        revisionControlService.release(releaseInfo.releaseVersion())
         revisionControlService.switchToDevelopBranch()
         buildService.setupVersion(releaseInfo.developVersion)
         revisionControlService.commitChanges("Update version to " + releaseInfo.developVersion)

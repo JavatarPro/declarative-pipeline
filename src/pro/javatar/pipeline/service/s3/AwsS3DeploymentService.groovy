@@ -50,9 +50,9 @@ class AwsS3DeploymentService implements DeploymentService {
 
     def getS3Path(ReleaseInfo releaseInfo, Env env, S3Repo s3Repo) {
         if (s3Repo.hasEnvFolder()) {
-            return "${env.getValue()}/${releaseInfo.getServiceName()}/${releaseInfo.getReleaseVersion()}/"
+            return "${env.getValue()}/${releaseInfo.getServiceName()}/${releaseInfo.releaseVersion()}/"
         }
-        return "${releaseInfo.getServiceName()}/${releaseInfo.getReleaseVersion()}/"
+        return "${releaseInfo.getServiceName()}/${releaseInfo.releaseVersion()}/"
     }
 
     def getS3LatestPath(ReleaseInfo releaseInfo, Env env, S3Repo s3Repo) {

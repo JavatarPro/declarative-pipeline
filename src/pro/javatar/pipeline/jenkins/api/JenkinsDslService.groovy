@@ -53,4 +53,6 @@ public interface JenkinsDslService extends Serializable {
     void echo(String message)
 
     void writeFile(String path, String content)
+
+    String buildNumber()
 }

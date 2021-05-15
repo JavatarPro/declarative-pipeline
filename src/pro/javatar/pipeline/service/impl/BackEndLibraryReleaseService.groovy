@@ -22,8 +22,6 @@ import pro.javatar.pipeline.service.ReleaseService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
 import pro.javatar.pipeline.util.Logger
 
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-
 /**
  * @author Borys Zora
  * @since 2018-03-09
@@ -46,11 +44,11 @@ class BackEndLibraryReleaseService implements ReleaseService {
     def release(ReleaseInfo releaseInfo) {
         Logger.info("BackEndLibraryReleaseService start release: " + releaseInfo.toString());
 
-        validateReleaseVersion(releaseInfo.releaseVersion)
+        validateReleaseVersion(releaseInfo.releaseVersion())
         uploadService.uploadMaven2Artifacts();
 
         Logger.debug("BackEndLibraryReleaseService releaseRevisionControl() started")
-        revisionControlService.release(releaseInfo.releaseVersion)
+        revisionControlService.release(releaseInfo.releaseVersion())
         revisionControlService.switchToDevelopBranch()
         buildService.setupVersion(releaseInfo.developVersion)
         revisionControlService.commitChanges("Update version to " + releaseInfo.developVersion)
