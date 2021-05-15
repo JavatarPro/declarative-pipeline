@@ -68,7 +68,7 @@ class BuildAndUnitTestStage extends Stage {
     }
 
     def populateReleaseInfo() {
-        Logger.info("BuildAndUnitTestStage populateReleaseInfo started with releaseVersion: " + releaseVersion)
+        Logger.info("BuildAndUnitTestStage populateReleaseInfo started with")
         releaseInfo().setRepoFolder(revisionControl.folder)
         def currentVersion = buildService.getCurrentVersion()
         releaseInfo().setCurrentVersion(currentVersion)
