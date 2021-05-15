@@ -35,7 +35,6 @@ class ReleaseInfo implements ArtifactReleaseInfo, Serializable {
     String currentVersion
     String nextVersion
     String releaseVersion
-    String developVersion
     String repoFolder
     String serviceName
     String flowPrefix
@@ -139,14 +138,6 @@ class ReleaseInfo implements ArtifactReleaseInfo, Serializable {
 
     void setReleaseVersion(String releaseVersion) {
         this.releaseVersion = releaseVersion
-    }
-
-    String getDevelopVersion() {
-        return developVersion
-    }
-
-    void setDevelopVersion(String developVersion) {
-        this.developVersion = developVersion
     }
 
     String getRepoFolder() {
@@ -311,7 +302,6 @@ class ReleaseInfo implements ArtifactReleaseInfo, Serializable {
     String toString() {
         return "ReleaseInfo{" +
                 "releaseVersion='" + releaseVersion + '\'' +
-                ", developVersion='" + developVersion + '\'' +
                 ", repoFolder='" + repoFolder + '\'' +
                 ", serviceName='" + serviceName + '\'' +
                 ", flowPrefix='" + flowPrefix + '\'' +

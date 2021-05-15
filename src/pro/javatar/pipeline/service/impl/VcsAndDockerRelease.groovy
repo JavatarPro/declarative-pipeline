@@ -31,8 +31,8 @@ class VcsAndDockerRelease implements ReleaseService {
             Logger.info("VcsAndDockerRelease releaseRevisionControl() started")
             revisionControlService.release(releaseInfo.releaseVersion())
             revisionControlService.switchToDevelopBranch()
-            buildService.setupVersion(releaseInfo.developVersion)
-            revisionControlService.commitChanges("Update version to ${releaseInfo.developVersion}")
+            buildService.setupVersion(releaseInfo.nextVersion())
+            revisionControlService.commitChanges("Update version to ${releaseInfo.nextVersion()}")
             revisionControlService.pushRelease()
             Logger.info("VcsAndDockerRelease releaseRevisionControl() finished")
         }, 'release docker artifacts': {

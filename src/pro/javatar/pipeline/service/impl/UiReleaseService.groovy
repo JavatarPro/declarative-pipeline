@@ -42,8 +42,8 @@ class UiReleaseService implements ReleaseService {
         // String developVersion = buildService.getDevelopVersion(releaseVersion)
         revisionControlService.release(releaseInfo.releaseVersion())
         revisionControlService.switchToDevelopBranch()
-        buildService.setupVersion(releaseInfo.developVersion)
-        revisionControlService.commitChanges("Update develop version to :${releaseInfo.developVersion}")
+        buildService.setupVersion(releaseInfo.nextVersion())
+        revisionControlService.commitChanges("Update develop version to :${releaseInfo.nextVersion()}")
         revisionControlService.pushRelease()
         Logger.info("UiReleaseService releaseRevisionControl() finished")
     }
