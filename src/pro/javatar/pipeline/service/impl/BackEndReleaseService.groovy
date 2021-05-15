@@ -53,7 +53,7 @@ class BackEndReleaseService implements ReleaseService {
         Logger.info("BackEndReleaseService start release: " + releaseInfo.toString())
         validateReleaseVersion(releaseInfo.releaseVersion())
         if (! skipUploadService) {
-            uploadService.uploadMaven2Artifacts()
+            uploadService.uploadMaven2Artifacts(releaseInfo)
         }
         // TODO comment out promotion of docker, it should be after QA sign off
         dsl.parallel 'release revision control': {

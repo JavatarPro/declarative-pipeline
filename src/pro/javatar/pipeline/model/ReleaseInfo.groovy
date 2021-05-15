@@ -211,15 +211,7 @@ class ReleaseInfo implements ArtifactReleaseInfo, Serializable {
     }
 
     String getPrefixedReleaseVersion() {
-        return addPrefixIfNotExists(flowPrefix, releaseVersion)
-    }
-
-    String getPrefixedDevelopVersion() {
-        return addPrefixIfNotExists(flowPrefix, developVersion)
-    }
-
-    void setBuildReleaseVersion(String buildReleaseVersion) {
-        this.buildReleaseVersion = buildReleaseVersion
+        return addPrefixIfNotExists(flowPrefix, releaseVersion())
     }
 
     String getUiDistributionFolder() {

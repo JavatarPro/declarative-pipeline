@@ -49,19 +49,16 @@ class DockerDeploymentService implements DeploymentService {
     }
 
     void deploySingleArtifact(Env environment, ReleaseInfo releaseInfo) {
-        String version = releaseInfo.releaseVersion()
+        String version = releaseInfo.getDockerImageVersion()
+        if (environment == Env.DEV) {
+            // TODO improve lost prefix in this case
+            version = releaseInfo.releaseVersionWithBuildSuffix()
+            // TODO move & split this method to do it on build and release stage
+            dockerService.dockerPublish(releaseInfo.getDockerImageName(), version, environment)
+        }
         Logger.debug("DockerDeploymentService deploySingleArtifact to ${environment.getValue()} " +
                 "env and version: ${version} started")
-        // TODO move & split this method to do it on build and release stage
-        if (environment == Env.DEV) {
-            dockerService.dockerPublish(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion(), environment)
-            // TODO improve lost prefix in this case
-            dockerService.dockerDeployContainer(releaseInfo.getDockerImageName(), releaseInfo.releaseVersionWithBuildSuffix(),
-                    environment)
-        } else {
-            dockerService.dockerDeployContainer(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion(),
-                    environment)
-        }
+        dockerService.dockerDeployContainer(releaseInfo.getDockerImageName(), version, environment)
         Logger.debug("DockerDeploymentService deploySingleArtifact to ${environment.getValue()} " +
                 "env and version: ${version} finished")
     }
