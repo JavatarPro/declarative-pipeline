@@ -37,7 +37,6 @@ class Flow implements Serializable {
     Flow(ReleaseInfo releaseInfo, JenkinsDslService jenkinsDslService) {
         this.releaseInfo = releaseInfo;
         this.jenkinsDslService = jenkinsDslService;
-        this.releaseInfo.setBuildNumber(jenkinsDslService.buildNumber())
     }
 
     public static Flow of(def dsl) {

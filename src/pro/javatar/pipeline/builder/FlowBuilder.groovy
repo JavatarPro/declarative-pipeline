@@ -118,6 +118,7 @@ class FlowBuilder implements Serializable {
         createServices()
         createStages()
 
+        releaseInfo.setBuildNumber(jenkinsDslService.buildNumber())
         Flow flow = new Flow(releaseInfo, jenkinsDslService);
         populateStages(flow, stageTypes)
 
