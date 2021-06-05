@@ -468,7 +468,6 @@ class FlowBuilder implements Serializable {
         Logger.info("Load stages for libraries")
         addPipelineStage(StageType.BUILD_AND_UNIT_TESTS)
         addPipelineStage(StageType.AUTO_TESTS)
-        addPipelineStage(StageType.DEV_SIGN_OFF)
         addPipelineStage(StageType.RELEASE)
         return this
     }
