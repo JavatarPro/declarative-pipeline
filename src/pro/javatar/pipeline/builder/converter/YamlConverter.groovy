@@ -259,10 +259,11 @@ class YamlConverter {
         def maven = yml.maven
         if (maven == null) return null
         Logger.debug("YamlConverter:retrieveMaven: maven: ${maven}")
+        Maven result = new Maven().withParams(maven.params)
+        if (maven.repository == null) return result
         return new Maven()
                 .withRepositoryId(maven.repository.id)
                 .withRepositoryUrl(maven.repository.url)
-                .withParams(maven.params)
     }
 
     Python retrievePython(def yml) {
