@@ -47,7 +47,7 @@ abstract class DeployToEnvStage extends Stage {
     abstract Env getEnv()
 
     @Override
-    String getName() {
+    String name() {
         return "${getEnv().getValue().toLowerCase()} env"
     }
 

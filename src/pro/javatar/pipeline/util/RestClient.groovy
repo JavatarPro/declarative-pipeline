@@ -4,7 +4,7 @@
  */
 package pro.javatar.pipeline.util
 
-import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 
 /**
  * @author Borys Zora
@@ -15,13 +15,13 @@ class RestClient {
     String url
     String body
     HttpMethod httpMethod
-    HttpSecurity httpSecurity = HttpSecurity.BEARER
+    HttpSecurity httpSecurity = null // TODO = HttpSecurity.BEARER
     String credentialId
-    HttpMediaType httpMediaType = HttpMediaType.JSON
+    // HttpMediaType httpMediaType = HttpMediaType.JSON
     Map<HttpHeader, String> headers = new HashMap<>()
-    JenkinsDslService service
+    JenkinsDsl service
 
-    RestClient(JenkinsDslService service) {
+    RestClient(JenkinsDsl service) {
         this.service = service
     }
 
@@ -66,7 +66,8 @@ class RestClient {
     }
 
     RestClient contentType(HttpMediaType httpMediaType) {
-        this.httpMediaType = httpMediaType
+        // this.httpMediaType = httpMediaType
+        headers.put("Content-Type", httpMediaType.value)
         return this
     }
 

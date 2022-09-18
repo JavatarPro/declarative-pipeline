@@ -4,13 +4,12 @@
  */
 package pro.javatar.pipeline.integration.k8s
 
-import groovy.json.JsonSlurper
-import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+
+import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
 import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
 import pro.javatar.pipeline.service.orchestration.model.DeploymentResponseBO
 import pro.javatar.pipeline.util.Logger
-import java.util.concurrent.TimeUnit
 
 /**
  * @author Borys Zora
@@ -18,9 +17,9 @@ import java.util.concurrent.TimeUnit
  */
 class KubernetesService implements DockerOrchestrationService {
 
-    JenkinsDslService dsl
+    JenkinsDsl dsl
 
-    KubernetesService(JenkinsDslService dsl) {
+    KubernetesService(JenkinsDsl dsl) {
         this.dsl = dsl
     }
 

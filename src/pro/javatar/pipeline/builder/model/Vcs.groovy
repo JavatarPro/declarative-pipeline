@@ -37,7 +37,7 @@ class Vcs implements Serializable {
         return this
     }
 
-    Map<String, VcsRepoTO> getRepo() {
+    Map<String, Vcs> getRepo() {
         return repo
     }
 

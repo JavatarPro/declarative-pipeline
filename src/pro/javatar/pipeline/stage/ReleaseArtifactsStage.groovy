@@ -45,7 +45,7 @@ class ReleaseArtifactsStage extends Stage {
     }
 
     @Override
-    String getName() {
+    String name() {
         return "release"
     }
 

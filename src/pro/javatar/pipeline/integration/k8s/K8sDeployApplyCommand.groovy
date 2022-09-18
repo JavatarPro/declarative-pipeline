@@ -5,7 +5,7 @@
 package pro.javatar.pipeline.integration.k8s
 
 import com.cloudbees.groovy.cps.NonCPS
-import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.util.Logger
 
 /**
@@ -19,10 +19,10 @@ class K8sDeployApplyCommand implements Serializable {
     private static String APPLY_FILE = "K8S-apply-deployment-file.json"
 
     String config
-    JenkinsDslService dsl
+    JenkinsDsl dsl
     String applyResponse
 
-    K8sDeployApplyCommand(String config, JenkinsDslService dsl) {
+    K8sDeployApplyCommand(String config, JenkinsDsl dsl) {
         this.config = config
         this.dsl = dsl
     }

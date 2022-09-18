@@ -5,7 +5,7 @@
 package pro.javatar.pipeline.integration.k8s
 
 import groovy.json.JsonSlurper
-import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.util.Logger
 
 import java.util.concurrent.TimeUnit
@@ -18,11 +18,11 @@ class K8sDeployVerifier implements Serializable {
 
     String deploy
     String version
-    JenkinsDslService dsl
+    JenkinsDsl dsl
     Status rolloutStatus = Status.IN_PROGRESS
     Status deployStatus = Status.IN_PROGRESS
 
-    K8sDeployVerifier(String deploy, String version, JenkinsDslService dsl) {
+    K8sDeployVerifier(String deploy, String version, JenkinsDsl dsl) {
         this.deploy = deploy
         this.version = version
         this.dsl = dsl

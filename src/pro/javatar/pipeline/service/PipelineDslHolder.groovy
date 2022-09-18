@@ -15,7 +15,7 @@
 package pro.javatar.pipeline.service
 
 import com.cloudbees.groovy.cps.NonCPS
-import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.jenkins.dsl.JenkinsDslServiceImpl
 import pro.javatar.pipeline.util.Logger
 
@@ -30,9 +30,9 @@ public class PipelineDslHolder implements Serializable {
     public static def dsl
 
     @NonCPS
-    static JenkinsDslService createDsl(def dslContext) {
+    static JenkinsDsl createDsl(def dslContext) {
         dsl = dslContext
-        JenkinsDslService jenkinsDslService = new JenkinsDslServiceImpl(dsl)
+        JenkinsDsl jenkinsDslService = new JenkinsDslServiceImpl(dsl)
         Logger.dslService = jenkinsDslService
         return jenkinsDslService
     }

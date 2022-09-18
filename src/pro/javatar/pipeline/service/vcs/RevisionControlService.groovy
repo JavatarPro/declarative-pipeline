@@ -17,7 +17,6 @@ package pro.javatar.pipeline.service.vcs
 
 import pro.javatar.pipeline.exception.ReleaseFinishException
 import pro.javatar.pipeline.model.ReleaseInfo
-import pro.javatar.pipeline.service.vcs.model.VcsRepo
 import pro.javatar.pipeline.service.vcs.model.VscCheckoutRequest
 import pro.javatar.pipeline.util.Logger
 
@@ -35,8 +34,6 @@ abstract class RevisionControlService implements Serializable {
 
     static final String DEFAULT_CHECKOUT_FOLDER = "repo"
     String folder = DEFAULT_CHECKOUT_FOLDER
-
-    protected VcsRepositoryUrlResolver urlResolver
 
     protected String domain
 
@@ -72,8 +69,6 @@ abstract class RevisionControlService implements Serializable {
     abstract def setUpVcsFlowPreparations()
 
     abstract def checkout(String branch)
-
-    abstract def checkoutRepo(String repoOwner, String repo, String branch)
 
     abstract def checkoutRepo(String repoUrl, String branch)
 
@@ -143,20 +138,8 @@ abstract class RevisionControlService implements Serializable {
         return getBranchWithPrefix(prefix, getDevBranch())
     }
 
-    void setUrlResolver(VcsRepositoryUrlResolver urlResolver) {
-        this.urlResolver = urlResolver
-    }
-
-    void setDomain(String domain) {
-        this.domain = domain
-    }
-
     void setUserName(String userName) {
         this.userName = userName
-    }
-
-    String getDomain() {
-        return domain
     }
 
     String getUserName() {

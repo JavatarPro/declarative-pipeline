@@ -14,7 +14,7 @@
  */
 package pro.javatar.pipeline.util
 
-import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 
 import static pro.javatar.pipeline.util.LogLevel.*
 import com.cloudbees.groovy.cps.NonCPS
@@ -28,7 +28,7 @@ import groovy.json.JsonOutput
 class Logger implements Serializable {
 
     static LogLevel LEVEL = INFO
-    static JenkinsDslService dslService
+    static JenkinsDsl dslService
 
     @NonCPS
     static void fatal(def message) {

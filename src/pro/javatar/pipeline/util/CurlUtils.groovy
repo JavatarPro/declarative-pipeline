@@ -24,7 +24,7 @@ class CurlUtils {
     }
 
     static String toUrl(RestClient restClient) {
-        return restClient.url
+        return "'${restClient.url}'"
     }
 
     static String toSecurity(RestClient restClient) {
@@ -35,7 +35,7 @@ class CurlUtils {
             return "-u {USERNAME}:{PASSWORD}"
         }
         if(restClient.httpSecurity == RestClient.HttpSecurity.BEARER) {
-            return "-H ${RestClient.HttpHeader.AUTHORIZATION.value}: Bearer TOKEN"
+            return "-H ${RestClient.HttpHeader.AUTHORIZATION.value}: Bearer ${restClient.credentialId}"
         }
         if(restClient.httpSecurity == RestClient.HttpSecurity.COOKIE) {
             return "-H ${RestClient.HttpHeader.COOKIE.value}: COOKIE_NAME_VALUE"
@@ -44,13 +44,13 @@ class CurlUtils {
     }
 
     static String toBody(RestClient restClient) {
-        return "-d ${restClient.body}"
+        return "-d '${restClient.body}'"
     }
 
     static String toHeaders(RestClient restClient) {
-        return restClient.headers.stream()
-                .map({ k, v -> " -H ${k.value}: ${v} " })
-                .reduce(String.&concat)
+        String result = ""
+        restClient.headers.each {result += " -H '${it.key}: ${it.value}' " }
+        return result
     }
 
 }

@@ -15,6 +15,7 @@
 package pro.javatar.pipeline.model
 
 import com.cloudbees.groovy.cps.NonCPS
+import pro.javatar.pipeline.domain.Config
 import pro.javatar.pipeline.exception.InvalidReleaseNumberException
 import pro.javatar.pipeline.release.ArtifactReleaseInfo
 import pro.javatar.pipeline.service.infra.model.InfraRequest
@@ -50,6 +51,7 @@ class ReleaseInfo implements ArtifactReleaseInfo, Serializable {
     String buildDockerFromFolder = ".jenkins"
 
     InfraRequest infraRequest = new InfraRequest()
+    Config config
 
     @Override
     String nextVersion() {

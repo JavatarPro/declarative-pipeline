@@ -63,7 +63,7 @@ class BuildAndUnitTestStage extends Stage {
     }
 
     @Override
-    String getName() {
+    String name() {
         return "build and unit test";
     }
 

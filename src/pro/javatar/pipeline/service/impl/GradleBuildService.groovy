@@ -16,24 +16,23 @@ package pro.javatar.pipeline.service.impl
 
 import pro.javatar.pipeline.config.GradleConfig
 import pro.javatar.pipeline.exception.MalformedReleaseVersionException
-import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.NexusUploadAware
 import pro.javatar.pipeline.util.FileUtils
 import pro.javatar.pipeline.util.Logger
 
-import static pro.javatar.pipeline.config.GradleConfig.PASSWORD_VARIABLE_BUILD_GRADLE
 import static pro.javatar.pipeline.config.GradleConfig.PASSWORD_VARIABLE_TO_BE_REPLACED
 import static pro.javatar.pipeline.config.GradleConfig.USER_VARIABLE_TO_BE_REPLACED
 
 class GradleBuildService extends BuildService implements NexusUploadAware {
 
-    private JenkinsDslService dslService;
+    private JenkinsDsl dslService;
 
     private GradleConfig config;
 
-    GradleBuildService(JenkinsDslService dslService, GradleConfig config) {
+    GradleBuildService(JenkinsDsl dslService, GradleConfig config) {
         Logger.debug(String.format("GradleBuildService: gradleConfig: " + config.toString()));
         this.dslService = dslService;
         this.config = config;

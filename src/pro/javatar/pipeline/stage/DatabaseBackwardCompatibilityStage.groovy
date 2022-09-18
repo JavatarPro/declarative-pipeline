@@ -71,7 +71,7 @@ class DatabaseBackwardCompatibilityStage extends Stage {
 
     @NonCPS
     @Override
-    public String getName() {
+    public String name() {
         return "Service rollback"
     }
 }

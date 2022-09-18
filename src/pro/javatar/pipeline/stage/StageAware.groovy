@@ -19,7 +19,7 @@ interface StageAware {
 
     void execute() throws PipelineException;
 
-    String getName();
+    String name();
 
     boolean shouldSkip();
 

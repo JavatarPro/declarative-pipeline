@@ -17,7 +17,7 @@ package pro.javatar.pipeline.stage
 import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.config.AutoTestConfig
 import pro.javatar.pipeline.exception.PipelineException
-import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.jenkins.api.JenkinsExecutor
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.test.AutoTestsService
@@ -31,12 +31,12 @@ class AutoTestsStage extends Stage {
 
     AutoTestsService autoTestsService;
 
-    JenkinsDslService jenkinsDslService;
+    JenkinsDsl jenkinsDslService;
 
     AutoTestConfig autoTestConfig;
 
     AutoTestsStage(AutoTestsService autoTestsService,
-                   JenkinsDslService jenkinsDslService,
+                   JenkinsDsl jenkinsDslService,
                    AutoTestConfig autoTestConfig) {
         this.autoTestsService = autoTestsService
         this.jenkinsDslService = jenkinsDslService
@@ -67,7 +67,7 @@ class AutoTestsStage extends Stage {
     }
 
     @Override
-    String getName() {
+    String name() {
         return "auto tests"
     }
 

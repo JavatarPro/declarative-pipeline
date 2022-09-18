@@ -17,8 +17,6 @@ package pro.javatar.pipeline.service.vcs
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.util.Logger
 
-import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-
 /**
  * @author Borys Zora
  * @since 2018-03-18

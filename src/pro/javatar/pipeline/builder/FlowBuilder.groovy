@@ -22,7 +22,7 @@ import pro.javatar.pipeline.builder.model.Python
 import pro.javatar.pipeline.config.Config
 import pro.javatar.pipeline.exception.*
 import pro.javatar.pipeline.integration.docker.DockerOnlyBuildService
-import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.model.*
 import pro.javatar.pipeline.release.CurrentVersionAware
 import pro.javatar.pipeline.release.ReleaseType
@@ -62,7 +62,6 @@ class FlowBuilder implements Serializable {
     List<StageType> stageTypes = new ArrayList<>()
     Map<StageType, Stage> availableStages = new HashMap<>()
     Set<StageType> stageTypesToBeSkipped = new HashSet<>()
-    SlackBuilder slackBuilder // TODO
     DockerBuilder dockerBuilder // TODO
     SonarQubeBuilder sonarQubeBuilder // TODO
     SwaggerBuilder swaggerBuilder // TODO
@@ -90,7 +89,6 @@ class FlowBuilder implements Serializable {
     RevisionControlService revisionControlService
     ReleaseService releaseService
     DockerService dockerService
-    SlackService slackService
     SonarQubeService sonarQubeService
     SwaggerService swaggerService
     PipelineStagesSuit suit
@@ -101,12 +99,12 @@ class FlowBuilder implements Serializable {
     List<ReleaseUploadArtifactType> releaseUploadArtifactTypes
 
     NexusUploadAware uploadAware;
-    JenkinsDslService jenkinsDslService;
+    JenkinsDsl dsl;
     Config config;
 
-    FlowBuilder(JenkinsDslService jenkinsDslService) {
+    FlowBuilder(JenkinsDsl dsl) {
         Logger.debug("FlowBuilder: constructor")
-        this.jenkinsDslService = jenkinsDslService;
+        this.dsl = dsl;
     }
 
     Flow build() {
@@ -118,8 +116,8 @@ class FlowBuilder implements Serializable {
         createServices()
         createStages()
 
-        releaseInfo.setBuildNumber(jenkinsDslService.buildNumber())
-        Flow flow = new Flow(releaseInfo, jenkinsDslService);
+        releaseInfo.setBuildNumber(dsl.buildNumber())
+        Flow flow = new Flow(releaseInfo, dsl);
         populateStages(flow, stageTypes)
 
         Logger.info("build Flow finished: " + toString())
@@ -133,7 +131,7 @@ class FlowBuilder implements Serializable {
             if (stageTypesToBeSkipped.contains(stageType)) {
                 stage.skipStage = true
             }
-            Logger.info(stage.getName() + " is present: " + stageType.name())
+            Logger.info(stage.name() + " is present: " + stageType.name())
             flow.addStage(stage)
         }
         Logger.info("Flow with stages: " + flow.getStageNames())
@@ -180,7 +178,7 @@ class FlowBuilder implements Serializable {
             uploadAware = mavenBuildService;
             dockerBuildService = new DockerBuildService(mavenBuildService, dockerService)
         } else if (buildType == BuildServiceType.GRADLE) {
-            gradleBuildService = new GradleBuildService(jenkinsDslService, config.gradleConfig())
+            gradleBuildService = new GradleBuildService(dsl, config.gradleConfig())
             gradleBuildService.setUp()
             uploadAware = gradleBuildService;
             dockerBuildService = new DockerBuildService(gradleBuildService, dockerService)
@@ -232,12 +230,12 @@ class FlowBuilder implements Serializable {
         availableStages.put(StageType.BUILD_AND_UNIT_TESTS,
                 new BuildAndUnitTestStage(buildService, revisionControlService))
         availableStages.put(StageType.AUTO_TESTS,
-                new AutoTestsStage(autoTestsService, jenkinsDslService, config.autoTestConfig()))
+                new AutoTestsStage(autoTestsService, dsl, config.autoTestConfig()))
         availableStages.put(StageType.RELEASE, new ReleaseArtifactsStage(releaseService))
         availableStages.put(StageType.BACKWARD_COMPATIBILITY_TEST,
                 new DatabaseBackwardCompatibilityStage(dockerService, deploymentService))
         availableStages.put(StageType.BACKWARD_COMPATIBILITY_AUTO_TESTS,
-                new AutoTestsStage(autoTestsService, jenkinsDslService, config.autoTestConfig()))
+                new AutoTestsStage(autoTestsService, dsl, config.autoTestConfig()))
         createSignOffStages()
         createDeployStages()
         Logger.info("FlowBuilder:createStages: createStages finished")
@@ -357,20 +355,20 @@ class FlowBuilder implements Serializable {
             npmBuildService = npm.build()
             buildService = npmBuildService
         } else if (buildType == BuildServiceType.NPM_DOCKER) {
-            DockerNpmBuildService service = new DockerNpmBuildService(dockerService, jenkinsDslService)
+            DockerNpmBuildService service = new DockerNpmBuildService(dockerService, dsl)
             service.setType(npm.getType())
             service.setNpmVersion(npm.npmVersion)
             dockerNpmBuildService = service
             buildService = dockerNpmBuildService
         } else if (buildType == BuildServiceType.NPM_YARN_DOCKER) {
-            DockerNpmBuildService service = new DockerNpmYarnBuildService(dockerService, jenkinsDslService)
+            DockerNpmBuildService service = new DockerNpmYarnBuildService(dockerService, dsl)
             service.setType(npm.getType())
             service.setNpmVersion(npm.npmVersion)
             dockerNpmBuildService = service
             buildService = dockerNpmBuildService
         } else if (buildType == BuildServiceType.NPM_JUST_DOCKER || buildType == BuildServiceType.TEST_DOCKER) {
             npmBuildService = npm.build()
-            npmBuildService.withDslService(jenkinsDslService)
+            npmBuildService.withDslService(dsl)
             buildService = new DockerOnlyBuildService(dockerService, npmBuildService, npmBuildService)
         } else if (buildType == BuildServiceType.SENCHA) {
             senchaService = new SenchaService()
@@ -507,11 +505,6 @@ class FlowBuilder implements Serializable {
 
     FlowBuilder withRevisionControl(RevisionControlBuilder revisionControlBuilder) {
         this.revisionControlBuilder = revisionControlBuilder
-        return this
-    }
-
-    FlowBuilder withSlack(SlackBuilder slackBuilder) {
-        this.slackBuilder = slackBuilder
         return this
     }
 

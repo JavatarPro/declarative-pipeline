@@ -8,21 +8,19 @@ import pro.javatar.pipeline.builder.RevisionControlBuilder
 import pro.javatar.pipeline.builder.S3Builder
 import pro.javatar.pipeline.builder.model.DockerRegistry
 import pro.javatar.pipeline.builder.SonarQubeBuilder
-import pro.javatar.pipeline.builder.model.Mesos
 import pro.javatar.pipeline.builder.model.Nomad
 import pro.javatar.pipeline.builder.model.S3
 import pro.javatar.pipeline.builder.model.S3Repository
 import pro.javatar.pipeline.builder.model.VcsRepoTO
 import pro.javatar.pipeline.builder.model.YamlConfig
 import pro.javatar.pipeline.integration.k8s.KubernetesService
-import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.model.DockerOrchestrationServiceType
 import pro.javatar.pipeline.model.RevisionControlType
 import pro.javatar.pipeline.model.VcsRepositoryType
 import pro.javatar.pipeline.release.ReleaseType
 import pro.javatar.pipeline.release.ReleaseUploadArtifactType
 import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
-import pro.javatar.pipeline.integration.marathon.MesosService
 import pro.javatar.pipeline.integration.nomad.NomadService
 import pro.javatar.pipeline.service.orchestration.model.NomadBO
 import pro.javatar.pipeline.service.vcs.model.VcsRepo
@@ -36,7 +34,7 @@ import static pro.javatar.pipeline.util.StringUtils.isBlank
 // TODO remove this class
 class FlowBuilderConverter {
 
-    FlowBuilder toFlowBuilder(YamlConfig yamlFile, JenkinsDslService dslService) {
+    FlowBuilder toFlowBuilder(YamlConfig yamlFile, JenkinsDsl dslService) {
         return new FlowBuilder(dslService)
                 .withServiceName(yamlFile.getService().getName())
                 .withBuildType(yamlFile.getService().getBuildType())
@@ -85,7 +83,7 @@ class FlowBuilderConverter {
                 .withMaven(jenkinsTools.getMaven())
     }
 
-    DockerBuilder toDockerBuilder(YamlConfig yamlFile, JenkinsDslService dslService) {
+    DockerBuilder toDockerBuilder(YamlConfig yamlFile, JenkinsDsl dslService) {
         Logger.debug("FlowBuilderConverter:toDockerBuilder:started")
         Map<String, DockerRegistry> dockerRegistryMap = yamlFile.getDocker().getDockerRegistries()
 
@@ -103,36 +101,19 @@ class FlowBuilderConverter {
         return builder
     }
 
-    DockerOrchestrationService toOrchestrationService(YamlConfig yamlFile, JenkinsDslService dslService) {
+    DockerOrchestrationService toOrchestrationService(YamlConfig yamlFile, JenkinsDsl dslService) {
         Logger.info("FlowBuilderConverter: toOrchestrationService: started")
         String type = yamlFile.getOrchestrationService()
         if (isBlank(type)) {
             return null
         }
         DockerOrchestrationServiceType orchestrationServiceType = DockerOrchestrationServiceType.fromString(type)
-        if (orchestrationServiceType == DockerOrchestrationServiceType.MESOS) {
-            return toMesosService(yamlFile)
-        }
         if (orchestrationServiceType == DockerOrchestrationServiceType.NOMAD) {
             return toNomadService(yamlFile)
         }
         if (orchestrationServiceType == DockerOrchestrationServiceType.K8S) {
             return toK8sService(yamlFile, dslService)
         }
-    }
-
-    MesosService toMesosService(YamlConfig yamlFile) {
-        Logger.info("FlowBuilderConverter: toMesosService: started")
-        Mesos mesos = yamlFile.getMesos()
-        if (mesos == null) {
-            return null
-        }
-        MesosService mesosService = new MesosService()
-        Map<String, VcsRepo> vcsRepoMap = toVcsRepoMap(mesos.getVcsConfigRepos())
-        mesosService.setVcsRepoMap(vcsRepoMap)
-        yamlFile.getMesos()
-        Logger.info("FlowBuilderConverter: toMesosService: finished")
-        return mesosService
     }
 
     NomadService toNomadService(YamlConfig yamlFile) {
@@ -165,7 +146,7 @@ class FlowBuilderConverter {
         return nomadService
     }
 
-    KubernetesService toK8sService(YamlConfig yamlFile, JenkinsDslService dslService) {
+    KubernetesService toK8sService(YamlConfig yamlFile, JenkinsDsl dslService) {
         return new KubernetesService(dslService)
     }
 
@@ -194,15 +175,7 @@ class FlowBuilderConverter {
 
     RevisionControlBuilder toRevisionControlBuilder(YamlConfig yamlFile) {
         def repo = yamlFile.getService().getRepo()
-        return new RevisionControlBuilder()
-                .withRepo(repo.getName())
-                .withRepoOwner(repo.getOwner())
-                .withRevisionControlType(repo.getRevisionControl())
-                .withVcsRepositoryType(repo.getType())
-                .withFlowPrefix(null)
-                .withCredentialsId(repo.getCredentialsId())
-                .withDomain(repo.getDomain())
-                .withBranch(repo.getBranch())
+        return new RevisionControlBuilder().build(repo.vcs());
     }
 
     S3Builder toS3Builder(YamlConfig yamlFile) {

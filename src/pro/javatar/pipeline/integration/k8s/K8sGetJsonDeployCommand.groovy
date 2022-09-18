@@ -4,8 +4,8 @@
  */
 package pro.javatar.pipeline.integration.k8s
 
-import com.cloudbees.groovy.cps.NonCPS
-import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+
+import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.util.Logger
 
 /**
@@ -16,10 +16,10 @@ class K8sGetJsonDeployCommand implements Serializable {
 
     public static String DEFAULT_MESSAGE = "K8sGetJsonDeployCommand.K8sDeploymentNotFound"
     String deploy
-    JenkinsDslService dsl
+    JenkinsDsl dsl
     String config = null
 
-    K8sGetJsonDeployCommand(String deploy, JenkinsDslService dsl) {
+    K8sGetJsonDeployCommand(String deploy, JenkinsDsl dsl) {
         this.deploy = deploy
         this.dsl = dsl
     }

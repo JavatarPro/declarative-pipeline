@@ -4,7 +4,7 @@
  */
 package pro.javatar.pipeline.command
 
-import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.util.Logger
 
 /**
@@ -13,12 +13,12 @@ import pro.javatar.pipeline.util.Logger
  */
 class ShellCommand implements Command {
 
-    JenkinsDslService dslService
+    JenkinsDsl dslService
     String name
     List<String> commands = new ArrayList<>()
     boolean failOnError
 
-    ShellCommand(JenkinsDslService dslService, String name, boolean failOnError, String... commands) {
+    ShellCommand(JenkinsDsl dslService, String name, boolean failOnError, String... commands) {
         this.dslService = dslService
         this.name = name
         this.commands = commands.toList()

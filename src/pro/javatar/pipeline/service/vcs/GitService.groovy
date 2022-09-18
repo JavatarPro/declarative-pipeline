@@ -19,6 +19,7 @@ import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.GitFlowReleaseFinishException
 import pro.javatar.pipeline.exception.InvalidBranchException
 import pro.javatar.pipeline.model.ReleaseInfo
+import pro.javatar.pipeline.domain.Vcs
 import pro.javatar.pipeline.service.vcs.model.VscCheckoutRequest
 import pro.javatar.pipeline.util.Logger
 
@@ -30,19 +31,17 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class GitService extends RevisionControlService {
 
-    String credentialsId
-    String repo
-    String repoOwner
-    String flowPrefix = ""
+    Vcs vcs
     GitFlowService gitFlowService
 
-    GitService(String repo, String credentialsId,
-               String repoOwner, String flowPrefix) {
-        this.repo = repo
-        this.credentialsId = credentialsId
-        this.repoOwner = repoOwner
-        this.flowPrefix = flowPrefix
+    GitService(Vcs vcs) {
+        this.vcs = vcs
         gitFlowService = new GitFlowService(this)
+    }
+
+    @Override
+    String getFlowPrefix() {
+        return ""
     }
 
     @Override
@@ -55,21 +54,12 @@ class GitService extends RevisionControlService {
 
     @Override
     def checkout(String branch) {
-        Logger.info("GitService checkout repo: ${repo}, branch: ${branch}")
-        String repoUrl = urlResolver.getRepoUrl()
-        // dsl.git branch: 'master', changelog: true, credentialsId: credentialsId, poll: true, url: repoUrl
-        Logger.debug("credentialsId: ${credentialsId}, url: ${repoUrl}")
-        dsl.git credentialsId: credentialsId, url: repoUrl
+        Logger.info("GitService checkout repo: ${vcs.getUrl()}, branch: ${branch}")
+        Logger.debug("credentialsId: ${vcs.getCred()}, url: ${vcs.getUrl()}")
+        dsl.git credentialsId: vcs.getCred(), url: vcs.getUrl()
         dsl.sh "pwd; ls -la"
         dsl.sh "git checkout ${branch}"
-        Logger.info("GitService checkout successfully finished for repo: ${repo}, branch: ${branch}")
-    }
-
-    @Override
-    def checkoutRepo(String repoOwner, String repo, String branch) {
-        Logger.debug("GitService checkoutRepo: repoOwner: ${repoOwner}, repo: ${repo}, branch: ${branch}")
-        String repoUrl = urlResolver.getRepoUrl(repoOwner, repo)
-        return checkoutRepo(repoUrl, branch)
+        Logger.info("GitService checkout successfully finished for repo: ${vcs.getUrl()}, branch: ${branch}")
     }
 
     @Override

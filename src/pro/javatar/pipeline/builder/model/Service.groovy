@@ -9,7 +9,7 @@ class Service implements Serializable {
     String name
     String buildType
     Boolean useBuildNumberForVersion
-    VcsRepoTO repo
+    Vcs repo
     String vcsRepoId
     String orchestration
     // TODO tmp solution will be separate DTO of Service
@@ -62,15 +62,15 @@ class Service implements Serializable {
         return this
     }
 
-    VcsRepoTO getRepo() {
+    Vcs getRepo() {
         return repo
     }
 
-    void setRepo(VcsRepoTO repo) {
+    void setRepo(Vcs repo) {
         this.repo = repo
     }
 
-    Service withRepo(VcsRepoTO repo) {
+    Service withRepo(Vcs repo) {
         this.repo = repo
         return this
     }

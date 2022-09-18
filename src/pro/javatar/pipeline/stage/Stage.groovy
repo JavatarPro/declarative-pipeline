@@ -33,7 +33,7 @@ abstract class Stage implements StageAware, Serializable {
     abstract void execute() throws PipelineException;
 
     @Override
-    abstract String getName();
+    abstract String name();
 
     @Override
     boolean shouldSkip() {

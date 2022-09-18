@@ -4,7 +4,7 @@
  */
 package pro.javatar.pipeline.integration.k8s
 
-import pro.javatar.pipeline.jenkins.api.JenkinsDslService
+import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.util.Logger
 
 /**
@@ -17,10 +17,10 @@ class K8sCreateDeployCommand implements Serializable {
 
     String deploy
     String image
-    JenkinsDslService dsl
+    JenkinsDsl dsl
     String applyResponse
 
-    K8sCreateDeployCommand(String deploy, String image, JenkinsDslService dsl) {
+    K8sCreateDeployCommand(String deploy, String image, JenkinsDsl dsl) {
         this.dsl = dsl
         this.deploy = deploy
         this.image = image
