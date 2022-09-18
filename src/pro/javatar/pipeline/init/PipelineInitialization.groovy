@@ -5,7 +5,6 @@
 package pro.javatar.pipeline.init
 
 import pro.javatar.pipeline.domain.Config
-import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.stage.StageAware
 
 /**
@@ -14,8 +13,8 @@ import pro.javatar.pipeline.stage.StageAware
  */
 class PipelineInitialization {
 
-    static List<StageAware> createStages(JenkinsDsl dsl,
-                                         Config config) {
-        return null;
+    static List<StageAware> createStages(Config config) {
+        // TODO if custom create stages
+        return config.pipeline.suit.stages
     }
 }

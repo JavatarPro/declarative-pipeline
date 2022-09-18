@@ -74,6 +74,7 @@ class Logger implements Serializable {
                 dslService.echo(loggerLevel.name() + ": " + msg)
             }
         } catch (Exception e) {
+            if (dslService == null) return
             dslService.echo("Logger:print:Exception " + e.getClass())
             dslService.echo(e.getMessage())
             dslService.echo(e.printStackTrace())

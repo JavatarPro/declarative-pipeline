@@ -15,7 +15,7 @@ import java.time.Duration
  * @author Borys Zora
  * @version 2019-11-03
  */
-public interface JenkinsDsl extends Serializable {
+interface JenkinsDsl extends Serializable {
 
     void executeStage(StageAware stage);
 

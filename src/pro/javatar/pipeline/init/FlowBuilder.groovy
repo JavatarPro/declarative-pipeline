@@ -31,7 +31,7 @@ class FlowBuilder {
         Logger.debug("build Flow from dsl and configFiles: ${configFiles}")
         Config config = createEffectiveConfig(dsl, configFiles)
         createServices(dsl, config)
-        List<StageAware> stages = createStages(dsl, config)
+        List<StageAware> stages = createStages(config)
         ReleaseInfo info = releaseInfo(dsl, config)
         return new Flow(info, dsl)
                 .addStages(stages)

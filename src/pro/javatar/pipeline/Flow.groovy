@@ -70,8 +70,8 @@ class Flow implements Serializable {
         return this;
     }
 
-    Flow addStages(List<StageAware> stages) {
-        stages.addAll(stages);
+    Flow addStages(List<StageAware> list) {
+        stages.addAll(list);
         return this;
     }
 

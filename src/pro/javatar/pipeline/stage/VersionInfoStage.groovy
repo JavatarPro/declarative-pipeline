@@ -5,8 +5,10 @@
 package pro.javatar.pipeline.stage
 
 import pro.javatar.pipeline.exception.PipelineException
+import pro.javatar.pipeline.integration.k8s.K8sVersionInfo
 import pro.javatar.pipeline.integration.slack.SlackChannelSender
 import pro.javatar.pipeline.service.ContextHolder
+import static pro.javatar.pipeline.util.StringUtils.toPrettyJson
 
 /**
  * @author Borys Zora
@@ -14,11 +16,13 @@ import pro.javatar.pipeline.service.ContextHolder
  */
 class VersionInfoStage extends Stage {
 
-    SlackChannelSender sender = ContextHolder.get(SlackChannelSender.class)
+    K8sVersionInfo versionInfo () {return ContextHolder.get(K8sVersionInfo.class) }
+    SlackChannelSender sender() {return ContextHolder.get(SlackChannelSender.class) }
 
     @Override
     void execute() throws PipelineException {
-        sender.send("test")
+        def versions = versionInfo().versionsCurrent()
+        sender().send(toPrettyJson(versions))
     }
 
     @Override

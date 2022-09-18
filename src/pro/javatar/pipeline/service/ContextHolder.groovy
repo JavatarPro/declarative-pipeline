@@ -46,7 +46,7 @@ class ContextHolder {
         if (service == null) {
             return
         }
-        def result = serviceHolder.get(service)
+        def result = serviceHolder.get(service.getCanonicalName())
         Logger.trace("ServiceContextHolder: getService: result: ${result}")
         return result
     }

@@ -15,8 +15,8 @@
 package pro.javatar.pipeline.model
 
 import pro.javatar.pipeline.exception.UnrecognizedPipelineStagesSuitException
-
-import static pro.javatar.pipeline.util.StringUtils.isBlank
+import pro.javatar.pipeline.stage.StageAware
+import pro.javatar.pipeline.stage.VersionInfoStage
 
 /**
  * @author Borys Zora
@@ -28,30 +28,25 @@ enum PipelineStagesSuit {
     SERVICE_WITH_DB,
     SERVICE_SIMPLE,
     LIBRARY,
+    ANALYSE_SERVICE_VERSIONS(
+            new VersionInfoStage()
+    ),
     CUSTOM
+
+    List<StageAware> stages = new ArrayList<>()
+
+    PipelineStagesSuit(StageAware... stages) {
+        this.stages.addAll(stages.toList())
+    }
+
+    List<StageAware> getStages() {
+        return stages
+    }
 
     static PipelineStagesSuit fromString(String suit) {
         if (suit == null) {
             throw new UnrecognizedPipelineStagesSuitException("suit is null")
         }
-        if("service".equalsIgnoreCase(suit) || "µService".equalsIgnoreCase(suit)
-                || "ui".equalsIgnoreCase(suit)) {
-            return SERVICE
-        }
-        if("library".equalsIgnoreCase(suit) || "lib".equalsIgnoreCase(suit)
-                || "component".equalsIgnoreCase(suit)
-                || "ui-component".equalsIgnoreCase(suit)) {
-            return LIBRARY
-        }
-        if("custom".equalsIgnoreCase(suit) || isBlank(suit)) {
-            return CUSTOM
-        }
-        if("service-with-db".equalsIgnoreCase(suit) || isBlank(suit)) {
-            return SERVICE_WITH_DB
-        }
-        if("service-simple".equalsIgnoreCase(suit) || isBlank(suit)) {
-            return SERVICE_SIMPLE
-        }
-        throw new UnrecognizedPipelineStagesSuitException("suit ${suit} is not recognized")
+        return valueOf(suit.toUpperCase().replaceAll("-", "_"))
     }
 }

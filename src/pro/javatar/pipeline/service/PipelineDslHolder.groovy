@@ -25,14 +25,19 @@ import pro.javatar.pipeline.util.Logger
  * @author Borys Zora
  * @since 2018-03-09
  */
-public class PipelineDslHolder implements Serializable {
+class PipelineDslHolder implements Serializable {
 
     public static def dsl
 
     @NonCPS
     static JenkinsDsl createDsl(def dslContext) {
         dsl = dslContext
-        JenkinsDsl jenkinsDslService = new JenkinsDslServiceImpl(dsl)
+        JenkinsDsl jenkinsDslService = null
+        if (dslContext instanceof JenkinsDsl) {
+            jenkinsDslService = dslContext
+        } else {
+            jenkinsDslService = new JenkinsDslServiceImpl(dsl)
+        }
         Logger.dslService = jenkinsDslService
         return jenkinsDslService
     }
