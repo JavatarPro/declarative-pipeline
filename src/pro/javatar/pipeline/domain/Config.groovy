@@ -64,7 +64,7 @@ class Command implements Serializable {
     String name
     String file
     String params
-    CommandType type
+    // CommandType type
 }
 
 class Slack implements Serializable {
