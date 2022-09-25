@@ -15,6 +15,7 @@
 
 package pro.javatar.pipeline.service
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.util.Logger
 
 import java.util.concurrent.ConcurrentHashMap
@@ -27,6 +28,7 @@ class ContextHolder {
 
     final static Map<String, Object> serviceHolder = new ConcurrentHashMap<>()
 
+    @NonCPS
     static def add(Object service) {
         if (service == null) {
             return
@@ -34,6 +36,7 @@ class ContextHolder {
         return serviceHolder.put(service.getClass().getCanonicalName(), service)
     }
 
+    @NonCPS
     static def add(Class key, Object service) {
         if (service == null) {
             return
@@ -41,6 +44,7 @@ class ContextHolder {
         return serviceHolder.put(key.getCanonicalName(), service)
     }
 
+    @NonCPS
     static def get(Class service) {
         Logger.trace("ServiceContextHolder: getService: ${service}")
         if (service == null) {
@@ -51,6 +55,7 @@ class ContextHolder {
         return result
     }
 
+    @NonCPS
     static def remove(String key) {
         if (key == null) {
             return
@@ -58,10 +63,12 @@ class ContextHolder {
         return serviceHolder.remove(key)
     }
 
+    @NonCPS
     static def remove(Class service) {
         remove(service.getCanonicalName())
     }
 
+    @NonCPS
     static void link(Class generic, Class service) {
         add(generic, get(service))
     }
