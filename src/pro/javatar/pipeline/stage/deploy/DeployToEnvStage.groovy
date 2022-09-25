@@ -12,16 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.stage.deploy
 
-import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.DeploymentService
 import pro.javatar.pipeline.stage.Stage
 import pro.javatar.pipeline.util.Logger
 
+import static pro.javatar.pipeline.service.ContextHolder.get
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
@@ -30,11 +29,10 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 abstract class DeployToEnvStage extends Stage {
 
-    protected DeploymentService deploymentService // = ServiceContextHolder.getService(DeploymentService.class)
-
     @Override
     void execute() throws PipelineException {
-        Logger.info("DeployToEnvStage to " + getEnv().getValue() + " execute started: " + toString())
+        Logger.info("DeployToEnvStage to " + getEnv().getValue() + " execute started")
+        DeploymentService deploymentService = get(DeploymentService.class)
         // TODO replace hardcode with configuration
         dsl.timeout(time: 10, unit: 'MINUTES') {
             dsl.dir(releaseInfo().getRepoFolder()) {
@@ -49,22 +47,5 @@ abstract class DeployToEnvStage extends Stage {
     @Override
     String name() {
         return "${getEnv().getValue().toLowerCase()} env"
-    }
-
-    DeployToEnvStage withDeploymentService(DeploymentService deploymentService) {
-        this.deploymentService = deploymentService
-        return this
-    }
-
-    @NonCPS
-    @Override
-    public String toString() {
-        return "DeployToEnvStage{" +
-//                "env=" + getEnv().getValue() +
-                ", deploymentService=" + deploymentService +
-                ", skipStage=" + skipStage +
-                ", exitFromPipeline=" + exitFromPipeline +
-//                ", releaseInfo=" + releaseInfo() +
-                '}';
     }
 }

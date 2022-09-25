@@ -21,6 +21,7 @@ import pro.javatar.pipeline.builder.model.JenkinsTool
 import pro.javatar.pipeline.builder.model.Python
 import pro.javatar.pipeline.config.Config
 import pro.javatar.pipeline.exception.*
+import pro.javatar.pipeline.init.RevisionControlBuilder
 import pro.javatar.pipeline.integration.docker.DockerOnlyBuildService
 import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.model.*
@@ -53,6 +54,7 @@ import pro.javatar.pipeline.util.Logger
  * @author Borys Zora
  * @since 2018-03-09
  */
+@Deprecated
 class FlowBuilder implements Serializable {
 
     ReleaseInfo releaseInfo = new ReleaseInfo()
@@ -597,19 +599,9 @@ class FlowBuilder implements Serializable {
         return this
     }
 
+    @Deprecated
     MavenBuildService buildMavenBuildService(Maven maven, JenkinsTool tool) {
         MavenBuildService service = new MavenBuildService()
-        service.setJava(maven.getJava())
-        service.setMaven(maven.getMaven())
-        service.setJavaTool(tool.java)
-        service.setMavenTool(tool.maven)
-        service.setMavenParams(maven.getMavenParams())
-        service.setGroupId(maven.getGroupId())
-        service.setArtifactId(maven.getArtifactId())
-        service.setPackaging(maven.getPackaging())
-        service.setRepositoryId(maven.getRepositoryId())
-        service.setLayout(maven.getLayout())
-        service.setRepoUrl(maven.getRepoUrl())
         return service
     }
 
@@ -625,7 +617,6 @@ class FlowBuilder implements Serializable {
         ContextHolder.add(RevisionControlService.class, revisionControlService)
         ContextHolder.add(releaseService)
         ContextHolder.add(dockerService)
-        ContextHolder.add(slackService)
         ContextHolder.add(sonarQubeService)
         ContextHolder.add(swaggerService)
         ContextHolder.add(dockerNpmBuildService)

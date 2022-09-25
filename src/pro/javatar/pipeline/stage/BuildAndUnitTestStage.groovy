@@ -19,6 +19,7 @@ import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
 import pro.javatar.pipeline.util.Logger
 
+import static pro.javatar.pipeline.service.ContextHolder.get
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 
 /**
@@ -28,18 +29,16 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class BuildAndUnitTestStage extends Stage {
 
-    BuildService buildService
-    RevisionControlService revisionControl
-
-    BuildAndUnitTestStage(BuildService buildService,
-                          RevisionControlService revisionControlService) {
-        this.buildService = buildService
-        this.revisionControl = revisionControlService
+    BuildAndUnitTestStage() {
+        Logger.debug("BuildAndUnitTestStage#constructor")
     }
 
     @Override
     void execute() throws PipelineException {
         Logger.info("BuildAndUnitTestStage execute started")
+        RevisionControlService revisionControl = get(RevisionControlService.class)
+        BuildService buildService = get(BuildService.class)
+        // TODO make decorator to wrap dsl.timeout to simplify for unit tests
         dsl.timeout(time: buildService.unitTestsTimeout, unit: 'MINUTES') {
             revisionControl.cleanUp()
             dsl.dir(revisionControl.folder) {
@@ -69,30 +68,13 @@ class BuildAndUnitTestStage extends Stage {
 
     def populateReleaseInfo() {
         Logger.info("BuildAndUnitTestStage populateReleaseInfo started with")
+        RevisionControlService revisionControl = get(RevisionControlService.class)
+        BuildService buildService = get(BuildService.class)
         releaseInfo().setRepoFolder(revisionControl.folder)
         def currentVersion = buildService.getCurrentVersion()
         releaseInfo().setCurrentVersion(currentVersion)
         releaseInfo().setFlowPrefix(revisionControl.getFlowPrefix())
         buildService.populateReleaseInfo(releaseInfo())
         Logger.info("BuildAndUnitTestStage populateReleaseInfo finished")
-    }
-
-    boolean equals(o) {
-        if (this.is(o)) return true
-        if (getClass() != o.class) return false
-
-        BuildAndUnitTestStage that = (BuildAndUnitTestStage) o
-
-        if (buildService != that.buildService) return false
-        if (revisionControl != that.revisionControl) return false
-
-        return true
-    }
-
-    int hashCode() {
-        int result
-        result = (buildService != null ? buildService.hashCode() : 0)
-        result = 31 * result + (revisionControl != null ? revisionControl.hashCode() : 0)
-        return result
     }
 }

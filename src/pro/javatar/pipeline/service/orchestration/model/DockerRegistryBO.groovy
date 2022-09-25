@@ -10,11 +10,18 @@ import com.cloudbees.groovy.cps.NonCPS
  * @author Borys Zora
  * @version 2018-10-15
  */
+@Deprecated // TODO remove in favor to domain.Docker
 class DockerRegistryBO {
 
+    String registry
     String credentialsId
 
-    String registry
+    DockerRegistryBO() {}
+
+    DockerRegistryBO(String registry, String credentialsId) {
+        this.registry = registry
+        this.credentialsId = credentialsId
+    }
 
     String getCredentialsId() {
         return credentialsId

@@ -44,16 +44,6 @@ class Vcs implements Serializable { // version control system
     String cred
 }
 
-class Maven implements Serializable {
-    String repo_id
-    String repo_url
-    String jenkins_tool_mvn
-    String jenkins_tool_jdk
-    String build_cmd = "mvn clean install"
-    String integration_test_cmd = "mvn -B verify -DskipITs=false"
-    String params
-}
-
 class AutoTest implements Serializable {
     List<Command> commands = new ArrayList<>()
 }

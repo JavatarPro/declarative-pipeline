@@ -15,8 +15,11 @@
 package pro.javatar.pipeline.model
 
 import pro.javatar.pipeline.exception.UnrecognizedPipelineStagesSuitException
+import pro.javatar.pipeline.stage.BuildAndUnitTestStage
+import pro.javatar.pipeline.stage.ReleaseArtifactsStage
 import pro.javatar.pipeline.stage.StageAware
 import pro.javatar.pipeline.stage.VersionInfoStage
+import pro.javatar.pipeline.stage.deploy.DeployToDevEnvStage
 
 /**
  * @author Borys Zora
@@ -26,7 +29,12 @@ enum PipelineStagesSuit {
 
     SERVICE,
     SERVICE_WITH_DB,
-    SERVICE_SIMPLE,
+    SERVICE_SIMPLE(
+            new BuildAndUnitTestStage(),
+            new DeployToDevEnvStage(),
+            // new AutoTestsStage(),
+            new ReleaseArtifactsStage()
+    ),
     LIBRARY,
     ANALYSE_SERVICE_VERSIONS(
             new VersionInfoStage()

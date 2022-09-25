@@ -15,8 +15,12 @@
 package pro.javatar.pipeline.service.orchestration
 
 import com.cloudbees.groovy.cps.NonCPS
+import pro.javatar.pipeline.domain.Config
+import pro.javatar.pipeline.domain.Docker
+import pro.javatar.pipeline.integration.k8s.KubernetesService
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.model.ReleaseInfo
+import pro.javatar.pipeline.service.ContextHolder
 import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
 import pro.javatar.pipeline.service.orchestration.model.DockerRegistryBO
 import pro.javatar.pipeline.util.Logger
@@ -34,22 +38,35 @@ class DockerService implements Serializable {
 
     static final String DEFAULT_DOCKER_FILE = "Dockerfile"
 
-    Map<String, DockerRegistryBO> dockerRegistries
+    Map<String, Docker> dockerRegistries = new HashMap<>()
 
     DockerOrchestrationService orchestrationService
 
     String customDockerFileName
 
-    DockerService(Map<String, DockerRegistryBO> dockerRegistries, DockerOrchestrationService orchestrationService) {
-        this.dockerRegistries = dockerRegistries
-        this.orchestrationService = orchestrationService
+    DockerService(Map<String, DockerRegistryBO> map,
+                  DockerOrchestrationService orchestration) {
+        map.each { k, v ->
+            Docker docker = new Docker()
+            docker.name = k
+            docker.url = v.registry
+            docker.cred = v.credentialsId
+            this.dockerRegistries.put(docker.name, docker)
+        }
+        this.orchestrationService = orchestration
+    }
+
+    DockerService(List<Docker> dockers) {
+        this.orchestrationService = ContextHolder.get(DockerOrchestrationService.class)
+        dockers.each { d -> dockerRegistries.put(d.name, d) }
     }
 
     def dockerBuildImage(ReleaseInfo releaseInfo) {
         if (releaseInfo.isMultiDockerBuild()) {
             releaseInfo.dockerImageNames.each {
-                String image -> dockerBuildImage(image, releaseInfo.getDockerImageVersion(),
-                        releaseInfo.getCustomDockerFileName(image))
+                String image ->
+                    dockerBuildImage(image, releaseInfo.getDockerImageVersion(),
+                            releaseInfo.getCustomDockerFileName(image))
             }
             return
         }
@@ -58,22 +75,6 @@ class DockerService implements Serializable {
         } else {
             dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
         }
-    }
-
-    // FIXME concurrency issue should be resolved, build failed
-    def dockerBuildImageInParallel(ReleaseInfo releaseInfo) {
-        if (releaseInfo.isMultiDockerBuild()) {
-            def stepsForParallel = [:]
-            releaseInfo.dockerImageNames.each {
-                String image -> stepsForParallel["Docker build: ${image}"] = {
-                    dockerBuildImage(image, releaseInfo.getDockerImageVersion(),
-                            releaseInfo.getCustomDockerFileName(image))
-                }
-            }
-            dsl.parallel stepsForParallel
-            return
-        }
-        dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
     }
 
     def dockerBuildImage(String imageName, String imageVersion, String customDockerFileName) {
@@ -93,7 +94,7 @@ class DockerService implements Serializable {
     def dockerBuildImageWithContextOptimizationForUI(ReleaseInfo releaseInfo) {
         Logger.debug("dockerBuildImageWithContextOptimizationForUI started")
         dsl.sh "mv ${releaseInfo.getUiDistributionFolder()} ${releaseInfo.getBuildDockerFromFolder()}"
-        dsl.dir (releaseInfo.getBuildDockerFromFolder()) {
+        dsl.dir(releaseInfo.getBuildDockerFromFolder()) {
             dsl.sh "pwd && ls -la && ls -la .."
             dockerBuildImage(releaseInfo.getDockerImageName(), releaseInfo.getDockerImageVersion())
         }
@@ -180,8 +181,8 @@ class DockerService implements Serializable {
         }
         // TODO known issues if user not added to docker group or added but jenkins node not restarted
         dsl.sh "whoami"
-        dsl.withCredentials([[$class: 'UsernamePasswordMultiBinding',
-                              credentialsId: credentialsId,
+        dsl.withCredentials([[$class          : 'UsernamePasswordMultiBinding',
+                              credentialsId   : credentialsId,
                               usernameVariable: 'DOCKER_REGISTRY_USERNAME',
                               passwordVariable: 'DOCKER_REGISTRY_PASSWORD']]) {
             dsl.sh("docker login ${dockerRegistryUrl} -u ${dsl.env.DOCKER_REGISTRY_USERNAME} -p${dsl.env.DOCKER_REGISTRY_PASSWORD}")
@@ -199,7 +200,8 @@ class DockerService implements Serializable {
                 .withDockerRegistry(dockerRegistry)
                 .withEnvironment(env)
                 .withService(imageName)
-                .withBuildNumber(dsl.currentBuild.number) // TODO remove low level details from this level of abstraction
+                .withBuildNumber(dsl.currentBuild.number)
+        // TODO remove low level details from this level of abstraction
         Logger.debug("DockerService:dockerDeployContainer: orchestrationService.setup")
         orchestrationService.setup()
         Logger.debug("DockerService:dockerDeployContainer: orchestrationService.dockerDeployContainer")
@@ -227,14 +229,14 @@ class DockerService implements Serializable {
     def populateReleaseInfo(ReleaseInfo releaseInfo) {
         Logger.debug("DockerService:populateReleaseInfo:started with releaseInfo: " + releaseInfo.toString());
         String output = dsl.sh returnStdout: true, script: 'ls -d */*'
-        List<String> dockerFiles = output.split().findAll {it -> it.contains(DEFAULT_DOCKER_FILE)}
+        List<String> dockerFiles = output.split().findAll { it -> it.contains(DEFAULT_DOCKER_FILE) }
         if (dockerFiles == null) {
             Logger.warn("DockerService:populateReleaseInfo: No Dockerfile has been found")
             return
         }
         String theDockerFile = null
         List<String> multipleDockerFiles = new ArrayList<>()
-        for(String dockerfile: dockerFiles) {
+        for (String dockerfile : dockerFiles) {
             if (DEFAULT_DOCKER_FILE.equals(dockerfile)) {
                 theDockerFile = dockerfile
             } else if (dockerfile != null || dockerfile.contains("/" + DEFAULT_DOCKER_FILE)) {
@@ -252,7 +254,7 @@ class DockerService implements Serializable {
             Logger.error("DockerService:populateReleaseInfo: No docker file provided")
             return
         }
-        for (String dockerfile: multipleDockerFiles) {
+        for (String dockerfile : multipleDockerFiles) {
             String[] array = dockerfile.split("/")
             if (array.size() == 2) {
                 String dockerImageName = array[0]

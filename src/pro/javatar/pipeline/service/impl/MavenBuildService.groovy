@@ -14,7 +14,7 @@
  */
 package pro.javatar.pipeline.service.impl
 
-import com.cloudbees.groovy.cps.NonCPS
+import pro.javatar.pipeline.domain.Maven
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.NexusUploadAware
@@ -22,7 +22,6 @@ import pro.javatar.pipeline.util.Logger
 
 import static java.lang.String.format
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
-import static pro.javatar.pipeline.util.StringUtils.isBlank
 import static pro.javatar.pipeline.util.StringUtils.isNotBlank
 
 /**
@@ -31,27 +30,23 @@ import static pro.javatar.pipeline.util.StringUtils.isNotBlank
  */
 class MavenBuildService extends BuildService implements NexusUploadAware {
 
-    protected String java
-    protected String maven
-    protected String mavenParams = ""
-    protected String groupId
-    protected String artifactId
-    protected String packaging
-    protected String repositoryId
-    protected String layout
-    protected String repoUrl
-    protected String mavenTool;
-    protected String javaTool;
+    Maven maven = new Maven()
 
     MavenBuildService() {
         Logger.info("MavenBuildService default constructor")
+        maven.build_cmd = "mvn clean package"
+    }
+
+    MavenBuildService(Maven maven) {
+        Logger.info("MavenBuildService constructor")
+        this.maven = maven
     }
 
     @Override
     void setUp() {
         Logger.info("MavenBuildService: setUp started")
-        dsl.env.M2_HOME="${dsl.tool mavenTool}"
-        dsl.env.JAVA_HOME="${dsl.tool javaTool}"
+        dsl.env.M2_HOME="${dsl.tool maven.jenkins_tool_mvn}"
+        dsl.env.JAVA_HOME="${dsl.tool maven.jenkins_tool_jdk}"
         dsl.env.PATH="${dsl.env.JAVA_HOME}/bin:${dsl.env.M2_HOME}/bin:${dsl.env.PATH}"
         dsl.sh 'java -version'
         dsl.sh 'mvn -version'
@@ -61,7 +56,7 @@ class MavenBuildService extends BuildService implements NexusUploadAware {
     @Override
     void buildAndUnitTests(ReleaseInfo releaseInfo) {
         Logger.info("MavenBuildService buildAndUnitTests started")
-        dsl.sh "mvn clean package " + mavenParams
+        dsl.sh maven.build_cmd + " " + maven.params
         Logger.info("MavenBuildService buildAndUnitTests finished")
     }
 
@@ -86,9 +81,8 @@ class MavenBuildService extends BuildService implements NexusUploadAware {
 
     @Override
     def runIntegrationTests() {
-        Logger.info("MavenBuildService:integrationTests with mavenParams: ${mavenParams} started")
-        dsl.sh "mvn -B verify ${mavenParams} -DskipITs=false"
-        //dsl.sh "mvn failsafe:integration-test -DskipITs=false ${mavenParams}"
+        Logger.info("MavenBuildService:integrationTests with mavenParams: ${maven.params} started")
+        dsl.sh "mvn -B verify ${maven.params} -DskipITs=false"
         Logger.info("MavenBuildService:integrationTests:finished")
     }
 
@@ -112,7 +106,8 @@ class MavenBuildService extends BuildService implements NexusUploadAware {
     }
 
     String getMavenRepoUrl(String version) {
-        getMavenRepoUrl(repoUrl, groupId, artifactId, version, packaging)
+        def pom = dsl.readMavenPom file: 'pom.xml'
+        getMavenRepoUrl(maven.repo_url, pom.group, pom.artifact, version, pom.package)
     }
 
     String getMavenRepoUrl(String repoUrl, String groupId, String artifactId, String version, String packaging) {
@@ -121,7 +116,8 @@ class MavenBuildService extends BuildService implements NexusUploadAware {
     }
 
     String artifactName(String version) {
-        return artifactName(artifactId, version, packaging)
+        def pom = dsl.readMavenPom file: 'pom.xml'
+        return artifactName(pom.artifact, version, pom.package)
     }
 
     String artifactName(String artifactId, String version, String packaging) {
@@ -144,83 +140,14 @@ class MavenBuildService extends BuildService implements NexusUploadAware {
     }
 
     def deployMavenArtifactsToNexus() {
-        deployMavenArtifactsToNexus(mavenParams)
+        deployMavenArtifactsToNexus(maven.params)
     }
 
     // TODO verify in pom.xml if distributionManagement section exists
     String getAltDeploymentRepository() {
-        if (isNotBlank(repositoryId) && isNotBlank(repoUrl)) {
-            return "-DaltDeploymentRepository=${repositoryId}::${layout}::${repoUrl}"
+        if (isNotBlank(maven.repo_id) && isNotBlank(maven.repo_url)) {
+            return "-DaltDeploymentRepository=${maven.repo_id}::${maven.layout}::${maven.repo_url}"
         }
         return ""
-    }
-
-    void setJava(String java) {
-        this.java = java
-    }
-
-    void setMaven(String maven) {
-        this.maven = maven
-    }
-
-    protected void setMavenParams(String mavenParams) {
-        if(isBlank(mavenParams)) {
-            return
-        }
-        this.mavenParams = mavenParams
-    }
-
-    String getMavenParams() {
-        if (isBlank(mavenParams)) {
-            return ""
-        }
-        return mavenParams
-    }
-
-    void setGroupId(String groupId) {
-        this.groupId = groupId
-    }
-
-    void setArtifactId(String artifactId) {
-        this.artifactId = artifactId
-    }
-
-    void setPackaging(String packaging) {
-        this.packaging = packaging
-    }
-
-    void setRepositoryId(String repositoryId) {
-        this.repositoryId = repositoryId
-    }
-
-    void setRepoUrl(String repoUrl) {
-        this.repoUrl = repoUrl
-    }
-
-    void setLayout(String layout) {
-        this.layout = layout
-    }
-
-    void setMavenTool(String mavenTool) {
-        this.mavenTool = mavenTool
-    }
-
-    void setJavaTool(String javaTool) {
-        this.javaTool = javaTool
-    }
-
-    @NonCPS
-    @Override
-    public String toString() {
-        return "MavenBuildService{" +
-                "java='" + java + '\'' +
-                ", maven='" + maven + '\'' +
-                ", mavenParams='" + mavenParams + '\'' +
-                ", groupId='" + groupId + '\'' +
-                ", artifactId='" + artifactId + '\'' +
-                ", packaging='" + packaging + '\'' +
-                ", repositoryId='" + repositoryId + '\'' +
-                ", repoUrl='" + repoUrl + '\'' +
-                '}';
     }
 }

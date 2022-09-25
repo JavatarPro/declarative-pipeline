@@ -4,7 +4,7 @@ import pro.javatar.pipeline.builder.BackEndAutoTestsServiceBuilder
 import pro.javatar.pipeline.builder.DockerBuilder
 import pro.javatar.pipeline.builder.FlowBuilder
 import pro.javatar.pipeline.builder.Maven
-import pro.javatar.pipeline.builder.RevisionControlBuilder
+import pro.javatar.pipeline.init.RevisionControlBuilder
 import pro.javatar.pipeline.builder.S3Builder
 import pro.javatar.pipeline.builder.model.DockerRegistry
 import pro.javatar.pipeline.builder.SonarQubeBuilder

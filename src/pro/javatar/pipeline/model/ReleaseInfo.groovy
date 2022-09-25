@@ -77,7 +77,7 @@ class ReleaseInfo implements ArtifactReleaseInfo, Serializable {
     @Override
     String releaseVersionWithBuildSuffix() {
         if (isNotBlank(buildNumber)) {
-            return String.format("%s.%s", releaseVersion(), buildNumber)
+            return "${releaseVersion()}.b${buildNumber}"
         }
         Logger.warn("releaseVersionWithBuildSuffix: buildNumber is blank so releaseVersion() will be returned")
         return releaseVersion()

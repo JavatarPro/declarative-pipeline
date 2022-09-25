@@ -12,21 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.stage.deploy
 
 import pro.javatar.pipeline.model.Env
-import pro.javatar.pipeline.service.DeploymentService
 
 /**
  * @author Borys Zora
  * @since 2018-03-09
  */
 class DeployToProdEnvStage extends DeployToEnvStage {
-
-    DeployToProdEnvStage(DeploymentService deploymentService) {
-        super.deploymentService = deploymentService
-    }
 
     @Override
     Env getEnv() {

@@ -62,4 +62,7 @@ class ContextHolder {
         remove(service.getCanonicalName())
     }
 
+    static void link(Class generic, Class service) {
+        add(generic, get(service))
+    }
 }
