@@ -15,7 +15,6 @@
 
 package pro.javatar.pipeline.service.vcs
 
-import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.GitFlowReleaseFinishException
 import pro.javatar.pipeline.exception.InvalidBranchException
 import pro.javatar.pipeline.model.ReleaseInfo
@@ -277,16 +276,5 @@ class GitService extends RevisionControlService {
 
     def getShowConfigFile() {
         dsl.sh "cat .git/config"
-    }
-
-    @NonCPS
-    @Override
-    public String toString() {
-        return "GitService{" +
-                "credentialsId='" + credentialsId + '\'' +
-                ", repo='" + repo + '\'' +
-                ", repoOwner='" + repoOwner + '\'' +
-                ", flowPrefix='" + flowPrefix + '\'' +
-                "} "
     }
 }
