@@ -4,7 +4,7 @@
  */
 package pro.javatar.pipeline.service.orchestration.model
 
-import com.cloudbees.groovy.cps.NonCPS
+import pro.javatar.pipeline.domain.Docker
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.util.Logger
 
@@ -16,7 +16,7 @@ class DeploymentRequestBO implements Serializable {
 
     String imageName
     String imageVersion
-    DockerRegistryBO dockerRegistry
+    Docker dockerRegistry
     Env env
     Integer buildNumber
     String service
@@ -26,7 +26,7 @@ class DeploymentRequestBO implements Serializable {
     }
 
     String getImage() {
-        return "${getDockerRegistry().registry}/${getImageName()}:${getImageVersion()}"
+        return "${getDockerRegistry().url}/${getImageName()}:${getImageVersion()}"
     }
 
     String getDeploy() {
@@ -63,15 +63,15 @@ class DeploymentRequestBO implements Serializable {
         return this;
     }
 
-    DockerRegistryBO getDockerRegistry() {
+    Docker getDockerRegistry() {
         return dockerRegistry
     }
 
-    void setDockerRegistry(DockerRegistryBO dockerRegistry) {
+    void setDockerRegistry(Docker dockerRegistry) {
         this.dockerRegistry = dockerRegistry
     }
 
-    DeploymentRequestBO withDockerRegistry(DockerRegistryBO dockerRegistry) {
+    DeploymentRequestBO withDockerRegistry(Docker dockerRegistry) {
         setDockerRegistry(dockerRegistry)
         return this;
     }
@@ -122,19 +122,5 @@ class DeploymentRequestBO implements Serializable {
     DeploymentRequestBO withService(String service) {
         setService(service)
         return this
-    }
-
-    @NonCPS
-    @Override
-    public String toString() {
-        // TODO replace all toString toJson
-        return "DeploymentRequestBO{" +
-                "imageName='" + imageName + '\'' +
-                ", imageVersion='" + imageVersion + '\'' +
-                ", dockerRegistry=" + dockerRegistry +
-//                ", environment=" + environment +
-                ", buildNumber=" + buildNumber +
-                ", service='" + service + '\'' +
-                '}';
     }
 }
