@@ -16,6 +16,7 @@ import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.model.DockerOrchestrationServiceType
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.BuildService
+import pro.javatar.pipeline.service.DeploymentService
 import pro.javatar.pipeline.service.ReleaseService
 import pro.javatar.pipeline.service.impl.BackEndReleaseServiceV2
 import pro.javatar.pipeline.service.impl.DockerBuildService
@@ -52,11 +53,18 @@ class ServiceInitialization implements Serializable {
         add(new MavenBuildService(config.maven))
         setupBuildService(config)
         add(new DockerBuildService(get(BuildService.class), get(DockerService.class)))
-        add(new DockerDeploymentService(info, get(DockerService.class)))
+        setupDeploymentService(config, info)
         addReleaseService()
 
         // PipelineStagesSuit.LIBRARY for BE
         Logger.info("ServiceInitialization:createServices completed")
+    }
+
+    static void setupDeploymentService(Config config, ReleaseInfo info) {
+        //         DeploymentService deploymentService = get(DeploymentService.class)
+        def ds = new DockerDeploymentService(info, get(DockerService.class))
+        add(ds)
+        add(DeploymentService.class, ds)
     }
 
     static void setupRevisionControl(Vcs vcs) {

@@ -39,6 +39,12 @@ class BuildAndUnitTestStage extends Stage {
         RevisionControlService revisionControl = get(RevisionControlService.class)
         BuildService buildService = get(BuildService.class)
         // TODO make decorator to wrap dsl.timeout to simplify for unit tests
+//        JenkinsDsl dsl = get(JenkinsDsl.class)
+//        options {
+//            timeout(time: 1, unit: 'HOURS')
+//            checkoutToSubdirectory()
+//        }
+//        if (buildService != null) return // uncomment for debug purposes
         dsl.timeout(time: buildService.unitTestsTimeout, unit: 'MINUTES') {
             revisionControl.cleanUp()
             dsl.dir(revisionControl.folder) {

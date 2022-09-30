@@ -32,7 +32,8 @@ class DockerDeploymentService implements DeploymentService {
     ReleaseInfo releaseInfo
     DockerService dockerService
 
-    DockerDeploymentService(ReleaseInfo releaseInfo, DockerService dockerService) {
+    DockerDeploymentService(ReleaseInfo releaseInfo,
+                            DockerService dockerService) {
         this.releaseInfo = releaseInfo
         this.dockerService = dockerService
     }
