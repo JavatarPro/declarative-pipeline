@@ -52,7 +52,10 @@ class ServiceInitialization implements Serializable {
         add(new DockerService(config.docker))
         add(new MavenBuildService(config.maven))
         setupBuildService(config)
-        add(new DockerBuildService(get(BuildService.class), get(DockerService.class)))
+        // TODO decouple builds (maven and docker)
+        DockerBuildService dbs = new DockerBuildService(get(BuildService.class), get(DockerService.class))
+        add(dbs)
+        add(BuildService.class, dbs)
         setupDeploymentService(config, info)
         addReleaseService()
 
