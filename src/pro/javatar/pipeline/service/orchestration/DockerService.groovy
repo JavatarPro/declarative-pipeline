@@ -15,9 +15,7 @@
 package pro.javatar.pipeline.service.orchestration
 
 import com.cloudbees.groovy.cps.NonCPS
-import pro.javatar.pipeline.domain.Config
 import pro.javatar.pipeline.domain.Docker
-import pro.javatar.pipeline.integration.k8s.KubernetesService
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.ContextHolder
@@ -103,10 +101,10 @@ class DockerService implements Serializable {
 
     def dockerPublish(String imageName, String imageVersion, Env env) {
         Logger.info("DockerService:dockerPublish: ${imageName}:${imageVersion} to env: ${env}")
-        DockerRegistryBO dockerRegistry = dockerRegistries.get(env.getValue())
+        Docker dockerRegistry = dockerRegistries.get(env.getValue())
         Logger.info("DockerService:dockerPublish:dockerRegistry: ${dockerRegistry}")
-        String registry = dockerRegistry.getRegistry()
-        String credentials = dockerRegistry.getCredentialsId()
+        String registry = dockerRegistry.url
+        String credentials = dockerRegistry.cred
         if (DockerHolder.isImageAlreadyPublished(imageName, imageVersion, registry)) {
             Logger.info("image: ${imageName}:${imageVersion} has already been published into registry: ${registry}, " +
                     "will skip publishing")
