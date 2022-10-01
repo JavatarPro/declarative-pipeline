@@ -5,6 +5,7 @@
 package pro.javatar.pipeline.integration.k8s
 
 import pro.javatar.pipeline.domain.DockerImage
+import pro.javatar.pipeline.domain.Version
 import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import groovy.json.JsonSlurper
 
@@ -26,6 +27,7 @@ class K8sVersionInfo implements Serializable {
         this.dockerUrlNext = dockerUrlNext
     }
 
+    // versions from dev environment, used dockerUrlCurrent
     Map<String, String> versionsCurrent() {
         String json = dsl.getShellExecutionResponse("kubectl get deploy -o json")
         def parser = new JsonSlurper()
@@ -41,12 +43,29 @@ class K8sVersionInfo implements Serializable {
         return result
     }
 
-    Map<String, String> versionsNext() {
-
+    // versions to be proposed for next release to some env, used dockerUrlNext
+    Map<String, String> versionsNext(Map<String, String> versions) {
+        Map<String, String> result = new HashMap<>()
+        versions.each { service, image ->
+            DockerImage di = DockerImage.fromString(image)
+            Version v = Version.fromString(di.version)
+            di.version = v.toStringWithoutBuild()
+            di.dockerUrl = dockerUrlNext
+            result.put(service, di.toString())
+        }
+        return result
     }
 
-    String allVersions() {
-        return null
+    // comparing proposed versions with existing on env to where we are going to promote
+    Map<String, String> toUpdate(Map<String, String> proposedVersions, Map<String, String> existingVersions) {
+        Map<String, String> result = new HashMap<>()
+        proposedVersions.each { service, image ->
+            String existingImage = existingVersions.get(service)
+            if (existingImage == null || !existingImage.equals(image)) {
+                result.put(service, image)
+            }
+        }
+        return result
     }
 
 }

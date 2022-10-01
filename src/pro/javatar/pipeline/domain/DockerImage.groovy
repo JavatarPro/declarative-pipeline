@@ -12,15 +12,19 @@ package pro.javatar.pipeline.domain
 class DockerImage implements Serializable {
     String dockerUrl
     String deployment
-    Version version
+    String version
 
     static DockerImage fromString(String image) {
         DockerImage result = new DockerImage()
         String[] items = image.split(":")
-        result.version = Version.fromString(items[1])
+        result.version = items[1]
         String[] it = items[0].split("/")
         result.dockerUrl = it[0]
         result.deployment = it[1]
         return result
+    }
+
+    String toString() {
+        return "${dockerUrl}/${deployment}:${version}"
     }
 }

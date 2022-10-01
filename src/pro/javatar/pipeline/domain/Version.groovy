@@ -18,6 +18,10 @@ class Version implements Serializable {
         return "${major}.${minor}.${patch}.b${build}"
     }
 
+    String toStringWithoutBuild() {
+        return "${major}.${minor}.${patch}"
+    }
+
     static Version fromString(String version) {
         Version v = new Version();
         String[] items = release(version).split("\\.")

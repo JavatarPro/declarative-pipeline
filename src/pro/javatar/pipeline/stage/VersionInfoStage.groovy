@@ -23,6 +23,7 @@ class VersionInfoStage extends Stage {
     void execute() throws PipelineException {
         def versions = versionInfo().versionsCurrent()
         sender().send(toPrettyJson(versions))
+        versionInfo()
     }
 
     @Override
