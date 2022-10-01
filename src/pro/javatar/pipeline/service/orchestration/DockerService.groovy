@@ -146,8 +146,8 @@ class DockerService implements Serializable {
                 "${imageVersion}, ${dockerRegistryUrl})")
         dsl.sh "docker images"
         String versionWithBuildNumber = getImageVersionWithBuildNumber(imageVersion)
-        dsl.sh "docker tag ${imageName}:${imageVersion} ${dockerRegistryUrl}/${imageName}:${versionWithBuildNumber}"
-        dsl.sh "docker push ${dockerRegistryUrl}/${imageName}:${versionWithBuildNumber}"
+        dsl.sh "docker tag ${imageName}:${imageVersion} ${dockerRegistryUrl}/${imageName}:b${versionWithBuildNumber}"
+        dsl.sh "docker push ${dockerRegistryUrl}/${imageName}:b${versionWithBuildNumber}"
         DockerHolder.addToAlreadyPublished(imageName, versionWithBuildNumber, dockerRegistryUrl)
         Logger.info("DockerService:dockerPushImageWithBuildNumberToRegistryWithoutLogin completed")
     }
