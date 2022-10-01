@@ -65,7 +65,7 @@ class GitService extends RevisionControlService {
     def checkoutRepo(String repoUrl, String branch) {
         Logger.debug("checkoutRepo with repoUrl: ${repoUrl}, branch: ${branch}")
         VscCheckoutRequest vscCheckoutRequest = new VscCheckoutRequest().withBranch(branch).withRepoUrl(repoUrl)
-                                                        .withCredentialsId(credentialsId)
+                                                        .withCredentialsId(vcs.cred)
         checkoutRepo(vscCheckoutRequest)
     }
 
@@ -135,7 +135,7 @@ class GitService extends RevisionControlService {
     def createAndPushBranch(String branchName) {
         Logger.info("GitService:createAndPushBranch: branchName: ${branchName} started")
         dsl.sh "git checkout -b ${branchName}"
-        dsl.sshagent([credentialsId]) {
+        dsl.sshagent([vcs.cred]) {
             dsl.sh "git push -u origin ${branchName}"
         }
         Logger.info("GitService:createAndPushBranch: branchName: ${branchName} finished")
@@ -144,7 +144,7 @@ class GitService extends RevisionControlService {
     @Override
     def pushNewBranches() {
         Logger.debug("GitService:pushNewBranches started")
-        dsl.sshagent([credentialsId]) {
+        dsl.sshagent([vcs.cred]) {
             dsl.sh "git push --all -u"
         }
         Logger.debug("GitService:pushNewBranches finished")
@@ -154,7 +154,7 @@ class GitService extends RevisionControlService {
     def pushNewBranch(String branchName) {
         Logger.info("GitService:pushNewBranch: ${branchName} started")
         // git branch --set-upstream origin yourbranch
-        dsl.sshagent([credentialsId]) {
+        dsl.sshagent([vcs.cred]) {
             dsl.sh "git push -u origin ${branchName}"
         }
         Logger.info("GitService:pushNewBranch: ${branchName} finished")
@@ -167,7 +167,7 @@ class GitService extends RevisionControlService {
 
     @Override
     String getRepoName() {
-        return repo
+        return vcs.url
     }
 
     @Override
@@ -177,7 +177,7 @@ class GitService extends RevisionControlService {
 
     @Override
     def pushRelease() {
-        dsl.sshagent([credentialsId]) {
+        dsl.sshagent([vcs.cred]) {
             dsl.sh "git push"
             dsl.sh "git push --all"
             dsl.sh "git push origin --tags"
