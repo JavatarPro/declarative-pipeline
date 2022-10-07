@@ -39,17 +39,17 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
 
         vcs.checkoutIntoFolder("master")
         def releaseRequest = dsl.readJson("${vcs.folder}/${RELEASE_FILE}")
-        def proposedVersions = releaseRequest.proposedVersions
+        def proposedVersions = releaseRequest.get(K8sVersions.PROPOSED_VERSIONS)
         def prodVersions = versionInfo.versionsCurrent()
         def updates = versionInfo.toUpdate(proposedVersions, prodVersions)
         updates.each {deployment, image ->
             service.createOrReplace(DockerImage.fromString(image))
         }
         def result = [
-                K8sVersions.DEV_VERSIONS: releaseRequest.devVersions,
-                K8sVersions.PROPOSED_VERSIONS: proposedVersions,
-                K8sVersions.PROD_VERSIONS: prodVersions,
-                K8sVersions.PROD_VERSION_UPDATES: updates,
+                "${K8sVersions.DEV_VERSIONS}": releaseRequest.get(K8sVersions.DEV_VERSIONS),
+                "${K8sVersions.PROPOSED_VERSIONS}": proposedVersions,
+                "${K8sVersions.PROD_VERSIONS}": prodVersions,
+                "${K8sVersions.PROD_VERSION_UPDATES}": updates,
         ]
         String json = toPrettyJson(result)
         // TODO make slack template
