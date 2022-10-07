@@ -4,6 +4,7 @@
  */
 package pro.javatar.pipeline.jenkins.api
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.stage.StageAware
 
 import java.time.Duration
@@ -33,6 +34,7 @@ interface JenkinsDsl extends Serializable {
 
     def readYaml(String yamlConfig);
 
+    @NonCPS
     String getShellExecutionResponse(String command);
 
     String getShellExecutionResponse(String command, String defaultMessage);
