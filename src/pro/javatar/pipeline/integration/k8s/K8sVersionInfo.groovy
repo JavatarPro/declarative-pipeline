@@ -4,6 +4,7 @@
  */
 package pro.javatar.pipeline.integration.k8s
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.domain.DockerImage
 import pro.javatar.pipeline.domain.Version
 import pro.javatar.pipeline.jenkins.api.JenkinsDsl
@@ -27,6 +28,7 @@ class K8sVersionInfo implements Serializable {
         this.dockerUrlNext = dockerUrlNext
     }
 
+    @NonCPS
     // versions from dev environment, used dockerUrlCurrent
     Map<String, String> versionsCurrent() {
         String json = dsl.getShellExecutionResponse("kubectl get deploy -o json")

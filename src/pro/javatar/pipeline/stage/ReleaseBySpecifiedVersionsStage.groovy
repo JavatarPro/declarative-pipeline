@@ -5,6 +5,7 @@
 package pro.javatar.pipeline.stage
 
 import pro.javatar.pipeline.domain.DockerImage
+import pro.javatar.pipeline.domain.K8sVersions
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.integration.k8s.K8sVersionInfo
 import pro.javatar.pipeline.integration.k8s.KubernetesService
@@ -38,7 +39,6 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
 
         vcs.checkoutIntoFolder("master")
         def releaseRequest = dsl.readJson("${vcs.folder}/${RELEASE_FILE}")
-        def currentVersions = releaseRequest.currentVersions
         def proposedVersions = releaseRequest.proposedVersions
         def prodVersions = versionInfo.versionsCurrent()
         def updates = versionInfo.toUpdate(proposedVersions, prodVersions)
@@ -46,10 +46,10 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
             service.createOrReplace(DockerImage.fromString(image))
         }
         def result = [
-                devVersions: currentVersions,
-                proposedVersions: proposedVersions,
-                prodVersions: prodVersions,
-                updates: updates
+                K8sVersions.DEV_VERSIONS: releaseRequest.devVersions,
+                K8sVersions.PROPOSED_VERSIONS: proposedVersions,
+                K8sVersions.PROD_VERSIONS: prodVersions,
+                K8sVersions.PROD_VERSION_UPDATES: updates,
         ]
         String json = toPrettyJson(result)
         // TODO make slack template
