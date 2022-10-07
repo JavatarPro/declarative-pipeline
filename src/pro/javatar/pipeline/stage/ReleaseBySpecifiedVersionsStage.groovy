@@ -46,8 +46,9 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
             service.createOrReplace(DockerImage.fromString(image))
         }
         def result = [
-                currentVersions: currentVersions,
+                devVersions: currentVersions,
                 proposedVersions: proposedVersions,
+                prodVersions: prodVersions,
                 updates: updates
         ]
         String json = toPrettyJson(result)
