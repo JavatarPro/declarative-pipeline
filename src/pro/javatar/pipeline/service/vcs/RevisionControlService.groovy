@@ -74,6 +74,27 @@ abstract class RevisionControlService implements Serializable {
 
     abstract def checkoutRepo(VscCheckoutRequest request)
 
+    abstract def moveFile(String oldPath, String newPath)
+
+    def checkoutIntoFolder(String branch) {
+        Logger.info("checkout branch: ${branch} into folder: ${folder} started")
+        dsl.dir(folder) {
+            dsl.executeShell("pwd; ls -la")
+            checkout(branch)
+            dsl.executeShell("pwd; ls -la")
+        }
+        Logger.info("checkout branch: ${branch} into folder: ${folder} completed")
+    }
+
+    def makeDir(String path) {
+        Logger.debug("makeDir: ${path} started")
+        dsl.dir(folder) {
+            dsl.executeShell("pwd; ls -la")
+            dsl.executeShell("mkdir -p ${path}")
+        }
+        Logger.debug("makeDir: ${path} completed")
+    }
+
     def checkoutProdBranch() {
         checkout(getProdBranch())
     }

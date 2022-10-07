@@ -4,7 +4,7 @@
  */
 package pro.javatar.pipeline.integration.k8s
 
-
+import pro.javatar.pipeline.domain.DockerImage
 import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
 import pro.javatar.pipeline.service.orchestration.model.DeploymentRequestBO
@@ -52,7 +52,7 @@ class KubernetesService implements DockerOrchestrationService {
     def incrementVersion(String version, String config, String deploy) {
         Logger.info("KubernetesService:incrementVersion: version:${version}, deploy:${deploy}")
         Logger.debug("KubernetesService:incrementVersion: config:${config}")
-        String newDeploy = new K8sJsonSetupVersion(config, deploy)
+        String newDeploy = new K8sJsonSetupVersion(config)
                 .setupVersion(version)
         new K8sDeployApplyCommand(newDeploy, dsl).apply()
     }
@@ -67,4 +67,14 @@ class KubernetesService implements DockerOrchestrationService {
         new K8sDeployVerifier(deploy, version, dsl).validate()
     }
 
+    def createOrReplace(DockerImage di) {
+        def oldDeploy = new K8sGetJsonDeployCommand(di.deployment, dsl)
+        if (oldDeploy.isDeploymentAlreadyExists()) {
+            String newDeploy = new K8sJsonSetupVersion(oldDeploy.config)
+                    .setupImage(di.toString())
+            new K8sDeployApplyCommand(newDeploy, dsl).apply()
+        } else {
+            createDeployment(di.deployment, di.toString())
+        }
+    }
 }

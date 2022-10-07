@@ -17,6 +17,7 @@ package pro.javatar.pipeline.model
 import pro.javatar.pipeline.exception.UnrecognizedPipelineStagesSuitException
 import pro.javatar.pipeline.stage.BuildAndUnitTestStage
 import pro.javatar.pipeline.stage.ReleaseArtifactsStage
+import pro.javatar.pipeline.stage.ReleaseBySpecifiedVersionsStage
 import pro.javatar.pipeline.stage.StageAware
 import pro.javatar.pipeline.stage.VersionInfoStage
 import pro.javatar.pipeline.stage.deploy.DeployToDevEnvStage
@@ -38,6 +39,9 @@ enum PipelineStagesSuit {
     LIBRARY,
     ANALYSE_SERVICE_VERSIONS(
             new VersionInfoStage()
+    ),
+    RELEASE_SERVICE_VERSIONS(
+            new ReleaseBySpecifiedVersionsStage()
     ),
     CUSTOM
 

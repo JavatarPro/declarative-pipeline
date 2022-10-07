@@ -16,11 +16,9 @@ import pro.javatar.pipeline.util.Logger
 class K8sJsonSetupVersion implements SetupVersionAware, Serializable {
 
     String deployJsonConfig
-    String containerName
 
-    K8sJsonSetupVersion(String deployJsonConfig, String containerName) {
+    K8sJsonSetupVersion(String deployJsonConfig) {
         this.deployJsonConfig = deployJsonConfig
-        this.containerName = containerName
     }
 
     @Override
@@ -34,6 +32,15 @@ class K8sJsonSetupVersion implements SetupVersionAware, Serializable {
         Logger.debug("K8sJsonSetupVersion:setupVersion: newImage=${newImage}")
         config.spec.template.spec.containers[0].image = newImage
         return JsonOutput.toJson(config)
+    }
+
+    def setupImage(String dockerImage) {
+        Logger.debug("K8sJsonSetupVersion:setupImage: stared")
+        def config = new JsonSlurper().parseText(deployJsonConfig)
+        config.spec.template.spec.containers[0].image = dockerImage
+        def result = JsonOutput.toJson(config)
+        Logger.debug("K8sJsonSetupVersion:setupImage: completed:\n${result}")
+        return result
     }
 
 }

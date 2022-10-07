@@ -101,6 +101,15 @@ class HgService extends RevisionControlService {
     }
 
     @Override
+    def moveFile(String oldPath, String newPath) {
+        Logger.debug("moveFile from old path: ${oldPath} to new path: ${newPath} started")
+        dsl.dir(folder) {
+            dsl.sh "hg mv oldPath newPath"
+        }
+        Logger.debug("moveFile from old path: ${oldPath} to new path: ${newPath} completed")
+    }
+
+    @Override
     def createReleaseBranchLocally(String releaseVersion) {
         Logger.info("createReleaseBranchLocally releaseVersion - ${releaseVersion}")
         dsl.sh "hg flow release start ${releaseVersion}"

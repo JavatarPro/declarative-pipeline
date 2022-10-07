@@ -21,9 +21,11 @@ class VersionInfoStage extends Stage {
 
     @Override
     void execute() throws PipelineException {
-        def versions = versionInfo().versionsCurrent()
-        sender().send(toPrettyJson(versions))
-        versionInfo()
+        def current = versionInfo().versionsCurrent()
+        def next = versionInfo().versionsNext(current)
+        def result = [currentVersions: current, proposedVersions: next]
+        // TODO make slack template
+        sender().send("```\n${toPrettyJson(result)}\n```")
     }
 
     @Override

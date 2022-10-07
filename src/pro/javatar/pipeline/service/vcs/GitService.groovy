@@ -83,6 +83,15 @@ class GitService extends RevisionControlService {
     }
 
     @Override
+    def moveFile(String oldPath, String newPath) {
+        Logger.debug("moveFile from old path: ${oldPath} to new path: ${newPath} started")
+        dsl.dir(folder) {
+            dsl.sh "git mv ${oldPath} ${newPath}"
+        }
+        Logger.debug("moveFile from old path: ${oldPath} to new path: ${newPath} completed")
+    }
+
+    @Override
     def createReleaseBranchLocally(String releaseVersion) {
         Logger.debug("createReleaseBranchLocally releaseVersion - ${releaseVersion}")
         dsl.sh "git status"

@@ -27,6 +27,8 @@ interface JenkinsDsl extends Serializable {
      */
     String readConfiguration(String file);
 
+    def readJson(String file)
+
     Map getJenkinsJobParameters();
 
     def readYaml(String yamlConfig);
