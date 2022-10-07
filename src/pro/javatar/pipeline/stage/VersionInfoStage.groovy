@@ -30,7 +30,7 @@ class VersionInfoStage extends Stage {
                 "${K8sVersions.PROPOSED_VERSIONS}": next
         ]
         // TODO make slack template
-        sender().send("```\n${toPrettyJson(result)}\n```")
+        sender.send("```\n${toPrettyJson(result)}\n```")
     }
 
     @Override
