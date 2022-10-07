@@ -26,8 +26,8 @@ class VersionInfoStage extends Stage {
         def current = info.versionsCurrent()
         def next = info.versionsNext(current)
         def result = [
-                K8sVersions.DEV_VERSIONS: current,
-                K8sVersions.PROPOSED_VERSIONS: next
+                "${K8sVersions.DEV_VERSIONS}": current,
+                "${K8sVersions.PROPOSED_VERSIONS}": next
         ]
         // TODO make slack template
         sender().send("```\n${toPrettyJson(result)}\n```")
