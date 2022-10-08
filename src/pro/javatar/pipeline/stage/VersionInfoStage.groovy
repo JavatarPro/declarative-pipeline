@@ -29,13 +29,17 @@ class VersionInfoStage extends Stage {
         sender = ContextHolder.get(SlackChannelSender.class)
         def current = info.versionsCurrent()
         def next = info.versionsNext(current)
-        def result = [
-                "${K8sVersions.DEV_VERSIONS}": current,
-                "${K8sVersions.PROPOSED_VERSIONS}": next
-        ]
-        Logger.debug("```\n${toPrettyJson(result)}\n```")
+
+        String msg = "Dev versions:\n```\n${toPrettyJson(current)}\n```"
+        Logger.debug(msg)
         // TODO make slack template
-        sender.send("```\n${toPrettyJson(result)}\n```")
+        sender.send(msg)
+
+        msg = "${K8sVersions.PROPOSED_VERSIONS}\n```\n${toPrettyJson(next)}\n```"
+        Logger.debug(msg)
+        // TODO make slack template
+        sender.send(msg)
+
         Logger.debug("VersionInfoStage#execute completed")
     }
 

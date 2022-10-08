@@ -43,15 +43,14 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
         vcs.checkoutIntoFolder("master")
         def releaseRequest = dsl.readJson("${vcs.folder}/${RELEASE_FILE}")
         Logger.trace("releaseRequest: \n${releaseRequest}")
-        def proposedVersions = releaseRequest.get(K8sVersions.PROPOSED_VERSIONS)
         def prodVersions = versionInfo.versionsCurrent()
         Logger.trace("prodVersions: \n${prodVersions}")
-        def updates = versionInfo.toUpdate(proposedVersions, prodVersions)
+        def updates = versionInfo.toUpdate(releaseRequest, prodVersions)
         updates.each {deployment, image ->
             service.createOrReplace(DockerImage.fromString(image))
         }
         def result = [
-                "${K8sVersions.PROPOSED_VERSIONS}": proposedVersions,
+                "${K8sVersions.PROPOSED_VERSIONS}": releaseRequest,
                 "${K8sVersions.PROD_VERSIONS}": prodVersions,
                 "${K8sVersions.PROD_VERSION_UPDATES}": updates,
         ]

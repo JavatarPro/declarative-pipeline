@@ -10,7 +10,6 @@ package pro.javatar.pipeline.domain
  */
 class K8sVersions {
 
-    static final String DEV_VERSIONS = "devVersions"
     static final String PROPOSED_VERSIONS = "proposedVersions"
     static final String PROD_VERSIONS = "prodVersions"
     static final String PROD_VERSION_UPDATES = "prodVersionUpdates"
