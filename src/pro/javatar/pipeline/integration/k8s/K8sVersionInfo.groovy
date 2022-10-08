@@ -33,7 +33,7 @@ class K8sVersionInfo implements Serializable {
         Logger.debug("K8sVersionInfo#versionsCurrent started")
         String cmd = "kubectl get deploy -o json"
         String json = dsl.getShellExecutionResponse(cmd)
-        Logger.debug("response from command: ${cmd} is: \n${json}")
+        Logger.trace("response from command: ${cmd} is: \n${json}")
         def parser = new JsonSlurper()
         def deployments = parser.parseText(json).items
         Map<String, String> result = new HashMap<>()

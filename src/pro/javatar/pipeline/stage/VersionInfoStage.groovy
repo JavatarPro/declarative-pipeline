@@ -35,7 +35,7 @@ class VersionInfoStage extends Stage {
         ]
         Logger.debug("```\n${toPrettyJson(result)}\n```")
         // TODO make slack template
-        // sender.send("```\n${toPrettyJson(result)}\n```")
+        sender.send("```\n${toPrettyJson(result)}\n```")
         Logger.debug("VersionInfoStage#execute completed")
     }
 
