@@ -58,10 +58,10 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
         ]
         String json = toPrettyJson(result)
         // TODO make slack template
-//        sender.send("Release in progress")
-//        sender.send("```\n${json}\n```")
+        sender.send("Release in progress")
+        sender.send("```\n${json}\n```")
         auditRelease()
-//        sender.send("Release completed")
+        sender.send("Release completed")
     }
 
     @Override
