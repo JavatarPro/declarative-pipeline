@@ -10,6 +10,8 @@ import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.integration.k8s.K8sVersionInfo
 import pro.javatar.pipeline.integration.slack.SlackChannelSender
 import pro.javatar.pipeline.service.ContextHolder
+import pro.javatar.pipeline.util.Logger
+
 import static pro.javatar.pipeline.util.StringUtils.toPrettyJson
 
 /**
@@ -21,17 +23,21 @@ class VersionInfoStage extends Stage {
     @NonCPS
     @Override
     void execute() throws PipelineException {
+        Logger.debug("VersionInfoStage#execute started")
         K8sVersionInfo info = ContextHolder.get(K8sVersionInfo.class)
         SlackChannelSender sender = ContextHolder.get(SlackChannelSender.class)
         def current = new HashMap()
+        def next = new HashMap()
         // def current = info.versionsCurrent()
-        def next = info.versionsNext(current)
+        // def next = info.versionsNext(current)
         def result = [
                 "${K8sVersions.DEV_VERSIONS}": current,
                 "${K8sVersions.PROPOSED_VERSIONS}": next
         ]
         // TODO make slack template
-        sender.send("```\n${toPrettyJson(result)}\n```")
+        Logger.debug("```\n${toPrettyJson(result)}\n```")
+        // sender.send("```\n${toPrettyJson(result)}\n```")
+        Logger.debug("VersionInfoStage#execute completed")
     }
 
     @Override
