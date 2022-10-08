@@ -30,10 +30,11 @@ class VersionInfoStage extends Stage {
         def next = new HashMap()
         def current = info.versionsCurrent()
         // def next = info.versionsNext(current)
-        def result = [
-                "${K8sVersions.DEV_VERSIONS}": current,
-                "${K8sVersions.PROPOSED_VERSIONS}": next
-        ]
+        def result = new HashMap()
+//        def result = [
+//                "${K8sVersions.DEV_VERSIONS}": current,
+//                "${K8sVersions.PROPOSED_VERSIONS}": next
+//        ]
         // TODO make slack template
         Logger.debug("```\n${toPrettyJson(result)}\n```")
         // sender.send("```\n${toPrettyJson(result)}\n```")
