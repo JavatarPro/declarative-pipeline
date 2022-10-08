@@ -23,7 +23,8 @@ class VersionInfoStage extends Stage {
     void execute() throws PipelineException {
         K8sVersionInfo info = ContextHolder.get(K8sVersionInfo.class)
         SlackChannelSender sender = ContextHolder.get(SlackChannelSender.class)
-        def current = info.versionsCurrent()
+        def current = new HashMap()
+        // def current = info.versionsCurrent()
         def next = info.versionsNext(current)
         def result = [
                 "${K8sVersions.DEV_VERSIONS}": current,
