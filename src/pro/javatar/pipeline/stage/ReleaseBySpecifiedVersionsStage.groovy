@@ -75,9 +75,10 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
         vcs.makeDir(RELEASE_FOLDER)
         String historyFile = RELEASE_HISTORY_FILE.replace("{date}",
                 Instant.now().truncatedTo(ChronoUnit.MINUTES).toString())
-        dsl.writeFile(RELEASE_FILE, json)
+        String path = "${vcs.folder}/${RELEASE_FILE}"
+        dsl.writeFile(path, json)
         vcs.moveFile(RELEASE_FILE, historyFile)
-        dsl.writeFile(RELEASE_FILE, "{}")
+        dsl.writeFile(path, "{}")
         vcs.commit("Release completed, move ${RELEASE_FILE} to ${historyFile}")
         vcs.push()
         Logger.debug("ReleaseBySpecifiedVersionsStage#auditRelease completed")
