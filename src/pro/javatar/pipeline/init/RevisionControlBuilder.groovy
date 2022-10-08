@@ -28,9 +28,10 @@ import pro.javatar.pipeline.util.StringUtils
 class RevisionControlBuilder implements Serializable {
 
     RevisionControlService build(Vcs vcs) {
-        Logger.info("RevisionControlService.build() started")
+        Logger.debug("RevisionControlService.build() started")
         if (vcs == null || vcs.getUrl() == null
                 || StringUtils.isBlank(vcs.getUrl())) {
+            Logger.debug("RevisionControlService.build() null will be returned.")
             return null
         }
         RevisionControlService result
@@ -41,7 +42,7 @@ class RevisionControlBuilder implements Serializable {
         } else {
             throw new UnsupportedOperationException("Supported only .git and .hg repos");
         }
-        Logger.info("RevisionControlService.build() finished")
+        Logger.debug("RevisionControlService.build() completed")
         return result
     }
 }

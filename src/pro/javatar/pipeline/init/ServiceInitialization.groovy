@@ -40,6 +40,7 @@ class ServiceInitialization implements Serializable {
 
     static void createServices(JenkinsDsl dsl, Config config, ReleaseInfo info) {
         Logger.info("ServiceInitialization:createServices started")
+        add(JenkinsDsl.class, dsl)
 
         // PipelineStagesSuit.ANALYSE_SERVICE_VERSIONS
         add(new K8sVersionInfo(dsl, config.docker[0].url, config.docker[1].url))

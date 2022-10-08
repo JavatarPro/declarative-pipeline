@@ -8,6 +8,7 @@ import pro.javatar.pipeline.Flow
 import pro.javatar.pipeline.domain.Config
 import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.model.ReleaseInfo
+import pro.javatar.pipeline.service.ContextHolder
 import pro.javatar.pipeline.service.PipelineDslHolder
 import pro.javatar.pipeline.stage.StageAware
 import pro.javatar.pipeline.util.Logger
