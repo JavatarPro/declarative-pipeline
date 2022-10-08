@@ -12,6 +12,7 @@ import pro.javatar.pipeline.integration.k8s.KubernetesService
 import pro.javatar.pipeline.integration.slack.SlackChannelSender
 import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.service.vcs.RevisionControlService
+import pro.javatar.pipeline.util.Logger
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -29,18 +30,21 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
     static final String RELEASE_FILE = "release.json"
     static final String RELEASE_HISTORY_FILE = "${RELEASE_FOLDER}/release-{date}.json"
 
+    K8sVersionInfo versionInfo
+    SlackChannelSender sender
+    KubernetesService service
+    RevisionControlService vcs
+    JenkinsDsl dsl
+
     @Override
     void execute() throws PipelineException {
-        K8sVersionInfo versionInfo = get(K8sVersionInfo.class)
-        SlackChannelSender sender = get(SlackChannelSender.class)
-        KubernetesService service = get(KubernetesService.class)
-        RevisionControlService vcs = get(RevisionControlService.class)
-        JenkinsDsl dsl = get(JenkinsDsl.class)
-
+        fillInServices()
         vcs.checkoutIntoFolder("master")
         def releaseRequest = dsl.readJson("${vcs.folder}/${RELEASE_FILE}")
+        Logger.trace("releaseRequest: \n${releaseRequest}")
         def proposedVersions = releaseRequest.get(K8sVersions.PROPOSED_VERSIONS)
         def prodVersions = versionInfo.versionsCurrent()
+        Logger.trace("prodVersions: \n${prodVersions}")
         def updates = versionInfo.toUpdate(proposedVersions, prodVersions)
         updates.each {deployment, image ->
             service.createOrReplace(DockerImage.fromString(image))
@@ -53,17 +57,34 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
         ]
         String json = toPrettyJson(result)
         // TODO make slack template
-        sender().send("Release in progress")
-        sender().send("```\n${json}\n```")
+        sender.send("Release in progress")
+        sender.send("```\n${json}\n```")
         vcs.makeDir(RELEASE_FOLDER)
-        String historyFile = RELEASE_HISTORY_FILE.replace("{date}", Instant.now().truncatedTo(ChronoUnit.MINUTES))
+        String historyFile = RELEASE_HISTORY_FILE.replace("{date}",
+                Instant.now().truncatedTo(ChronoUnit.MINUTES).toString())
         vcs.moveFile(RELEASE_FILE, historyFile)
         vcs.commitChanges("Release completed, move ${RELEASE_FILE} to ${historyFile}")
-        sender().send("Release completed")
+        sender.send("Release completed")
     }
 
     @Override
     String name() {
         return "release"
+    }
+
+    // helper methods
+    def fillInServices() {
+        Logger.debug("ReleaseBySpecifiedVersionsStage#fillInServices started")
+        versionInfo = get(K8sVersionInfo.class)
+        Logger.debug("versionInfo available: ${versionInfo != null}")
+        sender = get(SlackChannelSender.class)
+        Logger.debug("sender available: ${sender != null}")
+        service = get(KubernetesService.class)
+        Logger.debug("service available: ${service != null}")
+        vcs = get(RevisionControlService.class)
+        Logger.debug("vcs available: ${vcs != null}")
+        dsl = get(JenkinsDsl.class)
+        Logger.debug("dsl available: ${dsl != null}")
+        Logger.debug("ReleaseBySpecifiedVersionsStage#fillInServices completed")
     }
 }
