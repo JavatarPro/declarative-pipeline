@@ -4,7 +4,6 @@
  */
 package pro.javatar.pipeline.jenkins.api
 
-import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.stage.StageAware
 
 import java.time.Duration
