@@ -28,9 +28,9 @@ class VersionInfoStage extends Stage {
         Logger.debug("VersionInfoStage#execute started")
         info = ContextHolder.get(K8sVersionInfo.class)
         SlackChannelSender sender = ContextHolder.get(SlackChannelSender.class)
-        def current = new HashMap()
+        // def current = new HashMap()
         def next = new HashMap()
-//        def current = info.versionsCurrent()
+        def current = info.versionsCurrent()
         // def next = info.versionsNext(current)
         def result = [
                 "${K8sVersions.DEV_VERSIONS}": current,
