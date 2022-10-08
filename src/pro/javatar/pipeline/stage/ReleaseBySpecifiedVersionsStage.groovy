@@ -39,6 +39,7 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
     @Override
     void execute() throws PipelineException {
         fillInServices()
+        vcs.setUp()
         vcs.checkoutIntoFolder("master")
         def releaseRequest = dsl.readJson("${vcs.folder}/${RELEASE_FILE}")
         Logger.trace("releaseRequest: \n${releaseRequest}")
