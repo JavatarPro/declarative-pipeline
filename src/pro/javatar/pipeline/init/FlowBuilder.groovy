@@ -28,8 +28,10 @@ class FlowBuilder {
 
     static Flow build(JenkinsDsl dsl,
                       List<String> configFiles) {
-        Logger.debug("build Flow from dsl and configFiles: ${configFiles}")
         Config config = createEffectiveConfig(dsl, configFiles)
+        Logger.dslService = dsl
+        Logger.LEVEL = config.log_level
+        Logger.debug("build Flow from dsl and configFiles: ${configFiles}")
         ReleaseInfo info = releaseInfo(dsl, config)
         createServices(dsl, config, info)
         List<StageAware> stages = createStages(config)
