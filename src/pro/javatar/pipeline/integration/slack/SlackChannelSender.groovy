@@ -27,7 +27,7 @@ class SlackChannelSender implements Serializable {
     }
 
     // curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}' ${webhookUrl}
-    @NonCPS
+//    @NonCPS
     void send(String msg) {
         if (slack == null || !slack.enabled) {
             Logger.info("Slack is disabled: message: ${msg}")
