@@ -29,9 +29,9 @@ class VersionInfoStage extends Stage {
         info = ContextHolder.get(K8sVersionInfo.class)
         SlackChannelSender sender = ContextHolder.get(SlackChannelSender.class)
         // def current = new HashMap()
-        def next = new HashMap()
+        // def next = new HashMap()
         def current = info.versionsCurrent()
-        // def next = info.versionsNext(current)
+        def next = info.versionsNext(current)
         def result = [
                 "${K8sVersions.DEV_VERSIONS}": current,
                 "${K8sVersions.PROPOSED_VERSIONS}": next

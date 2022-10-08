@@ -4,7 +4,6 @@
  */
 package pro.javatar.pipeline.integration.k8s
 
-import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.domain.DockerImage
 import pro.javatar.pipeline.domain.Version
 import pro.javatar.pipeline.jenkins.api.JenkinsDsl
@@ -29,7 +28,6 @@ class K8sVersionInfo implements Serializable {
         this.dockerUrlNext = dockerUrlNext
     }
 
-    // @NonCPS
     // versions from dev environment, used dockerUrlCurrent
     Map<String, String> versionsCurrent() {
         Logger.debug("K8sVersionInfo#versionsCurrent started")
@@ -48,7 +46,6 @@ class K8sVersionInfo implements Serializable {
         return result
     }
 
-    @NonCPS
     // versions to be proposed for next release to some env, used dockerUrlNext
     Map<String, String> versionsNext(Map<String, String> versions) {
         Logger.debug("K8sVersionInfo#versionsNext started")

@@ -34,7 +34,6 @@ interface JenkinsDsl extends Serializable {
 
     def readYaml(String yamlConfig);
 
-    @NonCPS
     String getShellExecutionResponse(String command);
 
     String getShellExecutionResponse(String command, String defaultMessage);
