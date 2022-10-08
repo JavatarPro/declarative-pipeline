@@ -29,7 +29,7 @@ class K8sVersionInfo implements Serializable {
         this.dockerUrlNext = dockerUrlNext
     }
 
-    @NonCPS
+    // @NonCPS
     // versions from dev environment, used dockerUrlCurrent
     Map<String, String> versionsCurrent() {
         Logger.debug("K8sVersionInfo#versionsCurrent started")
