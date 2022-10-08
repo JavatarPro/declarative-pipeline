@@ -4,7 +4,6 @@
  */
 package pro.javatar.pipeline.integration.slack
 
-import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.domain.Slack
 import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.util.Logger
@@ -27,7 +26,6 @@ class SlackChannelSender implements Serializable {
     }
 
     // curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}' ${webhookUrl}
-//    @NonCPS
     void send(String msg) {
         if (slack == null || !slack.enabled) {
             Logger.info("Slack is disabled: message: ${msg}")

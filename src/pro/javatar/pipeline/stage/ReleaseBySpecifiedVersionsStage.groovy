@@ -51,7 +51,6 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
             service.createOrReplace(DockerImage.fromString(image))
         }
         def result = [
-                "${K8sVersions.DEV_VERSIONS}": releaseRequest.get(K8sVersions.DEV_VERSIONS),
                 "${K8sVersions.PROPOSED_VERSIONS}": proposedVersions,
                 "${K8sVersions.PROD_VERSIONS}": prodVersions,
                 "${K8sVersions.PROD_VERSION_UPDATES}": updates,
@@ -60,7 +59,7 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
         // TODO make slack template
         sender.send("Release in progress")
         sender.send("```\n${json}\n```")
-        auditRelease()
+        auditRelease(json)
         sender.send("Release completed")
     }
 
@@ -71,12 +70,14 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
 
     // helper methods
 
-    def auditRelease() {
+    def auditRelease(String json) {
         Logger.debug("ReleaseBySpecifiedVersionsStage#auditRelease started")
         vcs.makeDir(RELEASE_FOLDER)
         String historyFile = RELEASE_HISTORY_FILE.replace("{date}",
                 Instant.now().truncatedTo(ChronoUnit.MINUTES).toString())
+        dsl.writeFile(RELEASE_FILE, json)
         vcs.moveFile(RELEASE_FILE, historyFile)
+        dsl.writeFile(RELEASE_FILE, "{}")
         vcs.commit("Release completed, move ${RELEASE_FILE} to ${historyFile}")
         vcs.push()
         Logger.debug("ReleaseBySpecifiedVersionsStage#auditRelease completed")
