@@ -204,7 +204,7 @@ class GitService extends RevisionControlService {
         dsl.dir(folder) {
             dsl.sh "pwd; ls -la"
             dsl.sshagent([vcs.cred]) {
-                dsl.sh "git push"
+                dsl.sh "git push --set-upstream origin master"
             }
         }
         Logger.debug("git push completed")
