@@ -9,6 +9,7 @@ import pro.javatar.pipeline.domain.DockerImage
 import pro.javatar.pipeline.domain.Version
 import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import groovy.json.JsonSlurper
+import pro.javatar.pipeline.util.Logger
 
 /**
  * @author Borys Zora
@@ -31,6 +32,7 @@ class K8sVersionInfo implements Serializable {
     @NonCPS
     // versions from dev environment, used dockerUrlCurrent
     Map<String, String> versionsCurrent() {
+        Logger.debug("K8sVersionInfo#versionsCurrent started")
         String json = dsl.getShellExecutionResponse("kubectl get deploy -o json")
         def parser = new JsonSlurper()
         def deployments = parser.parseText(json).items
@@ -42,12 +44,14 @@ class K8sVersionInfo implements Serializable {
                 result.put(dockerImage.deployment, image)
             }
         }
+        Logger.debug("K8sVersionInfo#versionsCurrent result size: ${result.size()} completed")
         return result
     }
 
     @NonCPS
     // versions to be proposed for next release to some env, used dockerUrlNext
     Map<String, String> versionsNext(Map<String, String> versions) {
+        Logger.debug("K8sVersionInfo#versionsNext started")
         Map<String, String> result = new HashMap<>()
         versions.each { service, image ->
             DockerImage di = DockerImage.fromString(image)
@@ -56,11 +60,13 @@ class K8sVersionInfo implements Serializable {
             di.dockerUrl = dockerUrlNext
             result.put(service, di.toString())
         }
+        Logger.debug("K8sVersionInfo#versionsNext result size: ${result.size()} completed")
         return result
     }
 
     // comparing proposed versions with existing on env to where we are going to promote
     Map<String, String> toUpdate(Map<String, String> proposedVersions, Map<String, String> existingVersions) {
+        Logger.debug("K8sVersionInfo#toUpdate proposedVersions: ${proposedVersions.size()} proposedVersions: ${existingVersions.size()} started")
         Map<String, String> result = new HashMap<>()
         proposedVersions.each { service, image ->
             String existingImage = existingVersions.get(service)
@@ -68,6 +74,7 @@ class K8sVersionInfo implements Serializable {
                 result.put(service, image)
             }
         }
+        Logger.debug("K8sVersionInfo#toUpdate result size: ${result.size()} completed")
         return result
     }
 
