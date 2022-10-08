@@ -56,7 +56,7 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
                 "${K8sVersions.PROD_VERSIONS}": prodVersions,
                 "${K8sVersions.PROD_VERSION_UPDATES}": updates,
         ]
-//        String json = toPrettyJson(result)
+        String json = toPrettyJson(result)
         // TODO make slack template
 //        sender.send("Release in progress")
 //        sender.send("```\n${json}\n```")

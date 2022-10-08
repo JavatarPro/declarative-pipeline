@@ -111,7 +111,7 @@ class StringUtils {
         return new JsonBuilder(object).toString()
     }
 
-    @NonCPS
+//    @NonCPS
     static String toPrettyJson(def object) {
         if (object == null) {
             return null
