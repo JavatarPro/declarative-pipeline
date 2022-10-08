@@ -79,9 +79,9 @@ abstract class RevisionControlService implements Serializable {
     def checkoutIntoFolder(String branch) {
         Logger.info("checkout branch: ${branch} into folder: ${folder} started")
         dsl.dir(folder) {
-            dsl.executeShell("pwd; ls -la")
+            dsl.sh("pwd; ls -la")
             checkout(branch)
-            dsl.executeShell("pwd; ls -la")
+            dsl.sh("pwd; ls -la")
         }
         Logger.info("checkout branch: ${branch} into folder: ${folder} completed")
     }
