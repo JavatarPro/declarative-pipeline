@@ -192,6 +192,14 @@ class HgService extends RevisionControlService {
     }
 
     @Override
+    def push() {
+        Logger.debug("hg push started")
+        Logger.warn("Push not tested")
+        dsl.sh "hg push"
+        Logger.debug("hg push comleted")
+    }
+
+    @Override
     def switchToReleaseBranch(ReleaseInfo releaseInfo) {
         switchToBranch(hgFlowService.getReleaseBranch(releaseInfo))
     }

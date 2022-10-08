@@ -199,6 +199,17 @@ class GitService extends RevisionControlService {
 //        }
     }
 
+    def push() {
+        Logger.debug("git push started")
+        dsl.dir(folder) {
+            dsl.sh "pwd; ls -la"
+            dsl.sshagent([vcs.cred]) {
+                dsl.sh "git push"
+            }
+        }
+        Logger.debug("git push completed")
+    }
+
     def updateToDevelopBranch() {
         String branch = getDevBranchWithPrefix(flowPrefix)
         Logger.debug("updateDevelopVersion update to develop branch: ${branch} started")

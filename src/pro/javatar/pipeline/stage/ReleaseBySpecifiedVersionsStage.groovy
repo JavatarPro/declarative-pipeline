@@ -59,11 +59,7 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
         // TODO make slack template
         sender.send("Release in progress")
         sender.send("```\n${json}\n```")
-        vcs.makeDir(RELEASE_FOLDER)
-        String historyFile = RELEASE_HISTORY_FILE.replace("{date}",
-                Instant.now().truncatedTo(ChronoUnit.MINUTES).toString())
-        vcs.moveFile(RELEASE_FILE, historyFile)
-        vcs.commitChanges("Release completed, move ${RELEASE_FILE} to ${historyFile}")
+        auditRelease()
         sender.send("Release completed")
     }
 
@@ -73,6 +69,18 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
     }
 
     // helper methods
+
+    def auditRelease() {
+        Logger.debug("ReleaseBySpecifiedVersionsStage#auditRelease started")
+        vcs.makeDir(RELEASE_FOLDER)
+        String historyFile = RELEASE_HISTORY_FILE.replace("{date}",
+                Instant.now().truncatedTo(ChronoUnit.MINUTES).toString())
+        vcs.moveFile(RELEASE_FILE, historyFile)
+        vcs.commit("Release completed, move ${RELEASE_FILE} to ${historyFile}")
+        vcs.push()
+        Logger.debug("ReleaseBySpecifiedVersionsStage#auditRelease completed")
+    }
+
     def fillInServices() {
         Logger.debug("ReleaseBySpecifiedVersionsStage#fillInServices started")
         versionInfo = get(K8sVersionInfo.class)

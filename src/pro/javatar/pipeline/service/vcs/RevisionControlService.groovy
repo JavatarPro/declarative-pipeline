@@ -91,6 +91,7 @@ abstract class RevisionControlService implements Serializable {
         dsl.dir(folder) {
             dsl.sh("pwd; ls -la")
             dsl.sh("mkdir -p ${path}")
+            dsl.sh("pwd; ls -la")
         }
         Logger.debug("makeDir: ${path} completed")
     }
@@ -107,9 +108,17 @@ abstract class RevisionControlService implements Serializable {
 
     abstract def commitChanges(String message)
 
+    def commit(String message) {
+        dsl.dir(folder) {
+            commitChanges(message)
+        }
+    }
+
     abstract def release(String releaseVersion) throws ReleaseFinishException
 
     abstract def pushRelease()
+
+    abstract def push()
 
     def switchToDevelopBranch() {
         switchToBranch(getDevBranchWithPrefix(getFlowPrefix()))
