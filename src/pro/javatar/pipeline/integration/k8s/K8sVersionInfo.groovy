@@ -31,7 +31,9 @@ class K8sVersionInfo implements Serializable {
     // versions from dev environment, used dockerUrlCurrent
     Map<String, String> versionsCurrent() {
         Logger.debug("K8sVersionInfo#versionsCurrent started")
-        String json = dsl.getShellExecutionResponse("kubectl get deploy -o json")
+        String cmd = "kubectl get deploy -o json"
+        String json = dsl.getShellExecutionResponse(cmd)
+        Logger.debug("response from command: ${cmd} is: \n${json}")
         def parser = new JsonSlurper()
         def deployments = parser.parseText(json).items
         Map<String, String> result = new HashMap<>()
