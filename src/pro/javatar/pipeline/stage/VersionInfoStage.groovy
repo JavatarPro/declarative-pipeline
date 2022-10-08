@@ -20,21 +20,22 @@ import static pro.javatar.pipeline.util.StringUtils.toPrettyJson
  */
 class VersionInfoStage extends Stage {
 
+    private K8sVersionInfo info
+
     @NonCPS
     @Override
     void execute() throws PipelineException {
         Logger.debug("VersionInfoStage#execute started")
-        K8sVersionInfo info = ContextHolder.get(K8sVersionInfo.class)
+        info = ContextHolder.get(K8sVersionInfo.class)
         SlackChannelSender sender = ContextHolder.get(SlackChannelSender.class)
-        //def current = new HashMap()
+        def current = new HashMap()
         def next = new HashMap()
-        def current = info.versionsCurrent()
+//        def current = info.versionsCurrent()
         // def next = info.versionsNext(current)
-        def result = new HashMap()
-//        def result = [
-//                "${K8sVersions.DEV_VERSIONS}": current,
-//                "${K8sVersions.PROPOSED_VERSIONS}": next
-//        ]
+        def result = [
+                "${K8sVersions.DEV_VERSIONS}": current,
+                "${K8sVersions.PROPOSED_VERSIONS}": next
+        ]
         // TODO make slack template
         Logger.debug("```\n${toPrettyJson(result)}\n```")
         // sender.send("```\n${toPrettyJson(result)}\n```")
