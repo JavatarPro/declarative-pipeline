@@ -4,7 +4,7 @@
  */
 package pro.javatar.pipeline.util
 
-import com.cloudbees.groovy.cps.NonCPS
+//import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 
 /**
@@ -26,54 +26,54 @@ class RestClient implements Serializable {
         this.service = service
     }
 
-    @NonCPS
+//    @NonCPS
     String execute() {
         String curlCommand = CurlUtils.prepareCommand(this)
         return service.getShellExecutionResponse(curlCommand)
     }
 
-    @NonCPS
+//    @NonCPS
     RestClient post(String url) {
         this.url = url
         httpMethod = HttpMethod.POST
         return this
     }
 
-    @NonCPS
+//    @NonCPS
     RestClient get(String url) {
         this.url = url
         httpMethod = HttpMethod.GET
         return this
     }
 
-    @NonCPS
+//    @NonCPS
     RestClient put(String url) {
         this.url = url
         httpMethod = HttpMethod.PUT
         return this
     }
 
-    @NonCPS
+//    @NonCPS
     RestClient delete(String url) {
         this.url = url
         httpMethod = HttpMethod.DELETE
         return this
     }
 
-    @NonCPS
+//    @NonCPS
     RestClient withBody(String body) {
         this.body = body
         return this
     }
 
-    @NonCPS
+//    @NonCPS
     RestClient security(HttpSecurity httpSecurity, String credentialId) {
         this.httpSecurity = httpSecurity
         this.credentialId = credentialId
         return this
     }
 
-    @NonCPS
+//    @NonCPS
     RestClient contentType(HttpMediaType httpMediaType) {
         // this.httpMediaType = httpMediaType
         headers.put("Content-Type", httpMediaType.value)
