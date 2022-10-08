@@ -22,7 +22,7 @@ class VersionInfoStage extends Stage {
 
     private K8sVersionInfo info
 
-    @NonCPS
+//    @NonCPS
     @Override
     void execute() throws PipelineException {
         Logger.debug("VersionInfoStage#execute started")
