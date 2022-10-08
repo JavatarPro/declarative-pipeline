@@ -4,6 +4,8 @@
  */
 package pro.javatar.pipeline.domain
 
+import com.cloudbees.groovy.cps.NonCPS
+
 /**
  * @author Borys Zora
  * @version 2022-09-19
@@ -14,6 +16,7 @@ class DockerImage implements Serializable {
     String deployment
     String version
 
+    @NonCPS
     static DockerImage fromString(String image) {
         DockerImage result = new DockerImage()
         String[] items = image.split(":")
