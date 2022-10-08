@@ -89,8 +89,8 @@ abstract class RevisionControlService implements Serializable {
     def makeDir(String path) {
         Logger.debug("makeDir: ${path} started")
         dsl.dir(folder) {
-            dsl.executeShell("pwd; ls -la")
-            dsl.executeShell("mkdir -p ${path}")
+            dsl.sh("pwd; ls -la")
+            dsl.sh("mkdir -p ${path}")
         }
         Logger.debug("makeDir: ${path} completed")
     }

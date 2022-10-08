@@ -36,22 +36,6 @@ class ReleaseBySpecifiedVersionsStage extends Stage {
     RevisionControlService vcs
     JenkinsDsl dsl
 
-    // TRACE: "ServiceContextHolder: getService: class pro.javatar.pipeline.service.vcs.RevisionControlService"
-    //[Pipeline] echo
-    //TRACE: "ServiceContextHolder: getService: result: null"
-    // TRACE: "ServiceContextHolder: getService: class pro.javatar.pipeline.service.vcs.RevisionControlService"
-    //[Pipeline] echo
-    //TRACE: "ServiceContextHolder: getService: result: null"
-    // [Pipeline] echo
-    //DEBUG: "vcs available: false
-    // TRACE: "ServiceContextHolder: getService: interface pro.javatar.pipeline.jenkins.api.JenkinsDsl"
-    //[Pipeline] echo
-    //TRACE: "ServiceContextHolder: getService: result: null"
-    //[Pipeline] echo
-    //DEBUG: "dsl available: false"
-
-    // issues with dsl and vcs
-
     @Override
     void execute() throws PipelineException {
         fillInServices()
