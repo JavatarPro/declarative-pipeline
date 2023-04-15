@@ -7,6 +7,7 @@ package pro.javatar.pipeline.init
 import pro.javatar.pipeline.domain.AutoTest
 import pro.javatar.pipeline.domain.Config
 import pro.javatar.pipeline.domain.Maven
+import pro.javatar.pipeline.domain.Npm
 import pro.javatar.pipeline.domain.Pipeline
 import pro.javatar.pipeline.domain.Slack
 import pro.javatar.pipeline.domain.Vcs
@@ -23,6 +24,7 @@ class ConfigMerger {
         base.docker = list(base.docker, overrides.docker)
         mergeVcs(base.vcs, overrides.vcs)
         mergeMaven(base.maven, overrides.maven)
+        mergeNpm(base.npm, overrides.npm)
         base.log_level = item(base.log_level, overrides.log_level)
         mergeAutoTest(base.autoTest, overrides.autoTest)
         mergeSlack(base.slack, overrides.slack)
@@ -65,6 +67,11 @@ class ConfigMerger {
         base.build_cmd = item(base.build_cmd, overrides.build_cmd)
         base.integration_test_cmd = item(base.integration_test_cmd, overrides.integration_test_cmd)
         base.params = item(base.params, overrides.params)
+    }
+
+    private static void mergeNpm(Npm base, Npm overrides) {
+        base.version = item(base.version, overrides.version)
+        base.type = item(base.type, overrides.type)
     }
 
     static def item(def base, def overrides) {

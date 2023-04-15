@@ -11,6 +11,7 @@ import pro.javatar.pipeline.domain.CommandType
 import pro.javatar.pipeline.domain.Config
 import pro.javatar.pipeline.domain.Docker
 import pro.javatar.pipeline.domain.Maven
+import pro.javatar.pipeline.domain.Npm
 import pro.javatar.pipeline.domain.Pipeline
 import pro.javatar.pipeline.domain.ReleaseType
 import pro.javatar.pipeline.domain.Slack
@@ -42,6 +43,7 @@ class ConfigYamlConverter {
         populatePipeline(config.pipeline, yaml.pipeline)
         populateVcs(config.vcs, yaml.vcs)
         populateMaven(config.maven, yaml.maven)
+        populateNpm(config.npm, yaml.npm)
         populateDockers(config.docker, yaml.docker)
         populateAutoTests(config.autoTest, yaml.auto_test)
         config.log_level = LogLevel.fromString(yaml.log_level)
@@ -80,6 +82,12 @@ class ConfigYamlConverter {
         maven.params = yaml.params
         maven.jenkins_tool_mvn = yaml.jenkins_tool_mvn
         maven.jenkins_tool_jdk = yaml.jenkins_tool_jdk
+    }
+
+    private static void populateNpm(Npm npm, def yaml) {
+        if (yaml == null) return
+        npm.version = yaml.version
+        npm.type = yaml.type
     }
 
     private static void populateDockers(List<Docker> dockers, List list) {
