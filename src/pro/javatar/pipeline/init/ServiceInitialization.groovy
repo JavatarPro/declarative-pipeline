@@ -98,7 +98,7 @@ class ServiceInitialization implements Serializable {
             return
         }
         if (config.pipeline.build.get(0) == BuildType.NPM) {
-            link(BuildService.class, Npm.class)
+            link(BuildService.class, NpmBuildService.class)
             return
         }
         link(BuildService.class, DockerOnlyBuildService.class)
