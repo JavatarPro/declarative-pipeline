@@ -30,11 +30,6 @@ class NpmBuildService extends UiBuildService implements Serializable {
 
     protected Npm npm
 
-    @Deprecated
-    NpmBuildService() {
-        // for backward compatibility
-    }
-
     NpmBuildService(Npm npm) {
         this.npm = npm
     }
