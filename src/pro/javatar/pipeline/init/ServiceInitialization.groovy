@@ -61,7 +61,7 @@ class ServiceInitialization implements Serializable {
         add(new NpmBuildService(config.npm))
         add(new DockerNpmBuildService(dockerService, config.npm, dsl))
         add(new DockerNpmYarnBuildService(dockerService, config.npm, dsl))
-        setupBuildService(config)
+        setupBuildService(config, info)
         // TODO decouple builds (maven and docker)
         DockerBuildService dbs = new DockerBuildService(get(BuildService.class), get(DockerService.class))
         add(dbs)
@@ -92,7 +92,7 @@ class ServiceInitialization implements Serializable {
     }
 
     // TODO refactor to multiple build stages instead of inheritance
-    static void setupBuildService(Config config) {
+    static void setupBuildService(Config config, ReleaseInfo info) {
         if (config.pipeline.build.isEmpty()) return
         if (config.pipeline.build.get(0) == BuildType.MAVEN) {
             // link(BuildService.class, MavenBuildService.class)
@@ -106,6 +106,8 @@ class ServiceInitialization implements Serializable {
         if (config.pipeline.build.get(0) == BuildType.NPM) {
 //            link(BuildService.class, NpmBuildService.class)
             link(BuildService.class, DockerNpmYarnBuildService.class) // TODO decouple docker and npm builds
+            info.setIsUi(true)
+            info.setOptimizeDockerContext(true)
             return
         }
         link(BuildService.class, DockerOnlyBuildService.class)
