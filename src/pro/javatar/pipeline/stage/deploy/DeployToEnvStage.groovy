@@ -14,6 +14,7 @@
  */
 package pro.javatar.pipeline.stage.deploy
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.model.Env
 import pro.javatar.pipeline.service.DeploymentService
@@ -47,5 +48,15 @@ abstract class DeployToEnvStage extends Stage {
     @Override
     String name() {
         return "${getEnv().getValue().toLowerCase()} env"
+    }
+
+
+    @NonCPS @Override
+    String toString() {
+        return "DeployToEnvStage{" +
+                "name =" + name() +
+                "skipStage=" + skipStage +
+                ", exitFromPipeline=" + exitFromPipeline +
+                '}';
     }
 }

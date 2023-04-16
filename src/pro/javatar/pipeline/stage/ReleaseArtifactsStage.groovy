@@ -14,6 +14,7 @@
  */
 package pro.javatar.pipeline.stage
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.service.ContextHolder
 import pro.javatar.pipeline.service.ReleaseService
@@ -45,5 +46,15 @@ class ReleaseArtifactsStage extends Stage {
     @Override
     String name() {
         return "release"
+    }
+
+    @NonCPS @Override
+    String toString() {
+        ReleaseService releaseService = ContextHolder.get(ReleaseService.class)
+        return "ReleaseArtifactsStage{" +
+                "skipStage=" + skipStage +
+                ", exitFromPipeline=" + exitFromPipeline +
+                ", releaseService=" + releaseService +
+                '}';
     }
 }

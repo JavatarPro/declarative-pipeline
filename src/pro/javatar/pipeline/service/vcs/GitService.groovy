@@ -15,6 +15,7 @@
 
 package pro.javatar.pipeline.service.vcs
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.GitFlowReleaseFinishException
 import pro.javatar.pipeline.exception.InvalidBranchException
 import pro.javatar.pipeline.model.ReleaseInfo
@@ -65,7 +66,7 @@ class GitService extends RevisionControlService {
     def checkoutRepo(String repoUrl, String branch) {
         Logger.debug("checkoutRepo with repoUrl: ${repoUrl}, branch: ${branch}")
         VscCheckoutRequest vscCheckoutRequest = new VscCheckoutRequest().withBranch(branch).withRepoUrl(repoUrl)
-                                                        .withCredentialsId(vcs.cred)
+                .withCredentialsId(vcs.cred)
         checkoutRepo(vscCheckoutRequest)
     }
 
@@ -220,7 +221,7 @@ class GitService extends RevisionControlService {
 
     def validateReleaseFinish() throws GitFlowReleaseFinishException {
         String currentBranch = getCurrentBranch()
-        if(!"develop".equalsIgnoreCase(currentBranch)) {
+        if (!"develop".equalsIgnoreCase(currentBranch)) {
             String errorMessage = "[git flow release finish] failed! " +
                     "Expected branch develop but was ${currentBranch}"
             Logger.error(errorMessage)
@@ -231,7 +232,7 @@ class GitService extends RevisionControlService {
     def validateBranch(String branch) {
         Logger.debug("validateBranch: ${branch} started")
         String currentBranch = getCurrentBranch()
-        if (!branch.equalsIgnoreCase(currentBranch)){
+        if (!branch.equalsIgnoreCase(currentBranch)) {
             String errorMessage = "Invalid branch, expected: ${branch}, but was: ${currentBranch}"
             Logger.error(errorMessage)
             throw new InvalidBranchException(errorMessage)
@@ -254,7 +255,7 @@ class GitService extends RevisionControlService {
         Logger.info("validateTagCreated: ${tag} started")
         String actualTag = dsl.sh returnStdout: true, script: "git tag | grep ${tag}"
         actualTag = actualTag.trim()
-        if (!tag.equalsIgnoreCase(actualTag)){
+        if (!tag.equalsIgnoreCase(actualTag)) {
             String errorMessage = "Invalid branch, expected: ${tag}, but was: ${actualTag}"
             Logger.error(errorMessage)
             throw new InvalidBranchException(errorMessage)
@@ -266,10 +267,14 @@ class GitService extends RevisionControlService {
     List<String> getActiveBranches() {
         String output = dsl.sh returnStdout: true, script: 'git branch -a'
         Set<String> result = new HashSet<>()
-        output.split().findAll { it -> (!it.contains("*")
-                    && !it.contains("HEAD") && !it.contains("->"))}
-            .each{it -> result.add(it.replace("origin/", "")
-                    .replace("remotes/", ""))}
+        output.split().findAll { it ->
+            (!it.contains("*")
+                    && !it.contains("HEAD") && !it.contains("->"))
+        }
+                .each { it ->
+                    result.add(it.replace("origin/", "")
+                            .replace("remotes/", ""))
+                }
         return new ArrayList<>(result)
     }
 
@@ -296,5 +301,15 @@ class GitService extends RevisionControlService {
 
     def getShowConfigFile() {
         dsl.sh "cat .git/config"
+    }
+
+
+    @NonCPS
+    @Override
+    String toString() {
+        return "GitService{" +
+                "vcs=" + vcs +
+                ", gitFlowService=" + gitFlowService +
+                '}';
     }
 }

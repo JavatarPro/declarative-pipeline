@@ -16,12 +16,15 @@ import pro.javatar.pipeline.integration.slack.SlackChannelSender
 import pro.javatar.pipeline.jenkins.api.JenkinsDsl
 import pro.javatar.pipeline.model.DockerOrchestrationServiceType
 import pro.javatar.pipeline.model.ReleaseInfo
+import pro.javatar.pipeline.release.ReleaseServiceV3
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.DeploymentService
 import pro.javatar.pipeline.service.ReleaseService
 import pro.javatar.pipeline.service.impl.BackEndReleaseServiceV2
 import pro.javatar.pipeline.service.impl.DockerBuildService
 import pro.javatar.pipeline.service.impl.DockerDeploymentService
+import pro.javatar.pipeline.service.impl.DockerNpmBuildService
+import pro.javatar.pipeline.service.impl.DockerNpmYarnBuildService
 import pro.javatar.pipeline.service.impl.GradleBuildService
 import pro.javatar.pipeline.service.impl.MavenBuildService
 import pro.javatar.pipeline.service.impl.NpmBuildService
@@ -52,14 +55,17 @@ class ServiceInitialization implements Serializable {
         setupRevisionControl(config.vcs)
         add(new KubernetesService(dsl))
         setupOrchestrationService(config)
-        add(new DockerService(config.docker))
+        DockerService dockerService = new DockerService(config.docker);
+        add(dockerService)
         add(new MavenBuildService(config.maven))
         add(new NpmBuildService(config.npm))
+        add(new DockerNpmBuildService(dockerService, config.npm, dsl))
+        add(new DockerNpmYarnBuildService(dockerService, config.npm, dsl))
         setupBuildService(config)
         // TODO decouple builds (maven and docker)
         DockerBuildService dbs = new DockerBuildService(get(BuildService.class), get(DockerService.class))
         add(dbs)
-        add(BuildService.class, dbs)
+        add(DockerBuildService.class, dbs)
         setupDeploymentService(config, info)
         addReleaseService()
 
@@ -81,15 +87,15 @@ class ServiceInitialization implements Serializable {
     }
 
     static void addReleaseService() {
-        add(new BackEndReleaseServiceV2(get(BuildService.class),
-                get(RevisionControlService.class), get(DockerService.class)))
-        link(ReleaseService.class, BackEndReleaseServiceV2.class)
+        add(new ReleaseServiceV3(get(BuildService.class), get(RevisionControlService.class), get(DockerService.class)))
+        link(ReleaseService.class, ReleaseServiceV3.class)
     }
 
     // TODO refactor to multiple build stages instead of inheritance
     static void setupBuildService(Config config) {
         if (config.pipeline.build.isEmpty()) return
         if (config.pipeline.build.get(0) == BuildType.MAVEN) {
+            // link(BuildService.class, MavenBuildService.class)
             link(BuildService.class, MavenBuildService.class)
             return
         }
@@ -98,7 +104,8 @@ class ServiceInitialization implements Serializable {
             return
         }
         if (config.pipeline.build.get(0) == BuildType.NPM) {
-            link(BuildService.class, NpmBuildService.class)
+//            link(BuildService.class, NpmBuildService.class)
+            link(BuildService.class, DockerNpmYarnBuildService.class) // TODO decouple docker and npm builds
             return
         }
         link(BuildService.class, DockerOnlyBuildService.class)

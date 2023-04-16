@@ -31,13 +31,14 @@ class NpmBuildService extends UiBuildService implements Serializable {
     protected Npm npm
 
     NpmBuildService(Npm npm) {
+        super()
         this.npm = npm
     }
 
     @Override
     void setUp() {
-        Logger.debug("NpmBuildService setUp")
-        Logger.debug("dsl.tool([name: ${npm.version}, type: ${npm.type}])")
+        Logger.info("NpmBuildService setUp")
+        Logger.info("dsl.tool([name: ${npm.version}, type: ${npm.type}])")
         dslService.addToPath(npm.version, npm.type)
         dslService.executeShell("node --version")
         dslService.executeShell("npm -version")

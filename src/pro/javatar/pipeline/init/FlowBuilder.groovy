@@ -36,8 +36,9 @@ class FlowBuilder {
         ReleaseInfo info = releaseInfo(dsl, config)
         createServices(dsl, config, info)
         List<StageAware> stages = createStages(config)
-        return new Flow(info, dsl)
-                .addStages(stages)
+        Flow flow = new Flow(info, dsl).addStages(stages)
+        printFlowConfiguration(flow)
+        return flow
     }
 
     static ReleaseInfo releaseInfo(JenkinsDsl dsl, Config config) {
@@ -46,6 +47,13 @@ class FlowBuilder {
         info.serviceName = config.pipeline.service
         info.config = config
         return info
+    }
+
+    static void printFlowConfiguration(Flow flow) {
+        Logger.info("FlowBuilder: printFlowConfiguration started")
+        Logger.info("Flow stages:\n ${flow.stages.each {it -> it.toString() + "\n" }}")
+        Logger.info("Flow stages: ${flow.releaseInfo.toString()}")
+        Logger.info("FlowBuilder: printFlowConfiguration completed")
     }
 
 }

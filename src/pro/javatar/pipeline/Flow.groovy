@@ -14,7 +14,7 @@
  */
 package pro.javatar.pipeline
 
-
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.init.FlowBuilder
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.jenkins.api.JenkinsDsl

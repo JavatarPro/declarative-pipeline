@@ -14,6 +14,7 @@
  */
 package pro.javatar.pipeline.stage
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.exception.PipelineException
 import pro.javatar.pipeline.service.BuildService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
@@ -82,5 +83,18 @@ class BuildAndUnitTestStage extends Stage {
         releaseInfo().setFlowPrefix(revisionControl.getFlowPrefix())
         buildService.populateReleaseInfo(releaseInfo())
         Logger.info("BuildAndUnitTestStage populateReleaseInfo finished")
+    }
+
+    @NonCPS
+    @Override
+    String toString() {
+        RevisionControlService revisionControl = get(RevisionControlService.class)
+        BuildService buildService = get(BuildService.class)
+        return "BuildAndUnitTestStage{" +
+                "skipStage=" + skipStage +
+                ", exitFromPipeline=" + exitFromPipeline +
+                ", revisionControl=" + revisionControl.toString() +
+                ", buildService=" + buildService.toString() +
+                '}'
     }
 }

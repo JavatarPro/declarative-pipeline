@@ -4,6 +4,7 @@
  */
 package pro.javatar.pipeline.domain
 
+import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.model.BuildServiceType
 import pro.javatar.pipeline.model.DockerOrchestrationServiceType
 import pro.javatar.pipeline.model.PipelineStagesSuit
@@ -43,6 +44,9 @@ class Pipeline implements Serializable {
 class Vcs implements Serializable { // version control system
     String url
     String cred
+
+    @NonCPS @Override
+    String toString() { return "Vcs{ url='" + url + '\'' + ", cred='" + cred + '\'' + '}' }
 }
 
 class AutoTest implements Serializable {

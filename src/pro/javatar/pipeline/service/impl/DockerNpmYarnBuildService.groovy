@@ -16,14 +16,14 @@ import pro.javatar.pipeline.util.Logger
 class DockerNpmYarnBuildService extends DockerNpmBuildService {
 
     DockerNpmYarnBuildService(DockerService dockerService, Npm npm, JenkinsDsl dslService) {
-        super(dockerService, dslService)
+        super(dockerService, npm, dslService)
     }
 
     @Override
     void setUp() {
         Logger.debug("NpmBuildService setUp")
         Logger.debug("dsl.tool([name: ${npm.version}, type: ${npm.type}])")
-        def node = dslService.addToPath(npm.version, npm.type)
+        dslService.addToPath(npm.version, npm.type)
         dslService.executeShell("node --version")
         dslService.executeShell("npm -version")
         dslService.executeShell("yarn -version")

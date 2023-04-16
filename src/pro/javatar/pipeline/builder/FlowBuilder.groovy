@@ -357,13 +357,13 @@ class FlowBuilder implements Serializable {
             npmBuildService = npm.build()
             buildService = npmBuildService
         } else if (buildType == BuildServiceType.NPM_DOCKER) {
-            DockerNpmBuildService service = new DockerNpmBuildService(dockerService, dsl)
+            DockerNpmBuildService service = new DockerNpmBuildService(dockerService, null, dsl)
             service.setType(npm.getType())
             service.setNpmVersion(npm.npmVersion)
             dockerNpmBuildService = service
             buildService = dockerNpmBuildService
         } else if (buildType == BuildServiceType.NPM_YARN_DOCKER) {
-            DockerNpmBuildService service = new DockerNpmYarnBuildService(dockerService, dsl)
+            DockerNpmBuildService service = new DockerNpmYarnBuildService(dockerService, null, dsl)
             service.setType(npm.getType())
             service.setNpmVersion(npm.npmVersion)
             dockerNpmBuildService = service
