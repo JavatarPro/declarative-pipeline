@@ -11,6 +11,7 @@ import pro.javatar.pipeline.util.Logger
  * @author Borys Zora
  * @version 2018-10-15
  */
+@Deprecated
 class DockerRegistry implements Serializable {
 
     String credentialsId

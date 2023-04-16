@@ -8,6 +8,7 @@ import pro.javatar.pipeline.util.LogLevel
 import pro.javatar.pipeline.util.Logger
 import pro.javatar.pipeline.util.StringUtils
 
+@Deprecated
 class YamlConfig implements Config, Serializable {
 
     String version

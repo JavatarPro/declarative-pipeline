@@ -6,6 +6,7 @@ package pro.javatar.pipeline.init
 
 import pro.javatar.pipeline.domain.BuildType
 import pro.javatar.pipeline.domain.Config
+import pro.javatar.pipeline.domain.Npm
 import pro.javatar.pipeline.domain.Vcs
 import pro.javatar.pipeline.integration.docker.DockerOnlyBuildService
 import pro.javatar.pipeline.integration.k8s.K8sVersionInfo
@@ -23,6 +24,7 @@ import pro.javatar.pipeline.service.impl.DockerBuildService
 import pro.javatar.pipeline.service.impl.DockerDeploymentService
 import pro.javatar.pipeline.service.impl.GradleBuildService
 import pro.javatar.pipeline.service.impl.MavenBuildService
+import pro.javatar.pipeline.service.impl.NpmBuildService
 import pro.javatar.pipeline.service.orchestration.DockerOrchestrationService
 import pro.javatar.pipeline.service.orchestration.DockerService
 import pro.javatar.pipeline.service.vcs.RevisionControlService
@@ -52,6 +54,7 @@ class ServiceInitialization implements Serializable {
         setupOrchestrationService(config)
         add(new DockerService(config.docker))
         add(new MavenBuildService(config.maven))
+        add(new NpmBuildService(config.npm))
         setupBuildService(config)
         // TODO decouple builds (maven and docker)
         DockerBuildService dbs = new DockerBuildService(get(BuildService.class), get(DockerService.class))
@@ -92,6 +95,10 @@ class ServiceInitialization implements Serializable {
         }
         if (config.pipeline.build.get(0) == BuildType.GRADLE) {
             link(BuildService.class, GradleBuildService.class)
+            return
+        }
+        if (config.pipeline.build.get(0) == BuildType.NPM) {
+            link(BuildService.class, Npm.class)
             return
         }
         link(BuildService.class, DockerOnlyBuildService.class)

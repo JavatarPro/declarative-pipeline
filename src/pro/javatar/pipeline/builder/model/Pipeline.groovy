@@ -4,6 +4,7 @@ import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.util.Logger
 import pro.javatar.pipeline.util.StringUtils
 
+@Deprecated
 class Pipeline implements Serializable {
 
     // TODO validate enum PipelineStagesSuit

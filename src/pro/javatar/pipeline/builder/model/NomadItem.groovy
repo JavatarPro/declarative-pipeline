@@ -4,6 +4,7 @@ import com.cloudbees.groovy.cps.NonCPS
 
 import java.time.Period
 
+@Deprecated
 class NomadItem {
 
     String url

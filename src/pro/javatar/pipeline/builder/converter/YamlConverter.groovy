@@ -30,6 +30,7 @@ import java.time.Period
 
 import static pro.javatar.pipeline.util.StringUtils.isNotBlank
 
+@Deprecated
 class YamlConverter {
 
     YamlConfig toYamlModel(def yml) {

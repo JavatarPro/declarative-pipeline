@@ -9,6 +9,7 @@ import pro.javatar.pipeline.util.Logger
  * Author : Borys Zora
  * Date Created: 4/13/18 12:14
  */
+@Deprecated
 class S3Builder implements Serializable {
 
     Map<String, S3Repo> S3Repos = new HashMap<>()

@@ -25,6 +25,7 @@ import static pro.javatar.pipeline.util.StringUtils.isBlank
  * @author Borys Zora
  * @since 2018-03-09
  */
+@Deprecated
 class SonarQubeBuilder implements Serializable {
 
     private boolean enabled

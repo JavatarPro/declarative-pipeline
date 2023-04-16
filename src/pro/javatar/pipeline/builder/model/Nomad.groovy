@@ -23,6 +23,7 @@ import java.time.Period
  * @author Borys Zora
  * @version 2019-03-29
  */
+@Deprecated
 class Nomad implements Serializable {
 
     private Map<String, NomadItem> nomadConfig = new HashMap<>()

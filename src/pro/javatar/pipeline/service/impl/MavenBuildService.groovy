@@ -86,6 +86,7 @@ class MavenBuildService extends BuildService implements NexusUploadAware {
         Logger.info("MavenBuildService:integrationTests:finished")
     }
 
+    // TODO fix
     def deployFile(String version, String file) {
         Logger.info("deployFile version: ${version}, file: ${file} started")
         deployFile(groupId, artifactId, version, packaging, file, repositoryId, repoUrl)

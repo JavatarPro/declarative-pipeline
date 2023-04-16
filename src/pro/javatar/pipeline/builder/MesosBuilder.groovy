@@ -4,6 +4,7 @@ import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.service.vcs.model.VcsRepo
 import pro.javatar.pipeline.util.Logger
 
+@Deprecated
 class MesosBuilder implements Serializable {
 
     VcsRepo dev

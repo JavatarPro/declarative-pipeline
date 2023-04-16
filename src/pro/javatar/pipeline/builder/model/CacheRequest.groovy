@@ -3,6 +3,7 @@ package pro.javatar.pipeline.builder.model
 import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.util.Logger
 
+@Deprecated
 class CacheRequest implements Serializable {
 
     Map<String, List<String>> caches = new HashMap<>()

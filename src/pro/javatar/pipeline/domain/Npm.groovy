@@ -11,4 +11,5 @@ package pro.javatar.pipeline.domain
 class Npm implements Serializable {
     String version
     String type
+    String distributionFolder = "dist"
 }

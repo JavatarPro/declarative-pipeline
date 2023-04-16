@@ -11,6 +11,7 @@ import pro.javatar.pipeline.util.Logger
  * @author Borys Zora
  * @version 2018-12-04
  */
+@Deprecated
 class Sonar implements Serializable {
 
     String serverUrl

@@ -4,6 +4,7 @@ import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.util.Logger
 
 // TODO remove
+@Deprecated
 class AutoTest implements Serializable {
 
     String jenkinsJobName

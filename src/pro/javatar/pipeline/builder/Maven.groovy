@@ -22,6 +22,7 @@ import pro.javatar.pipeline.util.Logger
  * @author Borys Zora
  * @since 2018-03-09
  */
+@Deprecated
 class Maven implements Serializable {
 
     String java

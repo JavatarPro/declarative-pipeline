@@ -23,6 +23,7 @@ import pro.javatar.pipeline.util.Logger
  * @author Borys Zora
  * @since 2018-03-09
  */
+@Deprecated
 class Npm implements Serializable {
 
     static final String DEFAULT_JENKINS_NPM_TYPE = "nodejs"

@@ -11,6 +11,7 @@ import com.cloudbees.groovy.cps.NonCPS;
  * @author Borys Zora
  * @version 2019-02-17
  */
+@Deprecated
 class Environment implements Serializable {
 
     // e.g. dev, qa, uat, prod

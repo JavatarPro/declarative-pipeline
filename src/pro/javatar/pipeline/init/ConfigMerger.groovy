@@ -72,6 +72,7 @@ class ConfigMerger {
     private static void mergeNpm(Npm base, Npm overrides) {
         base.version = item(base.version, overrides.version)
         base.type = item(base.type, overrides.type)
+        base.distributionFolder = item(base.distributionFolder, overrides.distributionFolder)
     }
 
     static def item(def base, def overrides) {

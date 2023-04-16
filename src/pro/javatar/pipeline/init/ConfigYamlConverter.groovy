@@ -88,6 +88,7 @@ class ConfigYamlConverter {
         if (yaml == null) return
         npm.version = yaml.version
         npm.type = yaml.type
+        npm.distributionFolder = yaml.distributionFolder == null ? "dist" : yaml.distributionFolder
     }
 
     private static void populateDockers(List<Docker> dockers, List list) {

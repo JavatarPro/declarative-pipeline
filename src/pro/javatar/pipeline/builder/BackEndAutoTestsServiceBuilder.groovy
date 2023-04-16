@@ -29,6 +29,7 @@ import static pro.javatar.pipeline.util.StringUtils.isBlank
  * Author : Borys Zora
  * Date Created: 3/29/18 14:06
  */
+@Deprecated
 class BackEndAutoTestsServiceBuilder implements Serializable {
 
     private AutoTestConfig config;

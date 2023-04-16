@@ -5,6 +5,7 @@ import pro.javatar.pipeline.util.Logger
 
 import static pro.javatar.pipeline.util.StringUtils.isBlank
 
+@Deprecated
 class Vcs implements Serializable {
 
     String revisionControl

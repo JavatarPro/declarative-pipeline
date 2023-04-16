@@ -13,6 +13,7 @@ import pro.javatar.pipeline.util.Logger
  * @author Borys Zora
  * @version 2018-07-10
  */
+@Deprecated
 class DockerNpmBuildService extends NpmBuildService {
 
     DockerService dockerService

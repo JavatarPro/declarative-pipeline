@@ -32,6 +32,7 @@ import java.util.stream.Collectors
 import static pro.javatar.pipeline.util.StringUtils.isBlank
 
 // TODO remove this class
+@Deprecated
 class FlowBuilderConverter {
 
     FlowBuilder toFlowBuilder(YamlConfig yamlFile, JenkinsDsl dslService) {

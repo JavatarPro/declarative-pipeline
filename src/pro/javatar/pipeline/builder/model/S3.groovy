@@ -3,6 +3,7 @@ package pro.javatar.pipeline.builder.model
 import com.cloudbees.groovy.cps.NonCPS
 import pro.javatar.pipeline.util.Logger
 
+@Deprecated
 class S3 implements Serializable {
 
     Map<String, S3Repository> S3Repositories = new HashMap<>()

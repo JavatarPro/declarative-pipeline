@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pro.javatar.pipeline.service.impl
 
 import com.cloudbees.groovy.cps.NonCPS
+import pro.javatar.pipeline.domain.Npm
 import pro.javatar.pipeline.model.ReleaseInfo
 import pro.javatar.pipeline.service.UiBuildService
 import pro.javatar.pipeline.util.Logger
@@ -28,32 +28,25 @@ import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
  */
 class NpmBuildService extends UiBuildService implements Serializable {
 
-    String moduleRepository
-    protected String npmVersion
-    protected String type
-    String libraryFolder
+    protected Npm npm
+
+    @Deprecated
+    NpmBuildService() {
+        // for backward compatibility
+    }
+
+    NpmBuildService(Npm npm) {
+        this.npm = npm
+    }
 
     @Override
     void setUp() {
         Logger.debug("NpmBuildService setUp")
-        Logger.debug("dsl.tool([name: ${npmVersion}, type: ${type}])")
-        def node = dslService.addToPath(npmVersion, type)
-        // dsl.sh "npm config set registry ${moduleRepository}"
+        Logger.debug("dsl.tool([name: ${npm.version}, type: ${npm.type}])")
+        dslService.addToPath(npm.version, npm.type)
         dslService.executeShell("node --version")
         dslService.executeShell("npm -version")
-        // cacheLibraryFolder()
         dslService.executeShell("npm install --no-save")
-    }
-
-    // CacheUtils.cacheLibraryFolder()
-    def cacheLibraryFolder() {
-        String buildFolder = dslService.getEnv("WORKSPACE")
-        String libraryCacheFolder = "${buildFolder}/${libraryFolder}"
-        if (! dslService.fileExists(libraryCacheFolder)) {
-            dslService.executeShell("mkdir ${libraryCacheFolder}")
-        }
-        Logger.debug("ln -s ${libraryCacheFolder} ${libraryFolder}")
-        dslService.executeShell("ln -s ${libraryCacheFolder} ${libraryFolder}")
     }
 
     @Override
@@ -62,7 +55,7 @@ class NpmBuildService extends UiBuildService implements Serializable {
         dslService.executeShell("pwd; ls -la")
         if (!skipUnitTests) dslService.executeShell('npm run test')
         dslService.executeShell('npm run build')
-        dslService.executeShell("zip -r ${getArtifact()} ${distributionFolder}")
+        dslService.executeShell("zip -r ${getArtifact()} ${npm.distributionFolder}")
         dslService.executeShell("pwd; ls -la")
         Logger.info('npm buildAndUnitTests end')
     }
@@ -95,51 +88,11 @@ class NpmBuildService extends UiBuildService implements Serializable {
         Logger.info("setupVersion: ${version} finished")
     }
 
-    String archiveContent() {
-        dslService.executeShell("zip -r dist.zip dist")
-        return "dist.zip"
-    }
-
-    String getModuleRepository() {
-        return moduleRepository
-    }
-
-    void setModuleRepository(String moduleRepository) {
-        this.moduleRepository = moduleRepository
-    }
-
-    String getNpmVersion() {
-        return npmVersion
-    }
-
-    void setNpmVersion(String npmVersion) {
-        this.npmVersion = npmVersion
-    }
-
-    String getType() {
-        return type
-    }
-
-    void setType(String type) {
-        this.type = type
-    }
-
-    String getLibraryFolder() {
-        return libraryFolder
-    }
-
-    void setLibraryFolder(String libraryFolder) {
-        this.libraryFolder = libraryFolder
-    }
-
     @NonCPS
     @Override
-    public String toString() {
+    String toString() {
         return "NpmBuildService{" +
-                "moduleRepository='" + moduleRepository + '\'' +
-                ", npmVersion='" + npmVersion + '\'' +
-                ", type='" + type + '\'' +
-                ", libraryFolder='" + libraryFolder + '\'' +
-                '}';
+                "npm='" + npm + '\'' +
+                '}'
     }
 }

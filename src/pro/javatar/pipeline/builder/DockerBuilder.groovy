@@ -33,6 +33,7 @@ import static pro.javatar.pipeline.model.DockerOrchestrationServiceType.fromStri
  * @author Borys Zora
  * @since 2018-03-09
  */
+@Deprecated
 class DockerBuilder implements Serializable {
 
     Map<String, DockerRegistryBO> dockerRegistries = new HashMap<>()

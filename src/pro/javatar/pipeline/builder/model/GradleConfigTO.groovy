@@ -13,6 +13,7 @@ import static pro.javatar.pipeline.util.StringUtils.isBlank;
  * @author Borys Zora
  * @version 2019-11-17
  */
+@Deprecated
 public class GradleConfigTO implements GradleConfig {
 
     private String gradleTool;
