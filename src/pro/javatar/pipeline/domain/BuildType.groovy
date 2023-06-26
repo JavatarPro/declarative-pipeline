@@ -12,5 +12,6 @@ enum BuildType implements Serializable {
     MAVEN,
     GRADLE,
     NPM,
+    NODE,
     DOCKER
 }
