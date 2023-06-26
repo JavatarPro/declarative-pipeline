@@ -26,7 +26,7 @@ class DockerNodeBuildService extends DockerNpmBuildService {
         dslService.addToPath(npm.version, npm.type)
         dslService.executeShell("node --version")
         dslService.executeShell("npm -version")
-        dslService.executeShell("docker -version")
+        dslService.executeShell("docker --version")
     }
 
 }
