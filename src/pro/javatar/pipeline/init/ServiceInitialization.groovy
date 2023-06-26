@@ -23,6 +23,7 @@ import pro.javatar.pipeline.service.ReleaseService
 import pro.javatar.pipeline.service.impl.BackEndReleaseServiceV2
 import pro.javatar.pipeline.service.impl.DockerBuildService
 import pro.javatar.pipeline.service.impl.DockerDeploymentService
+import pro.javatar.pipeline.service.impl.DockerNodeBuildService
 import pro.javatar.pipeline.service.impl.DockerNpmBuildService
 import pro.javatar.pipeline.service.impl.DockerNpmYarnBuildService
 import pro.javatar.pipeline.service.impl.GradleBuildService
@@ -61,6 +62,7 @@ class ServiceInitialization implements Serializable {
         add(new NpmBuildService(config.npm))
         add(new DockerNpmBuildService(dockerService, config.npm, dsl))
         add(new DockerNpmYarnBuildService(dockerService, config.npm, dsl))
+        add(new DockerNodeBuildService(dockerService, config.npm, dsl))
         setupBuildService(config, info)
         // TODO decouple builds (maven and docker)
         DockerBuildService dbs = new DockerBuildService(get(BuildService.class), get(DockerService.class))
@@ -108,6 +110,12 @@ class ServiceInitialization implements Serializable {
             link(BuildService.class, DockerNpmYarnBuildService.class) // TODO decouple docker and npm builds
             info.setIsUi(true)
             info.setOptimizeDockerContext(true)
+            return
+        }
+        if (config.pipeline.build.get(0) == BuildType.NODE) {
+            link(BuildService.class, DockerNodeBuildService.class)
+            info.setIsUi(false)
+            info.setOptimizeDockerContext(false) // do not use .jenkins folder, we can use .dockerignore for node_modules
             return
         }
         link(BuildService.class, DockerOnlyBuildService.class)
