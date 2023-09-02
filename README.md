@@ -51,3 +51,20 @@ Our [documentation is in confluence](https://javatar.atlassian.net/wiki/spaces/J
     - version control types: git, mercurial
     - version control providers: gitlab, bitbucket
     - sonar quality check
+
+### Known Issues
+
+#### master branch needed for git flow
+
+```shell
+branch_old="main"
+branch_new="master"
+git checkout ${branch_old}
+git checkout -b ${branch_new}
+git push --set-upstream origin ${branch_new}
+# open gitlab
+# change Default Branch to branch_new
+# remove branch_old from Protected Branches
+# add branch_new to Protected Branches
+git push --delete origin ${branch_old}
+```
